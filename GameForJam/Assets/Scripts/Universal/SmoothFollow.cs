@@ -2,6 +2,9 @@
 
 namespace Universal
 {
+    /// <summary>
+    /// Script for an object to follow the target object with initial offset.
+    /// </summary>
     public class SmoothFollow : MonoBehaviour
     {
         public Transform target;

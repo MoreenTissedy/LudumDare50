@@ -26,6 +26,7 @@ namespace DefaultNamespace
         public void AddToMix(Ingredients ingredient)
         {
             //effect
+            Debug.Log("Добавлено: "+ingredient);
             Cauldron.instance.mix.Add(ingredient);
         }
         
@@ -50,7 +51,8 @@ namespace DefaultNamespace
         public void OnPointerClick(PointerEventData eventData)
         {
             Potions result = Brew();
-            Debug.Log(result);
+            Debug.Log("Сварено зелье: "+result);
+            GameManager.instance.EndEncounter(result);
         }
     }
 }

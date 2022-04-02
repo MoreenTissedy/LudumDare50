@@ -8,11 +8,11 @@ namespace DefaultNamespace
         public Villager villager; 
         public string text;
         public Potions requiredPotion;
-        [Header("Right potion brewed")]
-        public int moneyBonus, fearBonus, fameBonus;
+        [Header("Right potion brewed")] public int moneyBonus; 
+        public int fearBonus, fameBonus;
         public Encounter[] bonusCards;
-        [Header("Wrong potion brewed")] 
-        public int moneyPenalty, fearPenalty, famePenalty;
+        [Header("Wrong potion brewed")] public int moneyPenalty;
+        public int fearPenalty, famePenalty;
         public Encounter[] penaltyCards;
     }
 }

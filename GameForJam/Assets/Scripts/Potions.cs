@@ -7,7 +7,7 @@ namespace DefaultNamespace
         Poison, Healing,
         Chameleon, Beauty,
         Sleep, Wake,
-        Laughter, VoiceChange,
+        Laughter, VoiceChange, Memory,
         Placebo
     }
 }

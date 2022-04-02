@@ -4,8 +4,9 @@ namespace DefaultNamespace
     {
         private int statValue;
         private int min = 0;
-        private int max = 100;
-        
+        public static int max = 100;
+        public event System.Action changed;
+
         public int Value {
             get => statValue;
             set
@@ -15,6 +16,7 @@ namespace DefaultNamespace
                     statValue = max;
                 else if (statValue < min)
                     statValue = min;
+                changed?.Invoke();
             }
         }
     }

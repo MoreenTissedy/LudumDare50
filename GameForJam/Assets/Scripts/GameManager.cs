@@ -14,7 +14,6 @@ namespace DefaultNamespace
             {
                 Debug.LogError("double singleton:"+this.GetType().Name);
             }
-            
         }
         
         public Status money, fear, fame;

@@ -27,7 +27,11 @@ namespace DefaultNamespace
         {
             //effect
             Debug.Log("Добавлено: "+ingredient);
-            Cauldron.instance.mix.Add(ingredient);
+            mix.Add(ingredient);
+            if (mix.Count == 3)
+            {
+                BrewAction();
+            }
         }
         
         public Potions Brew()
@@ -50,8 +54,13 @@ namespace DefaultNamespace
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            BrewAction();
+        }
+
+        private void BrewAction()
+        {
             Potions result = Brew();
-            Debug.Log("Сварено зелье: "+result);
+            Debug.Log("Сварено зелье: " + result);
             GameManager.instance.EndEncounter(result);
         }
     }

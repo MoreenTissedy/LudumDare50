@@ -18,7 +18,7 @@ namespace DefaultNamespace
 
         private int moneyUpdateTotal, fameUpdateTotal, fearUpdateTotal;
 
-        private int currentDay;
+        private int currentDay = 1;
         private int cardsDrawnToday;
         public int cardsPerDay = 3;
         public int cardsDealtAtNight = 3;
@@ -106,6 +106,7 @@ namespace DefaultNamespace
 
         private void Night()
         {
+            cardDeck.NewDayPool(currentDay);
             cardDeck.DealCards(cardsDealtAtNight);
             currentDay++;
             cardsDrawnToday = 0;

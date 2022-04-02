@@ -9,9 +9,10 @@ namespace DefaultNamespace
     public class EncounterDeck : ScriptableObject
     {
         public Encounter[] startingCards;
+        public Encounter[] pool1, pool2, pool3;
         public Queue<Encounter> deck;
-        public List<Encounter> cardPool;
         [Header("Deck info")] public Encounter[] deckInfo;
+        public List<Encounter> cardPool;
 
         public void Init()
         {
@@ -20,6 +21,17 @@ namespace DefaultNamespace
             {
                 deck.Enqueue(card);
             }
+
+            cardPool = new List<Encounter>(15);
+            cardPool.AddRange(pool1);
+        }
+
+        public void NewDayPool(int day)
+        {
+            if (day == 3)
+                cardPool.AddRange(pool2);
+            else if (day == 5)
+                cardPool.AddRange(pool3);
         }
 
         /// <summary>

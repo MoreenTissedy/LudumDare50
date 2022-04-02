@@ -68,10 +68,12 @@ namespace DefaultNamespace
         {
             //visual effects
             
+            //Debug.Log(money.Value + defaultMoneyBonus);
             //status update
-            money.Value += defaultMoneyBonus;
+            money.Add(defaultMoneyBonus);
                            //+ Mathf.FloorToInt(fame.Value*fameMoneyCoef);
-            fame.Value += defaultFameBonus;
+            fame.Add(defaultFameBonus);
+           //Debug.Log(money.Value);
             
             //compare potion and save bonuses for later
             if (potion == currentCard.requiredPotion)
@@ -109,11 +111,11 @@ namespace DefaultNamespace
             cardsDrawnToday = 0;
             
             //status update
-            money.Value += moneyUpdateTotal;
+            money.Add(moneyUpdateTotal);
             moneyUpdateTotal = 0;
-            fear.Value += fearUpdateTotal;
+            fear.Add(fearUpdateTotal);
             fearUpdateTotal = 0;
-            fame.Value = fameUpdateTotal;
+            fame.Add(fameUpdateTotal);
             fameUpdateTotal = 0;
             
             //text message

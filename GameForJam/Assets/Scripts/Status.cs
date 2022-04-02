@@ -11,17 +11,22 @@ namespace DefaultNamespace
         {
             
         }
-        public int Value {
-            get => statValue;
-            set
+
+        public int Value()
+        {
+            return statValue;
+        }
+
+        public int Add(int num)
             {
-                statValue += value;
+                statValue += num;
                 if (statValue > max)
                     statValue = max;
                 else if (statValue < min)
                     statValue = min;
                 changed?.Invoke();
+                return statValue;
             }
-        }
+        
     }
 }

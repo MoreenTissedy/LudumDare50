@@ -5,7 +5,7 @@ namespace DefaultNamespace
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : ScriptableObject
     {
-        public Villager villager; 
+        public Villager[] villager; 
         public string text;
         public Potions requiredPotion;
         [Header("Right potion brewed")] public int moneyBonus; 

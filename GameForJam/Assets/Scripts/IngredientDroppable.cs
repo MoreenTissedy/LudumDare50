@@ -8,14 +8,21 @@ namespace DefaultNamespace
     public class IngredientDroppable: MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         public Ingredients type;
-        public GameObject tooltip;
 
-        private void Awake()
+        private Text tooltip;
+        
+        private void Start()
         {
-            tooltip.GetComponentInChildren<Text>().text = GameManager.instance.ingredientsBook.Get(type).friendlyName;
+            tooltip = GetComponentInChildren<Text>();
+            if (tooltip != null)
+            {
+                tooltip.text = GameManager.instance?.ingredientsBook?.Get(type)?.friendlyName ?? "not specified";
+                tooltip.gameObject.SetActive(false);
+            }
+
             var image = GetComponentInChildren<SpriteRenderer>();
-            image.sprite = GameManager.instance.ingredientsBook.Get(type).image;
-            tooltip.SetActive(false);
+            if (tooltip!=null)
+                image.sprite = GameManager.instance?.ingredientsBook?.Get(type)?.image;
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -25,12 +32,16 @@ namespace DefaultNamespace
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            tooltip.SetActive(true);
+            if (tooltip is null)
+                return;
+            tooltip.gameObject.SetActive(true);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            tooltip.SetActive(false);
+            if (tooltip is null)
+                return;
+            tooltip.gameObject.SetActive(false);
         }
     }
 }

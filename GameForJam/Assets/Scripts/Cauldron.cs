@@ -1,11 +1,12 @@
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 
 namespace DefaultNamespace
 {
-    public class Cauldron : MonoBehaviour
+    public class Cauldron : MonoBehaviour, IPointerClickHandler
     {
         public static Cauldron instance;
 
@@ -30,6 +31,8 @@ namespace DefaultNamespace
         
         public Potions Brew()
         {
+            //effects
+            
             foreach (var recipe in RecipeBook.instance.recipes)
             {
                 if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
@@ -42,6 +45,12 @@ namespace DefaultNamespace
 
             mix.Clear();
             return Potions.Placebo;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Potions result = Brew();
+            Debug.Log(result);
         }
     }
 }

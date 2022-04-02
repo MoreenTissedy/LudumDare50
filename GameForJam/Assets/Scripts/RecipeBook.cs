@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -18,5 +19,10 @@ namespace DefaultNamespace
         }
         
         public Recipe[] recipes;
+
+        public Recipe GetRecipeForPotion(Potions potion)
+        {
+            return recipes.Where(x => x.potion == potion).ToArray()[0];
+        }
     }
 }

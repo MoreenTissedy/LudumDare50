@@ -1,5 +1,7 @@
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
+
 
 namespace DefaultNamespace
 {
@@ -18,8 +20,13 @@ namespace DefaultNamespace
             
         }
         
-        public Ingredients[] mix;
+        public List<Ingredients> mix;
 
+        public void AddToMix(Ingredients ingredient)
+        {
+            //effect
+            Cauldron.instance.mix.Add(ingredient);
+        }
         
         public Potions Brew()
         {
@@ -28,10 +35,12 @@ namespace DefaultNamespace
                 if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
                     mix.Contains(recipe.ingredient3))
                 {
+                    mix.Clear();
                     return recipe.potion;
                 }
             }
 
+            mix.Clear();
             return Potions.Placebo;
         }
     }

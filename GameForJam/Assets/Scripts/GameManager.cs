@@ -6,6 +6,8 @@ namespace DefaultNamespace
     {
         public static GameManager instance;
 
+        public IngredientsData ingredientsBook;
+
         private void Awake()
         {
             if (instance is null)

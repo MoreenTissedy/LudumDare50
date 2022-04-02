@@ -10,9 +10,9 @@ namespace DefaultNamespace
         public Potions requiredPotion;
         [Header("Right potion brewed")] public int moneyBonus; 
         public int fearBonus, fameBonus;
-        public Encounter[] bonusCards;
+        public Encounter bonusCard;
         [Header("Wrong potion brewed")] public int moneyPenalty;
         public int fearPenalty, famePenalty;
-        public Encounter[] penaltyCards;
+        public Encounter penaltyCard;
     }
 }

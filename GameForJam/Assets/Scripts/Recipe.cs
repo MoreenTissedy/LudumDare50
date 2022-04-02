@@ -6,6 +6,7 @@ namespace DefaultNamespace
     public class Recipe : ScriptableObject
     {
         public Potions potion;
+        public bool evil;
         public Ingredients ingredient1, ingredient2, ingredient3;
         public string potionName;
         public string description;

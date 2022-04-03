@@ -11,12 +11,12 @@ using  UnityEngine.UI;
         public float gradualReduce = 0.5f;
         public Statustype type;
         
-        private float initialWidth;
+        private float initialHeight;
 
         private void Start()
         {
             
-           initialWidth = mask.rect.width;
+           initialHeight = mask.rect.height;
            switch (type)
            {
                case Statustype.Money:
@@ -40,10 +40,10 @@ using  UnityEngine.UI;
             //symbol glow
             
             float ratio = (float)current / Status.max;
-            ratio *= initialWidth;
+            ratio *= initialHeight;
             if (dotween)
             {
-                mask.DOSizeDelta(new Vector2(ratio, mask.rect.height), gradualReduce)
+                mask.DOSizeDelta(new Vector2(mask.rect.width, ratio), gradualReduce)
                     .SetEase(Ease.InOutCirc);
             }
             else

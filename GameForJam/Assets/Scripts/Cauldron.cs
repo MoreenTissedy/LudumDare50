@@ -10,6 +10,8 @@ namespace DefaultNamespace
     {
         public static Cauldron instance;
 
+        public ParticleSystem mixColor, bubbleColor, splash;
+
         private void Awake()
         {
             if (instance is null)
@@ -20,18 +22,31 @@ namespace DefaultNamespace
             }
             
         }
+
+        void RandomMixColor()
+        {
+            float randomHue = Random.value;
+            Color newColor = Color.HSVToRGB(randomHue, 1, 0.7f);
+            Color lighterColor = Color.HSVToRGB(randomHue, 0.8f, 0.7f);
+            mixColor.startColor = newColor;
+            bubbleColor.startColor = lighterColor;
+        }
         
         public List<Ingredients> mix;
 
         public void AddToMix(Ingredients ingredient)
         {
-            Witch.instance.Activate();
+            //Witch.instance.Activate();
             //effect
             Debug.Log("Добавлено: "+ingredient);
             mix.Add(ingredient);
             if (mix.Count == 3)
             {
                 BrewAction();
+            }
+            else
+            {
+                RandomMixColor();
             }
         }
 
@@ -42,7 +57,6 @@ namespace DefaultNamespace
         
         public Potions Brew()
         {
-            //effects
             
             foreach (var recipe in RecipeBook.instance.recipes)
             {
@@ -53,7 +67,10 @@ namespace DefaultNamespace
                     return recipe.potion;
                 }
             }
-
+            
+            //color mix in the potion color
+            RandomMixColor();
+            
             mix.Clear();
             return Potions.Placebo;
         }

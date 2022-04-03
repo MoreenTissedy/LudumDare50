@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+#pragma warning disable CS0618
 
 
 namespace DefaultNamespace

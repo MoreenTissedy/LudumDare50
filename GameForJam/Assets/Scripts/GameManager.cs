@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
@@ -176,7 +177,21 @@ namespace DefaultNamespace
             {
                 nightConditions.Remove(condition);
             }
-            
+
+            if (text == String.Empty)
+            {
+                int rnd = Random.Range(0, 2);
+                switch (rnd)
+                {
+                    case 0:
+                    text = "Ничего необычного.";
+                    break;
+                    case 1:
+                    text = "Ночь спокойна и тиха.";
+                    break;
+                }
+            }
+
             return text;
         }
         
@@ -186,11 +201,12 @@ namespace DefaultNamespace
             
             potionPopup.Hide();
             Witch.instance.Hide();
+            HideText();
 
             string nightText = NightChecks();
             //text message
-            Debug.Log("New day!");
-            ShowText(nightText);
+            Debug.Log(nightText);
+            nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
 
             yield return new WaitForSeconds(nightDelay/2);
             
@@ -210,7 +226,7 @@ namespace DefaultNamespace
             
             yield return new WaitForSeconds(nightDelay/2);
             
-            HideText();
+            nightPanel.Hide();
             Witch.instance.Wake();
             //in case the player had put some ingredients in the pot during the night - clear the pot
             Cauldron.instance.Clear();

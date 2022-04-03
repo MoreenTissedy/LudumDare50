@@ -115,7 +115,7 @@ namespace DefaultNamespace
                 moneyUpdateTotal += currentCard.moneyBonus;
                 fearUpdateTotal += currentCard.fearBonus;
                 fameUpdateTotal += currentCard.fameBonus;
-                if (currentCard.bonusCard != null)
+                if (currentCard.bonusCard.Length>0)
                     cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard));
             }
             else if (currentCard.useSecondVariant && potion == currentCard.requiredPotion2)
@@ -123,7 +123,7 @@ namespace DefaultNamespace
                 moneyUpdateTotal += currentCard.moneyBonus2;
                 fearUpdateTotal += currentCard.fearBonus2;
                 fameUpdateTotal += currentCard.fameBonus2;
-                if (currentCard.bonusCard != null)
+                if (currentCard.bonusCard.Length>0)
                     cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard2));
             }
             else
@@ -131,7 +131,7 @@ namespace DefaultNamespace
                 moneyUpdateTotal += currentCard.moneyPenalty;
                 fearUpdateTotal += currentCard.fearPenalty;
                 fameUpdateTotal += currentCard.famePenalty;
-                if (currentCard.penaltyCard != null)
+                if (currentCard.penaltyCard.Length>0)
                     cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.penaltyCard));
             }
             

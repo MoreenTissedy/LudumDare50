@@ -145,7 +145,13 @@ namespace DefaultNamespace
                     cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.penaltyCard));
             }
             
-            //villager exits
+            //status check
+            NightStatusChecks();
+            if (gameEnded)
+            {
+                potionPopup.Hide();
+                return;
+            }
             
             //draw new card
             if (cardsDrawnToday >= cardsPerDay)

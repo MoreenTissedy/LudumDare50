@@ -14,6 +14,8 @@ namespace DefaultNamespace
         public IngredientsData ingredientsBook;
         public EncounterDeck cardDeck;
         public PotionPopup potionPopup;
+        public NightPanel nightPanel;
+        public EndingPanel endingPanel;
         public Canvas textCanvas;
         public Text textField;
         
@@ -86,15 +88,16 @@ namespace DefaultNamespace
             cardsDrawnToday ++;
             Debug.Log(currentCard.text);
             ShowText(currentCard.text);
-            //new villager enters
+            ChangeVisitor.instance.Enter(currentCard.actualVillager);
         }
 
         public void EndEncounter(Potions potion)
         {
-            //visual effects
+            ChangeVisitor.instance.Exit();
+            
             potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
             potionsTotal.Add(potion);
-            
+
             //Debug.Log(money.Value + defaultMoneyBonus);
             //status update
             if (currentCard.actualVillager != null) 

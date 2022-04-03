@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using UnityEngine.UI;
 
 namespace DefaultNamespace
@@ -29,6 +30,9 @@ namespace DefaultNamespace
         public int cardsDealtAtNight = 3;
         public float nightDelay = 4f;
         public float villagerDelay = 2f;
+
+        [Tooltip("A list of conditions for total potions brewed checks that happen at night.")]
+        public List<NightCondition> nightConditions;
         
         //stats
         [Header("for info")]
@@ -148,6 +152,31 @@ namespace DefaultNamespace
             DrawCard();
         }
 
+        string NightChecks()
+        {
+            string text = String.Empty;
+            List<NightCondition> toRemove = new List<NightCondition>(3);
+            foreach (var condition in nightConditions)
+            {
+                if (potionsTotal.Count(x => x == condition.type) < condition.threshold)
+                    continue;
+                text += condition.flavourText + " ";
+                moneyUpdateTotal += condition.moneyModifier;
+                fearUpdateTotal += condition.fearModifier;
+                fameUpdateTotal += condition.fameModifier;
+                if (condition.bonusCard != null)
+                    cardDeck.AddCardToPool(condition.bonusCard);
+                toRemove.Add(condition);
+            }
+
+            foreach (var condition in toRemove)
+            {
+                nightConditions.Remove(condition);
+            }
+            
+            return text;
+        }
+        
         private IEnumerator StartNewDay()
         {
             yield return new WaitForSeconds(villagerDelay);
@@ -155,9 +184,10 @@ namespace DefaultNamespace
             potionPopup.Hide();
             Witch.instance.Hide();
 
+            string nightText = NightChecks();
             //text message
             Debug.Log("New day!");
-            ShowText("Новый день!");
+            ShowText(nightText);
 
             yield return new WaitForSeconds(nightDelay/2);
             

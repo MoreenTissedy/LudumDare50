@@ -10,8 +10,8 @@ namespace DefaultNamespace
     
     
         public GameObject bookObject;
-        public RecipeBookEntry entry1, entry2, entry3;
-        public int entryNumber = 3;
+        public RecipeBookEntry[] entries;
+        public GameObject rightCorner, leftCorner; 
         
         public Recipe[] recipes;
 
@@ -69,29 +69,23 @@ namespace DefaultNamespace
         public void OpenBook()
         {
             bookObject.SetActive(true);
-            currentRecipe = 0;
             UpdatePage();
         }
 
         void UpdatePage()
         {
             //sound
-            entry1.Display(recipes[currentRecipe]);
-            if (recipes.Length > currentRecipe + 1)
+            for (int i = 0; i < entries.Length; i++)
             {
-                entry2.Display(recipes[currentRecipe + 1]);
-            }
-            else
-            {
-                entry2.Clear();
-            }
-            if (recipes.Length > currentRecipe + 2)
-            {
-                entry3.Display(recipes[currentRecipe + 2]);
-            }
-            else
-            {
-                entry3.Clear();
+                int num = currentRecipe + i;
+                if (num < recipes.Length)
+                {
+                    entries[i].Display(recipes[num]);
+                }
+                else
+                {
+                    entries[i].Clear();
+                }
             }
         }
 
@@ -105,9 +99,9 @@ namespace DefaultNamespace
         {
             if (!bookObject.activeInHierarchy)
                 return;
-            if (recipes.Length - 1 < currentRecipe + entryNumber )
+            if (recipes.Length - 1 < currentRecipe + entries.Length )
                 return;
-            currentRecipe += entryNumber;
+            currentRecipe += entries.Length;
             UpdatePage();
         }
 
@@ -115,9 +109,9 @@ namespace DefaultNamespace
         {
             if (!bookObject.activeInHierarchy)
                 return;
-            if (currentRecipe - entryNumber < 0)
+            if (currentRecipe - entries.Length < 0)
                 return;
-            currentRecipe -= entryNumber;
+            currentRecipe -= entries.Length;
             UpdatePage();
         }
     }

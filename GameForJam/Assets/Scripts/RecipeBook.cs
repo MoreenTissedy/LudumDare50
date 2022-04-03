@@ -11,7 +11,7 @@ namespace DefaultNamespace
     
         public GameObject bookObject;
         public RecipeBookEntry[] entries;
-        public GameObject rightCorner, leftCorner;
+        public GameObject rightCorner, leftCorner; 
         
         public Recipe[] recipes;
 

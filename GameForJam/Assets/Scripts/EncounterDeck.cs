@@ -79,6 +79,13 @@ namespace DefaultNamespace
             cardPool.Add(card);
         }
 
+        public void AddToDeck(Encounter card)
+        {
+            if (card is null)
+                return;
+            deck.Enqueue(card);
+        }
+
         public Encounter GetTopCard()
         {
             var card = deck.Dequeue();

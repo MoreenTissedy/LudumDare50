@@ -32,7 +32,7 @@ namespace DefaultNamespace
             }
         }
 
-        public Encounter GetRandom(Encounter[] set)
+        public static Encounter GetRandom(Encounter[] set)
         {
             if (set.Length > 0)
             {

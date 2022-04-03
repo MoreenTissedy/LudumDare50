@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -16,7 +17,7 @@ namespace DefaultNamespace
         public EncounterDeck cardDeck;
         public PotionPopup potionPopup;
         public NightPanel nightPanel;
-        public EndingPanel endingPanel;
+        public EndingScreen endingPanel;
         public Canvas textCanvas;
         public Text textField;
         
@@ -34,6 +35,11 @@ namespace DefaultNamespace
         public float nightDelay = 4f;
         public float villagerDelay = 2f;
 
+        [Tooltip("High money, high fame, high fear, low fame, low fear")]
+        public Ending[] endings;
+        public int threshold = 70;
+        public Encounter[] highFameCards, highFearCards;
+
         [Tooltip("A list of conditions for total potions brewed checks that happen at night.")]
         public List<NightCondition> nightConditions;
         
@@ -42,14 +48,17 @@ namespace DefaultNamespace
         public Encounter currentCard;
         public List<Potions> potionsTotal;
 
+        public bool gameEnded;
+
         private void Awake()
         {
-            if (instance is null)
-                instance = this;
-            else
-            {
-                Debug.LogError("double singleton:"+this.GetType().Name);
-            }
+            // if (instance is null)
+            //     instance = this;
+            // else
+            // {
+            //     Debug.LogError("double singleton:"+this.GetType().Name);
+            // }
+            instance = this;
 
             potionsTotal = new List<Potions>(15);
 
@@ -95,6 +104,7 @@ namespace DefaultNamespace
         public void EndEncounter(Potions potion)
         {
             ChangeVisitor.instance.Exit();
+            HideText();
             
             potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
             potionsTotal.Add(potion);
@@ -116,7 +126,7 @@ namespace DefaultNamespace
                 fearUpdateTotal += currentCard.fearBonus;
                 fameUpdateTotal += currentCard.fameBonus;
                 if (currentCard.bonusCard.Length>0)
-                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard));
+                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.bonusCard));
             }
             else if (currentCard.useSecondVariant && potion == currentCard.requiredPotion2)
             {
@@ -124,7 +134,7 @@ namespace DefaultNamespace
                 fearUpdateTotal += currentCard.fearBonus2;
                 fameUpdateTotal += currentCard.fameBonus2;
                 if (currentCard.bonusCard.Length>0)
-                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard2));
+                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.bonusCard2));
             }
             else
             {
@@ -132,7 +142,7 @@ namespace DefaultNamespace
                 fearUpdateTotal += currentCard.fearPenalty;
                 fameUpdateTotal += currentCard.famePenalty;
                 if (currentCard.penaltyCard.Length>0)
-                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.penaltyCard));
+                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.penaltyCard));
             }
             
             //villager exits
@@ -194,6 +204,63 @@ namespace DefaultNamespace
 
             return text;
         }
+
+        IEnumerator EndGame()
+        {
+            gameEnded = true;
+            yield return new WaitUntil(() => Input.anyKeyDown);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        }
+        
+        void NightStatusChecks()
+        {
+            //endings
+            //[Tooltip("High money, high fame, high fear, low fame, low fear")]
+            bool endingReached = false;
+            if (fame.Value() >= statusBarsMax)
+            {
+                endingPanel.Show(endings[1]);
+                endingReached = true;
+            }
+            else if (fear.Value() >= statusBarsMax)
+            {
+                endingPanel.Show(endings[2]);
+                endingReached = true;
+            }
+            else if (money.Value() >= statusBarsMax)
+            {
+                endingPanel.Show(endings[0]);
+                endingReached = true;
+
+            }
+            else if (fame.Value() <= 0)
+            {
+                endingPanel.Show(endings[3]);
+                endingReached = true;
+            }
+            else if (fear.Value() <= 0)
+            {
+                endingPanel.Show(endings[4]);
+                endingReached = true;
+            }
+
+            if (endingReached)
+            {
+                StartCoroutine(EndGame());
+                return;
+            }
+            
+            //high status cards
+            if (fame.Value() > threshold)
+            {
+                cardDeck.AddToDeck(Encounter.GetRandom(highFameCards));
+            }
+
+            if (fear.Value() > threshold)
+            {
+                cardDeck.AddToDeck(Encounter.GetRandom(highFearCards));
+            }
+        }
         
         private IEnumerator StartNewDay()
         {
@@ -202,6 +269,10 @@ namespace DefaultNamespace
             potionPopup.Hide();
             Witch.instance.Hide();
             HideText();
+            
+            NightStatusChecks();
+            if (gameEnded)
+                yield break;
 
             string nightText = NightChecks();
             //text message
@@ -232,6 +303,8 @@ namespace DefaultNamespace
             Cauldron.instance.Clear();
             DrawCard();
         }
+        
+        
 
     }
 }

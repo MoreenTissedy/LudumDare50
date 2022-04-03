@@ -15,12 +15,13 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            if (instance is null)
-                instance = this;
-            else
-            {
-                Debug.LogError("double singleton:"+this.GetType().Name);
-            }
+            // if (instance is null)
+            //     instance = this;
+            // else
+            // {
+            //     Debug.LogError("double singleton:"+this.GetType().Name);
+            // }
+            instance = this;
             
         }
 

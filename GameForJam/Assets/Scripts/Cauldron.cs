@@ -25,6 +25,7 @@ namespace DefaultNamespace
 
         public void AddToMix(Ingredients ingredient)
         {
+            Witch.instance.Activate();
             //effect
             Debug.Log("Добавлено: "+ingredient);
             mix.Add(ingredient);
@@ -32,6 +33,11 @@ namespace DefaultNamespace
             {
                 BrewAction();
             }
+        }
+
+        public void Clear()
+        {
+            mix.Clear();
         }
         
         public Potions Brew()
@@ -60,7 +66,10 @@ namespace DefaultNamespace
         private void BrewAction()
         {
             Potions result = Brew();
+            Witch.instance.Activate();
             Debug.Log("Сварено зелье: " + result);
+            //TODO: potion popup
+            GameManager.instance.ShowText("Сварено зелье: " + result);
             GameManager.instance.EndEncounter(result);
         }
     }

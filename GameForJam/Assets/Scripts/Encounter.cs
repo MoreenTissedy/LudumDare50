@@ -14,5 +14,16 @@ namespace DefaultNamespace
         [Header("Wrong potion brewed")] public int moneyPenalty;
         public int fearPenalty, famePenalty;
         public Encounter penaltyCard;
+
+        [HideInInspector] public Villager actualVillager;
+
+        public void Init()
+        {
+            if (villager.Length > 0)
+            {
+                int random = Random.Range(0, villager.Length);
+                actualVillager = villager[random];
+            }
+        }
     }
 }

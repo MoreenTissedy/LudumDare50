@@ -6,5 +6,8 @@ namespace DefaultNamespace
     public class Villager : ScriptableObject
     {
         public Sprite image;
+        public int fameBonus;
+        public int moneyBonus;
+        public int fearBonus;
     }
 }

@@ -4,19 +4,30 @@ using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using  UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-    public class StatusBar : MonoBehaviour
+namespace DefaultNamespace
+{
+    public class StatusBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public RectTransform mask;
         public float gradualReduce = 0.5f;
         public Statustype type;
+        private Text tooltip;
         
         private float initialHeight;
 
         private void Start()
         {
-            
+           tooltip = GetComponentInChildren<Text>();
+           if (tooltip != null)
+            {   
+                tooltip.gameObject.SetActive(false);
+            }
+           
+ 
            initialHeight = mask.rect.height;
+           
            switch (type)
            {
                case Statustype.Money:
@@ -52,8 +63,22 @@ using  UnityEngine.UI;
             }
         }
 
-    }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (tooltip is null)
+                return;
+            tooltip.gameObject.SetActive(true);
+        }
 
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (tooltip is null)
+                return;
+            tooltip.gameObject.SetActive(false);
+        }
+
+    }
+}
 
 
     

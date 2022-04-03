@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -25,11 +27,6 @@ namespace DefaultNamespace
             {
                 Debug.LogError("double singleton:"+this.GetType().Name);
             }
-            
-        }
-
-        private void Start()
-        {
             CloseBook();
         }
 
@@ -69,6 +66,12 @@ namespace DefaultNamespace
         public void OpenBook()
         {
             bookObject.SetActive(true);
+            StartCoroutine(UpdateWithDelay());
+        }
+
+        IEnumerator UpdateWithDelay()
+        {
+            yield return null;
             UpdatePage();
         }
 
@@ -102,6 +105,8 @@ namespace DefaultNamespace
             if (recipes.Length - 1 < currentRecipe + entries.Length )
                 return;
             currentRecipe += entries.Length;
+            leftCorner.SetActive(true);
+            rightCorner.SetActive(false);
             UpdatePage();
         }
 
@@ -112,6 +117,8 @@ namespace DefaultNamespace
             if (currentRecipe - entries.Length < 0)
                 return;
             currentRecipe -= entries.Length;
+            leftCorner.SetActive(false);
+            rightCorner.SetActive(true);
             UpdatePage();
         }
     }

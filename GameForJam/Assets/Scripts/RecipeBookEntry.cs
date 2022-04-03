@@ -13,6 +13,11 @@ namespace DefaultNamespace
 
         public void Display(Recipe recipe)
         {
+            
+            image.enabled = true;
+            ingredient1.enabled = true;
+            ingredient2.enabled = true;
+            ingredient3.enabled = true;
             fullName.text = recipe.potionName;
             description.text = recipe.description;
             image.sprite = recipe.image;
@@ -25,10 +30,10 @@ namespace DefaultNamespace
         {
             fullName.text = "";
             description.text = "";
-            image.sprite = null;
-            ingredient1.sprite = null;
-            ingredient2.sprite = null;
-            ingredient3.sprite = null;
+            image.enabled = false;
+            ingredient1.enabled = false;
+            ingredient2.enabled = false;
+            ingredient3.enabled = false;
         }
     }
 }

@@ -2770,13 +2770,15 @@ MonoBehaviour:
   textCanvas: {fileID: 332701978}
   textField: {fileID: 555691532}
   fameMoneyCoef: 0.1
+  statusBarsMax: 100
+  statusBarsStart: 20
   cardsPerDay: 3
   cardsDealtAtNight: 3
   nightDelay: 4
   villagerDelay: 2
+  nightConditions: []
   currentCard: {fileID: 0}
-  rightPotionsTotal: 
-  wrongPotionsTotal: 
+  potionsTotal: 
 --- !u!4 &1745953328
 Transform:
   m_ObjectHideFlags: 0
@@ -3140,7 +3142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: f64f87050cd07d8478945816f1f7486d, type: 2}
   initialSkinName: 
-  initialFlipX: 0
+  initialFlipX: 1
   initialFlipY: 0
   updateWhenInvisible: 3
   separatorSlotNames: []

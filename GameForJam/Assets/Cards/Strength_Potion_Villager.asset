@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
   m_Name: Strength_Potion_Villager
   m_EditorClassIdentifier: 
-  villager: []
+  villager:
+  - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
   text: "\u0427\u0442\u043E-\u0442\u043E \u044F \u0441\u043B\u0430\u0431\u044B\u043C
     \u0441\u0442\u0430\u043B \u0441\u043E\u0432\u0441\u0435\u043C \u0432 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435
     \u0432\u0440\u0435\u043C\u044F. \u041C\u043E\u043B\u043E\u0442 \u0435\u043B\u0435
@@ -28,10 +29,10 @@ MonoBehaviour:
   fearPenalty: -5
   famePenalty: -5
   penaltyCard: []
-  useSecondVariant: 0
+  useSecondVariant: 1
   requiredPotion2: 3
   moneyBonus2: 0
-  fearBonus2: 0
+  fearBonus2: 15
   fameBonus2: 0
   bonusCard2: []
   actualVillager: {fileID: 0}

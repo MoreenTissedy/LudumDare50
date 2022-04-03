@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
   m_Name: Love_Potion_Villager
   m_EditorClassIdentifier: 
-  villager: []
+  villager:
+  - {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
   text: "\u041F\u0440\u0438\u0432\u0435\u0442, \u0441\u043E\u0441\u0435\u0434\u0443\u0448\u043A\u0430!
     \u042F \u0442\u0443\u0442 \u0441\u0435\u0431\u0435 \u043C\u0443\u0436\u0435\u043D\u044C\u043A\u0430,
     \u043D\u0430\u043A\u043E\u043D\u0435\u0446, \u043F\u043E\u0434\u043E\u0431\u0440\u0430\u043B\u0430.
@@ -26,15 +27,16 @@ MonoBehaviour:
   moneyBonus: 0
   fearBonus: 10
   fameBonus: 0
-  bonusCard: []
+  bonusCard:
+  - {fileID: 11400000, guid: d24aac84b6fc71a448555d0149f86403, type: 2}
   moneyPenalty: 5
   fearPenalty: 0
   famePenalty: 5
   penaltyCard: []
-  useSecondVariant: 0
+  useSecondVariant: 1
   requiredPotion2: 3
   moneyBonus2: 0
-  fearBonus2: 0
+  fearBonus2: 15
   fameBonus2: 0
   bonusCard2: []
   actualVillager: {fileID: 0}

@@ -68,8 +68,7 @@ namespace DefaultNamespace
             Potions result = Brew();
             Witch.instance.Activate();
             Debug.Log("Сварено зелье: " + result);
-            //TODO: potion popup
-            GameManager.instance.ShowText("Сварено зелье: " + result);
+            //GameManager.instance.ShowText("Сварено зелье: " + result);
             GameManager.instance.EndEncounter(result);
         }
     }

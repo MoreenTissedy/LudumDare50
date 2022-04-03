@@ -2,14 +2,15 @@ namespace DefaultNamespace
 {
     public class Status
     {
-        private int statValue = 20;
+        private int statValue;
         private int min = 0;
-        public static int max = 100;
+        public static int max = 50;
         public event System.Action changed;
 
         public Status()
         {
-            
+            statValue = GameManager.instance.statusBarsStart;
+            max = GameManager.instance.statusBarsMax;
         }
 
         public int Value()

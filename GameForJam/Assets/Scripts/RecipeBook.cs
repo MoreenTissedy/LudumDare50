@@ -45,7 +45,15 @@ namespace DefaultNamespace
 
         public Recipe GetRecipeForPotion(Potions potion)
         {
-            return recipes.Where(x => x.potion == potion).ToArray()[0];
+            var found = recipes.Where(x => x.potion == potion).ToArray();
+            if (found.Length > 0)
+            {
+                return found[0];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         void ToggleBook()

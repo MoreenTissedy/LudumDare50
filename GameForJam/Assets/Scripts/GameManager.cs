@@ -12,11 +12,14 @@ namespace DefaultNamespace
 
         public IngredientsData ingredientsBook;
         public EncounterDeck cardDeck;
+        public PotionPopup potionPopup;
         public Canvas textCanvas;
         public Text textField;
         
         public Status money, fear, fame;
         public float fameMoneyCoef = 0.1f;
+        public int statusBarsMax = 100;
+        public int statusBarsStart = 20;
 
         private int moneyUpdateTotal, fameUpdateTotal, fearUpdateTotal;
 
@@ -86,9 +89,8 @@ namespace DefaultNamespace
 
         public void EndEncounter(Potions potion)
         {
-            //HideText();
             //visual effects
-            //potion popup
+            potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
             
             //Debug.Log(money.Value + defaultMoneyBonus);
             //status update
@@ -137,6 +139,7 @@ namespace DefaultNamespace
         private IEnumerator DrawCardWithDelay()
         {
             yield return new WaitForSeconds(villagerDelay);
+            potionPopup.Hide();
             DrawCard();
         }
 
@@ -144,6 +147,7 @@ namespace DefaultNamespace
         {
             yield return new WaitForSeconds(villagerDelay);
             
+            potionPopup.Hide();
             Witch.instance.Hide();
 
             //text message

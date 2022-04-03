@@ -33,8 +33,7 @@ namespace DefaultNamespace
         //stats
         [Header("for info")]
         public Encounter currentCard;
-        public List<Potions> rightPotionsTotal;
-        public List<Potions> wrongPotionsTotal;
+        public List<Potions> potionsTotal;
 
         private void Awake()
         {
@@ -45,8 +44,7 @@ namespace DefaultNamespace
                 Debug.LogError("double singleton:"+this.GetType().Name);
             }
 
-            rightPotionsTotal = new List<Potions>(15);
-            wrongPotionsTotal = new List<Potions>(15);
+            potionsTotal = new List<Potions>(15);
 
             money = new Status();
             fame = new Status();
@@ -91,6 +89,7 @@ namespace DefaultNamespace
         {
             //visual effects
             potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
+            potionsTotal.Add(potion);
             
             //Debug.Log(money.Value + defaultMoneyBonus);
             //status update
@@ -108,18 +107,24 @@ namespace DefaultNamespace
                 moneyUpdateTotal += currentCard.moneyBonus;
                 fearUpdateTotal += currentCard.fearBonus;
                 fameUpdateTotal += currentCard.fameBonus;
-                rightPotionsTotal.Add(potion);
                 if (currentCard.bonusCard != null)
-                    cardDeck.AddCardToPool(currentCard.bonusCard);
+                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard));
+            }
+            else if (currentCard.useSecondVariant && potion == currentCard.requiredPotion2)
+            {
+                moneyUpdateTotal += currentCard.moneyBonus2;
+                fearUpdateTotal += currentCard.fearBonus2;
+                fameUpdateTotal += currentCard.fameBonus2;
+                if (currentCard.bonusCard != null)
+                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.bonusCard2));
             }
             else
             {
                 moneyUpdateTotal += currentCard.moneyPenalty;
                 fearUpdateTotal += currentCard.fearPenalty;
                 fameUpdateTotal += currentCard.famePenalty;
-                wrongPotionsTotal.Add(potion);
                 if (currentCard.penaltyCard != null)
-                    cardDeck.AddCardToPool(currentCard.penaltyCard);
+                    cardDeck.AddCardToPool(currentCard.GetRandom(currentCard.penaltyCard));
             }
             
             //villager exits

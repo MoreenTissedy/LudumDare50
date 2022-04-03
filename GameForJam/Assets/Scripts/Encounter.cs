@@ -10,10 +10,16 @@ namespace DefaultNamespace
         public Potions requiredPotion;
         [Header("Right potion brewed")] public int moneyBonus; 
         public int fearBonus, fameBonus;
-        public Encounter bonusCard;
+        public Encounter[] bonusCard;
         [Header("Wrong potion brewed")] public int moneyPenalty;
         public int fearPenalty, famePenalty;
-        public Encounter penaltyCard;
+        public Encounter[] penaltyCard;
+        [Header("Second potion variant")] 
+        public bool useSecondVariant;
+        public Potions requiredPotion2;
+        public int moneyBonus2; 
+        public int fearBonus2, fameBonus2;
+        public Encounter[] bonusCard2;
 
         [HideInInspector] public Villager actualVillager;
 
@@ -24,6 +30,17 @@ namespace DefaultNamespace
                 int random = Random.Range(0, villager.Length);
                 actualVillager = villager[random];
             }
+        }
+
+        public Encounter GetRandom(Encounter[] set)
+        {
+            if (set.Length > 0)
+            {
+                int random = Random.Range(0, set.Length);
+                return (set[random]);
+            }
+
+            return null;
         }
     }
 }

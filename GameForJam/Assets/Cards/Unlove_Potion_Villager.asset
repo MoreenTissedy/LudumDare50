@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
   m_Name: Unlove_Potion_Villager
   m_EditorClassIdentifier: 
-  villager: []
+  villager:
+  - {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
   text: "\u042D\u0442\u0430 \u0441\u0442\u0435\u0440\u0432\u0430 \u0443 \u043C\u0435\u043D\u044F
     \u043C\u0443\u0436\u0438\u043A\u0430 \u0443\u0432\u0435\u043B\u0430 \u043C\u0430\u0433\u0438\u0435\u0439
     \u0447\u0435\u0440\u043D\u043E\u0439. \u0417\u043D\u0430\u044E, \u0447\u0442\u043E
@@ -24,15 +25,17 @@ MonoBehaviour:
   moneyBonus: 0
   fearBonus: -10
   fameBonus: 10
-  bonusCard: []
+  bonusCard:
+  - {fileID: 11400000, guid: 6bd14ff3c1e1e1a45bfaa1195df2e5a8, type: 2}
   moneyPenalty: 0
   fearPenalty: 20
   famePenalty: -5
-  penaltyCard: []
-  useSecondVariant: 0
+  penaltyCard:
+  - {fileID: 11400000}
+  useSecondVariant: 1
   requiredPotion2: 10
   moneyBonus2: 0
-  fearBonus2: 0
-  fameBonus2: 0
+  fearBonus2: 5
+  fameBonus2: -5
   bonusCard2: []
   actualVillager: {fileID: 0}

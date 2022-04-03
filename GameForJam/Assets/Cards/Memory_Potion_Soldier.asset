@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
   m_Name: Memory_Potion_Soldier
   m_EditorClassIdentifier: 
-  villager: []
+  villager:
+  - {fileID: 11400000, guid: f5bbd271ef2934c4db8f1c277604d395, type: 2}
   text: "\u0414\u043E\u0431\u0440\u043E\u0433\u043E \u0442\u0435\u0431\u0435 \u0434\u043D\u044F,
     \u043A\u043E\u043B\u0434\u0443\u043D\u044C\u044F. \u042F \u0443\u0436\u0435 \u043F\u0430\u0440\u0443
     \u043B\u0435\u0442, \u043A\u0430\u043A \u0441 \u0432\u043E\u0439\u043D\u044B
@@ -31,10 +32,10 @@ MonoBehaviour:
   fearPenalty: -10
   famePenalty: -10
   penaltyCard: []
-  useSecondVariant: 0
+  useSecondVariant: 1
   requiredPotion2: 9
   moneyBonus2: 0
-  fearBonus2: 0
-  fameBonus2: 0
+  fearBonus2: 10
+  fameBonus2: -10
   bonusCard2: []
   actualVillager: {fileID: 0}

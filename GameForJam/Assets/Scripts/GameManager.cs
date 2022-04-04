@@ -133,12 +133,15 @@ namespace DefaultNamespace
             cardsDrawnToday ++;
             Debug.Log(currentCard.text);
             ShowText(currentCard.text);
-            ChangeVisitor.instance.Enter(currentCard.actualVillager);
+            //ChangeVisitor.instance.Enter(currentCard.actualVillager);
+            VisitorManager.instance.EnterDefault();
+            //VisitorManager.instance.Enter(currentCard.actualVillager);
         }
 
         public void EndEncounter(Potions potion)
         {
-            ChangeVisitor.instance.Exit();
+            //ChangeVisitor.instance.Exit();
+            VisitorManager.instance.Exit();
             HideText();
             
             potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));

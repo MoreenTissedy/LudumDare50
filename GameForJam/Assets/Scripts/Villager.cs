@@ -1,3 +1,5 @@
+using Spine;
+using Spine.Unity;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -6,6 +8,7 @@ namespace DefaultNamespace
     public class Villager : ScriptableObject
     {
         public Sprite image;
+        public SkeletonDataAsset animation;
         public int fameBonus;
         public int moneyBonus;
         public int fearBonus;

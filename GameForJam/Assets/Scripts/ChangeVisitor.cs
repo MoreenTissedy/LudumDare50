@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Spine.Unity;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -9,6 +10,7 @@ public class ChangeVisitor : MonoBehaviour
         public static ChangeVisitor instance;
 
         private SpriteRenderer rend;
+        private SkeletonAnimation anim;
 
             private void Awake()
             {

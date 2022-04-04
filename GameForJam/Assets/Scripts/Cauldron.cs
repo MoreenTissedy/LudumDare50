@@ -33,6 +33,14 @@ namespace DefaultNamespace
             mixColor.startColor = newColor;
             bubbleColor.startColor = lighterColor;
         }
+
+        void MixColor(Color color)
+        {
+            Color.RGBToHSV(color, out float h, out float s, out float v);
+            Color lighterColor = Color.HSVToRGB(h, s - 0.2f, v);
+            mixColor.startColor = color;
+            bubbleColor.startColor = lighterColor;
+        }
         
         public List<Ingredients> mix;
 
@@ -66,13 +74,13 @@ namespace DefaultNamespace
                     mix.Contains(recipe.ingredient3))
                 {
                     mix.Clear();
+                    //color mix in the potion color
+                    MixColor(recipe.color);
                     return recipe.potion;
                 }
             }
             
-            //color mix in the potion color
             RandomMixColor();
-            
             mix.Clear();
             return Potions.Placebo;
         }

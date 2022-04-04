@@ -88,6 +88,7 @@ namespace DefaultNamespace
 
         public void DrawCard()
         {
+            Cauldron.instance.Clear();
             currentCard = cardDeck.GetTopCard();
             if (currentCard == null)
             {
@@ -215,8 +216,14 @@ namespace DefaultNamespace
         {
             gameEnded = true;
             yield return new WaitUntil(() => Input.anyKeyDown);
+            ReloadGame();
+        }
+
+        public void ReloadGame()
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
+        
         
         void NightStatusChecks()
         {

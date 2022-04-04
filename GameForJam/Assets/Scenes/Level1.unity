@@ -830,7 +830,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 127650729}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1745953327}
+        m_TargetAssemblyTypeName: DefaultNamespace.GameManager, Assembly-CSharp
+        m_MethodName: ReloadGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &127650729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1312,6 +1324,81 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdd1c7966aec4fbcad6c7fbbe1255045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &332229284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 332229285}
+  - component: {fileID: 332229287}
+  - component: {fileID: 332229286}
+  m_Layer: 0
+  m_Name: Bottle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &332229285
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332229284}
+  m_LocalRotation: {x: -0, y: -0, z: -0.036975563, w: 0.99931616}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.36, y: 0.36, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1590777773}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -4.238}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -165.5, y: -1}
+  m_SizeDelta: {x: 523.2954, y: 293.18628}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &332229286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332229284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f504661554f4a0a4c97dfeb5fbe61956, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &332229287
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332229284}
+  m_CullTransparentMesh: 0
 --- !u!1 &332701975
 GameObject:
   m_ObjectHideFlags: 0
@@ -4070,7 +4157,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1590777773}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5525,7 +5612,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fd17cb886e7197343aaa9499d32eeef9, type: 3}
-    m_FontSize: 50
+    m_FontSize: 53
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 5
@@ -6080,6 +6167,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1725612734}
+  - {fileID: 332229285}
   - {fileID: 1035069296}
   m_Father: {fileID: 1261502595}
   m_RootOrder: 0
@@ -6296,8 +6384,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -167, y: 2.5999908}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -166.4, y: -2}
+  m_SizeDelta: {x: 102.6308, y: 102.3916}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1725612735
 MonoBehaviour:
@@ -6319,7 +6407,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7aeda719f05c6a2479c1967cad3a4b61, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b3b8720bb4f60cb40b861735054aa602, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6491,6 +6579,7 @@ MonoBehaviour:
   potionPopup: {fileID: 1261502599}
   nightPanel: {fileID: 1032199746}
   endingPanel: {fileID: 917117110}
+  pauseMenu: {fileID: 339440332}
   textCanvas: {fileID: 332701978}
   textField: {fileID: 555691532}
   fameMoneyCoef: 0
@@ -6512,7 +6601,12 @@ MonoBehaviour:
   highFearCards:
   - {fileID: 11400000, guid: be7723198bf051944ab852e89356d5a7, type: 2}
   nightConditions:
+  - {fileID: 11400000, guid: 098fc3d855ff8c8489253e7cb455214b, type: 2}
+  - {fileID: 11400000, guid: 88fa0b168ded71f4d8418f4070ffeef7, type: 2}
+  - {fileID: 11400000, guid: 86c3082de38992145bfd9f7a8d480006, type: 2}
+  - {fileID: 11400000, guid: 9ee7ff0ec96aae942831c9c04c886fa1, type: 2}
   - {fileID: 11400000, guid: d08ae62d5e87936d488cb142f376f895, type: 2}
+  - {fileID: 11400000, guid: cc2943d331bdf904782010883399bea3, type: 2}
   currentCard: {fileID: 0}
   potionsTotal: 
   gameEnded: 0
@@ -6943,7 +7037,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0020141602, y: -0.00030517578}
+  m_AnchoredPosition: {x: 0.001953125, y: -0.00024414062}
   m_SizeDelta: {x: 0.0041503906, y: -0.00024414062}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1946564738
@@ -7489,7 +7583,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: fd17cb886e7197343aaa9499d32eeef9, type: 3}
-    m_FontSize: 53
+    m_FontSize: 43
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
@@ -7500,8 +7594,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043B\u044E\u0431\u0443\u044E
-    \u043A\u043B\u0430\u0432\u0438\u0448\u0443"
+  m_Text: "\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0435\u0449\u0451
+    \u0440\u0430\u0437"
 --- !u!222 &2101656033
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8132,6 +8226,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 945104906}
     m_Modifications:
+    - target: {fileID: 2377586049068846240, guid: 68b26f641269a1747b23dec93e32fd48, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6018012426574356159, guid: 68b26f641269a1747b23dec93e32fd48, type: 3}
       propertyPath: m_Name
       value: RecipeLeft

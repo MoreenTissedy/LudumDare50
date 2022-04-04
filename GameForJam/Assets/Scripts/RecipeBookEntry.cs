@@ -21,6 +21,7 @@ namespace DefaultNamespace
             fullName.text = recipe.potionName;
             description.text = recipe.description;
             image.sprite = recipe.image;
+            image.color = recipe.color;
             ingredient1.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient1).image;
             ingredient2.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient2).image;
             ingredient3.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient3).image;

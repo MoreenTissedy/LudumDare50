@@ -36,6 +36,14 @@ namespace DefaultNamespace
         public float nightDelay = 4f;
         public float villagerDelay = 2f;
 
+        [Space(5)] 
+        public int wrongPotionsCheck1 = 5;
+        public int wrongPotionsFameMod1 = -20;
+        public int wrongPotionsCheck2 = 10;
+        public int wrongPotionsFameMod2 = -50;
+        private bool check1passed, check2passed;
+        [Space(5)]
+
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
         public Ending[] endings;
         public int threshold = 70;
@@ -48,6 +56,7 @@ namespace DefaultNamespace
         [Header("for info")]
         public Encounter currentCard;
         public List<Potions> potionsTotal;
+        public int wrongPotionsCount;
 
         public bool gameEnded;
 
@@ -159,6 +168,7 @@ namespace DefaultNamespace
             }
             else
             {
+                wrongPotionsCount++;
                 moneyUpdateTotal += currentCard.moneyPenalty;
                 fearUpdateTotal += currentCard.fearPenalty;
                 fameUpdateTotal += currentCard.famePenalty;
@@ -214,6 +224,8 @@ namespace DefaultNamespace
             {
                 nightConditions.Remove(condition);
             }
+            
+            WrongPotionCheck(ref text);
 
             if (text == String.Empty)
             {
@@ -231,6 +243,7 @@ namespace DefaultNamespace
 
             return text;
         }
+
 
         IEnumerator EndGame()
         {
@@ -299,6 +312,22 @@ namespace DefaultNamespace
                 cardDeck.AddToDeck(Encounter.GetRandom(highFearCards));
             }
         }
+
+        void WrongPotionCheck(ref string text)
+        {
+            if (!check2passed && wrongPotionsCount >= wrongPotionsCheck2)
+            {
+                check2passed = true;
+                fame.Add(wrongPotionsFameMod2);
+                text += "Крестьяне презрительно отзываются о ваших способностях: «Да она ни одного зелья правильно сварить не может!» ";
+            }
+            else if (!check1passed && wrongPotionsCount >= wrongPotionsCheck1)
+            {
+                check1passed = true;
+                fame.Add(wrongPotionsFameMod1);
+                text += "Люди фыркают и поджимают губы, когда слышат ваше имя — они недовольны тем, что ваши зелья им не помогают. ";
+            }
+        }
         
         private IEnumerator StartNewDay()
         {
@@ -316,6 +345,10 @@ namespace DefaultNamespace
             //text message
             Debug.Log(nightText);
             nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
+            
+            NightStatusChecks();
+            if (gameEnded)
+                yield break;
 
             yield return new WaitForSeconds(nightDelay/2);
             

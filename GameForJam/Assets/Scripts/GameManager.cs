@@ -259,6 +259,7 @@ namespace DefaultNamespace
         IEnumerator EndGame()
         {
             gameEnded = true;
+            yield return new WaitForSeconds(1f);
             yield return new WaitUntil(() => Input.anyKeyDown);
             ReloadGame();
         }
@@ -373,8 +374,9 @@ namespace DefaultNamespace
             fame.Add(fameUpdateTotal);
             fameUpdateTotal = 0;
             
-            yield return new WaitForSeconds(nightDelay/2);
-            
+            //yield return new WaitForSeconds(nightDelay/2);
+            yield return new WaitUntil(() => Input.anyKeyDown);
+
             nightPanel.Hide();
             Witch.instance.Wake();
             //in case the player had put some ingredients in the pot during the night - clear the pot

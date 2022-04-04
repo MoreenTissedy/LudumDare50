@@ -134,8 +134,8 @@ namespace DefaultNamespace
             Debug.Log(currentCard.text);
             ShowText(currentCard.text);
             //ChangeVisitor.instance.Enter(currentCard.actualVillager);
-            VisitorManager.instance.EnterDefault();
-            //VisitorManager.instance.Enter(currentCard.actualVillager);
+            //VisitorManager.instance.EnterDefault();
+            VisitorManager.instance.Enter(currentCard.actualVillager);
         }
 
         public void EndEncounter(Potions potion)

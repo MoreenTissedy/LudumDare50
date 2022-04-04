@@ -35,6 +35,7 @@ namespace DefaultNamespace
 
         void Hide(TrackEntry trackEntry)
         {
+            anim.AnimationState.Complete -= Hide;
             rend.enabled = false;
         }
     }

@@ -19,6 +19,8 @@ namespace DefaultNamespace
 
         private int currentRecipe = 0;
 
+        public AudioSource left, right;
+
         private void Awake()
         {
             // if (instance is null)
@@ -66,6 +68,7 @@ namespace DefaultNamespace
 
         public void OpenBook()
         {
+            left.Play();
             bookObject.SetActive(true);
             StartCoroutine(UpdateWithDelay());
         }
@@ -95,7 +98,7 @@ namespace DefaultNamespace
 
         public void CloseBook()
         {
-            //sound
+            right.Play();
             bookObject.SetActive(false);
         }
 
@@ -109,6 +112,7 @@ namespace DefaultNamespace
             leftCorner.SetActive(true);
             rightCorner.SetActive(false);
             UpdatePage();
+            right.Play();
         }
 
         public void PrevPage()
@@ -121,6 +125,7 @@ namespace DefaultNamespace
             leftCorner.SetActive(false);
             rightCorner.SetActive(true);
             UpdatePage();
+            left.Play();
         }
     }
 }

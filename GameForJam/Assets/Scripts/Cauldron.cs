@@ -14,7 +14,10 @@ namespace DefaultNamespace
 
         public ParticleSystem mixColor, bubbleColor, splash;
         public float splashDelay = 2f;
+        public AudioClip brew, add;
+        private AudioSource audios;
 
+        public List<Ingredients> mix;
         private void Awake()
         {
             // if (instance is null)
@@ -25,6 +28,7 @@ namespace DefaultNamespace
             // }
             instance = this;
             splash.Stop();
+            audios = GetComponent<AudioSource>();
         }
 
         void RandomMixColor()
@@ -52,12 +56,12 @@ namespace DefaultNamespace
             splash.startColor = color;
         }
         
-        public List<Ingredients> mix;
 
         public void AddToMix(Ingredients ingredient)
         {
             //Witch.instance.Activate();
             splash.Play();
+            audios.PlayOneShot(add);
             Debug.Log("Добавлено: "+ingredient);
             mix.Add(ingredient);
             if (mix.Count == 3)
@@ -77,7 +81,7 @@ namespace DefaultNamespace
         
         public Potions Brew()
         {
-            
+            audios.PlayOneShot(brew);
             foreach (var recipe in RecipeBook.instance.recipes)
             {
                 if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&

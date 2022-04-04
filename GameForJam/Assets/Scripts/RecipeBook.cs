@@ -35,9 +35,9 @@ namespace DefaultNamespace
         {
             if (Input.GetKeyDown(KeyCode.Space))
                 ToggleBook();
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
                 NextPage();
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
                 PrevPage();
         }
 

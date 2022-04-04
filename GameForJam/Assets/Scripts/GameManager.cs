@@ -18,6 +18,7 @@ namespace DefaultNamespace
         public PotionPopup potionPopup;
         public NightPanel nightPanel;
         public EndingScreen endingPanel;
+        public GameObject pauseMenu;
         public Canvas textCanvas;
         public Text textField;
         
@@ -67,6 +68,25 @@ namespace DefaultNamespace
             fear = new Status();
             
             HideText();
+            pauseMenu.SetActive(false);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (RecipeBook.instance.bookObject.activeInHierarchy)
+                    RecipeBook.instance.CloseBook();
+                else
+                {
+                    pauseMenu.SetActive(true);
+                }
+            }
+        }
+
+        public void Continue()
+        {
+            pauseMenu.SetActive(false);
         }
 
         public void ShowText(string text)
@@ -222,6 +242,11 @@ namespace DefaultNamespace
         public void ReloadGame()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        }
+
+        public void Exit()
+        {
+            Application.Quit();
         }
         
         

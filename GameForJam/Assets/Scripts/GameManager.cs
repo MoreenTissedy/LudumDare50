@@ -84,10 +84,15 @@ namespace DefaultNamespace
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+
                 if (RecipeBook.instance.bookObject.activeInHierarchy)
+                {
+                    Debug.Log("recipe book closed");
                     RecipeBook.instance.CloseBook();
+                }
                 else
                 {
+                    Debug.Log("pause menu");
                     pauseMenu.SetActive(true);
                 }
             }

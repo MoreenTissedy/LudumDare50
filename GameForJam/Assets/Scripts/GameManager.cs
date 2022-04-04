@@ -218,6 +218,8 @@ namespace DefaultNamespace
                 if (condition.bonusCard != null)
                     cardDeck.AddCardToPool(condition.bonusCard);
                 toRemove.Add(condition);
+                //one condition per night
+                break;
             }
 
             foreach (var condition in toRemove)
@@ -225,7 +227,8 @@ namespace DefaultNamespace
                 nightConditions.Remove(condition);
             }
             
-            WrongPotionCheck(ref text);
+            if (text == String.Empty)
+                WrongPotionCheck(ref text);
 
             if (text == String.Empty)
             {
@@ -318,13 +321,13 @@ namespace DefaultNamespace
             if (!check2passed && wrongPotionsCount >= wrongPotionsCheck2)
             {
                 check2passed = true;
-                fame.Add(wrongPotionsFameMod2);
+                fameUpdateTotal += wrongPotionsFameMod2;
                 text += "Крестьяне презрительно отзываются о ваших способностях: «Да она ни одного зелья правильно сварить не может!» ";
             }
             else if (!check1passed && wrongPotionsCount >= wrongPotionsCheck1)
             {
                 check1passed = true;
-                fame.Add(wrongPotionsFameMod1);
+                fameUpdateTotal += wrongPotionsFameMod1;
                 text += "Люди фыркают и поджимают губы, когда слышат ваше имя — они недовольны тем, что ваши зелья им не помогают. ";
             }
         }
@@ -346,10 +349,6 @@ namespace DefaultNamespace
             Debug.Log(nightText);
             nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
             
-            NightStatusChecks();
-            if (gameEnded)
-                yield break;
-
             yield return new WaitForSeconds(nightDelay/2);
             
             //deck update
@@ -372,6 +371,11 @@ namespace DefaultNamespace
             Witch.instance.Wake();
             //in case the player had put some ingredients in the pot during the night - clear the pot
             Cauldron.instance.Clear();
+            
+            NightStatusChecks();
+            if (gameEnded)
+                yield break;
+            
             DrawCard();
         }
         

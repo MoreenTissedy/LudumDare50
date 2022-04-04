@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace DefaultNamespace
         public static Cauldron instance;
 
         public ParticleSystem mixColor, bubbleColor, splash;
+        public float splashDelay = 2f;
 
         private void Awake()
         {
@@ -22,7 +24,7 @@ namespace DefaultNamespace
             //     Debug.LogError("double singleton:"+this.GetType().Name);
             // }
             instance = this;
-            
+            splash.Stop();
         }
 
         void RandomMixColor()
@@ -32,6 +34,7 @@ namespace DefaultNamespace
             Color lighterColor = Color.HSVToRGB(randomHue, 0.8f, 0.7f);
             mixColor.startColor = newColor;
             bubbleColor.startColor = lighterColor;
+            StartCoroutine(ColorSplash(newColor));
         }
 
         void MixColor(Color color)
@@ -40,6 +43,13 @@ namespace DefaultNamespace
             Color lighterColor = Color.HSVToRGB(h, s - 0.2f, v);
             mixColor.startColor = color;
             bubbleColor.startColor = lighterColor;
+            StartCoroutine(ColorSplash(color));
+        }
+
+        IEnumerator ColorSplash(Color color)
+        {
+            yield return new WaitForSeconds(splashDelay);
+            splash.startColor = color;
         }
         
         public List<Ingredients> mix;
@@ -47,7 +57,7 @@ namespace DefaultNamespace
         public void AddToMix(Ingredients ingredient)
         {
             //Witch.instance.Activate();
-            //effect
+            splash.Play();
             Debug.Log("Добавлено: "+ingredient);
             mix.Add(ingredient);
             if (mix.Count == 3)

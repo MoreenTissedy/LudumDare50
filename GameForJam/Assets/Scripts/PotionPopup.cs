@@ -27,7 +27,7 @@ namespace DefaultNamespace
             }
             else
             {
-                wording.text = "Зелье не получилось";
+                wording.text = "Вы сварили что-то не то";
                 picture.sprite = defaultPicture;
            //     picture.color = new Color32(255,255,255,100);
             }

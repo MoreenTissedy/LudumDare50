@@ -126,7 +126,8 @@ namespace DefaultNamespace
             currentCard = cardDeck.GetTopCard();
             if (currentCard == null)
             {
-                Debug.LogError("Ran out of cards!!!");
+                endingPanel.Show(endings[0]);
+                EndGame();
                 return;
             }
             currentCard.Init();

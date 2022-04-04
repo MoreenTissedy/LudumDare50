@@ -29,21 +29,21 @@ namespace DefaultNamespace
 
         public void NewDayPool(int day)
         {
-            switch (day%6)
+            switch ((day-1)%5)
             {
-                case 1:
+                case 0:
                     cardPool.AddRange(pool1);
                     break;
-                case 2:
+                case 1:
                     cardPool.AddRange(pool2);
                     break;
-                case 3:
+                case 2:
                     cardPool.AddRange(pool3);
                     break;
-                case 4:
+                case 3:
                     cardPool.AddRange(pool4);
                     break;
-                case 5:
+                case 4:
                     cardPool.AddRange(pool5);
                     break;
             }

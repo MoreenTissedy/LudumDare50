@@ -16,7 +16,7 @@ namespace DefaultNamespace
         public void Show(Ending ending)
         {
             text.text = ending.text;
-            //image.sprite = ending.image;
+            image.sprite = ending.image;
             gameObject.SetActive(true);
         }
         

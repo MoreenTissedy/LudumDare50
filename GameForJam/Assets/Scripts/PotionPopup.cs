@@ -22,14 +22,14 @@ namespace DefaultNamespace
             if (recipe != null)
             {
                 wording.text = "Вы сварили: " + recipe.potionName;
-            //    picture.sprite = recipe.image;
-                picture.color = recipe.color;
+                picture.sprite = recipe.image;
+            //    picture.color = recipe.color;
             }
             else
             {
                 wording.text = "Зелье не получилось";
-           //     picture.sprite = recipe.image;
-                picture.color = new Color32(255,255,255,100);
+                picture.sprite = defaultPicture;
+           //     picture.color = new Color32(255,255,255,100);
             }
         }
 

@@ -11,23 +11,32 @@ namespace DefaultNamespace
         public Ingredients type;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
-
-        private Text tooltip;
-
-        private SpriteRenderer image;
+        public IngredientsData dataList;
         
-        private void Start()
+        
+        [SerializeField, HideInInspector]
+        private Text tooltip;
+        [SerializeField, HideInInspector]
+        private SpriteRenderer image;
+
+        private void OnValidate()
         {
             tooltip = GetComponentInChildren<Text>();
             if (tooltip != null)
             {
-                tooltip.text = GameManager.instance?.ingredientsBook?.Get(type)?.friendlyName ?? "not specified";
-                tooltip.gameObject.SetActive(false);
+                tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
             }
 
             image = GetComponentInChildren<SpriteRenderer>();
-            if (tooltip!=null)
-                image.sprite = GameManager.instance?.ingredientsBook?.Get(type)?.image;
+            image.sprite = dataList?.Get(type)?.image;
+        }
+
+        private void Start()
+        {
+            if (tooltip != null)
+            {
+                tooltip.gameObject.SetActive(false);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

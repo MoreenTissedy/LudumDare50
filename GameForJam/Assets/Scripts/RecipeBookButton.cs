@@ -10,7 +10,6 @@ namespace DefaultNamespace
     {
         public float sizeCoef = 1.2f;
         public float sizeSpeed = 0.2f;
-        public bool noTutorial;
         private bool clicked;
         private Vector3 initialScale;
         private RectTransform transf;
@@ -20,7 +19,6 @@ namespace DefaultNamespace
             transf = GetComponent<RectTransform>();
             initialScale = transf.sizeDelta;
             //start flashing to attract attention
-            if (!noTutorial)
                 transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
                     SetLoops(-1, LoopType.Yoyo);
         }
@@ -36,7 +34,7 @@ namespace DefaultNamespace
         {
             
             //grow in size
-            if (!clicked & !noTutorial)
+            if (!clicked)
                 transf.DOPause();
             transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed);
         }
@@ -45,7 +43,7 @@ namespace DefaultNamespace
         {
             
             //shrink in size
-            if (clicked || noTutorial)
+            if (clicked)
                 transf.DOSizeDelta((initialScale), sizeSpeed);
             else
             {

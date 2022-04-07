@@ -11,7 +11,10 @@ namespace DefaultNamespace
     public class StatusBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public RectTransform mask;
-        public float gradualReduce = 0.5f;
+        public RectTransform sign;
+        public float gradualReduce = 3f;
+        public float signSizeChangeTime = 0.5f;
+        public float signSizeChange = 1.3f;
         public Statustype type;
         private Text tooltip;
         
@@ -61,6 +64,16 @@ namespace DefaultNamespace
             {
                 mask.sizeDelta = new Vector2(ratio, mask.rect.height);
             }
+            
+            //grow symbol
+            GrowSymbol();
+        }
+
+        void GrowSymbol()
+        {
+            sign.DOSizeDelta(sign.sizeDelta * signSizeChange, signSizeChangeTime).
+                SetLoops(2, LoopType.Yoyo).
+                SetEase(Ease.InQuad);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

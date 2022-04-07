@@ -6,11 +6,13 @@ using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
-    public class IngredientDroppable: MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
+        IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public Ingredients type;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
+        public float returntime = 0.5f;
         public IngredientsData dataList;
         
         
@@ -18,6 +20,9 @@ namespace DefaultNamespace
         private Text tooltip;
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
+
+        private Vector3 initialPosition;
+        private bool dragging;
 
         private void OnValidate()
         {
@@ -37,14 +42,8 @@ namespace DefaultNamespace
             {
                 tooltip.gameObject.SetActive(false);
             }
-        }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (Cauldron.instance.mix.Contains(type))
-                return;
-            image.transform.DOKill(true);
-            Cauldron.instance.AddToMix(type);
+            initialPosition = transform.position;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -68,5 +67,41 @@ namespace DefaultNamespace
             image.transform.DOKill();
             image.transform.DORotate(new Vector3(0, 0, 0), rotateSpeed);
         }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (Cauldron.instance.mix.Contains(type))
+                return;
+            dragging = true;
+            image.transform.DOKill(true);
+            Cauldron.instance.mouseEnterCauldronZone += OverCauldron;
+        }
+
+        void OverCauldron()
+        {
+            Cauldron.instance.AddToMix(type);
+            dragging = false;
+            transform.position = initialPosition;
+            Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;
+            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (!dragging)
+                return;
+            transform.position =
+                Camera.main.ScreenToWorldPoint((Vector3)eventData.position + Vector3.forward * Camera.main.nearClipPlane);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (!dragging)
+                return;
+            transform.DOMove(initialPosition, returntime);
+            dragging = false;
+            Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;
+        }
+        
     }
 }

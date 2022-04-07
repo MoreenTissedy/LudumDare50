@@ -2549,6 +2549,10 @@ PrefabInstance:
       propertyPath: type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1429748115795320478, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
+      propertyPath: gradualReduce
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3443302849785100856, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
       propertyPath: m_SizeDelta.x
       value: 77
@@ -7163,6 +7167,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!61 &1623485009
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623485003}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.046679497, y: 1.031286}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 6, y: 6}
+    newSize: {x: 6, y: 6}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.6624012, y: 3.1407313}
+  m_EdgeRadius: 0
 --- !u!114 &1660300182 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2096317035278184466, guid: 68b26f641269a1747b23dec93e32fd48, type: 3}
@@ -7457,6 +7487,10 @@ PrefabInstance:
       objectReference: {fileID: 185574369}
     - target: {fileID: 1429748115795320478, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
       propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1429748115795320478, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
+      propertyPath: gradualReduce
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3443302849785100856, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
@@ -10014,6 +10048,10 @@ PrefabInstance:
       propertyPath: mask
       value: 
       objectReference: {fileID: 38881114}
+    - target: {fileID: 1429748115795320478, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
+      propertyPath: gradualReduce
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8201929274610701791, guid: 4bd10b91cfa3e4c42a00598e7532c710, type: 3}
       propertyPath: m_Name
       value: StatusBarMoney

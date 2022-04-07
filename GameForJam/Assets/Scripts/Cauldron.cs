@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
+
 #pragma warning disable CS0618
 
 
 namespace DefaultNamespace
 {
-    public class Cauldron : MonoBehaviour, IPointerClickHandler
+    public class Cauldron : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
     {
         public static Cauldron instance;
 
@@ -18,6 +21,8 @@ namespace DefaultNamespace
         private AudioSource audios;
 
         public List<Ingredients> mix;
+
+        public event Action mouseEnterCauldronZone;
         private void Awake()
         {
             // if (instance is null)
@@ -101,7 +106,7 @@ namespace DefaultNamespace
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            BrewAction();
+            splash.Play();
         }
 
         private void BrewAction()
@@ -111,6 +116,11 @@ namespace DefaultNamespace
             Debug.Log("Сварено зелье: " + result);
             //GameManager.instance.ShowText("Сварено зелье: " + result);
             GameManager.instance.EndEncounter(result);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            mouseEnterCauldronZone?.Invoke();
         }
     }
 }

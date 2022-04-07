@@ -19,15 +19,17 @@ namespace DefaultNamespace
         }
 
         public int Add(int num)
-            {
-                statValue += num;
-                if (statValue > max)
-                    statValue = max;
-                else if (statValue < min)
-                    statValue = min;
-                changed?.Invoke();
+        {
+            if (num == 0)
                 return statValue;
-            }
+            statValue += num;
+            if (statValue > max)
+                statValue = max;
+            else if (statValue < min)
+                statValue = min;
+            changed?.Invoke();
+            return statValue;
+        }
         
     }
 }

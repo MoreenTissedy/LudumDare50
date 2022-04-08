@@ -8,6 +8,7 @@ namespace DefaultNamespace
         [Header("Conditions work only once")]
         public Potions type;
         public int threshold = 3;
+        [TextArea(3, 10)]
         public string flavourText;
         public int moneyModifier, fearModifier, fameModifier;
         public Encounter bonusCard;

@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: Wake_Potion_Villager
+  m_Name: Wake_potion_apples
   m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 0}
   villager:
   - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
   text: "\u0423 \u043C\u0435\u043D\u044F \u044F\u0431\u043B\u043E\u043A\u0438 \u0432\u043E\u0440\u0443\u0435\u0442
@@ -27,11 +28,13 @@ MonoBehaviour:
   moneyBonus: 0
   fearBonus: -5
   fameBonus: 10
-  bonusCard: []
+  bonusCard:
+  - {fileID: 11400000, guid: 6dfe497e56eeab84da483a7849c0c684, type: 2}
   moneyPenalty: 0
   fearPenalty: 5
   famePenalty: -10
-  penaltyCard: []
+  penaltyCard:
+  - {fileID: 11400000}
   useSecondVariant: 0
   requiredPotion2: 0
   moneyBonus2: 0

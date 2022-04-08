@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine.PlayerLoop;
 
@@ -85,7 +86,7 @@ namespace DefaultNamespace
                 return;
             deck.Enqueue(card);
         }
-
+        
         public Encounter GetTopCard()
         {
             var card = deck.Dequeue();

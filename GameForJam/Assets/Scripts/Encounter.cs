@@ -1,9 +1,10 @@
+using EasyLoc;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
-    public class Encounter : ScriptableObject
+    public class Encounter : LocalizableSO
     {
         public Villager[] villager; 
         public string text;
@@ -41,6 +42,12 @@ namespace DefaultNamespace
             }
 
             return null;
+        }
+
+        public override bool Localize(Language language)
+        {
+            //change text here
+            return false;
         }
     }
 }

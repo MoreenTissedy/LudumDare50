@@ -7,6 +7,8 @@ namespace DefaultNamespace
 {
     public class PotionPopup : MonoBehaviour
     {
+        public string youBrewed = "Вы сварили: ";
+        public string noRecipeForThis = "Вы сварили что-то не то";
         public Text wording;
         public Image picture;
         public Sprite defaultPicture;
@@ -21,13 +23,13 @@ namespace DefaultNamespace
             gameObject.SetActive(true);
             if (recipe != null)
             {
-                wording.text = "Вы сварили: " + recipe.potionName;
+                wording.text = youBrewed + recipe.potionName;
                 picture.sprite = recipe.image;
             //    picture.color = recipe.color;
             }
             else
             {
-                wording.text = "Вы сварили что-то не то";
+                wording.text = noRecipeForThis;
                 picture.sprite = defaultPicture;
            //     picture.color = new Color32(255,255,255,100);
             }

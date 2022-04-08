@@ -10,6 +10,7 @@ namespace DefaultNamespace
         public bool evil;
         public Ingredients ingredient1, ingredient2, ingredient3;
         public string potionName;
+        [TextArea(2, 10)]
         public string description;
         public Sprite image;
     }

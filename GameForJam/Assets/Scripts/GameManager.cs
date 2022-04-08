@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -263,6 +264,30 @@ namespace DefaultNamespace
             yield return new WaitForSeconds(1f);
             yield return new WaitUntil(() => Input.anyKeyDown);
             ReloadGame();
+        }
+        
+        [ContextMenu("Export Night Conditions to CSV")]
+        public void ExportConditions()
+        {
+            var file = File.CreateText(Application.dataPath+"/Localize/Night_events.csv");
+            file.WriteLine("id;flavour_RU;flavour_EN");
+            foreach (var condition in nightConditions)
+            {
+                file.WriteLine(condition.name+";"+condition.flavourText);
+            }
+            file.Close();
+        }
+        
+        [ContextMenu("Export Endings to CSV")]
+        public void ExportEndings()
+        {
+            var file = File.CreateText(Application.dataPath+"/Localize/Endings.csv");
+            file.WriteLine("id;description_RU;description_EN");
+            foreach (var ending in endings)
+            {
+                file.WriteLine(ending.name+";"+ending.text);
+            }
+            file.Close();
         }
 
         public void ReloadGame()

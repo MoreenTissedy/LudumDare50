@@ -2,12 +2,15 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using EasyLoc;
 
 namespace DefaultNamespace
 {
     public class PotionPopup : MonoBehaviour
     {
+        [Localize]
         public string youBrewed = "Вы сварили: ";
+        [Localize]
         public string noRecipeForThis = "Вы сварили что-то не то";
         public Text wording;
         public Image picture;

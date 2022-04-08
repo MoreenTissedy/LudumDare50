@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Linq;
+using EasyLoc;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -36,6 +37,13 @@ namespace DefaultNamespace
         public int cardsDealtAtNight = 3;
         public float nightDelay = 4f;
         public float villagerDelay = 2f;
+        [Localize]
+        public string defaultNightText1 = "Ничего необычного.";
+        [Localize]
+        public string defaultNightText2 = "Ночь спокойна и тиха.";
+        [Localize]
+        public string defaultNightText3 = "Дует ветер, гонит тучки.";
+        
 
         [Space(5)] 
         public int wrongPotionsCheck1 = 5;
@@ -43,6 +51,12 @@ namespace DefaultNamespace
         public int wrongPotionsCheck2 = 10;
         public int wrongPotionsFameMod2 = -50;
         private bool check1passed, check2passed;
+        [Localize] [TextArea(3, 7)]
+        public string wrongPotionCheckText1 = "Люди фыркают и поджимают губы, когда слышат ваше имя — " +
+                                              "они недовольны тем, что ваши зелья им не помогают. ";
+        [Localize] [TextArea(3, 7)]
+        public string wrongPotionCheckText2 = "Крестьяне презрительно отзываются о ваших способностях: " +
+                                              "«Да она ни одного зелья правильно сварить не может!» ";
         [Space(5)]
 
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
@@ -242,15 +256,18 @@ namespace DefaultNamespace
 
             if (text == String.Empty)
             {
-                int rnd = Random.Range(0, 2);
+                int rnd = Random.Range(0, 3);
                 switch (rnd)
                 {
                     case 0:
-                    text = "Ничего необычного.";
-                    break;
+                        text = defaultNightText1;
+                        break;
                     case 1:
-                    text = "Ночь спокойна и тиха.";
-                    break;
+                        text = defaultNightText2;
+                        break;
+                    case 2:
+                        text = defaultNightText3;
+                        break;
                 }
             }
 
@@ -357,13 +374,13 @@ namespace DefaultNamespace
             {
                 check2passed = true;
                 fameUpdateTotal += wrongPotionsFameMod2;
-                text += "Крестьяне презрительно отзываются о ваших способностях: «Да она ни одного зелья правильно сварить не может!» ";
+                text += wrongPotionCheckText2;
             }
             else if (!check1passed && wrongPotionsCount >= wrongPotionsCheck1)
             {
                 check1passed = true;
                 fameUpdateTotal += wrongPotionsFameMod1;
-                text += "Люди фыркают и поджимают губы, когда слышат ваше имя — они недовольны тем, что ваши зелья им не помогают. ";
+                text += wrongPotionCheckText1;
             }
         }
         

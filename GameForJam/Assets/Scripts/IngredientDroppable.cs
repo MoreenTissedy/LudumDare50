@@ -27,9 +27,10 @@ namespace DefaultNamespace
         private void OnValidate()
         {
             tooltip = GetComponentInChildren<Text>();
-            if (tooltip != null)
+            if (tooltip != null && tooltip.text == String.Empty)
             {
                 tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
+                Debug.Log("override ingredient text!");
             }
 
             image = GetComponentInChildren<SpriteRenderer>();
@@ -40,6 +41,7 @@ namespace DefaultNamespace
         {
             if (tooltip != null)
             {
+                tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
                 tooltip.gameObject.SetActive(false);
             }
 

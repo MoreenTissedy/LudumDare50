@@ -5,10 +5,12 @@ namespace DefaultNamespace
         private int statValue;
         private int min = 0;
         public static int max = 50;
+        public Statustype type;
         public event System.Action changed;
 
-        public Status()
+        public Status(Statustype type)
         {
+            this.type = type;
             statValue = GameManager.instance.statusBarsStart;
             max = GameManager.instance.statusBarsMax;
         }
@@ -21,6 +23,8 @@ namespace DefaultNamespace
         public int Add(int num)
         {
             if (num == 0)
+                return statValue;
+            if (type == Statustype.Money && num < 0)
                 return statValue;
             statValue += num;
             if (statValue > max)

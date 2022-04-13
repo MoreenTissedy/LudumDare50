@@ -9,22 +9,24 @@ namespace DefaultNamespace
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
+        [Serializable]
+        //custom property drawer
+        public class PotionResult
+        {
+            public Potions potion;
+            [Range(-1, 1)]
+            public float influenceCoef = 1;
+            public NightEvent bonusEvent;
+            public Encounter bonusCard;
+        }
+        
         public Villager[] villager;
         [TextArea(5, 10)]
         public string text;
-        public Potions requiredPotion;
-        [Header("Right potion brewed")] public int moneyBonus; 
-        public int fearBonus, fameBonus;
-        public Encounter[] bonusCard;
-        [Header("Wrong potion brewed")] public int moneyPenalty;
-        public int fearPenalty, famePenalty;
-        public Encounter[] penaltyCard;
-        [Header("Second potion variant")] 
-        public bool useSecondVariant;
-        public Potions requiredPotion2;
-        public int moneyBonus2; 
-        public int fearBonus2, fameBonus2;
-        public Encounter[] bonusCard2;
+        public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
+        public int primaryAmount = 10, secondaryAmount = 5;
+        public PotionResult[] resultsByPotion = new PotionResult[3];
+        
 
         [HideInInspector] public Villager actualVillager;
 
@@ -71,6 +73,40 @@ namespace DefaultNamespace
                 {
                     text = data[requiredColumns[0]];
                     return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool EndEncounter(Potions potion)
+        {
+            //compare potion
+            foreach (var filter in resultsByPotion)
+            {
+                if (potion == filter.potion)
+                {
+                    GameManager.instance.
+                        GetStatusByType(primaryInfluence).
+                        Add(Mathf.FloorToInt(primaryAmount * filter.influenceCoef));
+                    if (secondaryInfluence != Statustype.None)
+                    {
+                        GameManager.instance.
+                            GetStatusByType(secondaryInfluence).
+                            Add(Mathf.FloorToInt(secondaryAmount * filter.influenceCoef));
+                    }
+                    if (filter.bonusCard!=null)
+                        GameManager.instance.cardDeck.AddCardToPool(filter.bonusCard);
+                    if (filter.bonusEvent!=null)
+                        GameManager.instance.events.Add(filter.bonusEvent);
+                    if (filter.influenceCoef > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
 

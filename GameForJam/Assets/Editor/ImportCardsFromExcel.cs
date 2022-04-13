@@ -33,7 +33,7 @@ namespace Editor
                 // }
                 
                 enc.text = data[2];
-                if (Enum.TryParse(data[3], out Potions potion))
+                /*if (Enum.TryParse(data[3], out Potions potion))
                 {
                     enc.requiredPotion = potion;
                 }
@@ -48,7 +48,7 @@ namespace Editor
                 //card - data8
                 enc.moneyPenalty = ConvertFromString(data[9]);
                 enc.fearPenalty = ConvertFromString(data[10]);
-                enc.famePenalty = ConvertFromString(data[11]);
+                enc.famePenalty = ConvertFromString(data[11]);*/
                 //card penalty
 
                 AssetDatabase.CreateAsset(enc, $"Assets/Cards/{data[0]}.asset");

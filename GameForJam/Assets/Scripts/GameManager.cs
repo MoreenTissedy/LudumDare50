@@ -72,6 +72,8 @@ namespace DefaultNamespace
         public Encounter currentCard;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
+        public int rightPotionsCount;
+        public List<NightEvent> events;
 
         public bool gameEnded;
 
@@ -86,13 +88,32 @@ namespace DefaultNamespace
             instance = this;
 
             potionsTotal = new List<Potions>(15);
-
-            money = new Status();
-            fame = new Status();
-            fear = new Status();
+            events = new List<NightEvent>(5);
+            
+            money = new Status(Statustype.Money);
+            fame = new Status(Statustype.Fame);
+            fear = new Status(Statustype.Fear);
             
             HideText();
             pauseMenu.SetActive(false);
+        }
+
+        public Status GetStatusByType(Statustype type)
+        {
+            switch (type)
+            {
+                case Statustype.Money:
+                    return money;
+                    break;
+                case Statustype.Fear:
+                    return fear;
+                    break;
+                case Statustype.Fame:
+                    return fame;
+                    break;
+            }
+
+            return null;
         }
 
         private void Update()
@@ -163,45 +184,18 @@ namespace DefaultNamespace
             potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
             potionsTotal.Add(potion);
 
-            //Debug.Log(money.Value + defaultMoneyBonus);
-            //status update
-            if (currentCard.actualVillager != null) 
+            if (currentCard.EndEncounter(potion))
             {
-                money.Add(currentCard.actualVillager.moneyBonus + Mathf.FloorToInt(fame.Value() * fameMoneyCoef));
-                fame.Add(currentCard.actualVillager.fameBonus);
-                fear.Add(currentCard.actualVillager.fearBonus);
-            }
-            //Debug.Log(money.Value);
-            
-            //compare potion and save bonuses for later
-            if (potion == currentCard.requiredPotion)
-            {
-                moneyUpdateTotal += currentCard.moneyBonus;
-                fearUpdateTotal += currentCard.fearBonus;
-                fameUpdateTotal += currentCard.fameBonus;
-                if (currentCard.bonusCard.Length>0)
-                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.bonusCard));
-            }
-            else if (currentCard.useSecondVariant && potion == currentCard.requiredPotion2)
-            {
-                moneyUpdateTotal += currentCard.moneyBonus2;
-                fearUpdateTotal += currentCard.fearBonus2;
-                fameUpdateTotal += currentCard.fameBonus2;
-                if (currentCard.bonusCard.Length>0)
-                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.bonusCard2));
+                rightPotionsCount++;
             }
             else
             {
                 wrongPotionsCount++;
-                moneyUpdateTotal += currentCard.moneyPenalty;
-                fearUpdateTotal += currentCard.fearPenalty;
-                fameUpdateTotal += currentCard.famePenalty;
-                if (currentCard.penaltyCard.Length>0)
-                    cardDeck.AddCardToPool(Encounter.GetRandom(currentCard.penaltyCard));
             }
             
             //status check
-            NightStatusChecks();
+            StatusChecks();
+            
             if (gameEnded)
             {
                 potionPopup.Hide();
@@ -227,28 +221,49 @@ namespace DefaultNamespace
             DrawCard();
         }
 
+        NightEvent GetRandomEvent()
+        {
+            if (events.Count == 0)
+                return null;
+            int i = Random.Range(0, events.Count);
+            NightEvent randomEvent = events[i];
+            events.Remove(randomEvent);
+            return randomEvent;
+        }
         string NightChecks()
         {
             string text = String.Empty;
-            List<NightCondition> toRemove = new List<NightCondition>(3);
-            foreach (var condition in nightConditions)
-            {
-                if (potionsTotal.Count(x => x == condition.type) < condition.threshold)
-                    continue;
-                text += condition.flavourText + " ";
-                moneyUpdateTotal += condition.moneyModifier;
-                fearUpdateTotal += condition.fearModifier;
-                fameUpdateTotal += condition.fameModifier;
-                if (condition.bonusCard != null)
-                    cardDeck.AddCardToPool(condition.bonusCard);
-                toRemove.Add(condition);
-                //one condition per night
-                break;
-            }
 
-            foreach (var condition in toRemove)
+            var nightEvent = GetRandomEvent();
+            if (nightEvent != null)
             {
-                nightConditions.Remove(condition);
+                text = nightEvent.flavourText;
+                fearUpdateTotal += nightEvent.fearModifier;
+                fameUpdateTotal += nightEvent.fameModifier;
+                moneyUpdateTotal += nightEvent.moneyModifier;
+            }
+            else
+            {
+                List<NightCondition> toRemove = new List<NightCondition>(3);
+                foreach (var condition in nightConditions)
+                {
+                    if (potionsTotal.Count(x => x == condition.type) < condition.threshold)
+                        continue;
+                    text = condition.flavourText + " ";
+                    moneyUpdateTotal += condition.moneyModifier;
+                    fearUpdateTotal += condition.fearModifier;
+                    fameUpdateTotal += condition.fameModifier;
+                    if (condition.bonusCard != null)
+                        cardDeck.AddCardToPool(condition.bonusCard);
+                    toRemove.Add(condition);
+                    //one condition per night
+                    break;
+                }
+
+                foreach (var condition in toRemove)
+                {
+                    nightConditions.Remove(condition);
+                }
             }
             
             if (text == String.Empty)
@@ -318,7 +333,7 @@ namespace DefaultNamespace
         }
         
         
-        void NightStatusChecks()
+        void StatusChecks()
         {
             //endings
             //[Tooltip("High money, high fame, high fear, low fame, low fear")]
@@ -359,11 +374,13 @@ namespace DefaultNamespace
             //high status cards
             if (fame.Value() > threshold)
             {
+                //add first index
                 cardDeck.AddToDeck(Encounter.GetRandom(highFameCards));
             }
 
             if (fear.Value() > threshold)
             {
+                //add first index
                 cardDeck.AddToDeck(Encounter.GetRandom(highFearCards));
             }
         }
@@ -392,7 +409,7 @@ namespace DefaultNamespace
             Witch.instance.Hide();
             HideText();
             
-            NightStatusChecks();
+            StatusChecks();
             if (gameEnded)
                 yield break;
 
@@ -425,7 +442,7 @@ namespace DefaultNamespace
             //in case the player had put some ingredients in the pot during the night - clear the pot
             Cauldron.instance.Clear();
             
-            NightStatusChecks();
+            StatusChecks();
             if (gameEnded)
                 yield break;
             

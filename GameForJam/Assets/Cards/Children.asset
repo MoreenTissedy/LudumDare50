@@ -24,19 +24,37 @@ MonoBehaviour:
     \u043D\u0430\u043C \u0437\u0435\u043B\u044C\u0435, \u0447\u0442\u043E\u0431\u044B
     \u043A\u043E\u0440\u043E\u0432\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C
     \u0447\u0435\u043B\u043E\u0432\u0435\u0447\u0435\u0441\u043A\u0438\u043C \u0433\u043E\u0432\u043E\u0440\u0438\u043B\u0430!"
-  requiredPotion: 11
-  moneyBonus: 0
-  fearBonus: -10
-  fameBonus: 15
-  bonusCard: []
-  moneyPenalty: 0
-  fearPenalty: 10
-  famePenalty: 0
-  penaltyCard: []
-  useSecondVariant: 0
-  requiredPotion2: 0
-  moneyBonus2: 0
-  fearBonus2: 0
-  fameBonus2: 0
-  bonusCard2: []
+  primaryInfluence: 3
+  secondaryInfluence: 2
+  primaryAmount: 10
+  secondaryAmount: 5
+  resultsByPotion:
+  - potion: 11
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 11
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 6
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 12
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 10
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 3
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
+    bonusCard: {fileID: 11400000, guid: dd31b451e4687994f99c0c478766ad1f, type: 2}
+  - potion: 4
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
+    bonusCard: {fileID: 11400000, guid: dd31b451e4687994f99c0c478766ad1f, type: 2}
   actualVillager: {fileID: 0}

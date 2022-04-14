@@ -23,19 +23,21 @@ MonoBehaviour:
     \u0447\u0442\u043E \u0441\u043B\u0430\u0431\u0430\u043A. \u0415\u0441\u0442\u044C
     \u0443 \u0442\u0435\u0431\u044F \u0447\u0442\u043E-\u043D\u0438\u0431\u0443\u0434\u044C,
     \u0447\u0442\u043E\u0431\u044B \u0441\u0438\u043B\u0443 \u043C\u043D\u0435 \u0432\u0435\u0440\u043D\u0443\u0442\u044C?"
-  requiredPotion: 2
-  moneyBonus: 5
-  fearBonus: -10
-  fameBonus: 5
-  bonusCard: []
-  moneyPenalty: 0
-  fearPenalty: 5
-  famePenalty: -5
-  penaltyCard: []
-  useSecondVariant: 0
-  requiredPotion2: 0
-  moneyBonus2: 0
-  fearBonus2: 0
-  fameBonus2: 0
-  bonusCard2: []
+  primaryInfluence: 3
+  secondaryInfluence: 1
+  primaryAmount: 10
+  secondaryAmount: 5
+  resultsByPotion:
+  - potion: 2
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 9
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 7
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
   actualVillager: {fileID: 11400000, guid: 19f246bdf5ed23c4d8f4d8464d27a3f0, type: 2}

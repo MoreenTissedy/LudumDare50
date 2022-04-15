@@ -104,13 +104,10 @@ namespace DefaultNamespace
             {
                 case Statustype.Money:
                     return money;
-                    break;
                 case Statustype.Fear:
                     return fear;
-                    break;
                 case Statustype.Fame:
                     return fame;
-                    break;
             }
 
             return null;

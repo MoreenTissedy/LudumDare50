@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 
 namespace DefaultNamespace
 {
@@ -18,9 +19,11 @@ namespace DefaultNamespace
         
         public Recipe[] recipes;
 
-        private int currentRecipe = 0;
+        private int currentPage = 0;
 
         public AudioSource left, right;
+        public Text prevPageNum, nextPageNum;
+        
 
         private void Awake()
         {
@@ -32,6 +35,7 @@ namespace DefaultNamespace
             // }
             instance = this;
             CloseBook();
+            leftCorner.SetActive(false);
         }
 
         [ContextMenu("Export Recipes to CSV")]
@@ -97,7 +101,7 @@ namespace DefaultNamespace
             //sound
             for (int i = 0; i < entries.Length; i++)
             {
-                int num = currentRecipe + i;
+                int num = currentPage*entries.Length + i;
                 if (num < recipes.Length)
                 {
                     entries[i].Display(recipes[num]);
@@ -107,6 +111,8 @@ namespace DefaultNamespace
                     entries[i].Clear();
                 }
             }
+            nextPageNum.text = (currentPage *2+2).ToString();
+            prevPageNum.text = (currentPage*2+1).ToString();
         }
 
         public void CloseBook()
@@ -119,11 +125,12 @@ namespace DefaultNamespace
         {
             if (!bookObject.activeInHierarchy)
                 return;
-            if (recipes.Length - 1 < currentRecipe + entries.Length )
+            if ((currentPage+1)*entries.Length >= recipes.Length )
                 return;
-            currentRecipe += entries.Length;
+            currentPage++;
+            if ((currentPage+1)*entries.Length >= recipes.Length )
+                rightCorner.SetActive(false);
             leftCorner.SetActive(true);
-            rightCorner.SetActive(false);
             UpdatePage();
             right.Play();
         }
@@ -132,10 +139,11 @@ namespace DefaultNamespace
         {
             if (!bookObject.activeInHierarchy)
                 return;
-            if (currentRecipe - entries.Length < 0)
+            if (currentPage <= 0)
                 return;
-            currentRecipe -= entries.Length;
-            leftCorner.SetActive(false);
+            currentPage--;
+            if (currentPage == 0)
+                leftCorner.SetActive(false);
             rightCorner.SetActive(true);
             UpdatePage();
             left.Play();

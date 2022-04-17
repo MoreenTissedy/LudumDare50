@@ -77,6 +77,9 @@ namespace DefaultNamespace
 
         public bool gameEnded;
 
+        public event Action<int> NewDay;
+        public event Action<int, int> NewEncounter;
+        
         private void Awake()
         {
             // if (instance is null)
@@ -155,6 +158,8 @@ namespace DefaultNamespace
 
         public void DrawCard()
         {
+            
+            NewEncounter?.Invoke(cardsDrawnToday, cardsPerDay);
             Cauldron.instance.Clear();
             currentCard = cardDeck.GetTopCard();
             if (currentCard == null)
@@ -405,6 +410,7 @@ namespace DefaultNamespace
             potionPopup.Hide();
             Witch.instance.Hide();
             HideText();
+            NewDay?.Invoke(currentDay+1);
             
             StatusChecks();
             if (gameEnded)
@@ -430,6 +436,7 @@ namespace DefaultNamespace
             fearUpdateTotal = 0;
             fame.Add(fameUpdateTotal);
             fameUpdateTotal = 0;
+            
             
             //yield return new WaitForSeconds(nightDelay/2);
             yield return new WaitUntil(() => Input.anyKeyDown);

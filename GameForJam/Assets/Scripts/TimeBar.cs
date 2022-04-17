@@ -28,13 +28,15 @@ namespace DefaultNamespace
             step = rectWidth/(GameManager.instance.cardsPerDay+3);
             GameManager.instance.NewDay += OnNewDay;
             GameManager.instance.NewEncounter += OnNewVisitor;
+            Debug.Log("timeBar start");
         }
 
         private void OnNewVisitor(int arg1, int arg2)
         {
             float newStep = step;
             //longer shift after night
-            if (arg1 == 1)
+            Debug.Log("new visitor "+arg1);
+            if (arg1 == 0)
                 newStep = step * 2;
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x-newStep, speed);
         }

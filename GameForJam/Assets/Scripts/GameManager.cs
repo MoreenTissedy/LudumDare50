@@ -152,13 +152,15 @@ namespace DefaultNamespace
 
         private void Start()
         {
+            Debug.Log("start GM");
             cardDeck.Init();
-            DrawCard();
+            //Delay draw card to ensure every object has initialized
+            Invoke("DrawCard",0.2f);
         }
 
         public void DrawCard()
         {
-            
+            Debug.Log(NewEncounter);
             NewEncounter?.Invoke(cardsDrawnToday, cardsPerDay);
             Cauldron.instance.Clear();
             currentCard = cardDeck.GetTopCard();

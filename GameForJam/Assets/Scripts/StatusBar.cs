@@ -15,10 +15,11 @@ namespace DefaultNamespace
         public float gradualReduce = 3f;
         public float signSizeChangeTime = 0.5f;
         public float signSizeChange = 1.3f;
+        public bool vertical;
         public Statustype type;
         private Text tooltip;
         
-        private float initialHeight;
+        private float initialDimension;
 
         private void Start()
         {
@@ -27,9 +28,16 @@ namespace DefaultNamespace
             {   
                 tooltip.gameObject.SetActive(false);
             }
-           
- 
-           initialHeight = mask.rect.height;
+
+
+           if (vertical)
+           {
+               initialDimension = mask.rect.height;
+           }
+           else
+           {
+               initialDimension = mask.rect.width;
+           }
            
            switch (type)
            {
@@ -54,15 +62,25 @@ namespace DefaultNamespace
             //symbol glow
             
             float ratio = (float)current / Status.max;
-            ratio *= initialHeight;
-            if (dotween)
+            ratio *= initialDimension;
+            Vector2 newSize;
+            if (vertical)
             {
-                mask.DOSizeDelta(new Vector2(mask.rect.width, ratio), gradualReduce)
-                    .SetEase(Ease.InOutCirc);
+                newSize = new Vector2(mask.rect.width, ratio);
             }
             else
             {
-                mask.sizeDelta = new Vector2(ratio, mask.rect.height);
+                newSize = new Vector2(ratio, mask.rect.height);
+            }
+            if (dotween)
+            {
+                
+                    mask.DOSizeDelta(newSize, gradualReduce)
+                        .SetEase(Ease.InOutCirc);
+            }
+            else
+            {
+                mask.sizeDelta = newSize;
             }
             
             //grow symbol

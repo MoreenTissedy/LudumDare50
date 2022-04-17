@@ -22,7 +22,7 @@ namespace DefaultNamespace
         public EndingScreen endingPanel;
         public GameObject pauseMenu;
         public Canvas textCanvas;
-        public Text textField;
+        public VisitorTextBox visitorText;
         
         public Status money, fear, fame;
         public float fameMoneyCoef = 0.1f;
@@ -136,10 +136,10 @@ namespace DefaultNamespace
             pauseMenu.SetActive(false);
         }
 
-        public void ShowText(string text)
+        public void ShowText(Encounter card)
         {
             textCanvas.gameObject.SetActive(true);
-            textField.text = text;
+            visitorText.Display(card);
         }
 
         public void HideText()
@@ -166,7 +166,7 @@ namespace DefaultNamespace
             currentCard.Init();
             cardsDrawnToday ++;
             Debug.Log(currentCard.text);
-            ShowText(currentCard.text);
+            ShowText(currentCard);
             //ChangeVisitor.instance.Enter(currentCard.actualVillager);
             //VisitorManager.instance.EnterDefault();
             VisitorManager.instance.Enter(currentCard.actualVillager);

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: Children
+  m_Name: Children_First
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
   villager:
@@ -31,12 +31,12 @@ MonoBehaviour:
   resultsByPotion:
   - potion: 11
     influenceCoef: 1
-    bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 0}
-  - potion: 11
-    influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
     bonusCard: {fileID: 0}
+  - potion: 4
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
+    bonusCard: {fileID: 11400000, guid: dd31b451e4687994f99c0c478766ad1f, type: 2}
   - potion: 6
     influenceCoef: 0.5
     bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
@@ -52,9 +52,5 @@ MonoBehaviour:
   - potion: 3
     influenceCoef: 0.5
     bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
-    bonusCard: {fileID: 11400000, guid: dd31b451e4687994f99c0c478766ad1f, type: 2}
-  - potion: 4
-    influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
     bonusCard: {fileID: 11400000, guid: dd31b451e4687994f99c0c478766ad1f, type: 2}
   actualVillager: {fileID: 0}

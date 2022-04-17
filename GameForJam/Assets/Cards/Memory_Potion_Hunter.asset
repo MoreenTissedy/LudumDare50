@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: Memory_Potion_Hunter
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
+  villager:
+  - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
+  text: "\u0417\u0434\u043E\u0440\u043E\u0432\u043E, \u0432\u043E\u0440\u043E\u0436\u0435\u044F.
+    \u041E\u0442 \u043C\u0435\u043D\u044F \u0436\u0435\u043D\u0430 \u0443\u0448\u043B\u0430
+    \u043F\u0430\u0440\u0443 \u043C\u0435\u0441\u044F\u0446\u0435\u0432 \u043D\u0430\u0437\u0430\u0434
+    \u043A \u0434\u0440\u0443\u0433\u043E\u043C\u0443. \u0421\u043A\u043E\u043B\u044C\u043A\u043E
+    \u043D\u0435 \u0443\u043F\u0440\u0430\u0448\u0438\u0432\u0430\u043B - \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0442\u044C\u0441\u044F
+    \u043D\u0438\u043A\u0430\u043A \u043D\u0435 \u0445\u043E\u0447\u0435\u0442. \u0414\u0430
+    \u0438 \u0432\u044B\u0433\u043B\u044F\u0434\u0438\u0442 \u043E\u043D\u0430 \u0441\u0447\u0430\u0441\u0442\u043B\u0438\u0432\u0435\u0435
+    \u0442\u0435\u043F\u0435\u0440\u044C. \u0412\u043E\u0434\u043A\u043E\u0439 \u0435\u0451
+    \u0438\u0437 \u043F\u0430\u043C\u044F\u0442\u0438 \u0441\u0442\u0435\u0440\u0435\u0442\u044C
+    \u043D\u0435 \u043C\u043E\u0433\u0443. \u041C\u043E\u0436\u0435\u0442 \u0442\u044B
+    \u043F\u043E\u043C\u043E\u0436\u0435\u0448\u044C?"
+  primaryInfluence: 2
+  secondaryInfluence: 3
+  primaryAmount: 10
+  secondaryAmount: 5
+  resultsByPotion:
+  - potion: 12
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 319da4a100d800d49817c46e4cc3dc01, type: 2}
+  - potion: 11
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 3745ab9202b5a9604b720f732a867cfd, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 8
+    influenceCoef: 0.3
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 4
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  actualVillager: {fileID: 0}

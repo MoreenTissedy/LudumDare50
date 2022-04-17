@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
   villager:
-  - {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
+  - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
   text: "\u0417\u0434\u043E\u0440\u043E\u0432\u043E. \u041A\u0443\u0437\u043D\u0435\u0446
     \u043D\u0430\u0448 \u043C\u043D\u0435 \u0436\u0438\u0437\u043D\u0438 \u043D\u0435
     \u0434\u0430\u0435\u0442 - \u043A\u0430\u043A \u043D\u0430\u043F\u044C\u0435\u0442\u0441\u044F,
@@ -27,7 +27,7 @@ MonoBehaviour:
     \u0434\u0443\u0448\u0443 \u0431\u0440\u0430\u0442\u044C."
   primaryInfluence: 3
   secondaryInfluence: 0
-  primaryAmount: 15
+  primaryAmount: 10
   secondaryAmount: 5
   resultsByPotion:
   - potion: 3
@@ -36,10 +36,14 @@ MonoBehaviour:
     bonusCard: {fileID: 11400000, guid: 747d9a6ae6b6f1d4fbd50863fb23b41b, type: 2}
   - potion: 4
     influenceCoef: -1
-    bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 00741e07a18788c45aa708bfca64b0da, type: 2}
+    bonusCard: {fileID: 11400000, guid: c3abc326b38cea940a458fa3d0ac1542, type: 2}
   - potion: 2
-    influenceCoef: -1
-    bonusEvent: {fileID: 0}
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 662a0fcc34dd84942a9c4bf6a0573520, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 12
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 641aa33eabb5ab9429f500321ab8b72a, type: 2}
     bonusCard: {fileID: 0}
   actualVillager: {fileID: 0}

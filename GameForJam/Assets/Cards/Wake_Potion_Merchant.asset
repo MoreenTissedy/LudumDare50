@@ -10,35 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: Wake_Potion_Wealthy_Villager
+  m_Name: Wake_Potion_Merchant
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
   villager:
   - {fileID: 11400000, guid: 95a1e59ebc68cbe449d3d1b92df88671, type: 2}
   text: "\u041C\u043D\u0435 \u0432 \u0434\u043E\u0440\u043E\u0433\u0443 \u0434\u0430\u043B\u044C\u043D\u0443\u044E
     \u043D\u0443\u0436\u043D\u043E \u0435\u0445\u0430\u0442\u044C \u0431\u0443\u0434\u0435\u0442
-    \u0437\u0430\u0432\u0442\u0440\u0430. \u0410 \u0442\u0430\u043C \u043B\u0435\u0441
-    \u0434\u0440\u0435\u043C\u0443\u0447\u0438\u0439 \u0438 \u0434\u043B\u0438\u043D\u043D\u044B\u0439.
+    \u0437\u0430\u0432\u0442\u0440\u0430, \u0442\u043E\u0432\u0430\u0440\u044B \u0432
+    \u0433\u043E\u0440\u043E\u0434 \u0432\u0435\u0437\u0442\u0438. \u0410 \u0442\u0430\u043C
+    \u043B\u0435\u0441 \u0434\u0440\u0435\u043C\u0443\u0447\u0438\u0439 \u0438 \u0434\u043B\u0438\u043D\u043D\u044B\u0439.
     \u0425\u043E\u0447\u0443 \u043F\u0435\u0440\u0435\u0441\u0435\u0447\u044C \u043A\u0430\u043A
     \u043C\u043E\u0436\u043D\u043E \u0431\u044B\u0441\u0442\u0440\u0435\u0435, \u0434\u0430
-    \u0431\u043E\u044E\u0441\u044C \u0443\u0441\u043D\u0443\u0442\u044C. \u041F\u043E\u043C\u043E\u0436\u0435\u0448\u044C?
-    \u042F \u0442\u0435\u0431\u0435 \u0438\u0437 \u0433\u043E\u0440\u043E\u0434\u0430
-    \u043F\u0440\u0438\u0432\u0435\u0437\u0443 \u043A\u043E\u0442\u0435\u043B \u043D\u043E\u0432\u044B\u0439!"
+    \u0431\u043E\u044E\u0441\u044C \u0443\u0441\u043D\u0443\u0442\u044C. \u041F\u043E\u043C\u043E\u0436\u0435\u0448\u044C?"
   primaryInfluence: 1
   secondaryInfluence: 3
   primaryAmount: 20
   secondaryAmount: 10
   resultsByPotion:
   - potion: 2
-    influenceCoef: 0.3
+    influenceCoef: 0.5
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
   - potion: 9
     influenceCoef: 1
-    bonusEvent: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 133ccf637d0e48548af6957e34bf6956, type: 2}
     bonusCard: {fileID: 0}
   - potion: 0
     influenceCoef: 0.3
     bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 8
+    influenceCoef: -0.3
+    bonusEvent: {fileID: 11400000, guid: 97cef8b2d6a515446b23a6d48e27b9fb, type: 2}
     bonusCard: {fileID: 0}
   actualVillager: {fileID: 0}

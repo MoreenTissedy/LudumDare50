@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: Love_Potion_Villager_Third
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
+  villager:
+  - {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
+  text: "\u041D\u0438\u043A\u0430\u043A \u043E\u043D \u0441\u043E \u043C\u043D\u043E\u0439
+    \u043E\u0441\u0442\u0430\u0442\u044C\u0441\u044F \u043D\u0435 \u043C\u043E\u0436\u0435\u0442,
+    \u0432\u0441\u0451 \u0440\u0430\u0432\u043D\u043E \u0434\u043E\u043C\u043E\u0439
+    \u0432\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442\u0441\u044F. \u0414\u0430\u0439
+    \u043C\u043D\u0435 \u0435\u0449\u0435 \u0431\u0443\u0442\u044B\u043B\u043E\u0447\u043A\u0443!
+    \u041D\u0435 \u043C\u043E\u0433\u0443 \u0432\u0438\u0434\u0435\u0442\u044C, \u043A\u0430\u043A
+    \u043E\u043D \u0441 \u044D\u0442\u043E\u0439 \u0441\u0442\u0435\u0440\u0432\u043E\u0439
+    \u0436\u0438\u0432\u0435\u0442."
+  primaryInfluence: 3
+  secondaryInfluence: 0
+  primaryAmount: 15
+  secondaryAmount: 5
+  resultsByPotion:
+  - potion: 0
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 60fc1708895f0a3428ae23d1ea374778, type: 2}
+  - potion: 4
+    influenceCoef: -1
+    bonusEvent: {fileID: 11400000, guid: 4c178b798838b9d4bb76df857905c49c, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 3
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 13
+    influenceCoef: 0
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  actualVillager: {fileID: 0}

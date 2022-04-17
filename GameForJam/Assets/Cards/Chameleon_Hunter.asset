@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: Chameleon_Hunter
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 4900000, guid: 3591c79659777d950a058ce1eb138a84, type: 3}
+  villager:
+  - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
+  text: "\u0421\u043B\u0443\u0448\u0430\u0439, \u0447\u0442\u043E-\u0442\u043E \u044F
+    \u043A\u0430\u043A \u0431\u0443\u0434\u0442\u043E \u043E\u0445\u043E\u0442\u0438\u0442\u044C\u0441\u044F
+    \u0440\u0430\u0437\u0443\u0447\u0438\u043B\u0441\u044F - \u0441\u043B\u0435\u0434\u044B
+    \u043D\u0435 \u0443\u0437\u043D\u0430\u044E, \u043F\u043E\u0434\u043E\u0431\u0440\u0430\u0442\u044C\u0441\u044F
+    \u043A \u0437\u0432\u0435\u0440\u044E \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442\u0441\u044F.
+    \u0410 \u0440\u0430\u043D\u044C\u0448\u0435 \u0432\u0435\u0434\u044C \u043B\u0443\u0447\u0448\u0438\u043C
+    \u043E\u0445\u043E\u0442\u043D\u0438\u043A\u043E\u043C \u0431\u044B\u043B! \u041F\u043E\u0434\u0441\u043E\u0431\u0438,
+    \u0430? \u042F \u0442\u0435\u0431\u0435 \u043A\u0430\u043A\u0443\u044E-\u043D\u0438\u0431\u0443\u0434\u044C
+    \u0448\u043A\u0443\u0440\u043A\u0443 \u043A\u0440\u0430\u0441\u0438\u0432\u0443\u044E
+    \u043F\u0440\u0438\u043D\u0435\u0441\u0443!"
+  primaryInfluence: 3
+  secondaryInfluence: 1
+  primaryAmount: 5
+  secondaryAmount: 5
+  resultsByPotion:
+  - potion: 6
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: f7098b9c57dcd2e41945d9088fcf86d6, type: 2}
+  - potion: 2
+    influenceCoef: 0.8
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: f7098b9c57dcd2e41945d9088fcf86d6, type: 2}
+  - potion: 3
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 3745ab9202b5a9604b720f732a867cfd, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 4
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  actualVillager: {fileID: 0}

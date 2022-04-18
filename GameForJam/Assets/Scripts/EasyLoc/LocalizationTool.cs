@@ -4,6 +4,9 @@ using System.IO;
 using DefaultNamespace;
 using UnityEngine;
 using System.Reflection;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 namespace EasyLoc
 {
@@ -23,7 +26,7 @@ namespace EasyLoc
             foreach (LocalizableSO unit in Resources.FindObjectsOfTypeAll<LocalizableSO>())
             {
                 if (!unit.Localize(selectLanguage))
-                    Debug.LogWarning(unit.name+" not found in "+unit.localizationCSV);
+                    Debug.LogWarning(unit.name+" not found in "+unit.localizationCSV.name);
             }
             ImportUI();
         }
@@ -73,6 +76,7 @@ namespace EasyLoc
 
         void ImportUI()
         {
+            Debug.Log("UI import");
             //fetch data from csv into a dictionary
             Dictionary<string, string> locData = new Dictionary<string, string>();
             string[] lines = UI.text.Split('\n');
@@ -101,42 +105,58 @@ namespace EasyLoc
                 locData.Add(data[1],data[langIndex]);
             }
 
-            //only current scene
+            //search all Monobeh scripts, only current scene
             MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>();
             
             foreach (MonoBehaviour mono in sceneActive)
             {
                 Type monoType = mono.GetType();
 
-                // Retreive the fields from the mono instance
+                // Retreive the fields from the monobeh
                 FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public);
 
                 // search all fields and find the attribute [Localize]
                 for (int i = 0; i < objectFields.Length; i++)
                 {
-                    // if we detect any attribute try to find the data by id.
+                    // if we detect the attribute, try to find the respective localization data by id.
                     if (Attribute.GetCustomAttribute(objectFields[i],
-                        typeof(LocalizeAttribute)) is LocalizeAttribute attribute)
+                        typeof(LocalizeAttribute)) is LocalizeAttribute)
                     {
+                        bool hasData = false;
+                        //for UI.Text components we have special TextTool script
+                        //that allows us to specify the text ID (but doesn't ensure its uniqueness for now)
                         if (mono is EasyLocTextTool textTool)
                         {
                             if (locData.TryGetValue(textTool.id, out string textValue))
                             {
+                                hasData = true;
                                 textTool.SetText(textValue);
-                                Debug.Log(textValue+" "+textTool.text);
+                                Debug.Log(textTool.id+" "+textValue);
                             }
                         }
+                        //for the custom scripts their respective class and field act as ID
                         else
                         {
                             if (locData.TryGetValue(objectFields[i].Name, out string textValue))
                             {
+                                hasData = true;
                                 objectFields[i].SetValue(mono, textValue);
-                                Debug.Log(textValue);
+                                Debug.Log(objectFields[i].Name+" "+textValue);
                             }
+                        }
+                        //changes to prefab instances in editor are not recorded automatically,
+                        //so the values are reverted to prefab defaults at the very first possibility.
+                        //to change this behaviour we need this:
+                        if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
+                        {
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
+                            Debug.Log("record prefab");
                         }
                     }
                 }
             }
+            //signal that scene has changed
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         [ContextMenu("Export Cards Tool")]

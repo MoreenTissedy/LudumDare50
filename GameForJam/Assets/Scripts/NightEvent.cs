@@ -33,6 +33,8 @@ namespace DefaultNamespace
                 string[] data = lines[i].Split(';');
                 if (data[0] == name)
                 {
+                    if (requiredColumns[0] >= data.Length)
+                        return false;
                     flavourText = data[requiredColumns[0]];
                     return true;
                 }

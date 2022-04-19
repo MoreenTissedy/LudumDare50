@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5291144
 RectTransform:
   m_ObjectHideFlags: 0
@@ -218,7 +218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &11123384
 RectTransform:
   m_ObjectHideFlags: 0
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11123383}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -299,7 +299,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_TargetDisplay: 0
 --- !u!1 &18977979
 GameObject:
@@ -614,7 +614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &36834371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1156,7 +1156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u0428\u0430\u043C\u043F\u0438\u043D\u044C\u043E\u043D"
+      value: Agaricus
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -1466,6 +1466,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &265505579 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3934904961396618381, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+  m_PrefabInstance: {fileID: 1019074757}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &265505580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265505579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f862610d5bb04c48a9eaf8c7dbc6c8b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.2
+  tutorialScript: {fileID: 1369524417}
+  bookTutorial: 0
 --- !u!1 &271161824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1860,8 +1881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041A\u0440\u044B\u043B\u043E \u043B\u0435\u0442\u0443\u0447\u0435\u0439
-        \u043C\u044B\u0448\u0438"
+      value: Bat's wing
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -2469,7 +2489,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0417\u0430\u043D\u043E\u0432\u043E"
+  m_Text: Again
 --- !u!222 &482941536
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2490,7 +2510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u0417\u0430\u043D\u043E\u0432\u043E"
+  text: Again
   id: ending panel button
 --- !u!224 &502909263 stripped
 RectTransform:
@@ -2510,7 +2530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041F\u043E\u0433\u0430\u043D\u043A\u0430"
+      value: Death cap
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -3089,6 +3109,7 @@ GameObject:
   - component: {fileID: 595652899}
   - component: {fileID: 595652901}
   - component: {fileID: 595652900}
+  - component: {fileID: 595652902}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -3148,12 +3169,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041A\u0430\u0436\u0434\u043E\u0435 \u0437\u0435\u043B\u044C\u0435 \u0441\u043E\u0441\u0442\u043E\u0438\u0442
-    \u0438\u0437 \u0442\u0440\u0435\u0445 \u0438\u043D\u0433\u0440\u0435\u0434\u0438\u0435\u043D\u0442\u043E\u0432,
-    \u0440\u0430\u0437\u0432\u0435\u0448\u0430\u043D\u043D\u044B\u0445 \u043F\u043E
-    \u0432\u0430\u0448\u0435\u0439 \u0445\u0438\u0436\u0438\u043D\u0435. \u041F\u0435\u0440\u0435\u0442\u0430\u0441\u043A\u0438\u0432\u0430\u0439\u0442\u0435
-    \u0438\u0445 \u0432 \u043A\u043E\u0442\u0435\u043B \u0432 \u043B\u044E\u0431\u043E\u043C
-    \u043F\u043E\u0440\u044F\u0434\u043A\u0435."
+  m_Text: Each potion consists of three ingredients hanging somewhere in your hut.
+    Just drag them into your cauldron in any order.
 --- !u!222 &595652901
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3162,6 +3179,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595652898}
   m_CullTransparentMesh: 0
+--- !u!114 &595652902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595652898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: Each potion consists of three ingredients hanging somewhere in your hut.
+    Just drag them into your cauldron in any order.
+  id: tutorial book
 --- !u!1 &628642978
 GameObject:
   m_ObjectHideFlags: 0
@@ -4721,7 +4753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041C\u0443\u0445\u043E\u043C\u043E\u0440"
+      value: Amanita
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -5487,7 +5519,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u0417\u043B\u0430\u0447\u043D\u044B\u0439 \u043A\u043E\u0440\u0435\u043D\u044C "
+      value: Wry root
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -5695,7 +5727,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 139289748486201010, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: text
-      value: "\u0421\u0442\u0440\u0430\u0445"
+      value: Dread
       objectReference: {fileID: 0}
     - target: {fileID: 139289749255940928, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_Pivot.x
@@ -5707,7 +5739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 139289749255940928, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 139289749255940928, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5787,7 +5819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 559332271178628307, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: dayText
-      value: "\u0414\u0435\u043D\u044C"
+      value: Day
       objectReference: {fileID: 0}
     - target: {fileID: 2606399384509888104, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: id
@@ -5795,25 +5827,74 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2606399384509888104, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: text
-      value: "\u0421\u043B\u0430\u0432\u0430"
+      value: Fame
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 0.8438448
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1369524417}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowGameplay
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DefaultNamespace.Tutorial, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6601843691275000155, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_Text
       value: "\u0421\u043B\u0430\u0432\u0430"
       objectReference: {fileID: 0}
     - target: {fileID: 7590746760635836631, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590746760635836631, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7590746760635836631, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -50.319946
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 7590746760635836631, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 50.400024
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8830195795916828575, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5853460730637215873, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bac7629313b8cf1449db2d4596b9e3cc, type: 3}
 --- !u!1 &1023834242
 GameObject:
@@ -6415,6 +6496,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3042944657875605219, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
   m_PrefabInstance: {fileID: 1097069312}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1130413797 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3238548430363553824, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+  m_PrefabInstance: {fileID: 1719720194}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1130413798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130413797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f862610d5bb04c48a9eaf8c7dbc6c8b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.2
+  tutorialScript: {fileID: 1369524417}
+  bookTutorial: 1
 --- !u!114 &1133218954 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2096317035278184466, guid: 68b26f641269a1747b23dec93e32fd48, type: 3}
@@ -6558,6 +6660,7 @@ GameObject:
   - component: {fileID: 1160056610}
   - component: {fileID: 1160056612}
   - component: {fileID: 1160056611}
+  - component: {fileID: 1160056613}
   m_Layer: 5
   m_Name: 2
   m_TagString: Untagged
@@ -6617,12 +6720,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0415\u0441\u043B\u0438 \u0436\u0435 \u0432\u044B \u043F\u043E\u0434\u0441\u0443\u043D\u0435\u0442\u0435
-    \u0435\u043C\u0443 \u0434\u0440\u0443\u0433\u043E\u0435 \u0437\u0435\u043B\u044C\u0435,
-    \u043C\u043E\u0436\u0435\u0442 \u043F\u0440\u043E\u0438\u0437\u043E\u0439\u0442\u0438
-    \u0447\u0442\u043E-\u0442\u043E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E\u0435.
-    \n\u0412\u0441\u0435 \u0440\u0435\u0446\u0435\u043F\u0442\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F
-    \u0432 \u0432\u0430\u0448\u0435\u0439 \u043A\u043D\u0438\u0433\u0435."
+  m_Text: 'If you give them a wrong potion, something interesting might happen.
+
+
+    All
+    the recipes are in your book.'
 --- !u!222 &1160056612
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6631,6 +6733,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160056609}
   m_CullTransparentMesh: 0
+--- !u!114 &1160056613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160056609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: 'If you give them a wrong potion, something interesting might happen.
+
+
+    All
+    the recipes are in your book.'
+  id: tutorial visitor wrong potion
 --- !u!1 &1184814571
 GameObject:
   m_ObjectHideFlags: 0
@@ -6726,6 +6846,7 @@ GameObject:
   - component: {fileID: 1259423328}
   - component: {fileID: 1259423330}
   - component: {fileID: 1259423329}
+  - component: {fileID: 1259423331}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -6749,8 +6870,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -482, y: 225}
-  m_SizeDelta: {x: 693.3281, y: 286.84265}
+  m_AnchoredPosition: {x: -482, y: 184.21}
+  m_SizeDelta: {x: 693.3281, y: 368.42133}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1259423329
 MonoBehaviour:
@@ -6785,15 +6906,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041A \u0432\u0430\u043C \u043F\u0440\u0438\u0448\u0435\u043B \u043E\u0447\u0435\u0440\u0435\u0434\u043D\u043E\u0439
-    \u0433\u043E\u0441\u0442\u044C! \u041A\u0430\u0436\u0434\u044B\u0439 \u0438\u0437
-    \u043D\u0438\u0445 \u0445\u043E\u0447\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435
-    \u0437\u0435\u043B\u044C\u0435. \u0421\u0438\u043C\u0432\u043E\u043B \u0432 \u0443\u0433\u043B\u0443
-    \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442, \u043A\u0430\u043A\u043E\u0439
-    \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u0438\u043B\u044C\u043D\u0435\u0435
-    \u0432\u0441\u0435\u0433\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F,
-    \u0435\u0441\u043B\u0438 \u0432\u044B \u0441\u0432\u0430\u0440\u0438\u0442\u0435
-    \u043D\u0443\u0436\u043D\u043E\u0435 \u0437\u0435\u043B\u044C\u0435."
+  m_Text: Another visitor came to you! Each one of them wants a potion. The symbol
+    in the corner shows which of your statuses will change if you brew the right
+    potion.
 --- !u!222 &1259423330
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6802,6 +6917,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1259423327}
   m_CullTransparentMesh: 0
+--- !u!114 &1259423331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259423327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: Another visitor came to you! Each one of them wants a potion. The symbol
+    in the corner shows which of your statuses will change if you brew the right
+    potion.
+  id: tutorial visitor
 --- !u!1 &1260374105
 GameObject:
   m_ObjectHideFlags: 0
@@ -7008,9 +7139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f7a362e5b02477592d78f16b62951f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  youBrewed: "\u0412\u044B \u0441\u0432\u0430\u0440\u0438\u043B\u0438: "
-  noRecipeForThis: "\u0412\u044B \u0441\u0432\u0430\u0440\u0438\u043B\u0438 \u0447\u0442\u043E-\u0442\u043E
-    \u043D\u0435 \u0442\u043E"
+  youBrewed: 'You brewed: '
+  noRecipeForThis: You brewed nothing useful
   wording: {fileID: 1035069297}
   picture: {fileID: 1725612735}
   defaultPicture: {fileID: 21300000, guid: af3de1ed6fa39e64d918febad269ee2e, type: 3}
@@ -7262,6 +7392,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1369524416}
+  - component: {fileID: 1369524417}
   m_Layer: 0
   m_Name: Tutorial
   m_TagString: Untagged
@@ -7282,8 +7413,24 @@ Transform:
   m_Children:
   - {fileID: 11123384}
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1369524417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369524415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a056935580ce48bc9df6a395e608c53f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pages:
+  - {fileID: 5291144}
+  - {fileID: 36834371}
+  - {fileID: 1466258654}
 --- !u!1 &1378976666
 GameObject:
   m_ObjectHideFlags: 0
@@ -7624,7 +7771,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1466258654
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8144,7 +8291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u0425\u0432\u043E\u0441\u0442 \u043A\u0440\u044B\u0441\u044B"
+      value: Rat's tail
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -8281,7 +8428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041B\u0438\u0441\u0442 \u0432\u0435\u0440\u0431\u044F\u0442\u043A\u0438"
+      value: Verbaine leaf
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -8826,12 +8973,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2377827704016049617, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_Pivot.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377827704016049617, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377827704016049617, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -50.319824
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 2377827704016049617, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 50.399902
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5061474871267748993, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_Name
@@ -8839,7 +8994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5061474871267748999, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_RootOrder
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 5061474871267748999, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8881,7 +9036,48 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 0.8894314
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1369524417}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowOnBook
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DefaultNamespace.Tutorial, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
 --- !u!1 &1725612733
 GameObject:
@@ -9002,27 +9198,17 @@ MonoBehaviour:
   cardsDealtAtNight: 3
   nightDelay: 4
   villagerDelay: 2
-  defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
-  defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
-    \u0438 \u0442\u0438\u0445\u0430."
-  defaultNightText3: "\u0414\u0443\u0435\u0442 \u0432\u0435\u0442\u0435\u0440, \u0433\u043E\u043D\u0438\u0442
-    \u0442\u0443\u0447\u043A\u0438."
+  defaultNightText1: Nothing unusual happens.
+  defaultNightText2: Another peaceful night.
+  defaultNightText3: Wind plays with clouds.
   wrongPotionsCheck1: 5
   wrongPotionsFameMod1: -20
   wrongPotionsCheck2: 10
   wrongPotionsFameMod2: -50
-  wrongPotionCheckText1: "\u041B\u044E\u0434\u0438 \u0444\u044B\u0440\u043A\u0430\u044E\u0442
-    \u0438 \u043F\u043E\u0434\u0436\u0438\u043C\u0430\u044E\u0442 \u0433\u0443\u0431\u044B,
-    \u043A\u043E\u0433\u0434\u0430 \u0441\u043B\u044B\u0448\u0430\u0442 \u0432\u0430\u0448\u0435
-    \u0438\u043C\u044F \u2014 \u043E\u043D\u0438 \u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B
-    \u0442\u0435\u043C, \u0447\u0442\u043E \u0432\u0430\u0448\u0438 \u0437\u0435\u043B\u044C\u044F
-    \u0438\u043C \u043D\u0435 \u043F\u043E\u043C\u043E\u0433\u0430\u044E\u0442. "
-  wrongPotionCheckText2: "\u041A\u0440\u0435\u0441\u0442\u044C\u044F\u043D\u0435
-    \u043F\u0440\u0435\u0437\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u043E\u0442\u0437\u044B\u0432\u0430\u044E\u0442\u0441\u044F
-    \u043E \u0432\u0430\u0448\u0438\u0445 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445:
-    \xAB\u0414\u0430 \u043E\u043D\u0430 \u043D\u0438 \u043E\u0434\u043D\u043E\u0433\u043E
-    \u0437\u0435\u043B\u044C\u044F \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E
-    \u0441\u0432\u0430\u0440\u0438\u0442\u044C \u043D\u0435 \u043C\u043E\u0436\u0435\u0442!\xBB "
+  wrongPotionCheckText1: "People snort and sneer when they hear your name \u2013
+    your potions are no help whatsoever."
+  wrongPotionCheckText2: "Peasants speak of you with disdain: \u201CShe can't brew
+    a single potion right!\u201D"
   endings:
   - {fileID: 11400000, guid: 95762e6e2a19cfc428166f4f3a4b4c93, type: 2}
   - {fileID: 11400000, guid: 41b8b947a04200f4880657da55df3c35, type: 2}
@@ -9222,7 +9408,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041D\u0430\u0441\u0442\u0443\u043F\u0438\u043B\u0430 \u043D\u043E\u0447\u044C"
+  m_Text: Nightfall
 --- !u!222 &1825847640
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9275,8 +9461,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 4900000, guid: 4ad30e84e3795dcc99c6d42281dcecc2, type: 3}
-  selectLanguage: 1
-  loadedLanguage: 1
+  selectLanguage: 0
+  loadedLanguage: 0
 --- !u!1 &1856627389
 GameObject:
   m_ObjectHideFlags: 0
@@ -9348,7 +9534,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0414\u0430\u043B\u044C\u0448\u0435"
+  m_Text: Next
 --- !u!222 &1856627392
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9704,7 +9890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041B\u0438\u0441\u0442\u044C\u044F \u043A\u0440\u0430\u043F\u0438\u0432\u044B"
+      value: Nettle leaf
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -9817,7 +10003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041E\u0433\u043D\u0435\u043D\u043D\u044B\u0439 \u043C\u0443\u0445\u043E\u043C\u043E\u0440"
+      value: Fire amanita
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -9941,6 +10127,7 @@ GameObject:
   - component: {fileID: 1933314239}
   - component: {fileID: 1933314241}
   - component: {fileID: 1933314240}
+  - component: {fileID: 1933314242}
   m_Layer: 5
   m_Name: 1
   m_TagString: Untagged
@@ -10000,28 +10187,17 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041A\u0430\u043A\u043E\u0435 \u0431\u044B \u0437\u0435\u043B\u044C\u0435
-    \u0432\u044B \u043D\u0435 \u043E\u0442\u0434\u0430\u043B\u0438 \u0432\u0430\u0448\u0435\u043C\u0443
-    \u0433\u043E\u0441\u0442\u044E, \u044D\u0442\u043E \u043F\u043E\u0432\u043B\u0438\u044F\u0435\u0442
-    \u043D\u0430 \u0432\u0430\u0448\u0435 \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435
-    \u0432 \u043E\u0431\u0449\u0435\u0441\u0442\u0432\u0435 (\u0421\u0442\u0440\u0430\u0445,
-    \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0432\u044B \u043D\u0430\u0432\u043E\u0434\u0438\u0442\u0435
-    \u043D\u0430 \u043B\u044E\u0434\u0435\u0439 \u0438 \u0432\u0430\u0448\u0443 \u0421\u043B\u0430\u0432\u0443
-    \u0432 \u043C\u0438\u0440\u0435).\n\n\u041F\u043E\u0441\u0442\u0430\u0440\u0430\u0439\u0442\u0435\u0441\u044C,
-    \u0447\u0442\u043E\u0431\u044B \u0448\u043A\u0430\u043B\u044B \u0441\u0442\u0430\u0442\u0443\u0441\u043E\u0432
-    \u043D\u0435 \u0434\u043E\u0441\u0442\u0438\u0433\u043B\u0438 \u043D\u0438 \u043E\u0434\u043D\u043E\u0433\u043E
-    \u0438\u0437 \u043A\u043E\u043D\u0446\u043E\u0432, \u0438\u043D\u0430\u0447\u0435
-    \u043C\u043E\u0436\u0435\u0442 \u043F\u0440\u043E\u0438\u0437\u043E\u0439\u0442\u0438
-    \u0447\u0442\u043E-\u0442\u043E \u0441\u0442\u0440\u0430\u0448\u043D\u043E\u0435.\n\n\u0415\u0441\u043B\u0438
-    \u0432\u0430\u043C \u0443\u0434\u0430\u0441\u0442\u0441\u044F \u0441\u043A\u043E\u043F\u0438\u0442\u044C
-    \u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0434\u0435\u043D\u0435\u0433,
-    \u0432\u044B \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0435\u0440\u0435\u0431\u0440\u0430\u0442\u044C\u0441\u044F
-    \u0432 \u0434\u0440\u0443\u0433\u0443\u044E \u0434\u0435\u0440\u0435\u0432\u043D\u044E,
-    \u0433\u0434\u0435 \u043E \u0432\u0430\u0441 \u043D\u0438\u043A\u0442\u043E \u043D\u0435
-    \u0437\u043D\u0430\u0435\u0442. \u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E,
-    \u0442\u043E\u0433\u0434\u0430 \u0432\u0430\u0448\u0430 \u0436\u0438\u0437\u043D\u044C
-    \u0441\u0442\u0430\u043D\u0435\u0442 \u0431\u043E\u043B\u0435\u0435 \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u043E\u0439
-    \u0438 \u0431\u0435\u0437\u043E\u043F\u0430\u0441\u043D\u043E\u0439."
+  m_Text: 'Any potion you give to your visitor will affect your statuses in society
+    (Dread and Fame), be it in small or in great amount.
+
+
+    Try not to reach either
+    end of the status bars, lest something nasty will happen.
+
+
+    If you save enough
+    money, you may move to another village, where no one knows about your powers.
+    Maybe this time your life will be simple and safe.'
 --- !u!222 &1933314241
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10030,6 +10206,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1933314238}
   m_CullTransparentMesh: 0
+--- !u!114 &1933314242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933314238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: 'Any potion you give to your visitor will affect your statuses in society
+    (Dread and Fame), be it in small or in great amount.
+
+
+    Try not to reach either
+    end of the status bars, lest something nasty will happen.
+
+
+    If you save enough
+    money, you may move to another village, where no one knows about your powers.
+    Maybe this time your life will be simple and safe.'
+  id: tutorial dread fame
 --- !u!1 &1939303823
 GameObject:
   m_ObjectHideFlags: 0
@@ -11261,7 +11461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u041D\u043E\u0432\u0430\u044F \u0438\u0433\u0440\u0430"
+  text: New game
   id: menu new game
 --- !u!114 &1593797515909938127
 MonoBehaviour:
@@ -11275,7 +11475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
+  text: Resume
   id: menu continue
 --- !u!1001 &2301198565217525825
 PrefabInstance:
@@ -11290,7 +11490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 159216768320937950, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: text
-      value: "\u041A\u043E\u0440\u0435\u043D\u044C \u043C\u0430\u043D\u0434\u0440\u0430\u0433\u043E\u0440\u044B"
+      value: Mandrake root
       objectReference: {fileID: 0}
     - target: {fileID: 2301198565061899764, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
       propertyPath: m_Name
@@ -12378,7 +12578,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u0414\u0430\u043B\u044C\u0448\u0435"
+  text: Next
   id: night panel button
 --- !u!222 &7089676833072348024
 CanvasRenderer:
@@ -12812,7 +13012,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
+  m_Text: Resume
 --- !u!1 &7780886650573208775
 GameObject:
   m_ObjectHideFlags: 0
@@ -13161,7 +13361,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0412\u044B\u0445\u043E\u0434"
+  m_Text: Exit
 --- !u!1 &7780886650919245428
 GameObject:
   m_ObjectHideFlags: 0
@@ -13448,7 +13648,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u041D\u043E\u0432\u0430\u044F \u0438\u0433\u0440\u0430"
+  m_Text: New game
 --- !u!1 &7780886651708614761
 GameObject:
   m_ObjectHideFlags: 0
@@ -13813,7 +14013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u041D\u0430\u0441\u0442\u0443\u043F\u0438\u043B\u0430 \u043D\u043E\u0447\u044C"
+  text: Nightfall
   id: night panel title
 --- !u!1001 &8220053706243734116
 PrefabInstance:
@@ -13940,7 +14140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee5667ef00a42159da1187de02463f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: "\u0412\u044B\u0445\u043E\u0434"
+  text: Exit
   id: menu exit
 --- !u!222 &8526313878582482638
 CanvasRenderer:

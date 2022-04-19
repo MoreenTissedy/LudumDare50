@@ -102,6 +102,8 @@ namespace EasyLoc
                 {
                     continue;
                 }
+
+                data[langIndex] = data[langIndex].Replace('>', '\n');
                 locData.Add(data[1],data[langIndex]);
             }
 

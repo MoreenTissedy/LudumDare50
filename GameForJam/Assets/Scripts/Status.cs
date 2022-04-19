@@ -13,8 +13,16 @@ namespace DefaultNamespace
         public Status(Statustype type)
         {
             this.type = type;
-            statValue = GameManager.instance.statusBarsStart;
+            if (type == Statustype.Money)
+            {
+                statValue = 0;
+            }
+            else
+            {
+                statValue = GameManager.instance.statusBarsStart;
+            }
             max = GameManager.instance.statusBarsMax;
+            Debug.Log(type+" "+statValue);
         }
 
         public int Value()
@@ -35,6 +43,7 @@ namespace DefaultNamespace
             else if (statValue < min)
                 statValue = min;
             changed?.Invoke();
+            Debug.Log(type+" "+statValue);
             return statValue;
         }
         

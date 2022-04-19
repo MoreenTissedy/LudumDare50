@@ -5,7 +5,6 @@ using DefaultNamespace;
 using UnityEngine;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
 namespace EasyLoc
@@ -149,16 +148,16 @@ namespace EasyLoc
                         //changes to prefab instances in editor are not recorded automatically,
                         //so the values are reverted to prefab defaults at the very first possibility.
                         //to change this behaviour we need this:
-                        if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
-                        {
-                            PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
-                            Debug.Log("record prefab");
-                        }
+                        // if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
+                        // {
+                        //     PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
+                        //     Debug.Log("record prefab");
+                        // }
                     }
                 }
             }
             //signal that scene has changed
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            //EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         [ContextMenu("Export Cards Tool")]

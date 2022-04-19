@@ -19,13 +19,26 @@ namespace DefaultNamespace
         public void Init()
         {
             deck = new Queue<Encounter>(10);
-            foreach (var card in startingCards)
+            foreach (var card in Shuffle(startingCards))
             {
                 deck.Enqueue(card);
             }
 
             cardPool = new List<Encounter>(15);
             //cardPool.AddRange(pool1);
+        }
+
+        public static Encounter[] Shuffle(Encounter[] deck)
+        {
+            List<Encounter> deckList = deck.ToList();
+            var newDeckList = new List<Encounter>(deckList.Count);
+            while (deckList.Count > 0)
+            {
+                int random = Random.Range(0, deckList.Count);
+                newDeckList.Add(deckList[random]);
+                deckList.RemoveAt(random);
+            }
+            return newDeckList.ToArray();
         }
 
         public void NewDayPool(int day)

@@ -47,11 +47,11 @@ namespace DefaultNamespace
                    break;
                case Statustype.Fear:
                    GameManager.instance.fear.changed += () => SetValue(GameManager.instance.fear.Value());
-                   SetValue(GameManager.instance.money.Value());
+                   SetValue(GameManager.instance.fear.Value());
                    break;
                case Statustype.Fame:
                    GameManager.instance.fame.changed += () => SetValue(GameManager.instance.fame.Value());
-                   SetValue(GameManager.instance.money.Value());
+                   SetValue(GameManager.instance.fame.Value());
                    break;
            }
         }

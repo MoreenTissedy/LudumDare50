@@ -52,7 +52,8 @@ public class Mix : MonoBehaviour
 
     public void RandomJolt()
     {
-        mixProcess += Random.Range(-maxJolt, maxJolt);
+        int sign = Random.value > 0.5f ? 1 : -1; 
+        mixProcess += maxJolt*sign;
     }
     public void RandomKey()
     {

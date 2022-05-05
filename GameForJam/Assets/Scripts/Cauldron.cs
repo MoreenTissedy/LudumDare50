@@ -21,6 +21,8 @@ namespace DefaultNamespace
         private AudioSource audios;
         private Mix mixScript;
         private float mixBonusTotal;
+        public float mixBonusMin = 2, mixBonus1 = 3, mixBonus2 = 5;
+        public GameObject diamond;
 
         public List<Ingredients> mix;
 
@@ -70,7 +72,7 @@ namespace DefaultNamespace
             //Witch.instance.Activate();
             splash.Play();
             audios.PlayOneShot(add);
-            float bonus = 100/Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess);
+            float bonus = Mathf.Clamp(mixScript.keyMixWindow/2/Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess), 0, 5);
             mixBonusTotal += bonus;
             Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
@@ -80,6 +82,7 @@ namespace DefaultNamespace
             }
             else
             {
+                mixScript.RandomJolt();
                 //RandomMixColor();
             }
         }
@@ -88,24 +91,36 @@ namespace DefaultNamespace
         {
             mix.Clear();
             mixBonusTotal = 0;
+            mixScript.RandomKey();
+            mixScript.SetToKey();
         }
         
         public Potions Brew()
         {
             audios.PlayOneShot(brew);
-            foreach (var recipe in RecipeBook.instance.recipes)
+            
+            if (mixBonusTotal > mixBonusMin)
             {
-                if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
-                    mix.Contains(recipe.ingredient3))
+                foreach (var recipe in RecipeBook.instance.recipes)
                 {
-                    mix.Clear();
-                    //color mix in the potion color
-                    //MixColor(recipe.color);
-                    Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal}");
-                    return recipe.potion;
+                    if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
+                        mix.Contains(recipe.ingredient3))
+                    {
+                        mix.Clear();
+                        //color mix in the potion color
+                        //MixColor(recipe.color);
+                        Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal-mixBonusMin}");
+                        var numDiamonds = Mathf.FloorToInt(mixBonusTotal-mixBonusMin);
+                        for (int i = 0; i < numDiamonds; i++)
+                        {
+                            Debug.Log("Bonus!");
+                            Instantiate(diamond, transform.position, Quaternion.identity);
+                        }
+                        return recipe.potion;
+                    }
                 }
             }
-            
+
             //RandomMixColor();
             mix.Clear();
             return Potions.Placebo;

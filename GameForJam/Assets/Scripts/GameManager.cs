@@ -123,12 +123,10 @@ namespace DefaultNamespace
 
                 if (RecipeBook.instance.bookObject.activeInHierarchy)
                 {
-                    Debug.Log("recipe book closed");
                     RecipeBook.instance.CloseBook();
                 }
                 else
                 {
-                    Debug.Log("pause menu");
                     pauseMenu.SetActive(true);
                 }
             }
@@ -152,7 +150,6 @@ namespace DefaultNamespace
 
         private void Start()
         {
-            Debug.Log("start GM");
             cardDeck.Init();
             //Delay draw card to ensure every object has initialized
             Invoke("DrawCard",0.2f);

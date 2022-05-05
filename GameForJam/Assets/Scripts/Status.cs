@@ -22,7 +22,6 @@ namespace DefaultNamespace
                 statValue = GameManager.instance.statusBarsStart;
             }
             max = GameManager.instance.statusBarsMax;
-            Debug.Log(type+" "+statValue);
         }
 
         public int Value()
@@ -32,7 +31,6 @@ namespace DefaultNamespace
 
         public int Add(int num)
         {
-            Debug.Log($"{type} add {num}");
             if (num == 0)
                 return statValue;
             if (type == Statustype.Money && num < 0)

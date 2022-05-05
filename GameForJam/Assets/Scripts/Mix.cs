@@ -21,6 +21,8 @@ public class Mix : MonoBehaviour
     public float keyMixWindow = 100f;
     public float overMixValue = 1000f;
     public float overMixThreshold = 800f;
+    public float maxJolt = 100;
+    public float minSimulation = 0.2f, maxSimulation = 5f;
     
     private bool mixing = false;
     private List<int> lastPositions = new List<int>(5);
@@ -42,6 +44,22 @@ public class Mix : MonoBehaviour
         effectMain.startColor = blankColor;
     }
 
+    public void SetToKey()
+    {
+        mixProcess = keyMixValue + Random.Range(-keyMixWindow/2, keyMixWindow/2);
+        speed = 0;
+    }
+
+    public void RandomJolt()
+    {
+        mixProcess += Random.Range(-maxJolt, maxJolt);
+    }
+    public void RandomKey()
+    {
+        var bound = (overMixThreshold - keyMixWindow / 2);
+        keyMixValue = Random.Range(-bound, bound);
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -54,11 +72,16 @@ public class Mix : MonoBehaviour
         //proceed process
         mixProcess += speed;
         //effect speed
-        effectMain.simulationSpeed = Mathf.Abs(speed);
+        effectMain.simulationSpeed = Mathf.Clamp(Mathf.Abs(speed), minSimulation, maxSimulation);
         //color overmixed
         if (Mathf.Abs(mixProcess) > overMixValue)
         {
             effectMain.startColor = overmixColor;
+        }
+        else if (Mathf.Abs(mixProcess) > overMixThreshold)
+        {
+            var percent = (overMixValue - Mathf.Abs(mixProcess))/(overMixValue-overMixThreshold);
+            effectMain.startColor = Color.Lerp(overmixColor, blankColor, percent);
         }
         //color if within key window
         else if (mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2))
@@ -100,7 +123,6 @@ public class Mix : MonoBehaviour
             return;
 
 
-        Debug.Log(i);
         currentQuarter = i;
         lastPositions.Add(i);
         if (lastPositions.Count > 4)
@@ -120,7 +142,6 @@ public class Mix : MonoBehaviour
         int counterclockwiseCheckllist = 0;
         foreach (int k in lastPositions)
         {
-            Debug.Log(k);
             if (lastI == -1)
             {
                 lastI = k;

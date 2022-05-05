@@ -19,12 +19,15 @@ namespace DefaultNamespace
         public float splashDelay = 2f;
         public AudioClip brew, add;
         private AudioSource audios;
+        private Mix mixScript;
+        private float mixBonusTotal;
 
         public List<Ingredients> mix;
 
         public event Action mouseEnterCauldronZone;
         private void Awake()
         {
+            mixScript = FindObjectOfType<Mix>();
             // if (instance is null)
             //     instance = this;
             // else
@@ -67,7 +70,9 @@ namespace DefaultNamespace
             //Witch.instance.Activate();
             splash.Play();
             audios.PlayOneShot(add);
-            Debug.Log("Добавлено: "+ingredient);
+            float bonus = 100/Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess);
+            mixBonusTotal += bonus;
+            Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
             if (mix.Count == 3)
             {
@@ -75,13 +80,14 @@ namespace DefaultNamespace
             }
             else
             {
-                RandomMixColor();
+                //RandomMixColor();
             }
         }
 
         public void Clear()
         {
             mix.Clear();
+            mixBonusTotal = 0;
         }
         
         public Potions Brew()
@@ -94,12 +100,13 @@ namespace DefaultNamespace
                 {
                     mix.Clear();
                     //color mix in the potion color
-                    MixColor(recipe.color);
+                    //MixColor(recipe.color);
+                    Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal}");
                     return recipe.potion;
                 }
             }
             
-            RandomMixColor();
+            //RandomMixColor();
             mix.Clear();
             return Potions.Placebo;
         }

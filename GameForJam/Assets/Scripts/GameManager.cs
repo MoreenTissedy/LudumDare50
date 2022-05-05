@@ -160,7 +160,6 @@ namespace DefaultNamespace
 
         public void DrawCard()
         {
-            Debug.Log(NewEncounter);
             NewEncounter?.Invoke(cardsDrawnToday, cardsPerDay);
             Cauldron.instance.Clear();
             currentCard = cardDeck.GetTopCard();

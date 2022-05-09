@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Mix : MonoBehaviour
 {
     public RectTransform centerPoint;
-    public ParticleSystem effect;
+    public SpriteRenderer effect;
+    public Animator effectAnim;
     [ColorUsage(false)]
     public Color blankColor = Color.white;
     [ColorUsage(false)]
@@ -23,11 +25,13 @@ public class Mix : MonoBehaviour
     public float overMixThreshold = 800f;
     public float maxJolt = 100;
     public float minSimulation = 0.2f, maxSimulation = 5f;
+    public float joltTime = 0.2f;
     
     private bool mixing = false;
     private List<int> lastPositions = new List<int>(5);
     private int currentQuarter = -1;
     public float speed, mixProcess;
+    private Vector2 initialEffectScale;
     
     public float MixProcess => mixProcess;
 
@@ -40,8 +44,8 @@ public class Mix : MonoBehaviour
 
     private void Start()
     {
-        effectMain = effect.main;
-        effectMain.startColor = blankColor;
+        effect.color = blankColor;
+        initialEffectScale = effectAnim.transform.localScale;
     }
 
     public void SetToKey()
@@ -53,7 +57,7 @@ public class Mix : MonoBehaviour
     public void RandomJolt()
     {
         int sign = Random.value > 0.5f ? 1 : -1; 
-        mixProcess += maxJolt*sign;
+        DOTween.To(() => mixProcess, (value) => mixProcess = value, mixProcess + maxJolt*sign, joltTime);
     }
     public void RandomKey()
     {
@@ -72,29 +76,10 @@ public class Mix : MonoBehaviour
         speed -= speed * speedReduceRate;
         //proceed process
         mixProcess += speed;
-        //effect speed
-        effectMain.simulationSpeed = Mathf.Clamp(Mathf.Abs(speed), minSimulation, maxSimulation);
-        //color overmixed
-        if (Mathf.Abs(mixProcess) > overMixValue)
-        {
-            effectMain.startColor = overmixColor;
-        }
-        else if (Mathf.Abs(mixProcess) > overMixThreshold)
-        {
-            var percent = (overMixValue - Mathf.Abs(mixProcess))/(overMixValue-overMixThreshold);
-            effectMain.startColor = Color.Lerp(overmixColor, blankColor, percent);
-        }
-        //color if within key window
-        else if (mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2))
-        {
-            var percentKey = Mathf.Abs(keyMixValue-mixProcess)/(keyMixValue - keyMixWindow / 2);
-            effectMain.startColor = Color.Lerp(keyColor, blankColor, percentKey);
-        }
-        else
-        {
-            effectMain.startColor = blankColor;
-        }
         
+        UpdateEffectSpeed();
+        UpdateEffectColor();
+
         if (!mixing)
             return;
         Vector2 pointer = Input.mousePosition;
@@ -118,12 +103,51 @@ public class Mix : MonoBehaviour
 
     }
 
+    private void UpdateEffectColor()
+    {
+        //color overmixed
+        if (Mathf.Abs(mixProcess) > overMixValue)
+        {
+            effect.color = overmixColor;
+        }
+        //color nearly overmixed
+        else if (Mathf.Abs(mixProcess) > overMixThreshold)
+        {
+            var percent = (overMixValue - Mathf.Abs(mixProcess)) / (overMixValue - overMixThreshold);
+            effect.color = Color.Lerp(overmixColor, blankColor, percent);
+        }
+        //color if within key window
+        else if (mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2))
+        {
+            var percentKey = Mathf.Abs(keyMixValue - mixProcess) / (keyMixWindow / 2);
+            effect.color = Color.Lerp(keyColor, blankColor, percentKey);
+        }
+        //set color blank
+        else
+        {
+            effect.color = blankColor;
+        }
+    }
+
+    private void UpdateEffectSpeed()
+    {
+        effectAnim.speed = Mathf.Clamp(Mathf.Abs(speed), minSimulation, maxSimulation);
+        if (speed < 0)
+        {
+            effectAnim.transform.localScale = new Vector3(initialEffectScale.x, -initialEffectScale.y, 1);
+        }
+        else
+        {
+            effectAnim.transform.localScale = new Vector3(initialEffectScale.x, initialEffectScale.y, 1);
+        }
+    }
+
     private void RecordQuarter(int i)
     {
         if (currentQuarter == i)
             return;
 
-
+        float targetSpeed = 0;
         currentQuarter = i;
         lastPositions.Add(i);
         if (lastPositions.Count > 4)
@@ -133,7 +157,7 @@ public class Mix : MonoBehaviour
             lastSpeed.Add(speedCoef / (Time.timeSinceLevelLoad - lastTime));
             if (lastSpeed.Count>4)
                 lastSpeed.RemoveAt(0);
-            speed = lastSpeed.Average();
+            targetSpeed = lastSpeed.Average();
         }
 
         lastTime = Time.timeSinceLevelLoad;
@@ -148,7 +172,7 @@ public class Mix : MonoBehaviour
                 lastI = k;
                 continue;
             }
-            else if (k - lastI == 1 || k-lastI == -3)
+            if (k - lastI == 1 || k-lastI == -3)
                 clockwiseChecklist++;
             else if (k - lastI == -1 || k-lastI == 3)
                 counterclockwiseCheckllist++;
@@ -159,11 +183,12 @@ public class Mix : MonoBehaviour
         if (clockwiseChecklist == 3)
         {
             //clockwise detected
+            DOTween.To(() => speed, (value) => speed = value, targetSpeed, joltTime);
         }
         else if (counterclockwiseCheckllist == 3)
         {
             //counter-clockwise detected
-            speed = -speed;
+            DOTween.To(() => speed, (value) => speed = value, -targetSpeed, joltTime);
         }
         else
         {

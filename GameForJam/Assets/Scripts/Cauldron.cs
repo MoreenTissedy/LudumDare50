@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 
 namespace DefaultNamespace
 {
-    public class Cauldron : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
+    public class Cauldron : MonoBehaviour
     {
         public static Cauldron instance;
 
@@ -20,16 +20,32 @@ namespace DefaultNamespace
         public AudioClip brew, add;
         private AudioSource audios;
         private Mix mixScript;
+        private Fire fireScript;
+        private bool mixFound, fireFound;
         private float mixBonusTotal;
-        public float mixBonusMin = 2, mixBonus1 = 3, mixBonus2 = 5;
+        public float mixBonusMin = 2;
         public GameObject diamond;
 
         public List<Ingredients> mix;
 
         public event Action mouseEnterCauldronZone;
+        public event Action ingredientAdded;
         private void Awake()
         {
-            mixScript = FindObjectOfType<Mix>();
+            fireScript = GetComponentInChildren<Fire>();
+            if (fireScript is null)
+                fireFound = false;
+            else
+            {
+                fireFound = true;
+            }
+            mixScript = GetComponent<Mix>();
+            if (mixScript is null)
+                mixFound = false;
+            else
+            {
+                mixFound = true;
+            }
             // if (instance is null)
             //     instance = this;
             // else
@@ -65,17 +81,28 @@ namespace DefaultNamespace
             yield return new WaitForSeconds(splashDelay);
             splash.startColor = color;
         }
-        
+
 
         public void AddToMix(Ingredients ingredient)
         {
             //Witch.instance.Activate();
             splash.Play();
             audios.PlayOneShot(add);
-            float bonus = Mathf.Clamp(mixScript.keyMixWindow/2/Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess), 0, 5);
+
+            float bonus = 0;
+            if (mixFound)
+            {
+                float bonusValue = mixScript.keyMixWindow / 2 / Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess);
+                bonus += Mathf.Clamp(bonusValue, 0, 5);
+            }
+            if (fireFound && !fireScript.Boiling)
+            {
+                bonus = 0;
+            }
             mixBonusTotal += bonus;
             Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
+            ingredientAdded?.Invoke();
             if (mix.Count == 3)
             {
                 BrewAction();
@@ -128,7 +155,7 @@ namespace DefaultNamespace
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            splash.Play();
+            //splash.Play();
         }
 
         private void BrewAction()
@@ -140,7 +167,8 @@ namespace DefaultNamespace
             GameManager.instance.EndEncounter(result);
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+
+        public void PointerEntered()
         {
             mouseEnterCauldronZone?.Invoke();
         }

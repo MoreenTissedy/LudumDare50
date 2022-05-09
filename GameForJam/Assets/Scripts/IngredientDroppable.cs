@@ -30,7 +30,7 @@ namespace DefaultNamespace
             if (tooltip != null && tooltip.text == String.Empty)
             {
                 tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
-                Debug.Log("override ingredient text!");
+                //Debug.Log("override ingredient text!");
             }
 
             image = GetComponentInChildren<SpriteRenderer>();

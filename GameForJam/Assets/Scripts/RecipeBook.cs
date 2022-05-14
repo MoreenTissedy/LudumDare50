@@ -23,6 +23,7 @@ namespace DefaultNamespace
 
         public AudioSource left, right;
         public Text prevPageNum, nextPageNum;
+
         
 
         private void Awake()

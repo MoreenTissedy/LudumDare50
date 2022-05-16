@@ -1374,6 +1374,7 @@ MonoBehaviour:
   ingredient1: {fileID: 0}
   ingredient2: {fileID: 0}
   ingredient3: {fileID: 0}
+  currentRecipe: {fileID: 0}
 --- !u!1001 &222198771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1498,6 +1499,7 @@ MonoBehaviour:
   ingredient1: {fileID: 0}
   ingredient2: {fileID: 0}
   ingredient3: {fileID: 0}
+  currentRecipe: {fileID: 0}
 --- !u!1 &264877339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2671,6 +2673,7 @@ MonoBehaviour:
   ingredient1: {fileID: 0}
   ingredient2: {fileID: 0}
   ingredient3: {fileID: 0}
+  currentRecipe: {fileID: 0}
 --- !u!1 &555691530
 GameObject:
   m_ObjectHideFlags: 0
@@ -6360,6 +6363,7 @@ MonoBehaviour:
   ingredient1: {fileID: 0}
   ingredient2: {fileID: 0}
   ingredient3: {fileID: 0}
+  currentRecipe: {fileID: 0}
 --- !u!1 &1085322487
 GameObject:
   m_ObjectHideFlags: 0
@@ -9789,6 +9793,10 @@ PrefabInstance:
     - target: {fileID: 2377827704016049617, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2867338852582770390, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwitchToolTip
       objectReference: {fileID: 0}
     - target: {fileID: 5061474871267748993, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_Name

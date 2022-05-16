@@ -10,10 +10,11 @@ namespace DefaultNamespace
         public Text description;
         public Image image;
         public Image ingredient1, ingredient2, ingredient3;
+        public Recipe currentRecipe;
 
         public void Display(Recipe recipe)
         {
-            
+            currentRecipe = recipe;
             image.enabled = true;
             ingredient1.enabled = true;
             ingredient2.enabled = true;

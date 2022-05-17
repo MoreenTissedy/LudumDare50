@@ -9928,7 +9928,7 @@ PrefabInstance:
     - target: {fileID: 7978655693101030234, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1719720196}
+      objectReference: {fileID: 0}
     - target: {fileID: 7978655693101030234, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ButtonPressed
@@ -9948,23 +9948,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 7831655297800714135, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
---- !u!1 &1719720195 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5061474871267748993, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
-  m_PrefabInstance: {fileID: 1719720194}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1719720196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1719720195}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f442cc718dfb43a4e890c8f8bf86166d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1724902900
 GameObject:
   m_ObjectHideFlags: 0
@@ -10121,6 +10104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1745953328}
   - component: {fileID: 1745953327}
+  - component: {fileID: 1745953329}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -10225,6 +10209,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1745953329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745953326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b72b67826afd4f4dabbeec738fa103b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allRecipes:
+  - {fileID: 11400000, guid: f9ef458064cd2e646808f184b5d51ca5, type: 2}
+  - {fileID: 11400000, guid: dce8e3ca932692146b9d7d3676ef7804, type: 2}
+  - {fileID: 11400000, guid: 6f2ecdaa363271545ac4380c4559e9bc, type: 2}
+  - {fileID: 11400000, guid: c07e732133f637344854d4d4b2674243, type: 2}
+  - {fileID: 11400000, guid: 64e588419063d1b4e95f26a082bb0415, type: 2}
+  - {fileID: 11400000, guid: 149f98d7d1bc8fd48b42f8a4cb57a654, type: 2}
+  - {fileID: 11400000, guid: b88d579a37c45b941a4447deb0c3f810, type: 2}
+  - {fileID: 11400000, guid: 2c070ffe5cf54d95b825b6b3a1f6522d, type: 2}
+  - {fileID: 11400000, guid: 24177f9f873c3f249b9287af38ab834a, type: 2}
+  - {fileID: 11400000, guid: c898fdd40370490458dcf70c8b6fdd1a, type: 2}
+  - {fileID: 11400000, guid: 439f16c9f0c04f84f83948be19aaf7c3, type: 2}
+  - {fileID: 11400000, guid: dcd99721d00866548a49cbea7defa3e7, type: 2}
+  - {fileID: 11400000, guid: 3566ebb8576d3ac42bb157756658a8ea, type: 2}
+  - {fileID: 11400000, guid: 781ee56ce0f095e47b03d0802675e4e0, type: 2}
 --- !u!1 &1758493205
 GameObject:
   m_ObjectHideFlags: 0

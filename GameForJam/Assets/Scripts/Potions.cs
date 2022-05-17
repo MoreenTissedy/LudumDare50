@@ -8,6 +8,7 @@ namespace DefaultNamespace
         Chameleon, Beauty,
         Sleep, Wake,
         Laughter, VoiceChange, Memory,
+        MushroomSoup,
         Placebo
     }
 }

@@ -128,7 +128,7 @@ namespace DefaultNamespace
             
             if (mixBonusTotal > mixBonusMin)
             {
-                foreach (var recipe in RecipeBook.instance.recipes)
+                foreach (var recipe in RecipeSet.instance.allRecipes)
                 {
                     if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
                         mix.Contains(recipe.ingredient3))
@@ -142,6 +142,11 @@ namespace DefaultNamespace
                         {
                             Debug.Log("Bonus!");
                             Instantiate(diamond, transform.position, Quaternion.identity);
+                        }
+                        //if recipe is not in book -> add
+                        if (!RecipeBook.instance.recipes.Contains(recipe))
+                        {
+                            RecipeBook.instance.recipes.Add(recipe);
                         }
                         return recipe.potion;
                     }

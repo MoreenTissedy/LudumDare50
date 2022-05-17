@@ -17,7 +17,7 @@ namespace DefaultNamespace
         public RecipeBookEntry[] entries;
         public GameObject rightCorner, leftCorner; 
         
-        public Recipe[] recipes;
+        public List<Recipe> recipes;
 
         private int currentPage = 0;
 
@@ -103,7 +103,7 @@ namespace DefaultNamespace
             for (int i = 0; i < entries.Length; i++)
             {
                 int num = currentPage*entries.Length + i;
-                if (num < recipes.Length)
+                if (num < recipes.Count)
                 {
                     entries[i].Display(recipes[num]);
                 }
@@ -126,10 +126,10 @@ namespace DefaultNamespace
         {
             if (!bookObject.activeInHierarchy)
                 return;
-            if ((currentPage+1)*entries.Length >= recipes.Length )
+            if ((currentPage+1)*entries.Length >= recipes.Count )
                 return;
             currentPage++;
-            if ((currentPage+1)*entries.Length >= recipes.Length )
+            if ((currentPage+1)*entries.Length >= recipes.Count )
                 rightCorner.SetActive(false);
             leftCorner.SetActive(true);
             UpdatePage();

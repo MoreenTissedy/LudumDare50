@@ -11,7 +11,7 @@ public class PotionTooltip : MonoBehaviour
   Image[] ingImages = new Image[3];
   static Recipe recipy;
   RecipeBookEntry recipeBook;
-  SpriteRenderer[] currentIngredients = new SpriteRenderer [3];
+  ParticleSystem ingredientParticle;
   
   static bool isVisible = false;
 
@@ -55,8 +55,8 @@ public class PotionTooltip : MonoBehaviour
             //Debug.Log(ingredientsInScene[c].GetComponentInChildren<SpriteRenderer>().sprite.name);    
             if(ingImages[i].sprite == ingredientsInScene[c].GetComponentInChildren<SpriteRenderer>().sprite)
             {
-                currentIngredients[i] = ingredientsInScene[c].GetComponentInChildren<SpriteRenderer>();
-                currentIngredients[i].color = Color.black; 
+                ingredientParticle = ingredientsInScene[c].GetComponentInChildren<ParticleSystem>();
+                ingredientParticle.Play();
                 //Debug.Log(ingImages[i].sprite.name);
             }
         }
@@ -68,11 +68,14 @@ public class PotionTooltip : MonoBehaviour
     //Debug.Log("выключить");
     for (int i = 0; i<10; i++)
     {
-       ingredientsInScene[i].GetComponentInChildren<SpriteRenderer>().color = Color.white; 
+       ingredientParticle = ingredientsInScene[i].GetComponentInChildren<ParticleSystem>();
+       ingredientParticle.Stop();
        //Debug.Log(temp[i].sprite.name);
     }
     isVisible = false;
   }
+
+  
 
 }
 }

@@ -23,7 +23,7 @@ namespace DefaultNamespace
         {
             script = GetComponentInParent<IngredientDroppable>();
             base.SetText(text);
-            script.dataList.Get(script.type).friendlyName = text;
+            script.dataList.Get(script.ingredient).friendlyName = text;
         }
     }
 }

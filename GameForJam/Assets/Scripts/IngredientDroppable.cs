@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace DefaultNamespace
@@ -9,7 +10,7 @@ namespace DefaultNamespace
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public Ingredients type;
+        [FormerlySerializedAs("type")] public Ingredients ingredient;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
@@ -29,19 +30,19 @@ namespace DefaultNamespace
             tooltip = GetComponentInChildren<Text>();
             if (tooltip != null && tooltip.text == String.Empty)
             {
-                tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
+                tooltip.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
                 //Debug.Log("override ingredient text!");
             }
 
             image = GetComponentInChildren<SpriteRenderer>();
-            image.sprite = dataList?.Get(type)?.image;
+            image.sprite = dataList?.Get(ingredient)?.image;
         }
 
         private void Start()
         {
             if (tooltip != null)
             {
-                tooltip.text = dataList?.Get(type)?.friendlyName ?? "not specified";
+                tooltip.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
                 tooltip.gameObject.SetActive(false);
             }
 
@@ -53,7 +54,7 @@ namespace DefaultNamespace
             if (tooltip is null)
                 return;
             tooltip.gameObject.SetActive(true);
-            if (!Cauldron.instance.mix.Contains(type))
+            if (!Cauldron.instance.mix.Contains(ingredient))
                 image.gameObject.transform.
                     DORotate(new Vector3(0,0, rotateAngle), rotateSpeed).
                     SetLoops(-1, LoopType.Yoyo).
@@ -72,7 +73,7 @@ namespace DefaultNamespace
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (Cauldron.instance.mix.Contains(type))
+            if (Cauldron.instance.mix.Contains(ingredient))
                 return;
             dragging = true;
             image.transform.DOKill(true);
@@ -81,7 +82,7 @@ namespace DefaultNamespace
 
         void OverCauldron()
         {
-            Cauldron.instance.AddToMix(type);
+            Cauldron.instance.AddToMix(ingredient);
             dragging = false;
             transform.position = initialPosition;
             Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;

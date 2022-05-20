@@ -13,7 +13,6 @@ public class TooltipManager : MonoBehaviour
     Recipe currentRecipe;
     bool isHighlighted;
     Dictionary<Ingredients, IngredientDroppable> dict = new Dictionary<Ingredients, IngredientDroppable>();
-    IngredientDroppable temp;
     
     void Awake()
     {
@@ -36,7 +35,7 @@ public class TooltipManager : MonoBehaviour
     
     public void EnableOneHighlight(Ingredients ingredientToHighlight)
     {
-        if (dict.TryGetValue(ingredientToHighlight, out temp))
+        if (dict.TryGetValue(ingredientToHighlight, out var temp))
             {temp.EnableHighlight();}
     }
 
@@ -44,14 +43,14 @@ public class TooltipManager : MonoBehaviour
     {
         foreach(var i in ingredientsToHighlight)
         {
-            if(dict.TryGetValue(i, out temp))
+            if(dict.TryGetValue(i, out var temp))
             {temp.EnableHighlight();}
         }
     }
 
     public void DisableOneIngredient(Ingredients ingredientToHighlight)
     {
-        if(dict.TryGetValue(ingredientToHighlight, out temp))
+        if(dict.TryGetValue(ingredientToHighlight, out var temp))
             {temp.DisableHighlight();}
     }
 
@@ -59,7 +58,7 @@ public class TooltipManager : MonoBehaviour
     {
         foreach(var i in ingredientsToHighlight)
         {
-            if(dict.TryGetValue(i, out temp))
+            if(dict.TryGetValue(i, out var temp))
                 {temp.DisableHighlight();}
         }
     }
@@ -68,7 +67,7 @@ public class TooltipManager : MonoBehaviour
     {
         foreach(var i in dict.Keys)
         {
-            if(dict.TryGetValue(i, out temp))
+            if(dict.TryGetValue(i, out var temp))
                 {temp.DisableHighlight();}
         }
     }

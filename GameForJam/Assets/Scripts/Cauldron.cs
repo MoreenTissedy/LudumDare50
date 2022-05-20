@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.Audio;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
@@ -16,7 +17,8 @@ namespace DefaultNamespace
         [SerializeField] TooltipManager tooltipManager;
         public static Cauldron instance;
 
-        public ParticleSystem mixColor, bubbleColor, splash;
+        public SpriteRenderer baseMix, effectMix;
+        public ParticleSystem bubbleColor, splash;
         public float splashDelay = 2f;
         public AudioClip brew, add;
         private AudioSource audios;
@@ -26,6 +28,8 @@ namespace DefaultNamespace
         private float mixBonusTotal;
         public float mixBonusMin = 2;
         public GameObject diamond;
+        public float lighterColorCoef = 0.2f;
+        public float darkerColorCoef = 0.3f; 
 
         public List<Ingredients> mix;
 
@@ -63,16 +67,19 @@ namespace DefaultNamespace
             float randomHue = Random.value;
             Color newColor = Color.HSVToRGB(randomHue, 1, 0.7f);
             Color lighterColor = Color.HSVToRGB(randomHue, 0.8f, 0.7f);
-            mixColor.startColor = newColor;
+            effectMix.color = lighterColor;
+            baseMix.color = newColor;
             bubbleColor.startColor = lighterColor;
             StartCoroutine(ColorSplash(newColor));
         }
 
-        void MixColor(Color color)
+        public void MixColor(Color color)
         {
             Color.RGBToHSV(color, out float h, out float s, out float v);
-            Color lighterColor = Color.HSVToRGB(h, s - 0.2f, v);
-            mixColor.startColor = color;
+            Color lighterColor = Color.HSVToRGB(h, s - lighterColorCoef, v);
+            Color darkerColor = Color.HSVToRGB(h, s , v-darkerColorCoef);
+            effectMix.color = darkerColor;
+            baseMix.color = color;
             bubbleColor.startColor = lighterColor;
             StartCoroutine(ColorSplash(color));
         }

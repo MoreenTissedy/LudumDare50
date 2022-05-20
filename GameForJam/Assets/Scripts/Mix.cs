@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Mix : MonoBehaviour
 {
     public RectTransform centerPoint;
-    public SpriteRenderer effect;
+    public Cauldron pot;
     public Animator effectAnim;
     [ColorUsage(false)]
     public Color blankColor = Color.white;
@@ -27,7 +26,7 @@ public class Mix : MonoBehaviour
     public float minSimulation = 0.2f, maxSimulation = 5f;
     public float joltTime = 0.2f;
     
-    private bool mixing = false;
+    private bool mixing;
     private List<int> lastPositions = new List<int>(5);
     private int currentQuarter = -1;
     public float speed, mixProcess;
@@ -44,7 +43,10 @@ public class Mix : MonoBehaviour
 
     private void Start()
     {
-        effect.color = blankColor;
+        pot = GetComponentInParent<Cauldron>();
+        if (pot is null)
+            Debug.LogError("Mix script should be under Cauldron script");
+        pot?.MixColor(blankColor);
         initialEffectScale = effectAnim.transform.localScale;
     }
 
@@ -77,6 +79,12 @@ public class Mix : MonoBehaviour
         //proceed process
         mixProcess += speed;
         
+        //cyclic mixing
+        if (mixProcess > overMixThreshold)
+            mixProcess = -overMixThreshold;
+        else if (mixProcess < -overMixThreshold)
+            mixProcess = overMixThreshold;
+        
         UpdateEffectSpeed();
         UpdateEffectColor();
 
@@ -108,24 +116,24 @@ public class Mix : MonoBehaviour
         //color overmixed
         if (Mathf.Abs(mixProcess) > overMixValue)
         {
-            effect.color = overmixColor;
+            pot?.MixColor(overmixColor);
         }
         //color nearly overmixed
         else if (Mathf.Abs(mixProcess) > overMixThreshold)
         {
             var percent = (overMixValue - Mathf.Abs(mixProcess)) / (overMixValue - overMixThreshold);
-            effect.color = Color.Lerp(overmixColor, blankColor, percent);
+            pot?.MixColor(Color.Lerp(overmixColor, blankColor, percent));
         }
         //color if within key window
         else if (mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2))
         {
             var percentKey = Mathf.Abs(keyMixValue - mixProcess) / (keyMixWindow / 2);
-            effect.color = Color.Lerp(keyColor, blankColor, percentKey);
+            pot?.MixColor(Color.Lerp(keyColor, blankColor, percentKey));
         }
         //set color blank
         else
         {
-            effect.color = blankColor;
+            pot?.MixColor(blankColor);
         }
     }
 

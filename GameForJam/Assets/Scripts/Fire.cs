@@ -7,7 +7,7 @@ namespace DefaultNamespace
     /// <summary>
     /// child to cauldron, add box collider
     /// </summary>
-    public class Fire : MonoBehaviour, IBeginDragHandler, IDragHandler
+    public class Fire : MonoBehaviour, IPointerClickHandler
     {
         public ParticleSystem bubbles;
         public AudioSource bubblesSound;
@@ -90,7 +90,7 @@ namespace DefaultNamespace
             }
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public void OnPointerClick(PointerEventData eventData)
         {
             bubblesSound.PlayOneShot(fireSound, 0.5f);
             temperature += tempIncrement;

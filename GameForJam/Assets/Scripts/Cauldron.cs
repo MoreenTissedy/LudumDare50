@@ -13,6 +13,7 @@ namespace DefaultNamespace
 {
     public class Cauldron : MonoBehaviour
     {
+        [SerializeField] TooltipManager tooltipManager;
         public static Cauldron instance;
 
         public ParticleSystem mixColor, bubbleColor, splash;
@@ -103,6 +104,7 @@ namespace DefaultNamespace
             Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
             ingredientAdded?.Invoke();
+            tooltipManager.DisableOneIngredient(ingredient);
             if (mix.Count == 3)
             {
                 BrewAction();

@@ -10,6 +10,7 @@ namespace DefaultNamespace
 {
     public class RecipeBook : MonoBehaviour
     {
+        [SerializeField] TooltipManager tooltipManager;
         public static RecipeBook instance;
     
     
@@ -149,5 +150,11 @@ namespace DefaultNamespace
             UpdatePage();
             left.Play();
         }
+
+        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
+    {
+        tooltipManager.SwitchRecipeHighlight(recipeBookEntry.currentRecipe);
+        CloseBook();
+    }
     }
 }

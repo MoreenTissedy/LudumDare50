@@ -16,12 +16,13 @@ namespace DefaultNamespace
         public float returntime = 0.5f;
         public IngredientsData dataList;
         
-        
         [SerializeField, HideInInspector]
         private Text tooltip;
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
 
+        ParticleSystem ingredientParticle;
+        bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
 
@@ -36,6 +37,7 @@ namespace DefaultNamespace
 
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
+            ingredientParticle = GetComponentInChildren<ParticleSystem>();
         }
 
         private void Start()
@@ -104,6 +106,24 @@ namespace DefaultNamespace
             transform.DOMove(initialPosition, returntime);
             dragging = false;
             Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;
+        }
+
+        public void EnableHighlight()
+        {
+            if(!isHighlighted)
+            {
+                ingredientParticle.Play();
+                isHighlighted = true;
+            }
+        }
+
+        public void DisableHighlight()
+        {
+            if(isHighlighted)
+            {
+                ingredientParticle.Stop();
+                isHighlighted = false;
+            }
         }
         
     }

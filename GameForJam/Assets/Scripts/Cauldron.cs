@@ -127,6 +127,7 @@ namespace DefaultNamespace
         public Potions Brew()
         {
             audios.PlayOneShot(brew);
+            tooltipManager.DisableAllHIghlights();
             
             if (mixBonusTotal > mixBonusMin)
             {

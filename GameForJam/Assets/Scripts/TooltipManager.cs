@@ -15,17 +15,10 @@ public class TooltipManager : MonoBehaviour
     Dictionary<Ingredients, IngredientDroppable> dict = new Dictionary<Ingredients, IngredientDroppable>();
     IngredientDroppable temp;
     
-    void OnValidate()
-    {
-     //   ingredientsInScene.AddRange(FindObjectsOfType<IngredientDroppable>());
-    }
-
     void Awake()
     {
         foreach(var i in FindObjectsOfType<IngredientDroppable>())
-        {
-            dict.Add(i.ingredient, i);
-        }
+            {dict.Add(i.ingredient, i);}
     }
 
     public void SwitchRecipeHighlight(Recipe recipe)
@@ -43,69 +36,31 @@ public class TooltipManager : MonoBehaviour
     
     public void EnableOneHighlight(Ingredients ingredientToHighlight)
     {
-        dict.TryGetValue(ingredientToHighlight, out temp);
-        temp.EnableHighlight();
-        /*
-       foreach (var ing in ingredientsInScene)
-       {
-           if(ing.ingredient == ingredientToHighlight)
-           {
-               ing.EnableHighlight();
-               //Debug.Log("Включил, это " + ing.ingredient);
-               return; 
-           }
-       }*/
+        if (dict.TryGetValue(ingredientToHighlight, out temp))
+            {temp.EnableHighlight();}
     }
 
     public void EnableFewHighlights(List<Ingredients> ingredientsToHighlight)
     {
         foreach(var i in ingredientsToHighlight)
         {
-            dict.TryGetValue(i, out temp);
-            temp.EnableHighlight();
-            /*
-            foreach(var ing in ingredientsInScene)
-            {
-                if(ing.ingredient == i)
-                {
-                    ing.EnableHighlight();
-                }
-
-            } */  
+            if(dict.TryGetValue(i, out temp))
+            {temp.EnableHighlight();}
         }
     }
 
     public void DisableOneIngredient(Ingredients ingredientToHighlight)
     {
-        dict.TryGetValue(ingredientToHighlight, out temp);
-        temp.DisableHighlight();
-        /*
-       foreach (var ing in ingredientsInScene)
-       {
-           if(ing.ingredient == ingredientToHighlight)
-           {
-               ing.DisableHighlight();
-               Debug.Log("Выключил, это " + ing.ingredient);
-               return; 
-           }
-       } */
+        if(dict.TryGetValue(ingredientToHighlight, out temp))
+            {temp.DisableHighlight();}
     }
 
     public void DisableFewHighlights(List<Ingredients> ingredientsToHighlight)
     {
         foreach(var i in ingredientsToHighlight)
         {
-            dict.TryGetValue(i, out temp);
-            temp.DisableHighlight();
-
-            /*
-            foreach(var ing in ingredientsInScene)
-            {
-                if(ing.ingredient == i)
-                {
-                    ing.DisableHighlight();
-                }
-            } */  
+            if(dict.TryGetValue(i, out temp))
+                {temp.DisableHighlight();}
         }
     }
 
@@ -113,8 +68,8 @@ public class TooltipManager : MonoBehaviour
     {
         foreach(var i in dict.Keys)
         {
-            dict.TryGetValue(i, out temp);
-            temp.DisableHighlight();
+            if(dict.TryGetValue(i, out temp))
+                {temp.DisableHighlight();}
         }
     }
 

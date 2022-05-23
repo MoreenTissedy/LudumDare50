@@ -39,7 +39,11 @@ public class Mix : MonoBehaviour
     private List<float> lastSpeed = new List<float>(5);
     private float lastTime;
     private ParticleSystem.MainModule effectMain;
-    
+
+    public bool IsWithinKeyWindow()
+    {
+        return mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2);
+    }
 
     private void Start()
     {
@@ -125,7 +129,7 @@ public class Mix : MonoBehaviour
             pot?.MixColor(Color.Lerp(overmixColor, blankColor, percent));
         }
         //color if within key window
-        else if (mixProcess > (keyMixValue - keyMixWindow / 2) && mixProcess < (keyMixValue + keyMixWindow / 2))
+        else if (IsWithinKeyWindow())
         {
             var percentKey = Mathf.Abs(keyMixValue - mixProcess) / (keyMixWindow / 2);
             pot?.MixColor(Color.Lerp(keyColor, blankColor, percentKey));

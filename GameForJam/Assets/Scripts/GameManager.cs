@@ -17,7 +17,6 @@ namespace DefaultNamespace
 
         public IngredientsData ingredientsBook;
         public EncounterDeck cardDeck;
-        public PotionPopup potionPopup;
         public NightPanel nightPanel;
         public EndingScreen endingPanel;
         public GameObject pauseMenu;
@@ -151,8 +150,9 @@ namespace DefaultNamespace
         private void Start()
         {
             cardDeck.Init();
+            GetComponent<CatTutorial>()?.Start();
             //Delay draw card to ensure every object has initialized
-            Invoke("DrawCard",0.2f);
+            //Invoke("DrawCard",0.2f);
         }
 
         public void DrawCard()
@@ -173,15 +173,16 @@ namespace DefaultNamespace
             //ChangeVisitor.instance.Enter(currentCard.actualVillager);
             //VisitorManager.instance.EnterDefault();
             VisitorManager.instance.Enter(currentCard.actualVillager);
+            Cauldron.instance.PotionBrewed += EndEncounter;
         }
 
         public void EndEncounter(Potions potion)
         {
+            Cauldron.instance.PotionBrewed -= EndEncounter;
             //ChangeVisitor.instance.Exit();
             VisitorManager.instance.Exit();
             HideText();
             
-            potionPopup.Show(RecipeBook.instance.GetRecipeForPotion(potion));
             potionsTotal.Add(potion);
 
             if (currentCard.EndEncounter(potion))
@@ -198,7 +199,6 @@ namespace DefaultNamespace
             
             if (gameEnded)
             {
-                potionPopup.Hide();
                 return;
             }
             
@@ -217,7 +217,6 @@ namespace DefaultNamespace
         private IEnumerator DrawCardWithDelay()
         {
             yield return new WaitForSeconds(villagerDelay);
-            potionPopup.Hide();
             DrawCard();
         }
 
@@ -405,7 +404,6 @@ namespace DefaultNamespace
         {
             yield return new WaitForSeconds(villagerDelay);
             
-            potionPopup.Hide();
             Witch.instance.Hide();
             HideText();
             NewDay?.Invoke(currentDay+1);

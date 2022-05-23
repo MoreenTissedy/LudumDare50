@@ -79,7 +79,7 @@ namespace DefaultNamespace
                 return;
             dragging = true;
             image.transform.DOKill(true);
-            Cauldron.instance.mouseEnterCauldronZone += OverCauldron;
+            Cauldron.instance.MouseEnterCauldronZone += OverCauldron;
         }
 
         void OverCauldron()
@@ -87,7 +87,7 @@ namespace DefaultNamespace
             Cauldron.instance.AddToMix(ingredient);
             dragging = false;
             transform.position = initialPosition;
-            Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;
+            Cauldron.instance.MouseEnterCauldronZone -= OverCauldron;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
@@ -105,7 +105,7 @@ namespace DefaultNamespace
                 return;
             transform.DOMove(initialPosition, returntime);
             dragging = false;
-            Cauldron.instance.mouseEnterCauldronZone -= OverCauldron;
+            Cauldron.instance.MouseEnterCauldronZone -= OverCauldron;
         }
 
         public void EnableHighlight()

@@ -33,7 +33,7 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            GetComponentInParent<Cauldron>().ingredientAdded += JoltTemperature;
+            GetComponentInParent<Cauldron>().IngredientAdded += JoltTemperature;
             mixing = GetComponentInParent<Mix>();
             if (mixing is null)
             {
@@ -67,7 +67,7 @@ namespace DefaultNamespace
             }
         }
 
-        private void JoltTemperature()
+        private void JoltTemperature(Ingredients ingredients)
         {
             temperature -= tempDecrement;
         }

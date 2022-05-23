@@ -15,6 +15,7 @@ namespace DefaultNamespace
     public class Cauldron : MonoBehaviour
     {
         [SerializeField] TooltipManager tooltipManager;
+        public PotionPopup potionPopup;
         public static Cauldron instance;
 
         public SpriteRenderer baseMix, effectMix;
@@ -33,8 +34,14 @@ namespace DefaultNamespace
 
         public List<Ingredients> mix;
 
-        public event Action mouseEnterCauldronZone;
-        public event Action ingredientAdded;
+        public bool IsBoiling => fireScript?.boiling ?? false;
+        public bool IsMixRight => mixScript?.IsWithinKeyWindow() ?? false;
+
+
+        public event Action MouseEnterCauldronZone;
+        public event Action<Ingredients> IngredientAdded;
+
+        public event Action<Potions> PotionBrewed;
         private void Awake()
         {
             fireScript = GetComponentInChildren<Fire>();
@@ -60,6 +67,11 @@ namespace DefaultNamespace
             instance = this;
             splash.Stop();
             audios = GetComponent<AudioSource>();
+        }
+
+        private void OnValidate()
+        {
+            potionPopup = FindObjectOfType<PotionPopup>();
         }
 
         void RandomMixColor()
@@ -110,11 +122,11 @@ namespace DefaultNamespace
             mixBonusTotal += bonus;
             Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
-            ingredientAdded?.Invoke();
+            IngredientAdded?.Invoke(ingredient);
             tooltipManager.DisableOneIngredient(ingredient);
             if (mix.Count == 3)
             {
-                BrewAction();
+                Brew();
             }
             else
             {
@@ -130,9 +142,10 @@ namespace DefaultNamespace
             mixScript.RandomKey();
             mixScript.SetToKey();
         }
-        
-        public Potions Brew()
+
+        private Potions Brew()
         {
+            Witch.instance.Activate();
             audios.PlayOneShot(brew);
             tooltipManager.DisableAllHIghlights();
             
@@ -158,6 +171,8 @@ namespace DefaultNamespace
                         {
                             RecipeBook.instance.recipes.Add(recipe);
                         }
+                        potionPopup.Show(recipe);
+                        PotionBrewed?.Invoke(recipe.potion);
                         return recipe.potion;
                     }
                 }
@@ -165,6 +180,8 @@ namespace DefaultNamespace
 
             //RandomMixColor();
             mix.Clear();
+            potionPopup.ShowFailure();
+            PotionBrewed?.Invoke(Potions.Placebo);
             return Potions.Placebo;
         }
 
@@ -173,19 +190,9 @@ namespace DefaultNamespace
             //splash.Play();
         }
 
-        private void BrewAction()
-        {
-            Potions result = Brew();
-            Witch.instance.Activate();
-            Debug.Log("Сварено зелье: " + result);
-            //GameManager.instance.ShowText("Сварено зелье: " + result);
-            GameManager.instance.EndEncounter(result);
-        }
-
-
         public void PointerEntered()
         {
-            mouseEnterCauldronZone?.Invoke();
+            MouseEnterCauldronZone?.Invoke();
         }
     }
 }

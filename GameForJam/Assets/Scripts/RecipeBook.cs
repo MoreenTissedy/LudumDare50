@@ -25,6 +25,7 @@ namespace DefaultNamespace
         public AudioSource left, right;
         public Text prevPageNum, nextPageNum;
 
+        public event Action<Recipe> OnSelectRecipe;
         
 
         private void Awake()
@@ -152,9 +153,10 @@ namespace DefaultNamespace
         }
 
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
-    {
-        tooltipManager.SwitchRecipeHighlight(recipeBookEntry.currentRecipe);
-        CloseBook();
-    }
+        {
+            tooltipManager.SwitchRecipeHighlight(recipeBookEntry.currentRecipe);
+            CloseBook();
+            OnSelectRecipe?.Invoke(recipeBookEntry.currentRecipe);
+        }
     }
 }

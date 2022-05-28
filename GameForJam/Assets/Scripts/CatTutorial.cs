@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ namespace DefaultNamespace
         private Cauldron pot;
         private RecipeBook book;
         private bool tutorialMode;
+
+        public event Action OnEnd;
         
         private static readonly int SelectRecipe = Animator.StringToHash("SelectRecipe");
         private static readonly int TempRight = Animator.StringToHash("TempRight");
@@ -70,7 +73,7 @@ namespace DefaultNamespace
         private void PotOnIngredientAdded(Ingredients ingredient)
         {
             scheme.SetTrigger(IngredientAdded);
-            scheme.SetInteger(MixCount, scheme.GetInteger(MixCount)+1);
+            scheme.SetInteger(MixCount, pot.mix.Count);
             bool valid = false;
             if (!(selectedRecipe is null))
             {
@@ -88,6 +91,10 @@ namespace DefaultNamespace
             catToTheLeft.SetActive(false);
             catToTheRight.SetActive(true);
             catDialog.enabled = false;
+            pot.IngredientAdded -= PotOnIngredientAdded;
+            pot.PotionBrewed -= PotOnPotionBrewed;
+            book.OnSelectRecipe -= BookOnOnSelectRecipe;
+            OnEnd?.Invoke();
         }
 
         void Update()
@@ -99,11 +106,15 @@ namespace DefaultNamespace
             scheme.SetBool(TempRight, pot.IsBoiling);
             scheme.SetBool(MixRight, pot.IsMixRight);
             
-            //any key
-            if (Input.anyKeyDown)
-            {
-                scheme.SetTrigger(AnyKey);
-            }
+            // //any key
+            // if (Input.anyKeyDown)
+            // {
+            //     scheme.SetBool(AnyKey, true);
+            // }
+            // else
+            // {
+            //     scheme.SetBool(AnyKey, false);
+            // }
         }
 
         public void Show(string text)

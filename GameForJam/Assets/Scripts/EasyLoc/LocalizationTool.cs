@@ -149,11 +149,13 @@ namespace EasyLoc
                         //changes to prefab instances in editor are not recorded automatically,
                         //so the values are reverted to prefab defaults at the very first possibility.
                         //to change this behaviour we need this:
-                        // if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
-                        // {
-                        //     PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
-                        //     Debug.Log("record prefab");
-                        // }
+                        # if UNITY_EDITOR
+                        if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
+                        {
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
+                            Debug.Log("record prefab");
+                        }
+                        #endif
                     }
                 }
             }

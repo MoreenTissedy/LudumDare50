@@ -150,9 +150,29 @@ namespace DefaultNamespace
         private void Start()
         {
             cardDeck.Init();
-            GetComponent<CatTutorial>()?.Start();
-            //Delay draw card to ensure every object has initialized
-            //Invoke("DrawCard",0.2f);
+            CatTutorial catTutorial = GetComponent<CatTutorial>();
+            if (catTutorial is null)
+            {
+                StartCoroutine(DrawCardWithDelay());
+            }
+            else 
+            {
+                catTutorial.Start();
+                catTutorial.OnEnd += StartGame;
+            }
+            
+        }
+
+        private void StartGame()
+        {
+            
+            CatTutorial catTutorial = GetComponent<CatTutorial>();
+            if (!(catTutorial is null))
+            {
+                catTutorial.OnEnd -= StartGame;
+            }
+
+            DrawCard();
         }
 
         public void DrawCard()

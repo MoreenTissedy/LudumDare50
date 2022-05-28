@@ -154,7 +154,7 @@ namespace DefaultNamespace
 
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
-            tooltipManager.SwitchRecipeHighlight(recipeBookEntry.currentRecipe);
+            tooltipManager.HighlightRecipe(recipeBookEntry.currentRecipe);
             CloseBook();
             OnSelectRecipe?.Invoke(recipeBookEntry.currentRecipe);
         }

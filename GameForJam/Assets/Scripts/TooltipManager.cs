@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
 public class TooltipManager : MonoBehaviour
 {
-    [SerializeField]IngredientsData book;
-    List<IngredientDroppable> ingredientsInScene = new List<IngredientDroppable>();
     List<Ingredients> potionIngredients = new List<Ingredients>();
     Ingredients ingToH;
     Recipe currentRecipe;
@@ -20,17 +17,17 @@ public class TooltipManager : MonoBehaviour
             {dict.Add(i.ingredient, i);}
     }
 
-    public void SwitchRecipeHighlight(Recipe recipe)
+    public void HighlightRecipe(Recipe recipe)
     {
-        if (currentRecipe == recipe)
+        if (!recipe)
         {
-            DisableRecipeHighlight(recipe);
+            return;
         }
-        else if (currentRecipe != recipe)
+        if (currentRecipe)
         {
-            if (currentRecipe) {DisableRecipeHighlight(currentRecipe);}
-            EnableRecipeHighlight(recipe);
+            DisableRecipeHighlight(currentRecipe);
         }
+        EnableRecipeHighlight(recipe);
     }
     
     public void EnableOneHighlight(Ingredients ingredientToHighlight)
@@ -72,14 +69,14 @@ public class TooltipManager : MonoBehaviour
         }
     }
 
-    void EnableRecipeHighlight(Recipe recipyToHighlight)
+    void EnableRecipeHighlight(Recipe recipeToHighlight)
     {
         potionIngredients.Clear();
-        potionIngredients.Add(recipyToHighlight.ingredient1);
-        potionIngredients.Add(recipyToHighlight.ingredient2);
-        potionIngredients.Add(recipyToHighlight.ingredient3);
+        potionIngredients.Add(recipeToHighlight.ingredient1);
+        potionIngredients.Add(recipeToHighlight.ingredient2);
+        potionIngredients.Add(recipeToHighlight.ingredient3);
         EnableFewHighlights(potionIngredients);
-        currentRecipe = recipyToHighlight;
+        currentRecipe = recipeToHighlight;
     }
 
     void DisableRecipeHighlight(Recipe recipyToDisable)

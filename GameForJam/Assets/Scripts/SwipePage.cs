@@ -20,7 +20,7 @@ public class SwipePage : MonoBehaviour
 
     void Start()
     {       
-        recipeBook = FindObjectOfType<RecipeBook>();
+        recipeBook = RecipeBook.instance;
         rightPage.GetWorldCorners(rightPageCorners); // 0 и  2 хранят минимальные и максимальные x,y для страницы
         minPositionPage = rightPageCorners[0];
         maxPositionPage = rightPageCorners[2];

@@ -5,6 +5,10 @@ using DefaultNamespace;
 using UnityEngine;
 using System.Reflection;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace EasyLoc
 {
     public class LocalizationTool : MonoBehaviour
@@ -17,16 +21,32 @@ namespace EasyLoc
 
         public Language loadedLanguage;
 
+        #if UNITY_EDITOR
         void LoadCurrentLanguage()
         {
             loadedLanguage = selectLanguage;
-            foreach (LocalizableSO unit in Resources.FindObjectsOfTypeAll<LocalizableSO>())
+            var units = GetUnits();
+            Debug.Log("Found to localize: "+units.Length);
+            foreach (LocalizableSO unit in units)
             {
                 if (!unit.Localize(selectLanguage))
                     Debug.LogWarning(unit.name+" not found in "+unit.localizationCSV.name);
             }
             ImportUI();
         }
+
+        LocalizableSO[] GetUnits()
+        {
+            var guids = AssetDatabase.FindAssets("t: LocalizableSO");
+            List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
+            foreach (var guid in guids)
+            {
+                list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
+            }
+
+            return list.ToArray();
+        }
+        #endif
 
         [ContextMenu("Collect UI")]
         void CollectFieldsWithAttribute()

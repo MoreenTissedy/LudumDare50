@@ -30,8 +30,15 @@ namespace EasyLoc
             foreach (LocalizableSO unit in units)
             {
                 if (!unit.Localize(selectLanguage))
+                {
                     Debug.LogWarning(unit.name+" not found in "+unit.localizationCSV.name);
+                }
+                else
+                {
+                    EditorUtility.SetDirty(unit);
+                }
             }
+            AssetDatabase.SaveAssets();
             ImportUI();
         }
 

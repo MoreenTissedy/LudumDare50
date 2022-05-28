@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
 public class TooltipManager : MonoBehaviour
 {
-    List<Ingredients> potionIngredients = new List<Ingredients>();
-    Ingredients ingToH;
-    Recipe currentRecipe;
-    bool isHighlighted;
-    Dictionary<Ingredients, IngredientDroppable> dict = new Dictionary<Ingredients, IngredientDroppable>();
+    private List<Ingredients> potionIngredients = new List<Ingredients>();
+    private Recipe currentRecipe;
+    private Dictionary<Ingredients, IngredientDroppable> dict;
     
     void Awake()
     {
-        foreach(var i in FindObjectsOfType<IngredientDroppable>())
-            {dict.Add(i.ingredient, i);}
+        dict = new Dictionary<Ingredients, IngredientDroppable>();
+        foreach (var i in FindObjectsOfType<IngredientDroppable>())
+        {
+            dict.Add(i.ingredient, i);
+        }
     }
 
     public void HighlightRecipe(Recipe recipe)
     {
-        if (!recipe)
+        if (recipe is null)
         {
             return;
         }
@@ -79,12 +82,12 @@ public class TooltipManager : MonoBehaviour
         currentRecipe = recipeToHighlight;
     }
 
-    void DisableRecipeHighlight(Recipe recipyToDisable)
+    void DisableRecipeHighlight(Recipe recipeToDisable)
     {
         potionIngredients.Clear();
-        potionIngredients.Add(recipyToDisable.ingredient1);
-        potionIngredients.Add(recipyToDisable.ingredient2);
-        potionIngredients.Add(recipyToDisable.ingredient3);
+        potionIngredients.Add(recipeToDisable.ingredient1);
+        potionIngredients.Add(recipeToDisable.ingredient2);
+        potionIngredients.Add(recipeToDisable.ingredient3);
         DisableFewHighlights(potionIngredients);
     }
 }

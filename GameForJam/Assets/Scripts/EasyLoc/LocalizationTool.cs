@@ -4,9 +4,6 @@ using System.IO;
 using DefaultNamespace;
 using UnityEngine;
 using System.Reflection;
-using UnityEditor;
-//using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 namespace EasyLoc
 {
@@ -149,12 +146,13 @@ namespace EasyLoc
                         //changes to prefab instances in editor are not recorded automatically,
                         //so the values are reverted to prefab defaults at the very first possibility.
                         //to change this behaviour we need this:
-                        # if UNITY_EDITOR
-                        if (hasData && PrefabUtility.IsPartOfPrefabInstance(mono))
+                        #if UNITY_EDITOR
+                        if (hasData && UnityEditor.PrefabUtility.IsPartOfPrefabInstance(mono))
                         {
-                            PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
+                            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
                             Debug.Log("record prefab");
                         }
+                        UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
                         #endif
                     }
                 }

@@ -21,7 +21,7 @@ namespace DefaultNamespace
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
 
-        ParticleSystem ingredientParticle;
+        [SerializeField] ParticleSystem ingredientParticle;
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;

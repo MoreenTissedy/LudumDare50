@@ -10,7 +10,7 @@ namespace DefaultNamespace
 {
     public class RecipeBook : MonoBehaviour
     {
-        [SerializeField] TooltipManager tooltipManager;
+        public TooltipManager tooltipManager;
         public static RecipeBook instance;
     
     
@@ -37,6 +37,10 @@ namespace DefaultNamespace
             //     Debug.LogError("double singleton:"+this.GetType().Name);
             // }
             instance = this;
+            if (!tooltipManager)
+            {
+                tooltipManager = FindObjectOfType<TooltipManager>();
+            }
             CloseBook();
             leftCorner.SetActive(false);
         }
@@ -154,9 +158,9 @@ namespace DefaultNamespace
 
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
-            tooltipManager.HighlightRecipe(recipeBookEntry.currentRecipe);
             CloseBook();
-            OnSelectRecipe?.Invoke(recipeBookEntry.currentRecipe);
+            tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
+            OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
         }
     }
 }

@@ -11,7 +11,8 @@ namespace DefaultNamespace
         public Text description;
         public Image image;
         public Image ingredient1, ingredient2, ingredient3;
-        public Recipe currentRecipe;
+        private Recipe currentRecipe;
+        public Recipe CurrentRecipe => currentRecipe;
 
         public void Display(Recipe recipe)
         {
@@ -31,6 +32,7 @@ namespace DefaultNamespace
 
         public void Clear()
         {
+            currentRecipe = null;
             fullName.text = "";
             description.text = "";
             image.enabled = false;

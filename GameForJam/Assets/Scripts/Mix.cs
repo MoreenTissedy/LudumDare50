@@ -3,6 +3,7 @@ using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Mix : MonoBehaviour
 {
@@ -20,11 +21,12 @@ public class Mix : MonoBehaviour
     public float speedReduceRate = 0.01f;
     public float keyMixValue = 150f;
     public float keyMixWindow = 100f;
-    public float overMixValue = 1000f;
-    public float overMixThreshold = 800f;
+    [FormerlySerializedAs("overMixThreshold")] public float maxMixValue = 800f;
     public float maxJolt = 100;
     public float minSimulation = 0.2f, maxSimulation = 5f;
     public float joltTime = 0.2f;
+    public float defSaturation = 0.3f;
+    public float defLightness = 0.5f;
     
     private bool mixing;
     private List<int> lastPositions = new List<int>(5);
@@ -67,7 +69,7 @@ public class Mix : MonoBehaviour
     }
     public void RandomKey()
     {
-        var bound = (overMixThreshold - keyMixWindow / 2);
+        var bound = (maxMixValue - keyMixWindow / 2);
         keyMixValue = Random.Range(-bound, bound);
     }
 
@@ -84,10 +86,10 @@ public class Mix : MonoBehaviour
         mixProcess += speed;
         
         //cyclic mixing
-        if (mixProcess > overMixThreshold)
-            mixProcess = -overMixThreshold;
-        else if (mixProcess < -overMixThreshold)
-            mixProcess = overMixThreshold;
+        if (mixProcess > maxMixValue)
+            mixProcess = -maxMixValue;
+        else if (mixProcess < -maxMixValue)
+            mixProcess = maxMixValue;
         
         UpdateEffectSpeed();
         UpdateEffectColor();
@@ -117,28 +119,24 @@ public class Mix : MonoBehaviour
 
     private void UpdateEffectColor()
     {
-        //color overmixed
-        if (Mathf.Abs(mixProcess) > overMixValue)
-        {
-            pot?.MixColor(overmixColor);
-        }
-        //color nearly overmixed
-        else if (Mathf.Abs(mixProcess) > overMixThreshold)
-        {
-            var percent = (overMixValue - Mathf.Abs(mixProcess)) / (overMixValue - overMixThreshold);
-            pot?.MixColor(Color.Lerp(overmixColor, blankColor, percent));
-        }
-        //color if within key window
-        else if (IsWithinKeyWindow())
+       //color if within key window
+        if (IsWithinKeyWindow())
         {
             var percentKey = Mathf.Abs(keyMixValue - mixProcess) / (keyMixWindow / 2);
-            pot?.MixColor(Color.Lerp(keyColor, blankColor, percentKey));
+            pot?.MixColor(Color.Lerp(keyColor, GetColorByMixValue(), percentKey));
         }
-        //set color blank
+        //set color blank or set rainbow color
         else
         {
-            pot?.MixColor(blankColor);
+            //pot?.MixColor(blankColor);
+            pot?.MixColor(GetColorByMixValue());
         }
+    }
+
+    Color GetColorByMixValue()
+    {
+        float percent = (mixProcess / maxMixValue + 1)/2f;
+        return Color.HSVToRGB(percent, defSaturation, defLightness);
     }
 
     private void UpdateEffectSpeed()

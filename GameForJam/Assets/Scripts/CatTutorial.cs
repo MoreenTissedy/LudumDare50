@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,8 @@ namespace DefaultNamespace
         private static readonly int IngredientAdded = Animator.StringToHash("IngredientAdded");
         private static readonly int AnyKey = Animator.StringToHash("AnyKey");
         private static readonly int MixCount = Animator.StringToHash("MixCount");
+
+        private bool anyKeyPressed;
 
         public bool TutorialMode
         {
@@ -55,6 +58,27 @@ namespace DefaultNamespace
             
             //start tutorial
             tutorialMode = true;
+            StartCoroutine(StartOnInput());
+            //StartCoroutine(RegularInputUpdate());
+        }
+
+        IEnumerator StartOnInput()
+        {
+            yield return new WaitUntil(() => Input.anyKey);
+            scheme.SetBool(AnyKey, true);
+        }
+
+        IEnumerator RegularInputUpdate()
+        {
+            var seconds = new WaitForSeconds(1f);
+            while (tutorialMode)
+            {
+                yield return seconds;
+                scheme.SetBool(AnyKey, anyKeyPressed);
+                
+                Debug.Log(anyKeyPressed);
+                anyKeyPressed = false;
+            }
         }
 
         private void BookOnOnSelectRecipe(Recipe obj)
@@ -105,16 +129,12 @@ namespace DefaultNamespace
             //fire, mixProcess
             scheme.SetBool(TempRight, pot.IsBoiling);
             scheme.SetBool(MixRight, pot.IsMixRight);
-            
-            // //any key
-            // if (Input.anyKeyDown)
-            // {
-            //     scheme.SetBool(AnyKey, true);
-            // }
-            // else
-            // {
-            //     scheme.SetBool(AnyKey, false);
-            // }
+
+            if (!anyKeyPressed && Input.anyKey)
+            {
+                Debug.Log("set to true");
+                anyKeyPressed = true;
+            }
         }
 
         public void Show(string text)

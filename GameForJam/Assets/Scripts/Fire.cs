@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,8 +12,10 @@ namespace DefaultNamespace
     {
         public ParticleSystem bubbles;
         public AudioSource bubblesSound;
+        public GameObject steam;
         public AudioClip fireSound;
         public float boilingTemp = 100;
+        public float maxTemp = 150;
         [Tooltip("How much the temperature increases each time player swipes the fire")]
         public float tempIncrement = 10;
         [Tooltip("How much the temperature drops with every ingredient")]
@@ -23,6 +26,7 @@ namespace DefaultNamespace
         [Tooltip("Additional temperature reduction when mixing, coef of mixing speed")]
         public float reductionBonus = 1f;
 
+        [Header("DEBUG")]
         public float temperature;
         public float Temperature => temperature;
         public bool boiling = true;
@@ -59,11 +63,15 @@ namespace DefaultNamespace
             {
                 bubbles.Play();
                 bubblesSound.Play();
+                steam.SetActive(true);
+                steam.transform.DOScaleX(1, 0.2f).From(0);
             }
             else
             {
                 bubbles.Stop();
                 bubblesSound.Stop();
+                steam.transform.DOScaleX(0, 0.2f).From(1)
+                    .OnComplete(() => steam.SetActive(false));
             }
         }
 

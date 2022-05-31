@@ -160,8 +160,9 @@ namespace DefaultNamespace
                 catTutorial.Start();
                 catTutorial.OnEnd += StartGame;
             }
-            
         }
+        
+        
 
         private void StartGame()
         {

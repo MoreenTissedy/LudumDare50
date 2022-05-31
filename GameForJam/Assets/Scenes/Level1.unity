@@ -885,7 +885,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 155111612}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -5080,8 +5080,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubbles: {fileID: 1461655857852967732}
   bubblesSound: {fileID: 1623485004}
+  steam: {fileID: 1786299379}
   fireSound: {fileID: 8300000, guid: c6b540ff26b98003a8bb92789dd3abf3, type: 3}
   boilingTemp: 100
+  maxTemp: 150
   tempIncrement: 25
   tempDecrement: 30
   initialTemp: 70
@@ -6402,12 +6404,13 @@ MonoBehaviour:
   speedReduceRate: 0.05
   keyMixValue: 150
   keyMixWindow: 300
-  overMixValue: 500
-  overMixThreshold: 400
+  maxMixValue: 400
   maxJolt: 200
   minSimulation: 0.2
   maxSimulation: 5
   joltTime: 0.2
+  defSaturation: 0.5
+  defLightness: 0.7
   speed: 0
   mixProcess: 0
 --- !u!4 &1655841548 stripped

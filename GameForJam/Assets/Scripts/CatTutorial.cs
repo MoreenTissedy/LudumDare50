@@ -38,6 +38,7 @@ namespace DefaultNamespace
         void OnValidate()
         {
             scheme = GetComponent<Animator>();
+            scheme.enabled = false;
         }
         
         public void Start()
@@ -46,7 +47,7 @@ namespace DefaultNamespace
             catToTheRight.SetActive(false);
             catToTheLeft.SetActive(true);
             catDialog.enabled = true;
-            
+            Show("Привет!");
             pot = Cauldron.instance;
             book = RecipeBook.instance;
 
@@ -57,7 +58,6 @@ namespace DefaultNamespace
             book.OnSelectRecipe += BookOnOnSelectRecipe;
             
             //start tutorial
-            tutorialMode = true;
             StartCoroutine(StartOnInput());
             //StartCoroutine(RegularInputUpdate());
         }
@@ -65,7 +65,8 @@ namespace DefaultNamespace
         IEnumerator StartOnInput()
         {
             yield return new WaitUntil(() => Input.anyKey);
-            scheme.SetBool(AnyKey, true);
+            scheme.enabled = true;
+            tutorialMode = true;
         }
 
         IEnumerator RegularInputUpdate()
@@ -111,7 +112,14 @@ namespace DefaultNamespace
 
         public void End()
         {
+            StartCoroutine(EndTutorial());
+        }
+
+        private IEnumerator EndTutorial()
+        {
+            yield return new WaitUntil(()=> Input.anyKeyDown);
             tutorialMode = false;
+            scheme.enabled = false;
             catToTheLeft.SetActive(false);
             catToTheRight.SetActive(true);
             catDialog.enabled = false;

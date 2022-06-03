@@ -26,6 +26,9 @@ namespace DefaultNamespace
         [Tooltip("Additional temperature reduction when mixing, coef of mixing speed")]
         public float reductionBonus = 1f;
 
+        Animator animator;
+        bool animatorFound;
+
         [Header("DEBUG")]
         public float temperature;
         public float Temperature => temperature;
@@ -34,6 +37,7 @@ namespace DefaultNamespace
 
         private Mix mixing;
         private bool mixingFound;
+        private static readonly int TempAnimParam = Animator.StringToHash("Temperature");
 
         private void Awake()
         {
@@ -46,6 +50,12 @@ namespace DefaultNamespace
             else
             {
                 mixingFound = true;
+            }
+
+            animator = GetComponent<Animator>();
+            if (!(animator is null))
+            {
+                animatorFound = true;
             }
 
             temperature = initialTemp;
@@ -94,6 +104,10 @@ namespace DefaultNamespace
                     temperature -= Mathf.Abs(mixing.Speed) * reductionBonus;
                 }
 
+                if (animatorFound)
+                {
+                    animator.SetFloat(TempAnimParam, temperature);
+                }
                 SetBoiling(temperature > boilingTemp);
             }
         }
@@ -104,8 +118,6 @@ namespace DefaultNamespace
             temperature += tempIncrement;
         }
 
-        public void OnDrag(PointerEventData eventData)
-        {
-        }
+        
     }
 }

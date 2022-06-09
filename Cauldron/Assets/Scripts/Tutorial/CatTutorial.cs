@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -13,7 +14,9 @@ namespace CauldronCodebase
         [SerializeField] private Animator scheme;
 
         private Recipe selectedRecipe;
+        [Inject]
         private Cauldron pot;
+        [Inject]
         private RecipeBook book;
         private bool tutorialMode;
 
@@ -48,8 +51,6 @@ namespace CauldronCodebase
             catToTheLeft.SetActive(true);
             catDialog.enabled = true;
             Show("Привет!");
-            pot = Cauldron.instance;
-            book = RecipeBook.instance;
 
             //subscribe to cauldron
             pot.IngredientAdded += PotOnIngredientAdded;
@@ -148,6 +149,11 @@ namespace CauldronCodebase
         public void Show(string text)
         {
             catDialog.GetComponentInChildren<Text>().text = text;
+        }
+
+        public void ClearPot()
+        {
+            pot.Clear();
         }
     }
 }

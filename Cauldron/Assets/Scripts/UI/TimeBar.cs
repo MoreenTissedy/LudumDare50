@@ -2,6 +2,7 @@ using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -16,6 +17,11 @@ namespace CauldronCodebase
         [Localize]
         public string dayText = "День";
 
+        [Inject]
+        private GameManager gm;
+
+        [Inject] private MainSettings settings;
+
         private void Awake()
         {
             rectWidth = fullCycleSample.rect.width;
@@ -25,9 +31,9 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            step = rectWidth/(GameManager.instance.cardsPerDay+3);
-            GameManager.instance.NewDay += OnNewDay;
-            GameManager.instance.NewEncounter += OnNewVisitor;
+            step = rectWidth/(settings.gameplay.cardsPerDay+3);
+            gm.NewDay += OnNewDay;
+            gm.NewEncounter += OnNewVisitor;
         }
 
         private void OnNewVisitor(int arg1, int arg2)

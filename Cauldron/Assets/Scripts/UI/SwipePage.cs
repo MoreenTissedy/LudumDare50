@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -10,6 +11,7 @@ public class SwipePage : MonoBehaviour
     [SerializeField] RectTransform rightPage;
     [SerializeField] float minTouchTime = 0.15f;
     [SerializeField] bool toNext;
+    [Inject]
     RecipeBook recipeBook; 
     Vector3[] rightPageCorners = new Vector3[4];
     Vector2 minPositionPage, maxPositionPage;
@@ -19,8 +21,7 @@ public class SwipePage : MonoBehaviour
     
 
     void Start()
-    {       
-        recipeBook = RecipeBook.instance;
+    {   
         rightPage.GetWorldCorners(rightPageCorners); // 0 и  2 хранят минимальные и максимальные x,y для страницы
         minPositionPage = rightPageCorners[0];
         maxPositionPage = rightPageCorners[2];

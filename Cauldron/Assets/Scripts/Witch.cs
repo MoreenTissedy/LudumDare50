@@ -7,8 +7,6 @@ namespace CauldronCodebase
     [RequireComponent(typeof(SkeletonAnimation))]
     public class Witch : MonoBehaviour, IPointerClickHandler
     {
-        public static Witch instance;
-
         private SkeletonAnimation anim;
 
         [SpineAnimation]
@@ -20,16 +18,10 @@ namespace CauldronCodebase
         
         public bool Hidden { get; private set; }
 
+        
         private void Awake()
         {
-            // if (instance is null)
-            //     instance = this;
-            // else
-            // {
-            //     Debug.LogError("double singleton:"+this.GetType().Name);
-            // }
-            instance = this;
-
+            //Respond to Brew, Nightfall, NewDay events
             anim = GetComponent<SkeletonAnimation>();
         }
 

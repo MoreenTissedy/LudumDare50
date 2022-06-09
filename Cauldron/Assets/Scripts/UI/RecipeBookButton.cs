@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -13,6 +14,9 @@ namespace CauldronCodebase
         private bool clicked;
         private Vector3 initialScale;
         private RectTransform transf;
+
+        [Inject]
+        private RecipeBook book;
 
         private void Start()
         {
@@ -27,7 +31,7 @@ namespace CauldronCodebase
         {
             clicked = true;
             transf.DOKill(true);
-            RecipeBook.instance.OpenBook();
+            book.OpenBook();
         }
 
         public void OnPointerEnter(PointerEventData eventData)

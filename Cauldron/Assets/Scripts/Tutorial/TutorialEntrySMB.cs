@@ -4,11 +4,13 @@ namespace CauldronCodebase
 {
     public class TutorialEntrySMB : StateMachineBehaviour
     {
-        [SerializeField][TextArea(10,10)] private string text;
+        [SerializeField][TextArea(10,10)] protected string text;
+        protected CatTutorial catTutorial;
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo,
             int layerIndex)
         {
-            animator.gameObject.GetComponent<CatTutorial>().Show(text);
+            catTutorial = animator.gameObject.GetComponent<CatTutorial>();
+            catTutorial.Show(text);
         }
     }
 }

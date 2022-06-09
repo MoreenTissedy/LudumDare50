@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -7,7 +8,7 @@ namespace CauldronCodebase
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             base.OnStateEnter(animator, stateInfo, layerIndex);
-            Cauldron.instance.Clear();
+            catTutorial.ClearPot();
         }
     }
 }

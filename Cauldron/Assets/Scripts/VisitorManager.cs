@@ -9,13 +9,7 @@ namespace CauldronCodebase
         public Visitor[] visitors;
 
         private Visitor currentVisitor;
-
-        public static VisitorManager instance;
-
-        private void Awake()
-        {
-            instance = this;
-        }
+        
 
         public void Enter(Villager villager)
         {

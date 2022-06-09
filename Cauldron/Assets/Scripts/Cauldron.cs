@@ -17,7 +17,6 @@ namespace CauldronCodebase
         TooltipManager tooltipManager;
         
         public PotionPopup potionPopup;
-        public static Cauldron instance;
 
         public SpriteRenderer baseMix, effectMix;
         public ParticleSystem bubbleColor, splash;
@@ -41,8 +40,21 @@ namespace CauldronCodebase
 
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
-
         public event Action<Potions> PotionBrewed;
+
+        private RecipeSet recipeProvider;
+        private RecipeBook recipeBook;
+        private GameManager gm;
+
+        [Inject]
+        public void Construct(GameManager gm, RecipeSet recipeSet, RecipeBook book)
+        {
+            recipeProvider = recipeSet;
+            recipeBook = book;
+            this.gm = gm;
+            gm.NewEncounter += (i, i1) => Clear();
+        }
+        
         private void Awake()
         {
             fireScript = GetComponentInChildren<Fire>();
@@ -59,13 +71,6 @@ namespace CauldronCodebase
             {
                 mixFound = true;
             }
-            // if (instance is null)
-            //     instance = this;
-            // else
-            // {
-            //     Debug.LogError("double singleton:"+this.GetType().Name);
-            // }
-            instance = this;
             splash.Stop();
             audios = GetComponent<AudioSource>();
         }
@@ -146,13 +151,13 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
-            Witch.instance.Activate();
+            //Witch.instance.Activate();
             audios.PlayOneShot(brew);
             tooltipManager.DisableAllHIghlights();
             
             if (mixBonusTotal > mixBonusMin)
             {
-                foreach (var recipe in RecipeSet.instance.allRecipes)
+                foreach (var recipe in recipeProvider.allRecipes)
                 {
                     if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
                         mix.Contains(recipe.ingredient3))
@@ -168,9 +173,9 @@ namespace CauldronCodebase
                             Instantiate(diamond, transform.position, Quaternion.identity);
                         }
                         //if recipe is not in book -> add
-                        if (!RecipeBook.instance.recipes.Contains(recipe))
+                        if (!recipeBook.recipes.Contains(recipe))
                         {
-                            RecipeBook.instance.recipes.Add(recipe);
+                            recipeBook.recipes.Add(recipe);
                         }
                         potionPopup.Show(recipe);
                         PotionBrewed?.Invoke(recipe.potion);

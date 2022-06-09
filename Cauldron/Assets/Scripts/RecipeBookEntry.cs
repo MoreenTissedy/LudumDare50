@@ -2,18 +2,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
     public class RecipeBookEntry : MonoBehaviour
     {
-        [FormerlySerializedAs("name")] public Text fullName;
+        public Text fullName;
         public Text description;
         public Image image;
         public Image ingredient1, ingredient2, ingredient3;
         private Recipe currentRecipe;
         public Recipe CurrentRecipe => currentRecipe;
 
+        private IngredientsData ingredientsData;
+            [Inject]
+        public void Construct(IngredientsData data)
+        {
+            this.ingredientsData = data;
+        }
+        
         public void Display(Recipe recipe)
         {
             currentRecipe = recipe;
@@ -25,9 +33,9 @@ namespace CauldronCodebase
             description.text = recipe.description;
             image.sprite = recipe.image;
     //        image.color = recipe.color;
-            ingredient1.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient1).image;
-            ingredient2.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient2).image;
-            ingredient3.sprite = GameManager.instance.ingredientsBook.Get(recipe.ingredient3).image;
+            ingredient1.sprite = ingredientsData.Get(recipe.ingredient1).image;
+            ingredient2.sprite = ingredientsData.Get(recipe.ingredient2).image;
+            ingredient3.sprite = ingredientsData.Get(recipe.ingredient3).image;
         }
 
         public void Clear()

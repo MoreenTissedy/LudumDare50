@@ -3718,12 +3718,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5622affbbf64d1aa292e64a77bb8dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 7e9d60718430cf52ebb4e7b4aa946680, type: 2}
   gameLoop: {fileID: 1745953327}
-  recipeProvider: {fileID: 1319930043}
+  recipeProvider: {fileID: 11400000, guid: 13277fc82c941ed92b77870f6ea189e3, type: 2}
   recipeBook: {fileID: 163069097}
   theCauldron: {fileID: 1308457031262689057}
-  witch: {fileID: 1959972236}
   visitorManager: {fileID: 264877340}
+  ingredientsData: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
 --- !u!1 &1160056609
 GameObject:
   m_ObjectHideFlags: 0
@@ -4299,64 +4300,6 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1529559917066076135, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
   m_PrefabInstance: {fileID: 1088920469}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1319930041
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1319930042}
-  - component: {fileID: 1319930043}
-  m_Layer: 0
-  m_Name: RecipeProvider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1319930042
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1319930041}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1745953328}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1319930043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1319930041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b72b67826afd4f4dabbeec738fa103b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  allRecipes:
-  - {fileID: 11400000, guid: f9ef458064cd2e646808f184b5d51ca5, type: 2}
-  - {fileID: 11400000, guid: dce8e3ca932692146b9d7d3676ef7804, type: 2}
-  - {fileID: 11400000, guid: 6f2ecdaa363271545ac4380c4559e9bc, type: 2}
-  - {fileID: 11400000, guid: c07e732133f637344854d4d4b2674243, type: 2}
-  - {fileID: 11400000, guid: 64e588419063d1b4e95f26a082bb0415, type: 2}
-  - {fileID: 11400000, guid: 149f98d7d1bc8fd48b42f8a4cb57a654, type: 2}
-  - {fileID: 11400000, guid: b88d579a37c45b941a4447deb0c3f810, type: 2}
-  - {fileID: 11400000, guid: 2c070ffe5cf54d95b825b6b3a1f6522d, type: 2}
-  - {fileID: 11400000, guid: 24177f9f873c3f249b9287af38ab834a, type: 2}
-  - {fileID: 11400000, guid: c898fdd40370490458dcf70c8b6fdd1a, type: 2}
-  - {fileID: 11400000, guid: 439f16c9f0c04f84f83948be19aaf7c3, type: 2}
-  - {fileID: 11400000, guid: dcd99721d00866548a49cbea7defa3e7, type: 2}
-  - {fileID: 11400000, guid: 3566ebb8576d3ac42bb157756658a8ea, type: 2}
-  - {fileID: 11400000, guid: 781ee56ce0f095e47b03d0802675e4e0, type: 2}
 --- !u!1 &1369524415
 GameObject:
   m_ObjectHideFlags: 0
@@ -6361,20 +6304,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3940600c5a2b4a6a8bcf78afad6c4641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientsBook: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
   cardDeck: {fileID: 11400000, guid: ec51c383d12f8ff4daaec1b7426d9d33, type: 2}
   nightPanel: {fileID: 1032199746}
   endingPanel: {fileID: 5110209830411582714}
   pauseMenu: {fileID: 7780886650645843231}
   textCanvas: {fileID: 976548747}
   visitorText: {fileID: 46435478}
-  fameMoneyCoef: 0
-  statusBarsMax: 100
-  statusBarsStart: 20
-  cardsPerDay: 3
-  cardsDealtAtNight: 3
-  nightDelay: 4
-  villagerDelay: 2
   defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
   defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
     \u0438 \u0442\u0438\u0445\u0430."
@@ -6424,11 +6359,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0bc84cd13f28a4d989afbd0b922da7f8, type: 2}
   - {fileID: 11400000, guid: c4d2f0dbe5ad7e78b8edf1bb6243bed0, type: 2}
   - {fileID: 11400000, guid: 9a071e40d8f3d09b9a9200ecca518362, type: 2}
-  currentCard: {fileID: 0}
-  potionsTotal: 
-  wrongPotionsCount: 0
-  rightPotionsCount: 0
-  events: []
   gameEnded: 0
 --- !u!4 &1745953328
 Transform:
@@ -6444,7 +6374,6 @@ Transform:
   - {fileID: 1846963702}
   - {fileID: 1153789304}
   - {fileID: 52409420}
-  - {fileID: 1319930042}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

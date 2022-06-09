@@ -3,16 +3,9 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    public class RecipeSet : MonoBehaviour
+    [CreateAssetMenu(fileName = "All Recipe Set", menuName = "Recipe Deck", order = 1)]
+    public class RecipeSet : ScriptableObject
     {
-
-        public static RecipeSet instance;
         public Recipe[] allRecipes;
-
-        void Awake()
-        {
-            if (instance is null)
-                instance = this;
-        }
     }
 }

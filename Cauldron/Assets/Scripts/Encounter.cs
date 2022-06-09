@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EasyLoc;
 using UnityEngine;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -9,8 +10,10 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
+        private GameManager gm;
+        
         [Serializable]
-        //custom property drawer
+        //TODO custom property drawer
         public class PotionResult
         {
             public Potions potion;
@@ -30,13 +33,17 @@ namespace CauldronCodebase
 
         [HideInInspector] public Villager actualVillager;
 
-        public void Init()
+
+        
+        public void Init(GameManager gameManager)
         {
             if (villager.Length > 0)
             {
                 int random = Random.Range(0, villager.Length);
                 actualVillager = villager[random];
             }
+
+            gm = gameManager;
         }
 
         public static Encounter GetRandom(Encounter[] set)
@@ -86,19 +93,17 @@ namespace CauldronCodebase
             {
                 if (potion == filter.potion)
                 {
-                    GameManager.instance.
-                        GetStatusByType(primaryInfluence).
-                        Add(Mathf.FloorToInt(primaryAmount * filter.influenceCoef));
+                    gm.gState.Add(primaryInfluence, 
+                        Mathf.FloorToInt(primaryAmount * filter.influenceCoef));
                     if (secondaryInfluence != Statustype.None)
                     {
-                        GameManager.instance.
-                            GetStatusByType(secondaryInfluence).
-                            Add(Mathf.FloorToInt(secondaryAmount * filter.influenceCoef));
+                        gm.gState.Add(secondaryInfluence, 
+                            Mathf.FloorToInt(secondaryAmount * filter.influenceCoef));
                     }
                     if (filter.bonusCard!=null)
-                        GameManager.instance.cardDeck.AddCardToPool(filter.bonusCard);
+                        gm.cardDeck.AddCardToPool(filter.bonusCard);
                     if (filter.bonusEvent!=null)
-                        GameManager.instance.events.Add(filter.bonusEvent);
+                        gm.gState.events.Add(filter.bonusEvent);
                     if (filter.influenceCoef > 0)
                     {
                         return true;

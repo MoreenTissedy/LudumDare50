@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -7,25 +8,14 @@ namespace CauldronCodebase
     {
         public Statustype type;
         private Text text;
+
+        [Inject]
+        private GameManager gm;
         private void Start()
         {
             text = GetComponent<Text>();
-            switch (type)
-            {
-                case Statustype.Money:
-                    GameManager.instance.money.changed += () => SetValue(GameManager.instance.money.Value());
-                    SetValue(GameManager.instance.money.Value());
-                    break;
-                case Statustype.Fear:
-                    GameManager.instance.fear.changed += () => SetValue(GameManager.instance.fear.Value());
-                    SetValue(GameManager.instance.money.Value());
-                    break;
-                case Statustype.Fame:
-                    GameManager.instance.fame.changed += () => SetValue(GameManager.instance.fame.Value());
-                    SetValue(GameManager.instance.money.Value());
-                    break;
-            }
-            
+            gm.gState.statusChanged += () => SetValue(gm.gState.Get(type));
+            SetValue(gm.gState.Get(type));
         }
 
         void SetValue(int value)

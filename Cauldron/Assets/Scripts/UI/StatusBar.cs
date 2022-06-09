@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using  UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -20,6 +21,11 @@ namespace CauldronCodebase
         private Text tooltip;
         
         private float initialDimension;
+
+        [Inject]
+        private GameManager gm;
+
+        [Inject] private MainSettings settings;
 
         private void Start()
         {
@@ -39,29 +45,15 @@ namespace CauldronCodebase
                initialDimension = mask.rect.width;
            }
            
-           switch (type)
-           {
-               case Statustype.Money:
-                   GameManager.instance.money.changed += () => SetValue(GameManager.instance.money.Value());
-                   SetValue(GameManager.instance.money.Value());
-                   break;
-               case Statustype.Fear:
-                   GameManager.instance.fear.changed += () => SetValue(GameManager.instance.fear.Value());
-                   SetValue(GameManager.instance.fear.Value());
-                   break;
-               case Statustype.Fame:
-                   GameManager.instance.fame.changed += () => SetValue(GameManager.instance.fame.Value());
-                   SetValue(GameManager.instance.fame.Value());
-                   break;
-           }
+           gm.gState.statusChanged += () => SetValue(gm.gState.Get(type));
+           SetValue(gm.gState.Get(type));
         }
 
 
         public void SetValue(int current, bool dotween = true)
         {
             //symbol glow
-            
-            float ratio = (float)current / Status.max;
+            float ratio = (float) current / settings.gameplay.statusBarsMax;
             ratio *= initialDimension;
             Vector2 newSize;
             if (vertical)

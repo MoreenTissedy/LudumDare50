@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace CauldronCodebase
 {
     public class PotionSelect : MonoBehaviour, IPointerClickHandler
     {
+        [Inject]
+        private RecipeBook book;
         public void OnPointerClick(PointerEventData eventData)
         {
-            RecipeBook.instance.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
+            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
         }
     }
 }

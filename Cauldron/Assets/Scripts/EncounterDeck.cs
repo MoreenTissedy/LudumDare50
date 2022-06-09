@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine.PlayerLoop;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Encounter Deck", menuName = "Encounter Deck", order = 0)]
     public class EncounterDeck : ScriptableObject

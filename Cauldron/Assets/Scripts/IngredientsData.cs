@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Ingredients Book", menuName = "Ingredients", order = 0)]
     public class IngredientsData : ScriptableObject

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class TutorialButton : GrowOnMouseEnter
     {

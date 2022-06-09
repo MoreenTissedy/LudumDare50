@@ -1,24 +1,39 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
-public class TooltipManager : MonoBehaviour
+public class TooltipManager
 {
     private List<Ingredients> potionIngredients = new List<Ingredients>();
     private Recipe currentRecipe;
     private Dictionary<Ingredients, IngredientDroppable> dict;
-    
-    void Awake()
+
+    public TooltipManager()
     {
         dict = new Dictionary<Ingredients, IngredientDroppable>();
-        foreach (var i in FindObjectsOfType<IngredientDroppable>())
-        {
-            dict.Add(i.ingredient, i);
-        }
     }
+
+    public void AddIngredient(IngredientDroppable button)
+    {
+        dict.Add(button.ingredient, button);
+    }
+
+    public bool RemoveIngredient(IngredientDroppable button)
+    {
+        if (!dict.ContainsKey(button.ingredient))
+            return false;
+        dict.Remove(button.ingredient);
+        return true;
+    }
+    
+    // void Awake()
+    // {
+    //     dict = new Dictionary<Ingredients, IngredientDroppable>();
+    //     foreach (var i in FindObjectsOfType<IngredientDroppable>())
+    //     {
+    //         dict.Add(i.ingredient, i);
+    //     }
+    // }
 
     public void HighlightRecipe(Recipe recipe)
     {

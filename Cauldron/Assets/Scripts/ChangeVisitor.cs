@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Spine.Unity;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
 public class ChangeVisitor : MonoBehaviour
    {

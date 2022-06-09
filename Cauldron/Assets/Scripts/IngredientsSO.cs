@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace  DefaultNamespace
+namespace  CauldronCodebase
 {
 [CreateAssetMenu(menuName = "Ingredient", fileName = "New Ingredient")]
 public class IngredientsSO : ScriptableObject

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class GameManager : MonoBehaviour
     {

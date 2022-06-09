@@ -4,15 +4,18 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using Zenject;
 using Random = UnityEngine.Random;
 #pragma warning disable CS0618
 
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class Cauldron : MonoBehaviour
     {
-        [SerializeField] TooltipManager tooltipManager;
+        [Inject]
+        TooltipManager tooltipManager;
+        
         public PotionPopup potionPopup;
         public static Cauldron instance;
 

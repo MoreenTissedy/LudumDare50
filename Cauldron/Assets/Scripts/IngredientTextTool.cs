@@ -2,7 +2,7 @@ using System;
 using EasyLoc;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class IngredientTextTool : EasyLocTextTool
     {

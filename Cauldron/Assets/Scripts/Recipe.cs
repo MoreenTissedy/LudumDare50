@@ -3,7 +3,7 @@ using EasyLoc;
 using System.Collections.Generic;
 
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "New recipe", menuName = "Recipe", order = 0)]
     public class Recipe : LocalizableSO

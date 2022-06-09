@@ -2059,7 +2059,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 685469817}
-  - component: {fileID: 685469818}
   m_Layer: 0
   m_Name: Ingredients
   m_TagString: Untagged
@@ -2091,18 +2090,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &685469818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685469816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08959a4703228cd4fb0b022e6985b689, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &693048604 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2301198565061899768, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
@@ -3665,6 +3652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153789304}
   - component: {fileID: 1153789305}
+  - component: {fileID: 1153789306}
   m_Layer: 0
   m_Name: Zenject
   m_TagString: Untagged
@@ -3699,7 +3687,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 1153789306}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -3717,6 +3706,24 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
+--- !u!114 &1153789306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153789303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5622affbbf64d1aa292e64a77bb8dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameLoop: {fileID: 1745953327}
+  recipeProvider: {fileID: 1319930043}
+  recipeBook: {fileID: 163069097}
+  theCauldron: {fileID: 1308457031262689057}
+  witch: {fileID: 1959972236}
+  visitorManager: {fileID: 264877340}
 --- !u!1 &1160056609
 GameObject:
   m_ObjectHideFlags: 0
@@ -8003,7 +8010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f46891e4f5d64c74a1dfb91fed58207e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipManager: {fileID: 685469818}
   potionPopup: {fileID: 1261502599}
   baseMix: {fileID: 1314732555}
   effectMix: {fileID: 737912594}

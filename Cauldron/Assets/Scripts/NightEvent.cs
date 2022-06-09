@@ -4,7 +4,7 @@ using EasyLoc;
 using UnityEditor;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "New night event", menuName = "Night event", order = 8)]
     public class NightEvent : LocalizableSO

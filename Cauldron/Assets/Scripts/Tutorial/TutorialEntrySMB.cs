@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class TutorialEntrySMB : StateMachineBehaviour
     {

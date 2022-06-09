@@ -2,7 +2,7 @@ using UnityEngine;
 using EasyLoc;
 using System.Collections.Generic;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "New condition", menuName = "Total potion check condition", order = 8)]
     public class NightCondition : LocalizableSO

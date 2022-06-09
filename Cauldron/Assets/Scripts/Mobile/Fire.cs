@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     /// <summary>
     /// child to cauldron, add box collider

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
 public class SwipePage : MonoBehaviour
 {

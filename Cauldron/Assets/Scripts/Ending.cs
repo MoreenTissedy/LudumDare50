@@ -2,7 +2,7 @@ using UnityEngine;
 using EasyLoc;
 using System.Collections.Generic;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "New_ending", menuName = "Ending", order = 9)]
     public class Ending : LocalizableSO

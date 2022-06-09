@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class RecipeBookEntry : MonoBehaviour
     {

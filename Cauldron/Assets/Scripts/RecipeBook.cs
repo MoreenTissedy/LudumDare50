@@ -5,12 +5,12 @@ using System.Linq;
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using Zenject;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class RecipeBook : MonoBehaviour
     {
-        public TooltipManager tooltipManager;
         public static RecipeBook instance;
     
     
@@ -26,7 +26,9 @@ namespace DefaultNamespace
         public Text prevPageNum, nextPageNum;
 
         public event Action<Recipe> OnSelectRecipe;
-        
+
+        [Inject]
+        private TooltipManager tooltipManager;
 
         private void Awake()
         {
@@ -37,10 +39,6 @@ namespace DefaultNamespace
             //     Debug.LogError("double singleton:"+this.GetType().Name);
             // }
             instance = this;
-            if (!tooltipManager)
-            {
-                tooltipManager = FindObjectOfType<TooltipManager>();
-            }
             CloseBook();
             leftCorner.SetActive(false);
         }

@@ -4,7 +4,7 @@ using Spine;
 using UnityEngine;
 using Spine.Unity;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class Visitor : MonoBehaviour
     {

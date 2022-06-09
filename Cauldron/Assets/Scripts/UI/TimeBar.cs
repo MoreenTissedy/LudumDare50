@@ -3,7 +3,7 @@ using EasyLoc;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class TimeBar : MonoBehaviour
     {

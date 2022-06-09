@@ -1,12 +1,12 @@
 using System;
-using DefaultNamespace;
+using CauldronCodebase;
 using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using  UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class StatusBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

@@ -1,4 +1,4 @@
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public enum Potions
     {

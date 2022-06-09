@@ -2,7 +2,7 @@ using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [RequireComponent(typeof(SkeletonAnimation))]
     public class Witch : MonoBehaviour, IPointerClickHandler

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class PotionPopup : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class RecipeSet : MonoBehaviour
     {

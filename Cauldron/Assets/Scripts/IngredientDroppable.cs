@@ -2,15 +2,15 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [FormerlySerializedAs("type")] public Ingredients ingredient;
+        public Ingredients ingredient;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
@@ -25,6 +25,26 @@ namespace DefaultNamespace
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
+
+        private Cauldron cauldron;
+        private TooltipManager ingredientManager;
+
+        [Inject]
+        public void Construct(Cauldron cauldron, TooltipManager ingredientManager)
+        {
+            this.cauldron = cauldron;
+            this.ingredientManager = ingredientManager;
+        }
+
+        private void OnEnable()
+        {
+            ingredientManager.AddIngredient(this);
+        }
+
+        private void OnDisable()
+        {
+            ingredientManager.RemoveIngredient(this);
+        }
 
         private void OnValidate()
         {
@@ -56,7 +76,7 @@ namespace DefaultNamespace
             if (tooltip is null)
                 return;
             tooltip.gameObject.SetActive(true);
-            if (!Cauldron.instance.mix.Contains(ingredient))
+            if (!cauldron.mix.Contains(ingredient))
                 image.gameObject.transform.
                     DORotate(new Vector3(0,0, rotateAngle), rotateSpeed).
                     SetLoops(-1, LoopType.Yoyo).
@@ -75,19 +95,19 @@ namespace DefaultNamespace
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (Cauldron.instance.mix.Contains(ingredient))
+            if (cauldron.mix.Contains(ingredient))
                 return;
             dragging = true;
             image.transform.DOKill(true);
-            Cauldron.instance.MouseEnterCauldronZone += OverCauldron;
+            cauldron.MouseEnterCauldronZone += OverCauldron;
         }
 
         void OverCauldron()
         {
-            Cauldron.instance.AddToMix(ingredient);
+            cauldron.AddToMix(ingredient);
             dragging = false;
             transform.position = initialPosition;
-            Cauldron.instance.MouseEnterCauldronZone -= OverCauldron;
+            cauldron.MouseEnterCauldronZone -= OverCauldron;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
@@ -105,7 +125,7 @@ namespace DefaultNamespace
                 return;
             transform.DOMove(initialPosition, returntime);
             dragging = false;
-            Cauldron.instance.MouseEnterCauldronZone -= OverCauldron;
+            cauldron.MouseEnterCauldronZone -= OverCauldron;
         }
 
         public void EnableHighlight()

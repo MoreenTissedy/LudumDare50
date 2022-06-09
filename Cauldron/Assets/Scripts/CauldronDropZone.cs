@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class CauldronDropZone : MonoBehaviour, IPointerEnterHandler
     {

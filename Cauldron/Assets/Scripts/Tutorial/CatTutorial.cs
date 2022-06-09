@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     [RequireComponent(typeof(Animator))]
     public class CatTutorial:MonoBehaviour

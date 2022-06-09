@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class Tutorial : MonoBehaviour
     {

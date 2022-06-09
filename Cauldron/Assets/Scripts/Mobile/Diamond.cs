@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class Diamond : MonoBehaviour
     {

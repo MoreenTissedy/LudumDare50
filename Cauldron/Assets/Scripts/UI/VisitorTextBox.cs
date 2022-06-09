@@ -3,7 +3,7 @@ using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+namespace CauldronCodebase
 {
     public class VisitorTextBox : MonoBehaviour
     {

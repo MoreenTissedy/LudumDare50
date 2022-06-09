@@ -10,7 +10,7 @@ namespace CauldronCodebase
     {
         public Potions potion;
         public Color color;
-        public bool evil;
+        public bool magical;
         public Ingredients ingredient1, ingredient2, ingredient3;
         public string potionName;
         [TextArea(2, 10)]

@@ -6228,10 +6228,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1369524417}
     - target: {fileID: 308531094725499906, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
-      propertyPath: m_Text
-      value: '?'
-      objectReference: {fileID: 0}
-    - target: {fileID: 308531094725499906, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_FontData.m_MaxSize
       value: 300
       objectReference: {fileID: 0}
@@ -6454,6 +6450,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1745953328}
   - component: {fileID: 1745953327}
+  - component: {fileID: 1745953329}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -6546,6 +6543,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1745953329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745953326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e2c9beba2f943a418e22620145561f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameCursor: {fileID: 2800000, guid: 2bd37c77fcf954542b40e08d50fb943a, type: 3}
 --- !u!1 &1758493205
 GameObject:
   m_ObjectHideFlags: 0

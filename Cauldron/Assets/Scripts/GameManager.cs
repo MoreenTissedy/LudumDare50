@@ -3,11 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
-using System.Linq;
-using EasyLoc;
 using UnityEngine.SceneManagement;
 using Zenject;
-using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -27,19 +24,6 @@ namespace CauldronCodebase
         private int moneyUpdateTotal, fameUpdateTotal, fearUpdateTotal;
   
         
-
-        [Space(5)] 
-        public int wrongPotionsCheck1 = 5;
-        public int wrongPotionsFameMod1 = -20;
-        public int wrongPotionsCheck2 = 10;
-        public int wrongPotionsFameMod2 = -50;
-        private bool check1passed, check2passed;
-        [Localize] [TextArea(3, 7)]
-        public string wrongPotionCheckText1 = "Люди фыркают и поджимают губы, когда слышат ваше имя — " +
-                                              "они недовольны тем, что ваши зелья им не помогают. ";
-        [Localize] [TextArea(3, 7)]
-        public string wrongPotionCheckText2 = "Крестьяне презрительно отзываются о ваших способностях: " +
-                                              "«Да она ни одного зелья правильно сварить не может!» ";
         [Space(5)]
 
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
@@ -61,7 +45,7 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private VisitorManager visitors;
         private MainSettings settings;
-        private NightEventProvider nightEvents;
+        public NightEventProvider nightEvents;
 
         [Inject]
         public void Construct(RecipeBook book, Cauldron pot, VisitorManager vm, MainSettings settings, NightEventProvider nightEventProvider)
@@ -206,56 +190,7 @@ namespace CauldronCodebase
             DrawCard();
         }
 
-        NightEvent GetRandomEvent()
-        {
-            if (gState.events.Count == 0)
-                return null;
-            int i = Random.Range(0, gState.events.Count);
-            NightEvent randomEvent = gState.events[i];
-            gState.events.Remove(randomEvent);
-            return randomEvent;
-        }
-        string NightChecks()
-        {
-            string text = String.Empty;
-
-            var nightEvent = GetRandomEvent();
-            if (nightEvent != null)
-            {
-                text = nightEvent.flavourText;
-                fearUpdateTotal += nightEvent.fearModifier;
-                fameUpdateTotal += nightEvent.fameModifier;
-                moneyUpdateTotal += nightEvent.moneyModifier;
-            }
-            else
-            {
-                List<TotalPotionCountEvent> toRemove = new List<TotalPotionCountEvent>(3);
-                foreach (var condition in nightConditions)
-                {
-                    if (gState.potionsTotal.Count(x => x == condition.type) < condition.threshold)
-                        continue;
-                    text = condition.flavourText + " ";
-                    moneyUpdateTotal += condition.moneyModifier;
-                    fearUpdateTotal += condition.fearModifier;
-                    fameUpdateTotal += condition.fameModifier;
-                    if (condition.bonusCard != null)
-                        cardDeck.AddCardToPool(condition.bonusCard);
-                    toRemove.Add(condition);
-                    //one condition per night
-                    break;
-                }
-
-                foreach (var condition in toRemove)
-                {
-                    nightConditions.Remove(condition);
-                }
-            }
-            
-            if (text == String.Empty)
-                WrongPotionCheck(ref text);
-
-            return text;
-        }
+        
 
 
         IEnumerator EndGame()
@@ -353,22 +288,6 @@ namespace CauldronCodebase
             }
         }
 
-        void WrongPotionCheck(ref string text)
-        {
-            if (!check2passed && gState.wrongPotionsCount >= wrongPotionsCheck2)
-            {
-                check2passed = true;
-                fameUpdateTotal += wrongPotionsFameMod2;
-                text += wrongPotionCheckText2;
-            }
-            else if (!check1passed && gState.wrongPotionsCount >= wrongPotionsCheck1)
-            {
-                check1passed = true;
-                fameUpdateTotal += wrongPotionsFameMod1;
-                text += wrongPotionCheckText1;
-            }
-        }
-
         private IEnumerator StartNewDay()
         {
             yield return new WaitForSeconds(settings.gameplay.villagerDelay);
@@ -381,17 +300,8 @@ namespace CauldronCodebase
             if (gameEnded)
                 yield break;
 
-            string nightText = NightChecks();
-            //text message
-            Debug.Log(nightText);
-            if (nightText != String.Empty)
-            {
-                nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
-            }
-            else
-            {
-                nightPanel.ShowDefault();
-            }
+            //night events
+            nightPanel.Show(nightEvents.GetEvents(gState));
 
             yield return new WaitForSeconds(settings.gameplay.nightDelay/2);
             

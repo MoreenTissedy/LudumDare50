@@ -36,7 +36,8 @@ namespace Editor
             List<ConditionalEvent> data = ScriptableObjectHelper.LoadAllAssetsList<ConditionalEvent>();
             List<ConditionalEvent> deck = new List<ConditionalEvent>(data.Count);
             //randomize
-            for (int i = 0; i < data.Count; i++)
+            int dataCount = data.Count;
+            for (int i = 0; i < dataCount; i++)
             {
                 int dice = Random.Range(0, data.Count);
                 deck.Add(data[dice]);

@@ -6,12 +6,12 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "Event Provider", menuName = "Event Provider", order = 9)]
     public class NightEventProvider : ScriptableObject
     {
-        //conditionalEvents - take 1
         public List<ConditionalEvent> conditionalEvents;
         public List<NightEvent> storyEvents;
 
-        NightEvent CheckConditions(GameState game)
+        public NightEvent CheckConditions(GameState game)
         {
+            //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
             bool foundValid = false;
             foreach (ConditionalEvent check in conditionalEvents)
@@ -29,6 +29,19 @@ namespace CauldronCodebase
             }
 
             return validEvent;
+        }
+
+        public NightEvent[] GetEvents(GameState game)
+        {
+            List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count+1);
+            returnEvents.AddRange(storyEvents);
+            NightEvent conditionalEvent = CheckConditions(game);
+            if (!(conditionalEvent is null))
+            {
+                returnEvents.Add(conditionalEvent);
+            }
+            storyEvents.Clear();
+            return returnEvents.ToArray();
         }
     }
 }

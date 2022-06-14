@@ -24,6 +24,19 @@ namespace CauldronCodebase
             Hide();
         }
 
+        public void Show(NightEvent[] events)
+        {
+            if (events is null || events.Length == 0)
+            {
+                ShowDefault();
+            }
+            else
+            {
+                Show(events[0]);
+            }
+            //show multiple events
+        }
+
         public void ShowDefault()
         {
             string text = String.Empty;
@@ -41,15 +54,21 @@ namespace CauldronCodebase
                     break;
             }
 
-            Show(text, 0, 0, 0);
+            flavour.text = text;
+            money.text = "—";
+            fear.text = "—";
+            fame.text = "—";
+            gameObject.SetActive(true);
         }
+        
+        
 
-        public void Show(string fl, int m, int fr, int fm)
+        public void Show(NightEvent nightEvent)
         {
-            flavour.text = fl;
-            money.text = m.ToString();
-            fear.text = fr.ToString();
-            fame.text = fm.ToString();
+            flavour.text = nightEvent.flavourText;
+            money.text = nightEvent.moneyModifier.ToString();
+            fear.text = nightEvent.fearModifier.ToString();
+            fame.text = nightEvent.fameModifier.ToString();
             gameObject.SetActive(true);
         }
         

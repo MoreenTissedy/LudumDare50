@@ -30,7 +30,6 @@ namespace CauldronCodebase
         public Encounter currentCard;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
-        public List<NightEvent> events;
 
         private int statusMax;
         
@@ -39,7 +38,6 @@ namespace CauldronCodebase
         public GameState(int max, int startValue)
         {
             potionsTotal = new List<Potions>(15);
-            events = new List<NightEvent>(5);
             
             statusMax = max;
             fear = startValue;

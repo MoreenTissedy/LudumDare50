@@ -1296,6 +1296,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 6.1999207
       objectReference: {fileID: 0}
+    - target: {fileID: 7369095500164978524, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9075573652817167267, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
 --- !u!224 &222198772 stripped
@@ -3620,6 +3628,11 @@ MonoBehaviour:
   money: {fileID: 66649336}
   fear: {fileID: 1482767559}
   fame: {fileID: 831078270}
+  defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
+  defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
+    \u0438 \u0442\u0438\u0445\u0430."
+  defaultNightText3: "\u0414\u0443\u0435\u0442 \u0432\u0435\u0442\u0435\u0440, \u0433\u043E\u043D\u0438\u0442
+    \u0442\u0443\u0447\u043A\u0438."
 --- !u!1 &1035069295
 GameObject:
   m_ObjectHideFlags: 0
@@ -4047,6 +4060,7 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 7e9d60718430cf52ebb4e7b4aa946680, type: 2}
   gameLoop: {fileID: 1745953327}
   recipeProvider: {fileID: 11400000, guid: 13277fc82c941ed92b77870f6ea189e3, type: 2}
+  nightEvents: {fileID: 11400000, guid: 2c8ed395dcf99dc93bdf5778f7335d9f, type: 2}
   recipeBook: {fileID: 163069097}
   theCauldron: {fileID: 1308457031262689057}
   visitorManager: {fileID: 264877340}
@@ -5208,6 +5222,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482767557}
   m_CullTransparentMesh: 0
+--- !u!1 &1494365630 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7354000313373256632, guid: 265cf049209d87e4988c8938a119cddd, type: 3}
+  m_PrefabInstance: {fileID: 7354000312683070559}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1494365631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494365630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4adc2fed0b7460298addb741fc7bddd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flavour: {fileID: 0}
+  money: {fileID: 0}
+  fear: {fileID: 0}
+  fame: {fileID: 0}
+  defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
+  defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
+    \u0438 \u0442\u0438\u0445\u0430."
+  defaultNightText3: "\u0414\u0443\u0435\u0442 \u0432\u0435\u0442\u0435\u0440, \u0433\u043E\u043D\u0438\u0442
+    \u0442\u0443\u0447\u043A\u0438."
 --- !u!1 &1495109484
 GameObject:
   m_ObjectHideFlags: 0
@@ -6492,27 +6532,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 7780886650645843231}
   textCanvas: {fileID: 976548747}
   visitorText: {fileID: 46435478}
-  defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
-  defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
-    \u0438 \u0442\u0438\u0445\u0430."
-  defaultNightText3: "\u0414\u0443\u0435\u0442 \u0432\u0435\u0442\u0435\u0440, \u0433\u043E\u043D\u0438\u0442
-    \u0442\u0443\u0447\u043A\u0438."
-  wrongPotionsCheck1: 5
-  wrongPotionsFameMod1: -20
-  wrongPotionsCheck2: 10
-  wrongPotionsFameMod2: -50
-  wrongPotionCheckText1: "\u041B\u044E\u0434\u0438 \u0444\u044B\u0440\u043A\u0430\u044E\u0442
-    \u0438 \u043F\u043E\u0434\u0436\u0438\u043C\u0430\u044E\u0442 \u0433\u0443\u0431\u044B,
-    \u043A\u043E\u0433\u0434\u0430 \u0441\u043B\u044B\u0448\u0430\u0442 \u0432\u0430\u0448\u0435
-    \u0438\u043C\u044F \u2014 \u043E\u043D\u0438 \u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u043D\u044B
-    \u0442\u0435\u043C, \u0447\u0442\u043E \u0432\u0430\u0448\u0438 \u0437\u0435\u043B\u044C\u044F
-    \u0438\u043C \u043D\u0435 \u043F\u043E\u043C\u043E\u0433\u0430\u044E\u0442. "
-  wrongPotionCheckText2: "\u041A\u0440\u0435\u0441\u0442\u044C\u044F\u043D\u0435
-    \u043F\u0440\u0435\u0437\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E \u043E\u0442\u0437\u044B\u0432\u0430\u044E\u0442\u0441\u044F
-    \u043E \u0432\u0430\u0448\u0438\u0445 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445:
-    \xAB\u0414\u0430 \u043E\u043D\u0430 \u043D\u0438 \u043E\u0434\u043D\u043E\u0433\u043E
-    \u0437\u0435\u043B\u044C\u044F \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E
-    \u0441\u0432\u0430\u0440\u0438\u0442\u044C \u043D\u0435 \u043C\u043E\u0436\u0435\u0442!\xBB "
   endings:
   - {fileID: 11400000, guid: 95762e6e2a19cfc428166f4f3a4b4c93, type: 2}
   - {fileID: 11400000, guid: 41b8b947a04200f4880657da55df3c35, type: 2}
@@ -6542,6 +6561,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c4d2f0dbe5ad7e78b8edf1bb6243bed0, type: 2}
   - {fileID: 11400000, guid: 9a071e40d8f3d09b9a9200ecca518362, type: 2}
   gameEnded: 0
+  nightEvents: {fileID: 0}
 --- !u!4 &1745953328
 Transform:
   m_ObjectHideFlags: 0

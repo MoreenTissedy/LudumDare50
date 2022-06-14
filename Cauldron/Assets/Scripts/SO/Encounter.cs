@@ -103,7 +103,7 @@ namespace CauldronCodebase
                     if (filter.bonusCard!=null)
                         gm.cardDeck.AddCardToPool(filter.bonusCard);
                     if (filter.bonusEvent!=null)
-                        gm.gState.events.Add(filter.bonusEvent);
+                        gm.nightEvents.storyEvents.Add(filter.bonusEvent);
                     if (filter.influenceCoef > 0)
                     {
                         return true;

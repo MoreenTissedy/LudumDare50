@@ -1,16 +1,15 @@
-using UnityEngine;
-using EasyLoc;
 using System.Collections.Generic;
+using System.IO;
+using EasyLoc;
+using UnityEditor;
+using UnityEngine;
 
 namespace CauldronCodebase
 {
-    [CreateAssetMenu(fileName = "New condition", menuName = "Total potion check condition", order = 8)]
-    public class NightCondition : LocalizableSO
+    [CreateAssetMenu(fileName = "New night event", menuName = "Night event/Basic", order = 8)]
+    public class NightEvent : LocalizableSO
     {
-        [Header("Conditions work only once")]
-        public Potions type;
-        public int threshold = 3;
-        [TextArea(3, 10)]
+        [TextArea(8,8)]
         public string flavourText;
         public int moneyModifier, fearModifier, fameModifier;
         public Encounter bonusCard;
@@ -35,11 +34,28 @@ namespace CauldronCodebase
                 string[] data = lines[i].Split(';');
                 if (data[0] == name)
                 {
+                    if (requiredColumns[0] >= data.Length)
+                        return false;
                     flavourText = data[requiredColumns[0]];
                     return true;
                 }
             }
             return false;
         }
+        
+        [ContextMenu("Export All Events to csv")]
+        public void ExportAllNightEvents()
+        {
+            var file = File.CreateText(Application.dataPath+"/Localize/Events.csv");
+            file.WriteLine("id;description_RU;description_EN");
+            var events = Resources.FindObjectsOfTypeAll<NightEvent>();
+            foreach (var nightEvent in events)
+            {
+                file.WriteLine($"{nightEvent.name};{nightEvent.flavourText}");
+            }
+            file.Close();
+        }
     }
+    
+    
 }

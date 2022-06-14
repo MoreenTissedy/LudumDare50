@@ -25,13 +25,7 @@ namespace CauldronCodebase
         public VisitorTextBox visitorText;
         
         private int moneyUpdateTotal, fameUpdateTotal, fearUpdateTotal;
-
-        [Localize]
-        public string defaultNightText1 = "Ничего необычного.";
-        [Localize]
-        public string defaultNightText2 = "Ночь спокойна и тиха.";
-        [Localize]
-        public string defaultNightText3 = "Дует ветер, гонит тучки.";
+  
         
 
         [Space(5)] 
@@ -54,7 +48,7 @@ namespace CauldronCodebase
         public Encounter[] highFameCards, highFearCards;
 
         [Tooltip("A list of conditions for total potions brewed checks that happen at night.")]
-        public List<NightCondition> nightConditions;
+        public List<TotalPotionCountEvent> nightConditions;
         
         
 
@@ -67,14 +61,16 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private VisitorManager visitors;
         private MainSettings settings;
+        private NightEventProvider nightEvents;
 
         [Inject]
-        public void Construct(RecipeBook book, Cauldron pot, VisitorManager vm, MainSettings settings)
+        public void Construct(RecipeBook book, Cauldron pot, VisitorManager vm, MainSettings settings, NightEventProvider nightEventProvider)
         {
             recipeBook = book;
             cauldron = pot;
             visitors = vm;
             this.settings = settings;
+            nightEvents = nightEventProvider;
             
             gState = new GameState(settings.gameplay.statusBarsMax, settings.gameplay.statusBarsStart);
             
@@ -233,7 +229,7 @@ namespace CauldronCodebase
             }
             else
             {
-                List<NightCondition> toRemove = new List<NightCondition>(3);
+                List<TotalPotionCountEvent> toRemove = new List<TotalPotionCountEvent>(3);
                 foreach (var condition in nightConditions)
                 {
                     if (gState.potionsTotal.Count(x => x == condition.type) < condition.threshold)
@@ -257,23 +253,6 @@ namespace CauldronCodebase
             
             if (text == String.Empty)
                 WrongPotionCheck(ref text);
-
-            if (text == String.Empty)
-            {
-                int rnd = Random.Range(0, 3);
-                switch (rnd)
-                {
-                    case 0:
-                        text = defaultNightText1;
-                        break;
-                    case 1:
-                        text = defaultNightText2;
-                        break;
-                    case 2:
-                        text = defaultNightText3;
-                        break;
-                }
-            }
 
             return text;
         }
@@ -389,15 +368,15 @@ namespace CauldronCodebase
                 text += wrongPotionCheckText1;
             }
         }
-        
+
         private IEnumerator StartNewDay()
         {
             yield return new WaitForSeconds(settings.gameplay.villagerDelay);
-            
+
             //Witch.instance.Hide();
             HideText();
-            NewDay?.Invoke(gState.currentDay+1);
-            
+            NewDay?.Invoke(gState.currentDay + 1);
+
             StatusChecks();
             if (gameEnded)
                 yield break;
@@ -405,8 +384,15 @@ namespace CauldronCodebase
             string nightText = NightChecks();
             //text message
             Debug.Log(nightText);
-            nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
-            
+            if (nightText != String.Empty)
+            {
+                nightPanel.Show(nightText, moneyUpdateTotal, fearUpdateTotal, fameUpdateTotal);
+            }
+            else
+            {
+                nightPanel.ShowDefault();
+            }
+
             yield return new WaitForSeconds(settings.gameplay.nightDelay/2);
             
             //deck update

@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
 using CauldronCodebase;
 using UnityEditor;
 using UnityEngine;
 
 namespace Editor
 {
-    [CustomEditor(typeof(RecipeSet))]
+    [CustomEditor(typeof(RecipeProvider))]
     public class LoadRecipeSet : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -20,23 +18,10 @@ namespace Editor
 
         void LoadRecipes()
         {
-            RecipeSet set = target as RecipeSet;
-            if (set is null)
+            RecipeProvider provider = target as RecipeProvider;
+            if (provider is null)
                 return;
-            
-            List<Recipe> recipes = new List<Recipe>();
-            string[] guids = AssetDatabase.FindAssets("t: Recipe");
-            for( int i = 0; i < guids.Length; i++ )
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath( guids[i] );
-                Recipe asset = AssetDatabase.LoadAssetAtPath<Recipe>( assetPath );
-                if( asset != null )
-                {
-                    recipes.Add(asset);
-                }
-            }
-
-            set.allRecipes = recipes.ToArray();
+            provider.allRecipes = ScriptableObjectHelper.LoadAllAssets<Recipe>();
         }
     }
 }

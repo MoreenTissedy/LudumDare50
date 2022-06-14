@@ -7,7 +7,8 @@ namespace CauldronCodebase
     {
         [SerializeField] private MainSettings settings;
         [SerializeField] private GameManager gameLoop;
-        [SerializeField] private RecipeSet recipeProvider;
+        [SerializeField] private RecipeProvider recipeProvider;
+        [SerializeField] private NightEventProvider nightEvents;
         [SerializeField] private RecipeBook recipeBook;
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
@@ -21,8 +22,9 @@ namespace CauldronCodebase
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
             //this can be made from a prefab
             Container.Bind<GameManager>().FromInstance(gameLoop).AsSingle();
-            //this can be a scriptable object
-            Container.Bind<RecipeSet>().FromInstance(recipeProvider).AsSingle();
+            //this is a scriptable object
+            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
+            Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             //this can be made from a prefab
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             //these are scene objects

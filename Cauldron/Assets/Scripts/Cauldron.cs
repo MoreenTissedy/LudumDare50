@@ -42,14 +42,14 @@ namespace CauldronCodebase
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
 
-        private RecipeSet recipeProvider;
+        private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
         private GameManager gm;
 
         [Inject]
-        public void Construct(GameManager gm, RecipeSet recipeSet, RecipeBook book)
+        public void Construct(GameManager gm, RecipeProvider recipeProvider, RecipeBook book)
         {
-            recipeProvider = recipeSet;
+            this.recipeProvider = recipeProvider;
             recipeBook = book;
             this.gm = gm;
             gm.NewEncounter += (i, i1) => Clear();

@@ -1,100 +1,36 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using System.IO;
 using UnityEngine.UI;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBook : MonoBehaviour
+    public class RecipeBook : Book
     {   
-    
-        public GameObject bookObject;
-        public RecipeBookEntry[] entries;
-        public GameObject rightCorner, leftCorner; 
-        
+        [Header("Recipe Book")]
+        [SerializeField] protected RecipeBookEntry[] entries;
         public List<Recipe> recipes;
-
-        private int currentPage = 0;
-
-        public AudioSource left, right;
-        public Text prevPageNum, nextPageNum;
-
+        [SerializeField] protected Text prevPageNum, nextPageNum;
         public event Action<Recipe> OnSelectRecipe;
 
         [Inject]
         private TooltipManager tooltipManager;
 
-        private void Awake()
+        protected override void Update()
         {
-            CloseBook();
-            leftCorner.SetActive(false);
-        }
-
-        [ContextMenu("Export Recipes to CSV")]
-        public void ExportRecipes()
-        {
-            var file = File.CreateText(Application.dataPath+"/Localize/Recipes.csv");
-            file.WriteLine("id;name_RU;description_RU;name_EN;description_EN");
-            foreach (var recipe in recipes)
-            {
-                file.WriteLine(recipe.name+";"+recipe.potionName+";"+recipe.description);
-            }
-            file.Close();
-        }
-
-        private void Update()
-        {
+            base.Update();
             if (Input.GetKeyDown(KeyCode.Space))
                 ToggleBook();
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-                NextPage();
-            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-                PrevPage();
         }
 
-        public Recipe GetRecipeForPotion(Potions potion)
+        protected override void InitTotalPages()
         {
-            var found = recipes.Where(x => x.potion == potion).ToArray();
-            if (found.Length > 0)
-            {
-                return found[0];
-            }
-            else
-            {
-                return null;
-            }
+            totalPages = Mathf.CeilToInt((float)recipes.Count / entries.Length);
         }
 
-        void ToggleBook()
+        protected override void UpdatePage()
         {
-            if (bookObject.activeInHierarchy)
-                CloseBook();
-            else
-            {
-                OpenBook();
-            }
-        }
-
-        public void OpenBook()
-        {
-            left.Play();
-            bookObject.SetActive(true);
-            StartCoroutine(UpdateWithDelay());
-        }
-
-        IEnumerator UpdateWithDelay()
-        {
-            yield return null;
-            UpdatePage();
-        }
-
-        void UpdatePage()
-        {
-            //sound
             for (int i = 0; i < entries.Length; i++)
             {
                 int num = currentPage*entries.Length + i;
@@ -109,40 +45,6 @@ namespace CauldronCodebase
             }
             nextPageNum.text = (currentPage *2+2).ToString();
             prevPageNum.text = (currentPage*2+1).ToString();
-        }
-
-        public void CloseBook()
-        {
-            right.Play();
-            bookObject.SetActive(false);
-        }
-
-        public void NextPage()
-        {
-            if (!bookObject.activeInHierarchy)
-                return;
-            if ((currentPage+1)*entries.Length >= recipes.Count )
-                return;
-            currentPage++;
-            if ((currentPage+1)*entries.Length >= recipes.Count )
-                rightCorner.SetActive(false);
-            leftCorner.SetActive(true);
-            UpdatePage();
-            right.Play();
-        }
-
-        public void PrevPage()
-        {
-            if (!bookObject.activeInHierarchy)
-                return;
-            if (currentPage <= 0)
-                return;
-            currentPage--;
-            if (currentPage == 0)
-                leftCorner.SetActive(false);
-            rightCorner.SetActive(true);
-            UpdatePage();
-            left.Play();
         }
 
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)

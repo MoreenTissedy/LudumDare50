@@ -17,12 +17,12 @@ namespace CauldronCodebase
         {
             text = GetComponent<Text>();
             UpdateMoney();
-            gm.gState.statusChanged += UpdateMoney;
+            gm.GameState.statusChanged += UpdateMoney;
         }
 
         private void UpdateMoney()
         {
-            text.text = $"{gm.gState.Money} / {settings.gameplay.statusBarsMax}";
+            text.text = $"{gm.GameState.Money} / {settings.gameplay.statusBarsMax}";
         }
     
     }

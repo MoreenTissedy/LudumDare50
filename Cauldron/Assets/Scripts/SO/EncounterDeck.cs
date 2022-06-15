@@ -11,17 +11,17 @@ namespace CauldronCodebase
     {
         public Encounter[] startingCards;
         public Encounter[] pool1, pool2, pool3, pool4, pool5;
-        public Queue<Encounter> deck;
+        public LinkedList<Encounter> deck;
         [Header("Deck info")] public Encounter[] deckInfo;
         
         public List<Encounter> cardPool;
 
         public void Init()
         {
-            deck = new Queue<Encounter>(10);
+            deck = new LinkedList<Encounter>();
             foreach (var card in Shuffle(startingCards))
             {
-                deck.Enqueue(card);
+                deck.AddLast(card);
             }
 
             cardPool = new List<Encounter>(15);
@@ -76,7 +76,7 @@ namespace CauldronCodebase
                 if (cardPool.Count == 0)
                     return;
                 int randomIndex = Random.Range(0, cardPool.Count);
-                deck.Enqueue(cardPool[randomIndex]);
+                deck.AddLast(cardPool[randomIndex]);
                 cardPool.RemoveAt(randomIndex);
                 Debug.Log("one card dealt: "+cardPool.Count);
             }
@@ -93,16 +93,24 @@ namespace CauldronCodebase
             cardPool.Add(card);
         }
 
-        public void AddToDeck(Encounter card)
+        public void AddToDeck(Encounter card, bool asFirst = false)
         {
             if (card is null)
                 return;
-            deck.Enqueue(card);
+            if (asFirst)
+            {
+                deck.AddFirst(card);
+            }
+            else
+            {
+                deck.AddLast(card);
+            }
         }
         
         public Encounter GetTopCard()
         {
-            var card = deck.Dequeue();
+            var card = deck.First();
+            deck.RemoveFirst();
             deckInfo = deck.ToArray();
             return card;
         }

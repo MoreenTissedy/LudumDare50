@@ -34,6 +34,7 @@ namespace CauldronCodebase
             {
                 Show(events[0]);
             }
+
             //show multiple events
         }
 

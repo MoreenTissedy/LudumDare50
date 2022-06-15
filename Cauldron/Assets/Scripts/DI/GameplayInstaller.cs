@@ -13,6 +13,7 @@ namespace CauldronCodebase
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private IngredientsData ingredientsData;
+        [SerializeField] private EndingsProvider endings;
 
 
         public override void InstallBindings()
@@ -22,9 +23,10 @@ namespace CauldronCodebase
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
             //this can be made from a prefab
             Container.Bind<GameManager>().FromInstance(gameLoop).AsSingle();
-            //this is a scriptable object
+            //these are scriptable objects
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
+            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             //this can be made from a prefab
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             //these are scene objects

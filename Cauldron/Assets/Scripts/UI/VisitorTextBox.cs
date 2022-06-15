@@ -11,9 +11,14 @@ namespace CauldronCodebase
         public Image icon1,icon2;
         public Sprite fame, fear, money;
 
-
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        } 
+        
         public void Display(Encounter card)
         {
+            gameObject.SetActive(true);
             text.text = card.text;
             switch (card.primaryInfluence)
             {

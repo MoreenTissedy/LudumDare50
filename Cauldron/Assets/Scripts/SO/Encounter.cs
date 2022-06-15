@@ -93,17 +93,17 @@ namespace CauldronCodebase
             {
                 if (potion == filter.potion)
                 {
-                    gm.gState.Add(primaryInfluence, 
+                    gm.GameState.Add(primaryInfluence, 
                         Mathf.FloorToInt(primaryAmount * filter.influenceCoef));
                     if (secondaryInfluence != Statustype.None)
                     {
-                        gm.gState.Add(secondaryInfluence, 
+                        gm.GameState.Add(secondaryInfluence, 
                             Mathf.FloorToInt(secondaryAmount * filter.influenceCoef));
                     }
                     if (filter.bonusCard!=null)
-                        gm.cardDeck.AddCardToPool(filter.bonusCard);
+                        gm.CardDeck.AddCardToPool(filter.bonusCard);
                     if (filter.bonusEvent!=null)
-                        gm.nightEvents.storyEvents.Add(filter.bonusEvent);
+                        gm.NightEvents.storyEvents.Add(filter.bonusEvent);
                     if (filter.influenceCoef > 0)
                     {
                         return true;

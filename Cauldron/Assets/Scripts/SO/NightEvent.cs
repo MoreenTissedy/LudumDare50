@@ -13,6 +13,14 @@ namespace CauldronCodebase
         public string flavourText;
         public int moneyModifier, fearModifier, fameModifier;
         public Encounter bonusCard;
+
+        public void ApplyModifiers(GameState game)
+        {
+            game.Fame += fameModifier;
+            game.Fear += fearModifier;
+            game.Money += moneyModifier;
+        }
+        
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

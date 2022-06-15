@@ -11,32 +11,21 @@ namespace CauldronCodebase
     public class GameManager : MonoBehaviour
     {
 
-        public EncounterDeck cardDeck;
-        public GameState gState;
+        private EncounterDeck cardDeck;
+        private GameState gState;
+        private NightEventProvider nightEvents;
+        public EncounterDeck CardDeck => cardDeck;
+        public GameState GameState => gState;
+        public NightEventProvider NightEvents => nightEvents;
 
         //TODO: reactive UI
         public NightPanel nightPanel;
         public EndingScreen endingPanel;
         public GameObject pauseMenu;
-        public Canvas textCanvas;
-        public VisitorTextBox visitorText;
-        
-        private int moneyUpdateTotal, fameUpdateTotal, fearUpdateTotal;
-  
-        
-        [Space(5)]
-
-        [Tooltip("High money, high fame, high fear, low fame, low fear")]
-        public Ending[] endings;
-        public int threshold = 70;
-        public Encounter[] highFameCards, highFearCards;
-
-        [Tooltip("A list of conditions for total potions brewed checks that happen at night.")]
-        public List<TotalPotionCountEvent> nightConditions;
         
         
-
-        public bool gameEnded;
+        [SerializeField] private bool gameEnded;
+        public bool GameEnded => gameEnded;
 
         public event Action<int> NewDay;
         public event Action<int, int> NewEncounter;
@@ -45,24 +34,31 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private VisitorManager visitors;
         private MainSettings settings;
-        public NightEventProvider nightEvents;
+
+        public MainSettings Settings => settings;
+
+        private EndingsProvider endings;
 
         [Inject]
-        public void Construct(RecipeBook book, Cauldron pot, VisitorManager vm, MainSettings settings, NightEventProvider nightEventProvider)
+        public void Construct(RecipeBook book,
+            Cauldron pot,
+            VisitorManager vm,
+            MainSettings settings,
+            NightEventProvider nightEventProvider,
+            EndingsProvider endingsProvider)
         {
             recipeBook = book;
             cauldron = pot;
             visitors = vm;
             this.settings = settings;
             nightEvents = nightEventProvider;
+            endings = endingsProvider;
             
             gState = new GameState(settings.gameplay.statusBarsMax, settings.gameplay.statusBarsStart);
             
-            HideText();
             pauseMenu.SetActive(false);
         }
 
-        
 
         private void Update()
         {
@@ -84,17 +80,6 @@ namespace CauldronCodebase
         public void Continue()
         {
             pauseMenu.SetActive(false);
-        }
-
-        public void ShowText(Encounter card)
-        {
-            textCanvas.gameObject.SetActive(true);
-            visitorText.Display(card);
-        }
-
-        public void HideText()
-        {
-            textCanvas.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -133,47 +118,39 @@ namespace CauldronCodebase
             //in case we run out of cards
             if (gState.currentCard is null)
             {
-                endingPanel.Show(endings[0]);
-                EndGame();
+                EndGameProcess(endings.endings[0]);
                 return;
             }
-            NewEncounter?.Invoke(gState.cardsDrawnToday, settings.gameplay.cardsPerDay);
+            NewEncounter?.Invoke(gState.cardsDrawnToday, Settings.gameplay.cardsPerDay);
             
             currentCard.Init(this);
             gState.cardsDrawnToday ++;
             Debug.Log(currentCard.text);
-            ShowText(currentCard);
-            visitors.Enter(currentCard.actualVillager);
+            visitors.Enter(currentCard);
             cauldron.PotionBrewed += EndEncounter;
         }
 
         public void EndEncounter(Potions potion)
         {
             cauldron.PotionBrewed -= EndEncounter;
-            //ChangeVisitor.instance.Exit();
             visitors.Exit();
-            HideText();
             
             gState.potionsTotal.Add(potion);
 
-            if (gState.currentCard.EndEncounter(potion))
-            {
-            }
-            else
+            if (!gState.currentCard.EndEncounter(potion))
             {
                 gState.wrongPotionsCount++;
             }
-            
+
             //status check
-            StatusChecks();
+            endings.StatusChecks(this);
             
             if (gameEnded)
             {
                 return;
             }
             
-            //draw new card
-            if (gState.cardsDrawnToday >= settings.gameplay.cardsPerDay)
+            if (gState.cardsDrawnToday >= Settings.gameplay.cardsPerDay)
             {
                 StartCoroutine(StartNewDay());
             }
@@ -186,45 +163,25 @@ namespace CauldronCodebase
 
         private IEnumerator DrawCardWithDelay()
         {
-            yield return new WaitForSeconds(settings.gameplay.villagerDelay);
+            yield return new WaitForSeconds(Settings.gameplay.villagerDelay);
             DrawCard();
         }
 
-        
-
-
-        IEnumerator EndGame()
+        public void EndGame(Ending ending)
         {
+            StartCoroutine(EndGameProcess(ending));
+        }
+        
+        IEnumerator EndGameProcess(Ending ending)
+        {
+            endingPanel.Show(ending);
             gameEnded = true;
             yield return new WaitForSeconds(1f);
             yield return new WaitUntil(() => Input.anyKeyDown);
             ReloadGame();
         }
         
-        [ContextMenu("Export Night Conditions to CSV")]
-        public void ExportConditions()
-        {
-            var file = File.CreateText(Application.dataPath+"/Localize/Night_events.csv");
-            file.WriteLine("id;flavour_RU;flavour_EN");
-            foreach (var condition in nightConditions)
-            {
-                file.WriteLine(condition.name+";"+condition.flavourText);
-            }
-            file.Close();
-        }
-        
-        [ContextMenu("Export Endings to CSV")]
-        public void ExportEndings()
-        {
-            var file = File.CreateText(Application.dataPath+"/Localize/Endings.csv");
-            file.WriteLine("id;description_RU;description_EN");
-            foreach (var ending in endings)
-            {
-                file.WriteLine(ending.name+";"+ending.text);
-            }
-            file.Close();
-        }
-
+       
         public void ReloadGame()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
@@ -235,89 +192,33 @@ namespace CauldronCodebase
             Application.Quit();
         }
         
-        
-        void StatusChecks()
-        {
-            //endings
-            //[Tooltip("High money, high fame, high fear, low fame, low fear")]
-            bool endingReached = false;
-            if (gState.Fame >= settings.gameplay.statusBarsMax)
-            {
-                endingPanel.Show(endings[1]);
-                endingReached = true;
-            }
-            else if (gState.Fear >= settings.gameplay.statusBarsMax)
-            {
-                endingPanel.Show(endings[2]);
-                endingReached = true;
-            }
-            else if (gState.Money >= settings.gameplay.statusBarsMax)
-            {
-                endingPanel.Show(endings[0]);
-                endingReached = true;
-
-            }
-            else if (gState.Fame <= 0)
-            {
-                endingPanel.Show(endings[3]);
-                endingReached = true;
-            }
-            else if (gState.Fear <= 0)
-            {
-                endingPanel.Show(endings[4]);
-                endingReached = true;
-            }
-
-            if (endingReached)
-            {
-                StartCoroutine(EndGame());
-                return;
-            }
-            
-            //high status cards
-            if (gState.Fame > threshold)
-            {
-                //add first index
-                cardDeck.AddToDeck(Encounter.GetRandom(highFameCards));
-            }
-
-            if (gState.Fear > threshold)
-            {
-                //add first index
-                cardDeck.AddToDeck(Encounter.GetRandom(highFearCards));
-            }
-        }
-
+       
         private IEnumerator StartNewDay()
         {
-            yield return new WaitForSeconds(settings.gameplay.villagerDelay);
+            yield return new WaitForSeconds(Settings.gameplay.villagerDelay);
 
             //Witch.instance.Hide();
-            HideText();
             NewDay?.Invoke(gState.currentDay + 1);
 
-            StatusChecks();
+            endings.StatusChecks(this);
             if (gameEnded)
                 yield break;
 
             //night events
-            nightPanel.Show(nightEvents.GetEvents(gState));
+            var events = nightEvents.GetEvents(gState);
+            nightPanel.Show(events);
+            foreach (NightEvent nightEvent in events)
+            {
+                nightEvent.ApplyModifiers(gState);
+            }
 
-            yield return new WaitForSeconds(settings.gameplay.nightDelay/2);
+            yield return new WaitForSeconds(Settings.gameplay.nightDelay/2);
             
             //deck update
             cardDeck.NewDayPool(gState.currentDay);
-            cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
+            cardDeck.DealCards(Settings.gameplay.cardsDealtAtNight);
             gState.currentDay++;
             gState.cardsDrawnToday = 0;
-            
-            //status update
-            gState.Money += moneyUpdateTotal;
-            moneyUpdateTotal = 0;
-            gState.Fear += fearUpdateTotal;
-            fearUpdateTotal = 0;
-            gState.Fame += fameUpdateTotal;
-            fameUpdateTotal = 0;
             
             
             //yield return new WaitForSeconds(nightDelay/2);
@@ -326,7 +227,7 @@ namespace CauldronCodebase
             nightPanel.Hide();
             //Witch.instance.Wake();
             
-            StatusChecks();
+            endings.StatusChecks(this);
             if (gameEnded)
                 yield break;
             

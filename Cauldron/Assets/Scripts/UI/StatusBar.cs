@@ -45,8 +45,8 @@ namespace CauldronCodebase
                initialDimension = mask.rect.width;
            }
            
-           gm.gState.statusChanged += () => SetValue(gm.gState.Get(type));
-           SetValue(gm.gState.Get(type));
+           gm.GameState.statusChanged += () => SetValue(gm.GameState.Get(type));
+           SetValue(gm.GameState.Get(type));
         }
 
 

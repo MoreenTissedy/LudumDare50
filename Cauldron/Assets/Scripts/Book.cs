@@ -6,7 +6,7 @@ namespace CauldronCodebase
 {
     public abstract class Book : MonoBehaviour
     {
-        [SerializeField] protected GameObject bookObject;
+        [SerializeField] public GameObject bookObject;
         [SerializeField] protected bool keyboardControl;
         [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
         [FormerlySerializedAs("leftCorner")] [SerializeField] protected GameObject prevPageButton;

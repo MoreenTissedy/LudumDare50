@@ -1378,6 +1378,7 @@ MonoBehaviour:
   - {fileID: 2074301524}
   - {fileID: 1606099846}
   - {fileID: 1171410291}
+  visitorText: {fileID: 46435478}
 --- !u!4 &264877341
 Transform:
   m_ObjectHideFlags: 0
@@ -3228,11 +3229,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3042944657875605219, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
   m_PrefabInstance: {fileID: 969789016}
   m_PrefabAsset: {fileID: 0}
---- !u!223 &976548747 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 6448282156904387652, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
-  m_PrefabInstance: {fileID: 222198771}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &977943099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4065,6 +4061,7 @@ MonoBehaviour:
   theCauldron: {fileID: 1308457031262689057}
   visitorManager: {fileID: 264877340}
   ingredientsData: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
+  endings: {fileID: 11400000, guid: b0637f48345d84e2c887a048f1a71429, type: 2}
 --- !u!1 &1160056609
 GameObject:
   m_ObjectHideFlags: 0
@@ -6299,6 +6296,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: RecipeBook_new
       objectReference: {fileID: 0}
+    - target: {fileID: 5061474871267748998, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: openCloseSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 554c370f52df2dfc79f1b5123521a7e2, type: 3}
+    - target: {fileID: 5061474871267748998, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
+      propertyPath: keyboardControl
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5061474871267748999, guid: 0a922a05852d0994fa55bf75a6baf041, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -6530,38 +6535,7 @@ MonoBehaviour:
   nightPanel: {fileID: 1032199746}
   endingPanel: {fileID: 5110209830411582714}
   pauseMenu: {fileID: 7780886650645843231}
-  textCanvas: {fileID: 976548747}
-  visitorText: {fileID: 46435478}
-  endings:
-  - {fileID: 11400000, guid: 95762e6e2a19cfc428166f4f3a4b4c93, type: 2}
-  - {fileID: 11400000, guid: 41b8b947a04200f4880657da55df3c35, type: 2}
-  - {fileID: 11400000, guid: 71bbd5d41ebed1744ac18243d74cedd7, type: 2}
-  - {fileID: 11400000, guid: 8c2f539ffaeeb824198a42fd55c4d372, type: 2}
-  - {fileID: 11400000, guid: c782477fa47e6c644b01eddda1796ae3, type: 2}
-  threshold: 80
-  highFameCards:
-  - {fileID: 11400000, guid: 3f78c3d944da166449be8dae9f264ead, type: 2}
-  highFearCards:
-  - {fileID: 11400000, guid: be7723198bf051944ab852e89356d5a7, type: 2}
-  nightConditions:
-  - {fileID: 11400000, guid: 098fc3d855ff8c8489253e7cb455214b, type: 2}
-  - {fileID: 11400000, guid: 88fa0b168ded71f4d8418f4070ffeef7, type: 2}
-  - {fileID: 11400000, guid: 86c3082de38992145bfd9f7a8d480006, type: 2}
-  - {fileID: 11400000, guid: 9ee7ff0ec96aae942831c9c04c886fa1, type: 2}
-  - {fileID: 11400000, guid: d08ae62d5e87936d488cb142f376f895, type: 2}
-  - {fileID: 11400000, guid: cc2943d331bdf904782010883399bea3, type: 2}
-  - {fileID: 11400000, guid: 316ae2daff3fc0e1f908ba6ac3039016, type: 2}
-  - {fileID: 11400000, guid: 04f27c3ccb2eacba1a316173323832fe, type: 2}
-  - {fileID: 11400000, guid: 2627edeb8725363258dc4bdbfccf21bc, type: 2}
-  - {fileID: 11400000, guid: d32c993205a855eb79b4b97c76e49204, type: 2}
-  - {fileID: 11400000, guid: b7a6b4d56cc956d0482526a6b2632c53, type: 2}
-  - {fileID: 11400000, guid: e4a4dbe049e307608aad80e868e30192, type: 2}
-  - {fileID: 11400000, guid: 2828106b6be2e961d9383d8231222d0e, type: 2}
-  - {fileID: 11400000, guid: 0bc84cd13f28a4d989afbd0b922da7f8, type: 2}
-  - {fileID: 11400000, guid: c4d2f0dbe5ad7e78b8edf1bb6243bed0, type: 2}
-  - {fileID: 11400000, guid: 9a071e40d8f3d09b9a9200ecca518362, type: 2}
   gameEnded: 0
-  nightEvents: {fileID: 0}
 --- !u!4 &1745953328
 Transform:
   m_ObjectHideFlags: 0

@@ -10,8 +10,7 @@ namespace CauldronCodebase
 {
     public class GameManager : MonoBehaviour
     {
-
-        private EncounterDeck cardDeck;
+        [SerializeField] private EncounterDeck cardDeck;
         private GameState gState;
         private NightEventProvider nightEvents;
         public EncounterDeck CardDeck => cardDeck;

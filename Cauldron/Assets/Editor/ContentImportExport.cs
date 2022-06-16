@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -6,7 +7,7 @@ using CauldronCodebase;
 
 namespace Editor
 {
-    public class ImportCardsFromExcel
+    public class ContentImportExport
     {
         private static string CSVpath = "/Editor/Deck.csv";
         [MenuItem("Utilities/Import cards")]
@@ -54,6 +55,46 @@ namespace Editor
                 AssetDatabase.CreateAsset(enc, $"Assets/Cards/{data[0]}.asset");
             }
             AssetDatabase.SaveAssets();
+        }
+
+        [MenuItem("Utilities/Export for GraphViz")]
+        public static void ExportToDot()
+        {
+            //skip this for now
+            RandomNightEvent[] startingEvents = ScriptableObjectHelper.LoadAllAssets<RandomNightEvent>();
+            Encounter[] encounters = ScriptableObjectHelper.LoadAllAssets<Encounter>();
+
+            List<NightEvent> storyEvents = new List<NightEvent>(30);
+            string dotNotation = "digraph{\n";
+            foreach (var encounter in encounters)
+            {
+                dotNotation += $"{encounter.name}\n";
+                foreach (Encounter.PotionResult result in encounter.resultsByPotion)
+                {
+                    string color = result.influenceCoef > 0 ? "green" : "red";
+                    if (result.bonusCard != null)
+                    {
+                        dotNotation +=
+                            $"{encounter.name} -> {result.bonusCard.name} [color={color}, label={result.potion}]\n";
+                    }
+
+                    if (result.bonusEvent != null)
+                    {
+                        storyEvents.Add(result.bonusEvent);
+                        dotNotation += $"{encounter.name} -> {result.bonusEvent.name}[color={color}, label={result.potion}]\n";
+                        dotNotation += $"{result.bonusEvent.name} [shape = record]\n";
+                    }
+                }
+            }
+            foreach (NightEvent storyEvent in storyEvents)
+            {
+                if (storyEvent.bonusCard != null)
+                {
+                    dotNotation += $"{storyEvent.name} -> {storyEvent.bonusCard.name}\n";
+                }
+            }
+            dotNotation += "}";
+            File.WriteAllText(Application.dataPath + "/Content.dot", dotNotation);
         }
 
         static int ConvertFromString(string data)

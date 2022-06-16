@@ -175,9 +175,13 @@ namespace CauldronCodebase
                         //if recipe is not in book -> add
                         if (!recipeBook.recipes.Contains(recipe))
                         {
+                            potionPopup.Show(recipe, true);
                             recipeBook.recipes.Add(recipe);
                         }
-                        potionPopup.Show(recipe);
+                        else
+                        {
+                            potionPopup.Show(recipe);
+                        }
                         PotionBrewed?.Invoke(recipe.potion);
                         return recipe.potion;
                     }
@@ -186,7 +190,7 @@ namespace CauldronCodebase
 
             //RandomMixColor();
             mix.Clear();
-            potionPopup.ShowFailure();
+            potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             return Potions.Placebo;
         }

@@ -11,7 +11,9 @@ namespace CauldronCodebase
     public class Encounter : LocalizableSO
     {
         private GameManager gm;
-        
+
+        public int addToDeckOnDay = -1;
+
         [Serializable]
         //TODO custom property drawer
         public class PotionResult
@@ -22,14 +24,15 @@ namespace CauldronCodebase
             public NightEvent bonusEvent;
             public Encounter bonusCard;
         }
-        
+
         public Villager[] villager;
+
         [TextArea(5, 10)]
         public string text;
+
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public int primaryAmount = 10, secondaryAmount = 5;
         public PotionResult[] resultsByPotion = new PotionResult[3];
-        
 
         [HideInInspector] public Villager actualVillager;
 

@@ -68,22 +68,40 @@ namespace Editor
             string dotNotation = "digraph{\n";
             foreach (var encounter in encounters)
             {
-                dotNotation += $"{encounter.name}\n";
+                if (encounter.addToDeckOnDay >= 0)
+                {
+                    dotNotation += $"{encounter.name} [style=filled, color=yellow]\n";
+                }
+                else
+                {
+                    dotNotation += $"{encounter.name}\n";
+                }
+                
+                bool endNode = true;
                 foreach (Encounter.PotionResult result in encounter.resultsByPotion)
                 {
                     string color = result.influenceCoef > 0 ? "green" : "red";
+                    string style = "dotted";
+                    if (Mathf.Abs(result.influenceCoef) >= 0.8f) style = "solid";
+                    else if (Mathf.Abs(result.influenceCoef) >= 0.5f) style = "dashed";
+                    
                     if (result.bonusCard != null)
                     {
+                        endNode = false;
                         dotNotation +=
-                            $"{encounter.name} -> {result.bonusCard.name} [color={color}, label={result.potion}]\n";
+                            $"{encounter.name} -> {result.bonusCard.name} [color={color}, label={result.potion}, style={style}]\n";
                     }
-
                     if (result.bonusEvent != null)
                     {
+                        endNode = false;
                         storyEvents.Add(result.bonusEvent);
-                        dotNotation += $"{encounter.name} -> {result.bonusEvent.name}[color={color}, label={result.potion}]\n";
+                        dotNotation += $"{encounter.name} -> {result.bonusEvent.name}[color={color}, label={result.potion}, style = {style}]\n";
                         dotNotation += $"{result.bonusEvent.name} [shape = record]\n";
                     }
+                }
+                if (endNode == true)
+                {
+                    //dotNotation += $"{encounter.name} [color=purple]\n";
                 }
             }
             foreach (NightEvent storyEvent in storyEvents)

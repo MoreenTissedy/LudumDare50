@@ -319,7 +319,7 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 10
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -372,7 +372,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 14
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -529,7 +529,7 @@ ParticleSystem:
         m_RotationOrder: 0
     randomizeRotationDirection: 0
     maxNumParticles: 1000
-    size3D: 0
+    size3D: 1
     rotation3D: 1
     gravityModifier:
       serializedVersion: 2
@@ -969,21 +969,21 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
           weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
+          inWeight: 0
+          outWeight: 0
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 1
-          outSlope: 1
-          tangentMode: 34
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
           weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 0
@@ -1289,32 +1289,32 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.7647059, g: 0.8156863, b: 1, a: 1}
-        key1: {r: 0.40392157, g: 0.7764706, b: 1, a: 1}
-        key2: {r: 0.09019608, g: 0.24705882, b: 1, a: 0}
-        key3: {r: 0.6156863, g: 0.007843138, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5882353, g: 1, b: 0.6695935, a: 1}
+        key1: {r: 0.3415037, g: 1, b: 0.2980392, a: 1}
+        key2: {r: 0.16967781, g: 0.8773585, b: 0.2079308, a: 0}
+        key3: {r: 0.2264151, g: 0.19971521, b: 0.21213719, a: 0}
+        key4: {r: 0.09433961, g: 0.0716447, b: 0.0716447, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 1928
-        ctime1: 12143
-        ctime2: 32189
-        ctime3: 50308
-        ctime4: 0
+        ctime0: 2699
+        ctime1: 10987
+        ctime2: 26021
+        ctime3: 36815
+        ctime4: 56669
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 49730
-        atime2: 65535
-        atime3: 0
+        atime1: 51850
+        atime2: 64379
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
@@ -4770,8 +4770,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 3
   m_RenderMode: 4
   m_SortMode: 0
@@ -4984,7 +4984,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.5043963, b: 0.06132078, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -6073,33 +6073,33 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.7647059, g: 0.8156863, b: 1, a: 1}
-        key1: {r: 0.40392157, g: 0.7764706, b: 1, a: 1}
-        key2: {r: 0.09019608, g: 0.24705882, b: 1, a: 0}
-        key3: {r: 0.6156863, g: 0.007843138, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 1, g: 0.6933963, b: 0.1745283, a: 1}
+        key1: {r: 1, g: 0.69784707, b: 0.2971698, a: 1}
+        key2: {r: 1, g: 0.21226418, b: 0.29025075, a: 1}
+        key3: {r: 0.2264151, g: 0.19971521, b: 0.21213719, a: 0}
+        key4: {r: 0.09433961, g: 0.0716447, b: 0.0716447, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 1928
-        ctime1: 12143
-        ctime2: 32189
-        ctime3: 50308
-        ctime4: 0
+        ctime0: 2699
+        ctime1: 10987
+        ctime2: 26021
+        ctime3: 54741
+        ctime4: 65535
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 49730
-        atime2: 65535
-        atime3: 0
+        atime1: 45296
+        atime2: 49344
+        atime3: 64379
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 4
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9662,8 +9662,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 3
   m_RenderMode: 1
   m_SortMode: 0
@@ -9894,7 +9894,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.4669811, g: 0.6599559, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14469,8 +14469,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 3
   m_RenderMode: 4
   m_SortMode: 0
@@ -14683,7 +14683,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.6117647, g: 0.6117647, b: 0.6117647, a: 1}
+      maxColor: {r: 1, g: 0.605475, b: 0.16509432, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -15834,24 +15834,24 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.7647059, g: 0.8156863, b: 1, a: 1}
-        key1: {r: 0.40392157, g: 0.7764706, b: 1, a: 1}
-        key2: {r: 0.09019608, g: 0.24705882, b: 1, a: 0}
-        key3: {r: 0.6156863, g: 0.007843138, b: 1, a: 0}
+        key0: {r: 1, g: 0.6933963, b: 0.1745283, a: 1}
+        key1: {r: 1, g: 0.69784707, b: 0.2971698, a: 1}
+        key2: {r: 1, g: 0.21226418, b: 0.29025075, a: 0}
+        key3: {r: 0.2264151, g: 0.19971521, b: 0.21213719, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 1928
-        ctime1: 12143
-        ctime2: 32189
-        ctime3: 50308
+        ctime0: 2699
+        ctime1: 10987
+        ctime2: 26021
+        ctime3: 54741
         ctime4: 0
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 49730
+        atime1: 64379
         atime2: 65535
         atime3: 0
         atime4: 0
@@ -15860,7 +15860,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 4
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19315,8 +19315,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 2
   m_RenderMode: 0
   m_SortMode: 0
@@ -19565,7 +19565,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.76252353, g: 0.990566, b: 0.4625756, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -20713,32 +20713,32 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.7647059, g: 0.8156863, b: 1, a: 1}
-        key1: {r: 0.40392157, g: 0.7764706, b: 1, a: 1}
-        key2: {r: 0.09019608, g: 0.24705882, b: 1, a: 0}
-        key3: {r: 0.6156863, g: 0.007843138, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5882353, g: 1, b: 0.6695935, a: 1}
+        key1: {r: 0.3415037, g: 1, b: 0.2980392, a: 1}
+        key2: {r: 0.16967781, g: 0.8773585, b: 0.2079308, a: 0}
+        key3: {r: 0.2264151, g: 0.19971521, b: 0.21213719, a: 0}
+        key4: {r: 0.09433961, g: 0.0716447, b: 0.0716447, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 1928
-        ctime1: 12143
-        ctime2: 32189
-        ctime3: 50308
-        ctime4: 0
+        ctime0: 2699
+        ctime1: 10987
+        ctime2: 26021
+        ctime3: 36815
+        ctime4: 56669
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 49730
-        atime2: 65535
+        atime1: 51850
+        atime2: 64379
         atime3: 0
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
@@ -24194,9 +24194,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
+  m_SortingOrder: 13
   m_RenderMode: 4
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -24234,7 +24234,7 @@ GameObject:
   - component: {fileID: 830219158998936142}
   - component: {fileID: 862462897573878172}
   m_Layer: 0
-  m_Name: puf_effV1
+  m_Name: Smoke_splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24247,7 +24247,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 664674135189807060}
-  m_LocalRotation: {x: 0.22453679, y: -0, z: -0, w: 0.9744656}
+  m_LocalRotation: {x: 0.22453432, y: 0, z: 0, w: 0.97446626}
   m_LocalPosition: {x: -3.1648088, y: 0.8407652, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
@@ -29015,8 +29015,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -29070,7 +29070,7 @@ Transform:
   m_GameObject: {fileID: 664674136292355042}
   m_LocalRotation: {x: -0.7071057, y: -0, z: -0, w: 0.7071079}
   m_LocalPosition: {x: 0, y: 0.3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.175, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 663399025255634114}
   m_RootOrder: 6
@@ -30215,32 +30215,32 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.6313726, g: 0.9529412, b: 1, a: 1}
-        key2: {r: 0.21176471, g: 0.5921569, b: 1, a: 0}
-        key3: {r: 1, g: 1, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
-        key5: {r: 0, g: 0, b: 0, a: 0}
-        key6: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 1, g: 0.7837385, b: 0.4764151, a: 0.95686275}
+        key1: {r: 0.48235297, g: 0.38823533, b: 0.35686275, a: 0.95686275}
+        key2: {r: 0.48235297, g: 0.38823533, b: 0.35686275, a: 1}
+        key3: {r: 0.7733033, g: 1, b: 0.24056602, a: 0}
+        key4: {r: 0.9199696, g: 0.06132078, b: 1, a: 0}
+        key5: {r: 0.4197179, g: 1, b: 0, a: 0}
+        key6: {r: 0.8529666, g: 0.514151, b: 1, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 3277
-        ctime2: 7325
-        ctime3: 9830
-        ctime4: 0
-        ctime5: 0
-        ctime6: 0
+        ctime1: 26985
+        ctime2: 45104
+        ctime3: 29684
+        ctime4: 40863
+        ctime5: 48959
+        ctime6: 65535
         ctime7: 0
         atime0: 0
         atime1: 65535
-        atime2: 0
-        atime3: 0
+        atime2: 58018
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 2
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
@@ -33678,9 +33678,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
+  m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -33928,7 +33928,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.15028624, g: 0.7169812, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -35067,32 +35067,32 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.7647059, g: 0.8156863, b: 1, a: 1}
-        key1: {r: 0.40392157, g: 0.7764706, b: 1, a: 1}
-        key2: {r: 0.09019608, g: 0.24705882, b: 1, a: 0}
-        key3: {r: 0.6156863, g: 0.007843138, b: 1, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key0: {r: 0.5882353, g: 1, b: 0.6695935, a: 1}
+        key1: {r: 0.3415037, g: 1, b: 0.2980392, a: 1}
+        key2: {r: 0.16967781, g: 0.8773585, b: 0.2079308, a: 0}
+        key3: {r: 0.2264151, g: 0.19971521, b: 0.21213719, a: 0}
+        key4: {r: 0.09433961, g: 0.0716447, b: 0.0716447, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
-        ctime0: 1928
-        ctime1: 12143
-        ctime2: 32189
-        ctime3: 50308
-        ctime4: 0
+        ctime0: 2699
+        ctime1: 10987
+        ctime2: 26021
+        ctime3: 36815
+        ctime4: 56669
         ctime5: 0
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 49730
-        atime2: 65535
+        atime1: 51850
+        atime2: 64379
         atime3: 0
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
@@ -38548,9 +38548,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
+  m_SortingOrder: 13
   m_RenderMode: 4
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -43427,9 +43427,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
+  m_SortingOrder: 25
   m_RenderMode: 5
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -44618,8 +44618,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0.6313726, g: 0.9529412, b: 1, a: 1}
+        key0: {r: 1, g: 0.7837385, b: 0.4764151, a: 0.95686275}
+        key1: {r: 0.48235297, g: 0.38823533, b: 0.35686275, a: 0.95686275}
         key2: {r: 0.21176471, g: 0.5921569, b: 1, a: 0}
         key3: {r: 1, g: 1, b: 1, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -44627,7 +44627,7 @@ ParticleSystem:
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 3277
+        ctime1: 26985
         ctime2: 7325
         ctime3: 9830
         ctime4: 0
@@ -44643,7 +44643,7 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 2
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
@@ -48081,8 +48081,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1779255451
+  m_SortingLayer: 2
   m_SortingOrder: 4
   m_RenderMode: 0
   m_SortMode: 0

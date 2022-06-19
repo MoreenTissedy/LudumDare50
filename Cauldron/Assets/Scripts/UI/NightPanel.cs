@@ -1,17 +1,24 @@
 using System;
+using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Zenject;
+using TMPro;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class NightPanel : MonoBehaviour
+    public class NightPanel : Book, IPointerClickHandler
     {
-        public Text flavour;
-        public Text money;
-        public Text fear;
-        public Text fame;
+        [Inject]
+        private GameManager gm;
+        
+        public TMP_Text flavour;
+        public TMP_Text money;
+        public TMP_Text fear;
+        public TMP_Text fame;
         [Localize]
         public string defaultNightText1 = "Ничего необычного.";
         [Localize]
@@ -19,26 +26,9 @@ namespace CauldronCodebase
         [Localize]
         public string defaultNightText3 = "Дует ветер, гонит тучки.";
 
-        private void Start()
-        {
-            Hide();
-        }
+        public NightEvent[] content;
 
-        public void Show(NightEvent[] events)
-        {
-            if (events is null || events.Length == 0)
-            {
-                ShowDefault();
-            }
-            else
-            {
-                Show(events[0]);
-            }
-
-            //show multiple events
-        }
-
-        public void ShowDefault()
+        private void ShowDefault()
         {
             string text = String.Empty;
             int rnd = Random.Range(0, 3);
@@ -56,27 +46,57 @@ namespace CauldronCodebase
             }
 
             flavour.text = text;
+            //flavour.DOFade(1, 1).From(0);
             money.text = "—";
             fear.text = "—";
             fame.text = "—";
-            gameObject.SetActive(true);
         }
-        
-        
 
-        public void Show(NightEvent nightEvent)
+        public void OpenBookWithEvents(NightEvent[] events)
+        {
+            content = events;
+            InitTotalPages();
+            base.OpenBook();
+        }
+
+        private void Show(NightEvent nightEvent)
         {
             flavour.text = nightEvent.flavourText;
+            //flavour.DOFade(1, 1).From(0);
             money.text = nightEvent.moneyModifier.ToString();
             fear.text = nightEvent.fearModifier.ToString();
             fame.text = nightEvent.fameModifier.ToString();
-            gameObject.SetActive(true);
         }
-        
 
-        public void Hide()
+        protected override void InitTotalPages()
         {
-            gameObject.SetActive(false);
+            totalPages = content.Length;
+        }
+
+        protected override void UpdatePage()
+        {
+            Debug.Log("night panel update");
+            if (content is null || content.Length == 0 || currentPage >= content.Length)
+            {
+                ShowDefault();
+            }
+            else
+            {
+                Show(content[currentPage]);
+            }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (currentPage + 1 < totalPages)
+            {
+                NextPage();
+            }
+            else
+            {
+                CloseBook();
+                gm.StartNewDay();   
+            }
         }
     }
 }

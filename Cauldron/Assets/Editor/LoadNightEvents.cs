@@ -44,6 +44,7 @@ namespace Editor
                 data.RemoveAt(dice);
             }
             provider.conditionalEvents = deck;
+            EditorUtility.SetDirty(provider);
         }
     }
 }

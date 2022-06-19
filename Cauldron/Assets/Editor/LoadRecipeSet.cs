@@ -22,6 +22,7 @@ namespace Editor
             if (provider is null)
                 return;
             provider.allRecipes = ScriptableObjectHelper.LoadAllAssets<Recipe>();
+            EditorUtility.SetDirty(provider);
         }
     }
 }

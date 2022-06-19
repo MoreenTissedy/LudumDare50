@@ -1,29 +1,45 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
-    public class EndingScreen : MonoBehaviour
+    public class EndingScreen : Book
     {
+        [Inject]
+        private EndingsProvider endings;
+        
         public Text text;
         public Image image;
-        
-        private void Start()
+
+        public override void OpenBook()
         {
-            Hide();
+            base.OpenBook();
+            InitTotalPages();
+            currentPage = 0;
         }
 
-        public void Show(Ending ending)
+        public void OpenBookOnPage(Ending ending)
+        {
+            OpenBook();
+            currentPage = endings.GetIndexOf(ending);
+        }
+
+        private void Show(Ending ending)
         {
             text.text = ending.text;
             image.sprite = ending.image;
-            gameObject.SetActive(true);
         }
         
 
-        public void Hide()
+        protected override void InitTotalPages()
         {
-            gameObject.SetActive(false);
+            totalPages = endings.endings.Length;
+        }
+
+        protected override void UpdatePage()
+        {
+            Show(endings.endings[currentPage]);
         }
     }
 }

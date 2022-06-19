@@ -151,7 +151,7 @@ namespace CauldronCodebase
             
             if (gState.cardsDrawnToday >= Settings.gameplay.cardsPerDay)
             {
-                StartCoroutine(StartNewDay());
+                StartCoroutine(StartNight());
             }
             else
             {
@@ -173,7 +173,7 @@ namespace CauldronCodebase
         
         IEnumerator EndGameProcess(Ending ending)
         {
-            endingPanel.Show(ending);
+            endingPanel.OpenBookOnPage(ending);
             gameEnded = true;
             yield return new WaitForSeconds(1f);
             yield return new WaitUntil(() => Input.anyKeyDown);
@@ -192,7 +192,7 @@ namespace CauldronCodebase
         }
         
        
-        private IEnumerator StartNewDay()
+        private IEnumerator StartNight()
         {
             yield return new WaitForSeconds(Settings.gameplay.villagerDelay);
 
@@ -205,13 +205,13 @@ namespace CauldronCodebase
 
             //night events
             var events = nightEvents.GetEvents(gState);
-            nightPanel.Show(events);
+            nightPanel.OpenBookWithEvents(events);
             foreach (NightEvent nightEvent in events)
             {
                 nightEvent.ApplyModifiers(gState);
             }
 
-            yield return new WaitForSeconds(Settings.gameplay.nightDelay/2);
+            //yield return new WaitForSeconds(Settings.gameplay.nightDelay/2);
             
             //deck update
             cardDeck.NewDayPool(gState.currentDay);
@@ -221,19 +221,21 @@ namespace CauldronCodebase
             
             
             //yield return new WaitForSeconds(nightDelay/2);
-            yield return new WaitUntil(() => Input.anyKeyDown);
+            //yield return new WaitUntil(() => Input.anyKeyDown);
 
-            nightPanel.Hide();
+            //nightPanel.CloseBook();
             //Witch.instance.Wake();
             
+            //StartNewDay();
+        }
+
+        public void StartNewDay()
+        {
             endings.StatusChecks(this);
             if (gameEnded)
-                yield break;
-            
+                return;
+
             DrawCard();
         }
-        
-        
-
     }
 }

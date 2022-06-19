@@ -10,7 +10,17 @@ namespace CauldronCodebase
         public Ending[] endings;
         public int threshold = 70;
         public Encounter[] highFameCards, highFearCards;
-        
+
+        public int GetIndexOf(Ending ending)
+        {
+            for (var i = 0; i < endings.Length; i++)
+            {
+                if (ending == endings[i])
+                    return i;
+            }
+
+            return -1;
+        }
          
         public void StatusChecks(GameManager gm)
         {

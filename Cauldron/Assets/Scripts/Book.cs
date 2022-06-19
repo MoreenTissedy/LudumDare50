@@ -8,6 +8,7 @@ namespace CauldronCodebase
     {
         [SerializeField] public GameObject bookObject;
         [SerializeField] protected bool keyboardControl;
+        [SerializeField] protected bool buttonControl;
         [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
         [FormerlySerializedAs("leftCorner")] [SerializeField] protected GameObject prevPageButton;
         [FormerlySerializedAs("left")] [SerializeField] protected AudioSource leftPageSound;
@@ -28,7 +29,7 @@ namespace CauldronCodebase
         protected virtual void Awake()
         {
             CloseBook();
-            prevPageButton.SetActive(false);
+            if (buttonControl) prevPageButton.SetActive(false);
         }
         
         protected virtual void Update()
@@ -66,8 +67,11 @@ namespace CauldronCodebase
 
         public virtual void OpenBook()
         {
-            leftPageSound.PlayOneShot(openCloseSound);
-            rightPageSound.PlayOneShot(openCloseSound);
+            if (openCloseSound != null)
+            {
+                leftPageSound.PlayOneShot(openCloseSound);
+                rightPageSound.PlayOneShot(openCloseSound);
+            }
             bookObject.SetActive(true);
             StartCoroutine(UpdateWithDelay());
         }
@@ -80,8 +84,12 @@ namespace CauldronCodebase
         
         public virtual void CloseBook()
         {
-            leftPageSound.PlayOneShot(openCloseSound);
-            rightPageSound.PlayOneShot(openCloseSound);
+            if (openCloseSound != null)
+            {
+                leftPageSound.PlayOneShot(openCloseSound);
+                rightPageSound.PlayOneShot(openCloseSound);
+            }
+
             bookObject.SetActive(false);
         }
         
@@ -92,7 +100,7 @@ namespace CauldronCodebase
             currentPage++;
             UpdateBookButtons();
             UpdatePage();
-            rightPageSound.Play();
+            rightPageSound?.Play();
         }
 
         public void PrevPage()
@@ -102,7 +110,7 @@ namespace CauldronCodebase
             currentPage--;
             UpdateBookButtons();
             UpdatePage();
-            leftPageSound.Play();
+            leftPageSound?.Play();
         }
 
         public void OpenPage(int i)
@@ -112,11 +120,11 @@ namespace CauldronCodebase
             //sound
             if (i < currentPage)
             {
-                leftPageSound.Play();   
+                leftPageSound?.Play();   
             }
             else if (i > currentPage)
             {
-                rightPageSound.Play();
+                rightPageSound?.Play();
             }
 
             currentPage = i;
@@ -126,6 +134,8 @@ namespace CauldronCodebase
 
         private void UpdateBookButtons()
         {
+            if (!buttonControl || prevPageButton is null || nextPageButton is null)
+                return;
             prevPageButton.SetActive(true);
             nextPageButton.SetActive(true);
             if (currentPage == 0)

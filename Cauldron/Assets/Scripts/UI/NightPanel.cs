@@ -46,7 +46,7 @@ namespace CauldronCodebase
             }
 
             flavour.text = text;
-            //flavour.DOFade(1, 1).From(0);
+            DOTween.To(() => flavour.alpha, x => flavour.alpha = x, 1, 1).From(0);
             money.text = "—";
             fear.text = "—";
             fame.text = "—";
@@ -62,7 +62,7 @@ namespace CauldronCodebase
         private void Show(NightEvent nightEvent)
         {
             flavour.text = nightEvent.flavourText;
-            //flavour.DOFade(1, 1).From(0);
+            DOTween.To(() => flavour.alpha, x => flavour.alpha = x, 1, 1).From(0);
             money.text = nightEvent.moneyModifier.ToString();
             fear.text = nightEvent.fearModifier.ToString();
             fame.text = nightEvent.fameModifier.ToString();

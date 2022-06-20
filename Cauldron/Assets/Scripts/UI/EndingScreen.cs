@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -9,8 +10,18 @@ namespace CauldronCodebase
         [Inject]
         private EndingsProvider endings;
         
-        public Text text;
+        [Header("Ending display")]
+        public TMP_Text text;
         public Image image;
+
+        protected override void Update()
+        {
+            base.Update();
+            if (!bookObject.activeInHierarchy && Input.GetKeyDown(KeyCode.K))
+            {
+                OpenBook();
+            }
+        }
 
         public override void OpenBook()
         {

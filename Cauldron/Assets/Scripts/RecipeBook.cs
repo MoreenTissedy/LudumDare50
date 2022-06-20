@@ -31,10 +31,11 @@ namespace CauldronCodebase
             Attempts
         }
 
-        void OnValidate()
+        [ContextMenu("Find Entries")]
+        void FindEntries()
         {
-            //attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            //recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
         }
 
         private void Start()

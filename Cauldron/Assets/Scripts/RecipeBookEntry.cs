@@ -16,10 +16,12 @@ namespace CauldronCodebase
         public Recipe CurrentRecipe => currentRecipe;
 
         private IngredientsData ingredientsData;
-            [Inject]
+           
+        [Inject]
         public void Construct(IngredientsData data)
         {
             this.ingredientsData = data;
+            Clear();
         }
         
         public void Display(Recipe recipe)

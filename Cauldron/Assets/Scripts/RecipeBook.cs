@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -8,14 +9,84 @@ namespace CauldronCodebase
 {
     public class RecipeBook : Book
     {   
+        [FormerlySerializedAs("entries")]
         [Header("Recipe Book")]
-        [SerializeField] protected RecipeBookEntry[] entries;
-        public List<Recipe> recipes;
+        [SerializeField] protected RecipeBookEntry[] recipeEntries;
+        [SerializeField] protected AttemptEntry[] attemptEntries;
+        [FormerlySerializedAs("recipes")] public List<Recipe> magicalRecipes;
+        public List<Recipe> herbalRecipes;
+        public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
+        [SerializeField] private GameObject recipesDisplay, attemptsDisplay;
         public event Action<Recipe> OnSelectRecipe;
 
         [Inject]
         private TooltipManager tooltipManager;
+
+        private Mode currentMode = Mode.Magical;
+        public enum Mode
+        {
+            Magical,
+            Herbal,
+            Attempts
+        }
+
+        void OnValidate()
+        {
+            //attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
+            //recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
+        }
+
+        private void Start()
+        {
+            ChangeMode(Mode.Magical);
+        }
+
+        public void RecordAttempt(Ingredients[] mix)
+        {
+            if (attempts is null)
+            {
+                attempts = new List<Ingredients[]>(10);
+            }
+            attempts.Add(mix);
+        }
+
+        public void RecordRecipe(Recipe recipe)
+        {
+            if (recipe.magical)
+            {
+                magicalRecipes.Add(recipe);
+            }
+            else
+            {
+                if (herbalRecipes is null)
+                {
+                    herbalRecipes = new List<Recipe>(10);
+                }
+                herbalRecipes.Add(recipe);
+            }
+        }
+
+        public void ChangeMode(Mode newMode)
+        {
+            if (currentMode != newMode)
+            {
+                if (newMode == Mode.Attempts)
+                {
+                    recipesDisplay.SetActive(false);
+                    attemptsDisplay.SetActive(true);
+                }
+                else if (currentMode == Mode.Attempts)
+                {
+                    recipesDisplay.SetActive(true);
+                    attemptsDisplay.SetActive(false);
+                }
+                currentMode = newMode;
+                currentPage = 0;
+                InitTotalPages();
+                UpdatePage();
+            }
+        }
 
         protected override void Update()
         {
@@ -26,25 +97,85 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            totalPages = Mathf.CeilToInt((float)recipes.Count / entries.Length);
+            switch (currentMode)
+            {
+                case Mode.Magical:
+                    totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+                    break;
+                case Mode.Herbal:
+                    if (herbalRecipes != null)
+                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / recipeEntries.Length);
+                    else totalPages = 1;
+                    break;
+                case Mode.Attempts:
+                    if (attempts != null) totalPages = Mathf.CeilToInt((float) attempts.Count / attemptEntries.Length);
+                    else totalPages = 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         protected override void UpdatePage()
         {
-            for (int i = 0; i < entries.Length; i++)
+            void DisplaySet(List<Recipe> set)
             {
-                int num = currentPage*entries.Length + i;
-                if (num < recipes.Count)
+                if (set is null || set.Count == 0)
                 {
-                    entries[i].Display(recipes[num]);
+                    foreach (var entry in recipeEntries)
+                    {
+                        entry.Clear();
+                    }
+                    return;   
                 }
-                else
+                for (int i = 0; i < recipeEntries.Length; i++)
                 {
-                    entries[i].Clear();
+                    int num = currentPage * recipeEntries.Length + i;
+                    if (num < set.Count)
+                    {
+                        recipeEntries[i].Display(set[num]);
+                    }
+                    else
+                    {
+                        recipeEntries[i].Clear();
+                    }
                 }
+            }
+
+            switch (currentMode)
+            {
+                case Mode.Magical:
+                    DisplaySet(magicalRecipes);
+                    break;
+                case Mode.Herbal:
+                    DisplaySet(herbalRecipes);
+                    break;
+                case Mode.Attempts:
+                    DisplayAttempts();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             nextPageNum.text = (currentPage *2+2).ToString();
             prevPageNum.text = (currentPage*2+1).ToString();
+        }
+
+        private void DisplayAttempts()
+        {
+            if (attempts is null || attempts.Count == 0)
+                return;
+            for (int i = 0; i < attemptEntries.Length; i++)
+            {
+                int num = currentPage * recipeEntries.Length + i;
+                if (num < attempts.Count)
+                {
+                    attemptEntries[i].Display(attempts[num]);
+                }
+                else
+                {
+                    attemptEntries[i].Clear();
+                }
+            }
         }
 
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)

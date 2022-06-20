@@ -9,11 +9,12 @@ namespace CauldronCodebase
     {
         [Inject]
         private EndingsProvider endings;
-        
+
         [Header("Ending display")]
         public TMP_Text text;
         public Image image;
 
+        //DEBUG - no menu
         protected override void Update()
         {
             base.Update();

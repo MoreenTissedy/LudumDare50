@@ -31,6 +31,17 @@ namespace CauldronCodebase
             Attempts
         }
 
+        void OnValidate()
+        {
+            //attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
+            //recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
+        }
+
+        private void Start()
+        {
+            ChangeMode(Mode.Magical);
+        }
+
         public void RecordAttempt(Ingredients[] mix)
         {
             if (attempts is null)
@@ -72,6 +83,7 @@ namespace CauldronCodebase
                 }
                 currentMode = newMode;
                 currentPage = 0;
+                InitTotalPages();
                 UpdatePage();
             }
         }
@@ -85,7 +97,23 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+            switch (currentMode)
+            {
+                case Mode.Magical:
+                    totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+                    break;
+                case Mode.Herbal:
+                    if (herbalRecipes != null)
+                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / recipeEntries.Length);
+                    else totalPages = 1;
+                    break;
+                case Mode.Attempts:
+                    if (attempts != null) totalPages = Mathf.CeilToInt((float) attempts.Count / attemptEntries.Length);
+                    else totalPages = 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         protected override void UpdatePage()
@@ -93,7 +121,13 @@ namespace CauldronCodebase
             void DisplaySet(List<Recipe> set)
             {
                 if (set is null || set.Count == 0)
-                    return;
+                {
+                    foreach (var entry in recipeEntries)
+                    {
+                        entry.Clear();
+                    }
+                    return;   
+                }
                 for (int i = 0; i < recipeEntries.Length; i++)
                 {
                     int num = currentPage * recipeEntries.Length + i;

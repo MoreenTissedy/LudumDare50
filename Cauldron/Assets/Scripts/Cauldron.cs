@@ -155,7 +155,7 @@ namespace CauldronCodebase
             audios.PlayOneShot(brew);
             tooltipManager.DisableAllHIghlights();
             
-            //if (mixBonusTotal > mixBonusMin)
+            if (mixBonusTotal > mixBonusMin)
             {
                 foreach (var recipe in recipeProvider.allRecipes)
                 {
@@ -164,19 +164,19 @@ namespace CauldronCodebase
                     {
                         mix.Clear();
                         //color mix in the potion color
-                        MixColor(recipe.color);
-                        // Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal-mixBonusMin}");
-                        // var numDiamonds = Mathf.FloorToInt(mixBonusTotal-mixBonusMin);
-                        // for (int i = 0; i < numDiamonds; i++)
-                        // {
-                        //     Debug.Log("Bonus!");
-                        //     Instantiate(diamond, transform.position, Quaternion.identity);
-                        // }
+                        //MixColor(recipe.color);
+                        Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal-mixBonusMin}");
+                        var numDiamonds = Mathf.FloorToInt(mixBonusTotal-mixBonusMin);
+                        for (int i = 0; i < numDiamonds; i++)
+                        {
+                            Debug.Log("Bonus!");
+                            Instantiate(diamond, transform.position, Quaternion.identity);
+                        }
                         //if recipe is not in book -> add
-                        if (!recipeBook.magicalRecipes.Contains(recipe))
+                        if (!recipeBook.recipes.Contains(recipe))
                         {
                             potionPopup.Show(recipe, true);
-                            recipeBook.RecordRecipe(recipe);
+                            recipeBook.recipes.Add(recipe);
                         }
                         else
                         {
@@ -188,8 +188,7 @@ namespace CauldronCodebase
                 }
             }
 
-            recipeBook.RecordAttempt(mix.ToArray());
-            RandomMixColor();
+            //RandomMixColor();
             mix.Clear();
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);

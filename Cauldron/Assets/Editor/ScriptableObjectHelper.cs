@@ -11,6 +11,13 @@ namespace Editor
             return LoadAllAssetsList<T>().ToArray();
         }
 
+        public static T LoadSingleAsset<T>() where T:ScriptableObject
+        {
+            string guid = AssetDatabase.FindAssets($"t: {typeof(T)}")[0];
+            string assetPath = AssetDatabase.GUIDToAssetPath( guid );
+            return AssetDatabase.LoadAssetAtPath<T>( assetPath );
+        }
+        
         public static List<T> LoadAllAssetsList<T>() where T : ScriptableObject
         {
             List<T> data = new List<T>();

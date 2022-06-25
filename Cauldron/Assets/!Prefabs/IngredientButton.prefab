@@ -307,9 +307,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ingredient: 0
-  rotateAngle: 10
-  rotateSpeed: 0.3
-  returntime: 0.5
+  rotateAngle: 5
+  rotateSpeed: 0.2
+  returntime: 0.4
   dataList: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
   tooltip: {fileID: 2301198565767257074}
   image: {fileID: 3238362719770474279}
@@ -497,18 +497,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2301198565061899768}
     m_Modifications:
-    - target: {fileID: 1073974498055273112, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingLayer
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1073974498055273112, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingOrder
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1073974498055273112, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1779255451
-      objectReference: {fileID: 0}
     - target: {fileID: 2097156334983698128, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -554,40 +542,60 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2696379579819041682, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: lengthInSec
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2696379579819041682, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2696379579819041682, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
       propertyPath: InitialModule.startColor.maxColor.a
-      value: 0.27058825
+      value: 0.05882353
       objectReference: {fileID: 0}
     - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: InitialModule.startColor.maxColor.a
+      propertyPath: InitialModule.startColor.minColor.a
       value: 0.08627451
       objectReference: {fileID: 0}
-    - target: {fileID: 3494073846498103394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingLayer
+    - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: InitialModule.startColor.minColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: InitialModule.startColor.minColor.g
+      value: 0.39354917
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: InitialModule.startColor.minColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2849137575840091462, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: InitialModule.startColor.minMaxState
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3494073846498103394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingOrder
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3494073846498103394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1779255451
       objectReference: {fileID: 0}
     - target: {fileID: 4841969322775249547, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
       propertyPath: m_Name
       value: Glow_book_base Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7876075868610780394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 0.1
+      propertyPath: simulationSpeed
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7876075868610780394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
-      propertyPath: InitialModule.startSize.minScalar
-      value: 0.01
+      propertyPath: NoiseModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876075868610780394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: NoiseModule.frequency
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876075868610780394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: NoiseModule.strength.scalar
+      value: 0.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876075868610780394, guid: 6356c77952572364fb272b5934dc9f97, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6356c77952572364fb272b5934dc9f97, type: 3}

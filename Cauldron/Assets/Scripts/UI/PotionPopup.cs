@@ -30,8 +30,9 @@ namespace CauldronCodebase
         public void Show(Recipe recipe, bool newPotion = false)
         {
             gameObject.SetActive(true);
-            transform.DOScale(1, tweenDuration).From(startTweenSize);
-            newPotionEffect.SetActive(newPotion);
+            newPotionEffect.SetActive(false);
+            transform.DOScale(1, tweenDuration).From(startTweenSize).
+                OnComplete(() => newPotionEffect.SetActive(newPotion));
             
             if (recipe is null)
             {
@@ -50,6 +51,7 @@ namespace CauldronCodebase
         IEnumerator Hide()
         {
             yield return new WaitForSeconds(popupDuration);
+            newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
         }

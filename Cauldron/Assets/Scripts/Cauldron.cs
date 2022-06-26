@@ -173,7 +173,7 @@ namespace CauldronCodebase
                         //     Instantiate(diamond, transform.position, Quaternion.identity);
                         // }
                         //if recipe is not in book -> add
-                        if (!recipeBook.magicalRecipes.Contains(recipe))
+                        if (!recipeBook.IsRecipeInBook(recipe))
                         {
                             potionPopup.Show(recipe, true);
                             recipeBook.RecordRecipe(recipe);

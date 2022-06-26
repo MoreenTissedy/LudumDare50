@@ -21,7 +21,8 @@ namespace CauldronCodebase
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
 
-        [SerializeField] ParticleSystem ingredientParticle;
+        [SerializeField] GameObject ingredientParticle;
+        [SerializeField] private GameObject dragTrail;
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
@@ -39,10 +40,12 @@ namespace CauldronCodebase
         private void OnEnable()
         {
             ingredientManager.AddIngredient(this);
+            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         private void OnDisable()
         {
+            DisableHighlight();
             ingredientManager.RemoveIngredient(this);
         }
 
@@ -57,7 +60,6 @@ namespace CauldronCodebase
 
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
-            ingredientParticle = GetComponentInChildren<ParticleSystem>();
         }
 
         private void Start()
@@ -69,6 +71,8 @@ namespace CauldronCodebase
             }
 
             initialPosition = transform.position;
+            ingredientParticle?.SetActive(false);
+            dragTrail?.SetActive(false);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -100,12 +104,15 @@ namespace CauldronCodebase
             dragging = true;
             image.transform.DOKill(true);
             cauldron.MouseEnterCauldronZone += OverCauldron;
+            dragTrail?.SetActive(true);
+            ingredientParticle?.SetActive(false);
         }
 
         void OverCauldron()
         {
             cauldron.AddToMix(ingredient);
             dragging = false;
+            dragTrail?.SetActive(false);
             transform.position = initialPosition;
             cauldron.MouseEnterCauldronZone -= OverCauldron;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
@@ -125,6 +132,11 @@ namespace CauldronCodebase
                 return;
             transform.DOMove(initialPosition, returntime);
             dragging = false;
+            dragTrail?.SetActive(false);
+            if (isHighlighted)
+            {
+                ingredientParticle?.SetActive(true);
+            }
             cauldron.MouseEnterCauldronZone -= OverCauldron;
         }
 
@@ -132,7 +144,7 @@ namespace CauldronCodebase
         {
             if(!isHighlighted)
             {
-                ingredientParticle.Play();
+                ingredientParticle?.SetActive(true);
                 isHighlighted = true;
             }
         }
@@ -141,7 +153,7 @@ namespace CauldronCodebase
         {
             if(isHighlighted)
             {
-                ingredientParticle.Stop();
+                ingredientParticle?.SetActive(false);
                 isHighlighted = false;
             }
         }

@@ -31,10 +31,11 @@ namespace CauldronCodebase
             Attempts
         }
 
-        void OnValidate()
+        [ContextMenu("Find Entries")]
+        void FindEntries()
         {
-            //attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            //recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
         }
 
         private void Start()
@@ -49,6 +50,18 @@ namespace CauldronCodebase
                 attempts = new List<Ingredients[]>(10);
             }
             attempts.Add(mix);
+        }
+
+        public bool IsRecipeInBook(Recipe recipe)
+        {
+            if (recipe.magical)
+            {
+                return magicalRecipes.Contains(recipe);
+            }
+            else
+            {
+                return herbalRecipes.Contains(recipe);
+            }
         }
 
         public void RecordRecipe(Recipe recipe)

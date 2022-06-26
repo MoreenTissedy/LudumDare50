@@ -17,6 +17,7 @@ namespace CauldronCodebase
         MeatSoup, NettleShchi, NutritiousSoup, RatPottage,
         PaleLiquor, LeafTea, Kombucha, RootTincture, ScreamingTea,
         SurpriseMushrooms, TripleDecoction, ViralChowder,
-        Placebo
+        Placebo, CaleidoscopicBooze, HideousLiquid, HotStuff,
+        RatOnRoots, SapOfEnlightenment, SporadicGoo
     }
 }

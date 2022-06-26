@@ -1,7 +1,9 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using DG.Tweening;
 
 namespace CauldronCodebase
 {
@@ -10,10 +12,14 @@ namespace CauldronCodebase
         [Inject]
         private EndingsProvider endings;
 
-        [Header("Ending display")]
+        [Header("Ending display")] 
+        public TMP_Text title;
         public TMP_Text text;
         public Image image;
-
+        public Image lockedImage;
+        public event Action<int> OnPageUpdate;
+        
+        
         //DEBUG - no menu
         protected override void Update()
         {
@@ -28,19 +34,40 @@ namespace CauldronCodebase
         {
             base.OpenBook();
             InitTotalPages();
-            currentPage = 0;
         }
 
-        public void OpenBookOnPage(Ending ending)
+        public void OpenBookWithEnding(Ending ending)
         {
-            OpenBook();
             currentPage = endings.GetIndexOf(ending);
+            OpenBook();
+            if (!endings.unlocked[currentPage])
+            {
+                UnlockThisEnding();
+            }
+        }
+
+        private void UnlockThisEnding()
+        {
+            endings.unlocked[currentPage] = true;
+            image.DOFade(0, 3f);
+            DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);
         }
 
         private void Show(Ending ending)
         {
-            text.text = ending.text;
+            title.text = ending.title;
             image.sprite = ending.image;
+            text.text = ending.text;
+            if (endings.unlocked[endings.GetIndexOf(ending)])
+            {
+                text.alpha = 1;
+                lockedImage.color = Color.clear;
+            }
+            else
+            {
+                text.alpha = 0;
+                lockedImage.color = Color.black;
+            }
         }
         
 
@@ -52,6 +79,30 @@ namespace CauldronCodebase
         protected override void UpdatePage()
         {
             Show(endings.endings[currentPage]);
+            OnPageUpdate?.Invoke(currentPage);
+        }
+
+        protected override void UpdateBookButtons()
+        {
+            //cyclic pages - do nothing
+        }
+
+        public override void NextPage()
+        {
+            if (currentPage == totalPages - 1)
+            {
+                currentPage = -1;
+            }
+            base.NextPage();
+        }
+
+        public override void PrevPage()
+        {
+            if (currentPage == 0)
+            {
+                currentPage = totalPages;
+            }
+            base.PrevPage();
         }
     }
 }

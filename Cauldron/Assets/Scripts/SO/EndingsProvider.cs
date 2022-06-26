@@ -8,9 +8,15 @@ namespace CauldronCodebase
     {
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
         public Ending[] endings;
+        //TODO save this and init 
+        public bool[] unlocked;
         public int threshold = 70;
         public Encounter[] highFameCards, highFearCards;
 
+        public void Init()
+        {
+            unlocked = new bool[endings.Length];
+        }
         public int GetIndexOf(Ending ending)
         {
             for (var i = 0; i < endings.Length; i++)

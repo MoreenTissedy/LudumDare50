@@ -173,7 +173,7 @@ namespace CauldronCodebase
         
         IEnumerator EndGameProcess(Ending ending)
         {
-            endingPanel.OpenBookOnPage(ending);
+            endingPanel.OpenBookWithEnding(ending);
             gameEnded = true;
             yield return new WaitForSeconds(1f);
             yield return new WaitUntil(() => Input.anyKeyDown);

@@ -17,6 +17,8 @@ namespace CauldronCodebase
 
         protected int currentPage = 0;
         protected int totalPages = 3;
+        public int CurrentPage => currentPage;
+        public int TotalPages => totalPages;
 
         void OnValidate()
         {
@@ -29,9 +31,9 @@ namespace CauldronCodebase
         protected virtual void Awake()
         {
             CloseBook();
-            if (buttonControl) prevPageButton.SetActive(false);
+            UpdateBookButtons();
         }
-        
+
         protected virtual void Update()
         {
             if (!keyboardControl)
@@ -93,7 +95,7 @@ namespace CauldronCodebase
             bookObject.SetActive(false);
         }
         
-        public void NextPage()
+        public virtual void NextPage()
         {
             if (!bookObject.activeInHierarchy) return;
             if (currentPage + 1 >= totalPages) return;
@@ -103,7 +105,7 @@ namespace CauldronCodebase
             rightPageSound?.Play();
         }
 
-        public void PrevPage()
+        public virtual void PrevPage()
         {
             if (!bookObject.activeInHierarchy) return;
             if (currentPage <= 0) return;
@@ -132,7 +134,7 @@ namespace CauldronCodebase
             UpdatePage();
         }
 
-        private void UpdateBookButtons()
+        protected virtual void UpdateBookButtons()
         {
             if (!buttonControl || prevPageButton is null || nextPageButton is null)
                 return;

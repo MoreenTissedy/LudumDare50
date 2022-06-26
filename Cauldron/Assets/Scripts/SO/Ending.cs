@@ -7,6 +7,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_ending", menuName = "Ending", order = 9)]
     public class Ending : LocalizableSO
     {
+        public string title;
         [TextArea(3, 10)]
         public string text;
         public Sprite image;

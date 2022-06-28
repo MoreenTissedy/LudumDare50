@@ -8,7 +8,7 @@ namespace CauldronCodebase
     public abstract class Book : MonoBehaviour
     {
         [SerializeField] public GameObject bookObject;
-        [SerializeField] private RectTransform mainPanel;
+        [SerializeField] protected RectTransform mainPanel;
         [SerializeField] protected bool keyboardControl;
         [SerializeField] protected bool buttonControl;
         [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
@@ -16,9 +16,9 @@ namespace CauldronCodebase
         [FormerlySerializedAs("left")] [SerializeField] protected AudioSource leftPageSound;
         [FormerlySerializedAs("right")] [SerializeField] protected AudioSource rightPageSound;
         [SerializeField] protected AudioClip openCloseSound;
-        [SerializeField] private float openCloseAnimationTime = 1f;
+        [SerializeField] private float openCloseAnimationTime = 0.5f;
 
-        private float offScreenYPos;
+        private float offScreenYPos, initialYPos;
         protected int currentPage = 0;
         protected int totalPages = 3;
         public int CurrentPage => currentPage;
@@ -34,11 +34,12 @@ namespace CauldronCodebase
 
         protected virtual void Awake()
         {
+            //cache initial position
+            initialYPos = mainPanel.anchoredPosition.y;
             //cache offscreen position
-            float rectHeight = mainPanel.rect.height;
-            offScreenYPos = Screen.height + mainPanel.pivot.y * rectHeight;
+            offScreenYPos = 1080+initialYPos;
             
-            CloseBook();
+            bookObject.SetActive(false);
             UpdateBookButtons();
         }
 
@@ -83,7 +84,7 @@ namespace CauldronCodebase
                 rightPageSound.PlayOneShot(openCloseSound);
             }
             bookObject.SetActive(true);
-            mainPanel.DOMoveY(bookObject.transform.position.y, openCloseAnimationTime).
+            mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
         }
@@ -102,7 +103,7 @@ namespace CauldronCodebase
                 rightPageSound.PlayOneShot(openCloseSound);
             }
 
-            mainPanel.DOMoveY(offScreenYPos, openCloseAnimationTime).
+            mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() => bookObject.SetActive(false));
         }
         

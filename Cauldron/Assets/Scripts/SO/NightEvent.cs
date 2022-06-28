@@ -9,8 +9,10 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New night event", menuName = "Night event/Basic", order = 8)]
     public class NightEvent : LocalizableSO
     {
+        public string title;
         [TextArea(8,8)]
         public string flavourText;
+        public Sprite picture;
         public int moneyModifier, fearModifier, fameModifier;
         public Encounter bonusCard;
 

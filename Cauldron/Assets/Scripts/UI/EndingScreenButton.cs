@@ -8,7 +8,7 @@ namespace CauldronCodebase
 {
     public class EndingScreenButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        private State currentState = State.Locked;
+        private State currentState;
         enum  State
         {
             Locked,
@@ -52,19 +52,19 @@ namespace CauldronCodebase
 
         void UpdateColor(int page)
         {
-            if (panel.CurrentPage == number && currentState!=State.Current)
+            if (panel.CurrentPage == number)
             {
                 currentState = State.Current;
                 image.sprite = unlocked;
                 image.color = Color.white;
             }
-            else if (provider.unlocked[number] && currentState!=State.Unlocked)
+            else if (provider.unlocked[number])
             {
                 currentState = State.Unlocked;
                 image.sprite = unlocked;
                 image.color = Color.gray;
             }
-            else if (currentState!=State.Locked)
+            else
             {
                 currentState = State.Locked;
                 image.sprite = locked;

@@ -122,7 +122,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 1500, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3632154602019126427
 GameObject:
@@ -1150,6 +1150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bookObject: {fileID: 7354000313373256632}
+  mainPanel: {fileID: 6505342717496045355}
   keyboardControl: 0
   buttonControl: 0
   nextPageButton: {fileID: 0}
@@ -1157,16 +1158,24 @@ MonoBehaviour:
   leftPageSound: {fileID: 0}
   rightPageSound: {fileID: 0}
   openCloseSound: {fileID: 0}
+  openCloseAnimationTime: 1
+  eventCard: {fileID: 4909869660230223486}
   flavour: {fileID: 7354000313786175110}
-  money: {fileID: 7354000312025139266}
-  fear: {fileID: 0}
-  fame: {fileID: 0}
+  money: {fileID: 1942402139940452163}
+  fear: {fileID: 7354000312025139266}
+  fame: {fileID: 8060461487266611836}
   defaultNightText1: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u043E\u0433\u043E."
   defaultNightText2: "\u041D\u043E\u0447\u044C \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u0430
     \u0438 \u0442\u0438\u0445\u0430."
   defaultNightText3: "\u0414\u0443\u0435\u0442 \u0432\u0435\u0442\u0435\u0440, \u0433\u043E\u043D\u0438\u0442
     \u0442\u0443\u0447\u043A\u0438."
   content: []
+  enterTimeInterval: 1
+  angleDiff: 15
+  angleReductionCoef: 0.8
+  positionDiff: {x: -20, y: 10}
+  positionReductionCoef: 0.8
+  firstCardAngle: -5
 --- !u!1 &7354000312774567942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1725,8 +1734,47 @@ PrefabInstance:
       propertyPath: m_Name
       value: NightEvent_Image
       objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: exitMotion
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: enterMotion
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: exitRotation
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: enterRotation
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: exitStartDist
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: exitStartTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+      propertyPath: offscreenLeft
+      value: -2000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+--- !u!114 &4909869660230223486 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+  m_PrefabInstance: {fileID: 1266992268903788019}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd61ebacc1df497bb76d42c4f70eabe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1813955422617824771 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 628590908776530928, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
@@ -1739,6 +1787,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1564178303800887052}
     m_Modifications:
+    - target: {fileID: 5142274589381229746, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 98e596af7f178824183042681a26bbc2, type: 3}
     - target: {fileID: 6264627489429330268, guid: e696159bc7f103f03b549cc016be333b, type: 3}
       propertyPath: m_Name
       value: Fear_Frame
@@ -1825,6 +1877,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6264627489429330275, guid: e696159bc7f103f03b549cc016be333b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264627490045499032, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_Name
+      value: Fear_Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 63
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 93
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1942,6 +2010,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+--- !u!114 &8060461487266611836 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6264627490045499038, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+  m_PrefabInstance: {fileID: 4119930022598366434}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8060461487998913921 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6264627489429330275, guid: e696159bc7f103f03b549cc016be333b, type: 3}
@@ -1954,6 +2033,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1564178303800887052}
     m_Modifications:
+    - target: {fileID: 5142274589381229746, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8dbdfc21627bb094f9b52a6139cc010c, type: 3}
     - target: {fileID: 6264627489429330268, guid: e696159bc7f103f03b549cc016be333b, type: 3}
       propertyPath: m_Name
       value: Money_Frame
@@ -2042,8 +2125,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6264627490045499032, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_Name
+      value: Money_Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259930547405140262, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+--- !u!114 &1942402139940452163 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6264627490045499038, guid: e696159bc7f103f03b549cc016be333b, type: 3}
+  m_PrefabInstance: {fileID: 5477681127815963101}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1942402138525268158 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6264627489429330275, guid: e696159bc7f103f03b549cc016be333b, type: 3}

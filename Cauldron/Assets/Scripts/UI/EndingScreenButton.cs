@@ -2,13 +2,19 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class EndingScreenButton : GrowOnMouseEnter, IPointerClickHandler
+    public class EndingScreenButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        private State currentState = State.Locked;
+        enum  State
+        {
+            Locked,
+            Unlocked,
+            Current
+        }
         
         [Inject]
         private EndingsProvider provider;
@@ -16,10 +22,10 @@ namespace CauldronCodebase
         [SerializeField] private int number = -1;
         [SerializeField] private Image image;
 
-        [SerializeField] private Sprite unlocked, locked, current;
-     
-        
-#if UNITY_EDITOR
+        [SerializeField] private Sprite unlocked, locked, current, lockedHighlighted;
+
+
+        #if UNITY_EDITOR
         void OnValidate()
         {
             if (panel is null)
@@ -41,43 +47,71 @@ namespace CauldronCodebase
             {
                 PrefabUtility.RecordPrefabInstancePropertyModifications(this);
             }
-            
         }
-#endif
+        #endif
 
-         void UpdateColor(int page)
+        void UpdateColor(int page)
         {
-            if (panel.CurrentPage == number)
+            if (panel.CurrentPage == number && currentState!=State.Current)
             {
+                currentState = State.Current;
                 image.sprite = unlocked;
                 image.color = Color.white;
             }
-            else if (provider.unlocked[number])
+            else if (provider.unlocked[number] && currentState!=State.Unlocked)
             {
+                currentState = State.Unlocked;
                 image.sprite = unlocked;
                 image.color = Color.gray;
             }
-            else
+            else if (currentState!=State.Locked)
             {
+                currentState = State.Locked;
                 image.sprite = locked;
                 image.color = Color.white;
             }
         }
 
-         private void OnEnable()
-         {
-             panel.OnPageUpdate += UpdateColor;
-         }
-
-         private void OnDisable()
-         {
-             panel.OnPageUpdate -= UpdateColor;
-         }
-
-         public override void OnPointerClick(PointerEventData eventData)
+        private void OnEnable()
         {
-            base.OnPointerClick(eventData);
+            panel.OnPageUpdate += UpdateColor;
+        }
+
+        private void OnDisable()
+        {
+            panel.OnPageUpdate -= UpdateColor;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (currentState == State.Current)
+                return;
             panel.OpenPage(number);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (currentState == State.Locked)
+            {
+                image.sprite = lockedHighlighted;
+            }
+            else if (currentState == State.Unlocked)
+            {
+                image.color = Color.Lerp(Color.gray, Color.white, 0.5f);
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            
+            if (currentState == State.Locked)
+            {
+                image.sprite = locked;
+            }
+            else if (currentState == State.Unlocked)
+            {
+                image.color = Color.gray;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,6 +8,7 @@ namespace CauldronCodebase
     public abstract class Book : MonoBehaviour
     {
         [SerializeField] public GameObject bookObject;
+        [SerializeField] private RectTransform mainPanel;
         [SerializeField] protected bool keyboardControl;
         [SerializeField] protected bool buttonControl;
         [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
@@ -14,7 +16,9 @@ namespace CauldronCodebase
         [FormerlySerializedAs("left")] [SerializeField] protected AudioSource leftPageSound;
         [FormerlySerializedAs("right")] [SerializeField] protected AudioSource rightPageSound;
         [SerializeField] protected AudioClip openCloseSound;
+        [SerializeField] private float openCloseAnimationTime = 1f;
 
+        private float offScreenYPos;
         protected int currentPage = 0;
         protected int totalPages = 3;
         public int CurrentPage => currentPage;
@@ -30,6 +34,10 @@ namespace CauldronCodebase
 
         protected virtual void Awake()
         {
+            //cache offscreen position
+            float rectHeight = mainPanel.rect.height;
+            offScreenYPos = Screen.height + mainPanel.pivot.y * rectHeight;
+            
             CloseBook();
             UpdateBookButtons();
         }
@@ -75,6 +83,8 @@ namespace CauldronCodebase
                 rightPageSound.PlayOneShot(openCloseSound);
             }
             bookObject.SetActive(true);
+            mainPanel.DOMoveY(bookObject.transform.position.y, openCloseAnimationTime).
+                From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
         }
         
@@ -92,7 +102,8 @@ namespace CauldronCodebase
                 rightPageSound.PlayOneShot(openCloseSound);
             }
 
-            bookObject.SetActive(false);
+            mainPanel.DOMoveY(offScreenYPos, openCloseAnimationTime).
+                OnComplete(() => bookObject.SetActive(false));
         }
         
         public virtual void NextPage()

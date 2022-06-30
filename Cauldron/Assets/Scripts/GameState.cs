@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 namespace CauldronCodebase
@@ -33,7 +34,7 @@ namespace CauldronCodebase
 
         private int statusMax;
         
-        public event System.Action statusChanged;
+        public event System.Action StatusChanged;
 
         public GameState(int max, int startValue)
         {
@@ -57,7 +58,7 @@ namespace CauldronCodebase
             }
             return -1000;
         }
-        
+
         private int Set(Statustype type, int newValue)
         {
             int statValue = Get(type);
@@ -71,7 +72,19 @@ namespace CauldronCodebase
                 statValue = statusMax;
             else if (statValue < 0)
                 statValue = 0;
-            statusChanged?.Invoke();
+            switch (type)
+            {
+                case Statustype.Money:
+                    money = statValue;
+                    break;
+                case Statustype.Fear:
+                    fear = statValue;
+                    break;
+                case Statustype.Fame:
+                    fame = statValue;
+                    break;
+            }
+            StatusChanged?.Invoke();
             return statValue;
         }
 

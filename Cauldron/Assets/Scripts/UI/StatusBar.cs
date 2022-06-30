@@ -22,48 +22,39 @@ namespace CauldronCodebase
         
         private float initialDimension;
 
-        [Inject]
         private GameManager gm;
+        private MainSettings settings;
+        private int currentValue = Int32.MinValue;
 
-        [Inject] private MainSettings settings;
-
-        private void Start()
+        [Inject]
+        private void Construct(MainSettings mainSettings, GameManager gm)
         {
+           this.gm = gm;
+           settings = mainSettings;
            tooltip = GetComponentInChildren<Text>();
            if (tooltip != null)
-            {   
-                tooltip.gameObject.SetActive(false);
-            }
-
-
-           if (vertical)
-           {
-               initialDimension = mask.rect.height;
+           {   
+               tooltip.gameObject.SetActive(false);
            }
-           else
-           {
-               initialDimension = mask.rect.width;
-           }
-           
-           gm.GameState.statusChanged += () => SetValue(gm.GameState.Get(type));
-           SetValue(gm.GameState.Get(type));
+
+           initialDimension = vertical ? mask.rect.height : mask.rect.width;
+           gm.GameState.StatusChanged += UpdateValue;
+           SetValue(gm.GameState.Get(type), false);
         }
 
+        public void UpdateValue()
+        {
+            SetValue(gm.GameState.Get(type));
+        }
 
         public void SetValue(int current, bool dotween = true)
         {
-            //symbol glow
-            float ratio = (float) current / settings.gameplay.statusBarsMax;
-            ratio *= initialDimension;
-            Vector2 newSize;
-            if (vertical)
+            if (current == currentValue)
             {
-                newSize = new Vector2(mask.rect.width, ratio);
+                return;
             }
-            else
-            {
-                newSize = new Vector2(ratio, mask.rect.height);
-            }
+            currentValue = current;
+            var newSize = CalculateMaskSize(current);
             if (dotween)
             {
                 
@@ -77,6 +68,23 @@ namespace CauldronCodebase
             
             //grow symbol
             GrowSymbol();
+        }
+
+        private Vector2 CalculateMaskSize(int current)
+        {
+            float ratio = (float) current / settings.gameplay.statusBarsMax;
+            ratio *= initialDimension;
+            Vector2 newSize;
+            if (vertical)
+            {
+                newSize = new Vector2(mask.rect.width, ratio);
+            }
+            else
+            {
+                newSize = new Vector2(ratio, mask.rect.height);
+            }
+
+            return newSize;
         }
 
         void GrowSymbol()

@@ -14,7 +14,7 @@ namespace CauldronCodebase
         private void Start()
         {
             text = GetComponent<Text>();
-            gm.GameState.statusChanged += () => SetValue(gm.GameState.Get(type));
+            gm.GameState.StatusChanged += () => SetValue(gm.GameState.Get(type));
             SetValue(gm.GameState.Get(type));
         }
 

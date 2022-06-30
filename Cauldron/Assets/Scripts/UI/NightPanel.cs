@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
@@ -32,9 +33,11 @@ namespace CauldronCodebase
         [Header("DEBUG")]
         public NightEvent[] content;
 
-        [Header("Card animation parameters")] 
+        [Header("Interval between incoming cards in sec")] 
         public float enterTimeInterval = 1f;
-        public float angleDiff = -5f, angleReductionCoef = 0.3f;
+
+        [Header("Card placement parameters")] public float angleDiff = -5f;
+        public float angleReductionCoef = 0.3f;
         public Vector2 positionDiff = new Vector2(-10, -10);
         public float positionReductionCoef = 0.3f;
         public float firstCardAngle = -5f;
@@ -42,6 +45,7 @@ namespace CauldronCodebase
         private List<NightPanelCard> cardPool, activeCards;
         private Vector3 cardInitialPos, newCardPosition;
         private int eventCardSiblingIndex;
+        private bool firstCardDealt;
 
         protected override void Awake()
         {
@@ -88,6 +92,7 @@ namespace CauldronCodebase
             content = events;
             InitTotalPages();
             currentPage = 0;
+            firstCardDealt = false;
             base.OpenBook();
             StartCoroutine(DealCards());
         }
@@ -109,7 +114,10 @@ namespace CauldronCodebase
                 NightPanelCard card = GetCard();
                 card.Init(nightEvent.picture, cardInitialPos);
                 card.Enter(newPosition, newAngle);
-                
+                foreach (var activeCard in activeCards)
+                {
+                    activeCard.Punch();
+                }
                 newPosition += posDifference;
                 newAngle += angleDifference;
                 posDifference *= positionReductionCoef;
@@ -121,6 +129,11 @@ namespace CauldronCodebase
         void AddActiveCard(NightPanelCard card)
         {
             card.InPlace -= AddActiveCard;
+            if (!firstCardDealt)
+            {
+                firstCardDealt = true;
+                UpdatePage();
+            }
             activeCards.Add(card);
             //FanCards();
         }
@@ -176,15 +189,27 @@ namespace CauldronCodebase
 
         protected override void UpdatePage()
         {
-            Debug.Log("night panel update");
             if (content is null || content.Length == 0 || currentPage >= content.Length)
             {
+                //TODO default events as events
                 ShowDefault();
             }
-            else
+            else if (firstCardDealt)
             {
                 Show(content[currentPage]);
             }
+            else
+            {
+                ClearContent();
+            }
+        }
+
+        private void ClearContent()
+        {
+            flavour.text = String.Empty;
+            money.text = String.Empty;
+            fear.text = String.Empty;
+            fame.text = String.Empty;
         }
 
         public void OnPointerClick(PointerEventData eventData)

@@ -30,6 +30,7 @@ namespace CauldronCodebase
         [TextArea(5, 10)]
         public string text;
 
+        public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public int primaryAmount = 10, secondaryAmount = 5;
         public PotionResult[] resultsByPotion = new PotionResult[3];

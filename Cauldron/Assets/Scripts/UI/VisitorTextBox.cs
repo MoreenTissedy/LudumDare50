@@ -1,5 +1,7 @@
 using System;
 using System.Data;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +9,16 @@ namespace CauldronCodebase
 {
     public class VisitorTextBox : MonoBehaviour
     {
-        public Text text;
-        public Image icon1,icon2;
-        public Sprite fame, fear, money;
+        public float offScreen = -1000;
+        public float animTime = 0.5f;
+        public TMP_Text text;
+        public VisitorTextIcon[] iconObjects = new VisitorTextIcon[3];
+
+        [ContextMenu("Find Icon Objects")]
+        private void FindIconObjects()
+        {
+            iconObjects = GetComponentsInChildren<VisitorTextIcon>();
+        }
 
         public void Hide()
         {
@@ -19,42 +28,19 @@ namespace CauldronCodebase
         public void Display(Encounter card)
         {
             gameObject.SetActive(true);
+            gameObject.transform.DOLocalMoveX(gameObject.transform.localPosition.x, animTime)
+                .From(offScreen);
             text.text = card.text;
-            switch (card.primaryInfluence)
+            
+            iconObjects[0]?.Display(card.primaryInfluence, card.hidden);
+            iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
+            if (card.quest)
             {
-                case Statustype.None:
-                    icon1.enabled = false;
-                    break;
-                case Statustype.Money:
-                    icon1.enabled = true;
-                    icon1.sprite = money;
-                    break;
-                case Statustype.Fear:
-                    icon1.enabled = true;
-                    icon1.sprite = fear;
-                    break;
-                case Statustype.Fame:
-                    icon1.enabled = true;
-                    icon1.sprite = fame;
-                    break;
+                iconObjects[2]?.DisplayItem();
             }
-            switch (card.secondaryInfluence)
+            else
             {
-                case Statustype.None:
-                    icon2.enabled = false;
-                    break;
-                case Statustype.Money:
-                    icon2.enabled = true;
-                    icon2.sprite = money;
-                    break;
-                case Statustype.Fear:
-                    icon2.enabled = true;
-                    icon2.sprite = fear;
-                    break;
-                case Statustype.Fame:
-                    icon2.enabled = true;
-                    icon2.sprite = fame;
-                    break;
+                iconObjects[2]?.Hide();
             }
         }
     }

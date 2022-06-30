@@ -46,6 +46,7 @@ namespace CauldronCodebase
         private Vector3 cardInitialPos, newCardPosition;
         private int eventCardSiblingIndex;
         private bool firstCardDealt;
+        private bool test;
 
         protected override void Awake()
         {
@@ -87,8 +88,9 @@ namespace CauldronCodebase
             fame.text = "—";
         }
 
-        public void OpenBookWithEvents(NightEvent[] events)
+        public void OpenBookWithEvents(NightEvent[] events, bool test = false)
         {
+            this.test = test;
             content = events;
             InitTotalPages();
             currentPage = 0;
@@ -229,7 +231,10 @@ namespace CauldronCodebase
                     nightPanelCard.Hide();
                 }
                 CloseBook();
-                //gm.StartNewDay();   
+                if (!test)
+                {
+                    gm.StartNewDay();
+                }   
             }
         }
     }

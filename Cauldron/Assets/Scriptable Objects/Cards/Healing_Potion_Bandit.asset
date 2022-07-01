@@ -13,15 +13,18 @@ MonoBehaviour:
   m_Name: Healing_Potion_Bandit
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 9904824343798d2738acc620d6b62f7e, type: 3}
+  addToDeckOnDay: -1
   villager:
   - {fileID: 11400000, guid: 35e3642a71df6264fa9da44285ca8c3a, type: 2}
   text: "\u0420\u0430\u043D\u0438\u043B\u0438 \u043C\u0435\u043D\u044F \u0441\u0438\u043B\u044C\u043D\u043E.
     \u0421\u043F\u0430\u0441\u0438 \u043C\u0435\u043D\u044F, \u0432\u0435\u0434\u044C\u043C\u0430.
     \u042F \u0434\u0435\u043D\u0435\u0433 \u043D\u0435 \u043F\u043E\u0436\u0430\u043B\u0435\u044E!"
+  hidden: 0
+  quest: 0
   primaryInfluence: 1
   secondaryInfluence: 2
-  primaryAmount: 10
-  secondaryAmount: 10
+  primaryCoef: 1
+  secondaryCoef: 1
   resultsByPotion:
   - potion: 5
     influenceCoef: 1

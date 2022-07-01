@@ -131,9 +131,11 @@ namespace Editor
             var cards = ScriptableObjectHelper.LoadAllAssets<Encounter>();
             foreach (var card in cards)
             {
+                EditorUtility.SetDirty(card);
                 //card.primaryCoef = (float)card.primaryAmount / 10;
                 //card.secondaryCoef = (float)card.secondaryAmount / 10;
             }
+            
         }
 
         [MenuItem("Utilities/Export for GraphViz")]

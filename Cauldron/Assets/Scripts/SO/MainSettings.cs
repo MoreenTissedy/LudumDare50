@@ -12,6 +12,7 @@ namespace CauldronCodebase
         [Serializable]
         public class Gameplay
         {
+             public int defaultStatChange = 10;
              public int statusBarsMax = 100;
              public int statusBarsStart = 20;
              public int cardsPerDay = 3;

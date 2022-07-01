@@ -1,33 +1,56 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEngine.PlayerLoop;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    [CreateAssetMenu(fileName = "Encounter Deck", menuName = "Encounter Deck", order = 0)]
-    public class EncounterDeck : EncounterDeckBase
+    [CreateAssetMenu]
+    public class EncounterDeckAutoFilled : EncounterDeckBase
     {
-        public Encounter[] startingCards;
-        public Encounter[] pool1, pool2, pool3, pool4, pool5;
+        public CardPoolPerDay[] cardPoolsByDay;
         public LinkedList<Encounter> deck;
-        [Header("Deck info")] public Encounter[] deckInfo;
-
-        
-        
+        [Header("DEBUG")] 
+        public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
+        [Serializable]
+        public struct CardPoolPerDay
+        {
+            [HideInInspector] public string title;
+            public int day;
+            public Encounter[] cards;
+
+            public CardPoolPerDay(int day, Encounter[] cards)
+            {
+                this.day = day;
+                this.cards = cards;
+                title = $"Day {day}: {cards.Length} cards";
+            }
+        }
+
+        private Encounter[] GetPoolForDay(int day)
+        {
+            foreach (var pool in cardPoolsByDay)
+            {
+                if (pool.day == day)
+                {
+                    return pool.cards;
+                }
+            }
+            return new Encounter[0];
+        }
+        
+        /// <summary>
+        /// Form new deck and starting card pool.
+        /// </summary>
         public override void Init()
         {
             deck = new LinkedList<Encounter>();
-            foreach (var card in Shuffle(startingCards))
-            {
-                deck.AddLast(card);
-            }
-
             cardPool = new List<Encounter>(15);
-            //cardPool.AddRange(pool1);
+            NewDayPool(0);
+            DealCards(3);
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)
@@ -43,25 +66,15 @@ namespace CauldronCodebase
             return newDeckList.ToArray();
         }
 
+        /// <summary>
+        /// Form card pool, adding cards for the given 'day' (card set number).
+        /// </summary>
+        /// <param name="day">Day — card set number</param>
         public override void NewDayPool(int day)
         {
-            switch ((day-1)%5)
+            foreach (var card in Shuffle(GetPoolForDay(day)))
             {
-                case 0:
-                    cardPool.AddRange(pool1);
-                    break;
-                case 1:
-                    cardPool.AddRange(pool2);
-                    break;
-                case 2:
-                    cardPool.AddRange(pool3);
-                    break;
-                case 3:
-                    cardPool.AddRange(pool4);
-                    break;
-                case 4:
-                    cardPool.AddRange(pool5);
-                    break;
+                cardPool.Add(card);
             }
         }
 
@@ -103,6 +116,7 @@ namespace CauldronCodebase
             {
                 deck.AddLast(card);
             }
+            deckInfo = deck.ToArray();
         }
         
         public override Encounter GetTopCard()

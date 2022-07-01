@@ -32,7 +32,7 @@ namespace CauldronCodebase
 
         public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
-        public int primaryAmount = 10, secondaryAmount = 5;
+        public float primaryCoef, secondaryCoef;
         public PotionResult[] resultsByPotion = new PotionResult[3];
 
         [HideInInspector] public Villager actualVillager;
@@ -71,7 +71,7 @@ namespace CauldronCodebase
             string[] headers = lines[0].Split(';');
             for (int i = 0; i < headers.Length; i++)
             {
-                if (headers[i].Contains("_"+language.ToString()))
+                if (headers[i].Contains("_"+language))
                 {
                     requiredColumns.Add(i);
                 }
@@ -90,7 +90,7 @@ namespace CauldronCodebase
             return false;
         }
 
-        public bool EndEncounter(Potions potion)
+        public bool EndEncounter(Potions potion, MainSettings settings)
         {
             //compare potion
             foreach (var filter in resultsByPotion)
@@ -98,11 +98,15 @@ namespace CauldronCodebase
                 if (potion == filter.potion)
                 {
                     gm.GameState.Add(primaryInfluence, 
-                        Mathf.FloorToInt(primaryAmount * filter.influenceCoef));
+                        Mathf.FloorToInt(settings.gameplay.defaultStatChange 
+                                         * primaryCoef 
+                                         * filter.influenceCoef));
                     if (secondaryInfluence != Statustype.None)
                     {
                         gm.GameState.Add(secondaryInfluence, 
-                            Mathf.FloorToInt(secondaryAmount * filter.influenceCoef));
+                            Mathf.FloorToInt(settings.gameplay.defaultStatChange
+                                             * secondaryCoef 
+                                             * filter.influenceCoef));
                     }
                     if (filter.bonusCard!=null)
                         gm.CardDeck.AddCardToPool(filter.bonusCard);

@@ -32,17 +32,22 @@ namespace CauldronCodebase
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
 
+        public IEncounterDeck currentDeck;
+        public NightEventProvider currentEvents;
+
         private int statusMax;
         
         public event System.Action StatusChanged;
 
-        public GameState(int max, int startValue)
+        public GameState(int max, int startValue, IEncounterDeck deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
             
             statusMax = max;
             fear = startValue;
             fame = startValue;
+            currentDeck = deck;
+            currentEvents = events;
         }
         
         public int Get(Statustype type)

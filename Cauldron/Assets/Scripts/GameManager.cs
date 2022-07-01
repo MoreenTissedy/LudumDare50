@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
-using System.IO;
 using UnityEngine.SceneManagement;
 using Zenject;
 
@@ -10,10 +8,10 @@ namespace CauldronCodebase
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private EncounterDeck cardDeck;
+        [SerializeField] private EncounterDeckBase cardDeck;
         private GameState gState;
         private NightEventProvider nightEvents;
-        public EncounterDeck CardDeck => cardDeck;
+        public IEncounterDeck CardDeck => cardDeck;
         public GameState GameState => gState;
         public NightEventProvider NightEvents => nightEvents;
 
@@ -53,7 +51,9 @@ namespace CauldronCodebase
             nightEvents = nightEventProvider;
             endings = endingsProvider;
             
-            gState = new GameState(settings.gameplay.statusBarsMax, settings.gameplay.statusBarsStart);
+            gState = new GameState(settings.gameplay.statusBarsMax, 
+                settings.gameplay.statusBarsStart, 
+                cardDeck, nightEvents);
             
             pauseMenu.SetActive(false);
         }
@@ -136,7 +136,7 @@ namespace CauldronCodebase
             
             gState.potionsTotal.Add(potion);
 
-            if (!gState.currentCard.EndEncounter(potion))
+            if (!gState.currentCard.EndEncounter(potion, settings))
             {
                 gState.wrongPotionsCount++;
             }

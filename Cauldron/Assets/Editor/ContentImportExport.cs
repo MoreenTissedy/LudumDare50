@@ -60,13 +60,17 @@ namespace Editor
                 card.text = data[3];
                
                 // 4. Starred — ставим +, если нужно пометить запрос для игрока звездочкой (обозначив сильное влияние на сюжет или получение предмета).
+                card.quest = data[4].Contains('+');
                 // 5. Hidden — ставим +, если нужно скрыть для игрока влияние на статы Primary и Secondary, заменив их значком вопроса.
+                card.hidden = data[5].Contains('+');
                 // 6. Primary — стат, который меняется в результате запроса (Money, Fear, Fame, None).
                 card.primaryInfluence = ParseStat(data[6]);
                 // 7. Secondary — второй стат, который меняется в результате запроса (Money, Fear, Fame, None).
                 card.secondaryInfluence = ParseStat(data[7]);
                 // 8. PrimaryCoef — степень изменения первичного стата (коэффициент от дефолтного значения в системе). Любое число с точкой (0 для None).
+                card.primaryCoef = ConvertFloatFromString(data[8]);
                 // 9. SecondaryCoef — то же для второго стата.
+                card.secondaryCoef = ConvertFloatFromString(data[9]);
                 // 10 и далее — коэффициенты изменения статов по отдельным зельям (пустое поле будет принято за 0), любое число с точкой. Порядок столбцов должен совпадать с порядком магических зелий в enum Potions
                 RecipeProvider recipeProvider = ScriptableObjectHelper.LoadSingleAsset<RecipeProvider>();
                 int column = 10;
@@ -77,6 +81,7 @@ namespace Editor
                         .GetRecipeForPotion(potion)?
                         .magical ?? true)
                     {
+                        //TODO Food import
                         continue;
                     }
 
@@ -118,6 +123,17 @@ namespace Editor
                 }
             }
             AssetDatabase.SaveAssets();
+        }
+
+        [MenuItem("Utilities/Recalculate all events")]
+        public static void Recalc()
+        {
+            var cards = ScriptableObjectHelper.LoadAllAssets<Encounter>();
+            foreach (var card in cards)
+            {
+                //card.primaryCoef = (float)card.primaryAmount / 10;
+                //card.secondaryCoef = (float)card.secondaryAmount / 10;
+            }
         }
 
         [MenuItem("Utilities/Export for GraphViz")]

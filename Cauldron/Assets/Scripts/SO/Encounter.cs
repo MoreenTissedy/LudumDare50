@@ -97,17 +97,8 @@ namespace CauldronCodebase
             {
                 if (potion == filter.potion)
                 {
-                    gm.GameState.Add(primaryInfluence, 
-                        Mathf.FloorToInt(settings.gameplay.defaultStatChange 
-                                         * primaryCoef 
-                                         * filter.influenceCoef));
-                    if (secondaryInfluence != Statustype.None)
-                    {
-                        gm.GameState.Add(secondaryInfluence, 
-                            Mathf.FloorToInt(settings.gameplay.defaultStatChange
-                                             * secondaryCoef 
-                                             * filter.influenceCoef));
-                    }
+                    ModifyStat(primaryInfluence, primaryCoef, filter.influenceCoef);
+                    ModifyStat(secondaryInfluence, secondaryCoef, filter.influenceCoef);
                     if (filter.bonusCard!=null)
                         gm.CardDeck.AddCardToPool(filter.bonusCard);
                     if (filter.bonusEvent!=null)
@@ -124,6 +115,23 @@ namespace CauldronCodebase
             }
 
             return false;
+
+            void ModifyStat(Statustype type, float statCoef, float potionCoef)
+            {
+                if (type == Statustype.None)
+                {
+                    return;
+                }
+
+                float defaultStatChange = type == Statustype.Money
+                    ? settings.gameplay.defaultMoneyChangeCard
+                    : settings.gameplay.defaultStatChange;
+                
+                gm.GameState.Add(type,
+                    Mathf.FloorToInt(defaultStatChange
+                                     * statCoef
+                                     * potionCoef));
+            }
         }
     }
 }

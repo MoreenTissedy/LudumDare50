@@ -208,7 +208,7 @@ namespace CauldronCodebase
             nightPanel.OpenBookWithEvents(events);
             foreach (NightEvent nightEvent in events)
             {
-                nightEvent.ApplyModifiers(gState);
+                nightEvent.ApplyModifiers(gState, settings);
             }
 
             //yield return new WaitForSeconds(Settings.gameplay.nightDelay/2);

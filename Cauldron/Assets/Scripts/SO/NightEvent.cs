@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
-using UnityEditor;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -13,14 +12,29 @@ namespace CauldronCodebase
         [TextArea(8,8)]
         public string flavourText;
         public Sprite picture;
-        public int moneyModifier, fearModifier, fameModifier;
+        public float moneyCoef, fearCoef, fameCoef;
         public Encounter bonusCard;
 
-        public void ApplyModifiers(GameState game)
+        public void ApplyModifiers(GameState game, MainSettings settings)
         {
-            game.Fame += fameModifier;
-            game.Fear += fearModifier;
-            game.Money += moneyModifier;
+            game.Fame += CalculateModifier(Statustype.Fame, settings);
+            game.Fear += CalculateModifier(Statustype.Fear, settings);
+            game.Money += CalculateModifier(Statustype.Money, settings);
+        }
+
+        public int CalculateModifier(Statustype type, MainSettings settings)
+        {
+            switch (type)
+            {
+                case Statustype.Money:
+                    return Mathf.FloorToInt(moneyCoef * settings.gameplay.defaultMoneyChangeEvent);
+                case Statustype.Fear:
+                    return Mathf.FloorToInt(fearCoef * settings.gameplay.defaultStatChange);
+                case Statustype.Fame:
+                    return Mathf.FloorToInt(fameCoef * settings.gameplay.defaultStatChange);
+            }
+
+            return 0;
         }
         
         public override bool Localize(Language language)

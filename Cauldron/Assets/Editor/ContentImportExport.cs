@@ -125,19 +125,7 @@ namespace Editor
             AssetDatabase.SaveAssets();
         }
 
-        [MenuItem("Utilities/Recalculate all events")]
-        public static void Recalc()
-        {
-            var cards = ScriptableObjectHelper.LoadAllAssets<Encounter>();
-            foreach (var card in cards)
-            {
-                EditorUtility.SetDirty(card);
-                //card.primaryCoef = (float)card.primaryAmount / 10;
-                //card.secondaryCoef = (float)card.secondaryAmount / 10;
-            }
-            
-        }
-
+        
         [MenuItem("Utilities/Export for GraphViz")]
         public static void ExportToDot()
         {

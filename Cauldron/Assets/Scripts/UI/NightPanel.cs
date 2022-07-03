@@ -17,6 +17,8 @@ namespace CauldronCodebase
     {
         [Inject]
         private GameManager gm;
+        [Inject] 
+        private MainSettings settings;
 
         public NightPanelCard eventCard;
         public TMP_Text flavour;
@@ -179,9 +181,9 @@ namespace CauldronCodebase
         {
             flavour.text = nightEvent.flavourText;
             DOTween.To(() => flavour.alpha, x => flavour.alpha = x, 1, 1).From(0);
-            money.text = nightEvent.moneyModifier.ToString();
-            fear.text = nightEvent.fearModifier.ToString();
-            fame.text = nightEvent.fameModifier.ToString();
+            money.text = nightEvent.CalculateModifier(Statustype.Money, settings).ToString();
+            fear.text = nightEvent.CalculateModifier(Statustype.Fear, settings).ToString();
+            fame.text = nightEvent.CalculateModifier(Statustype.Fame, settings).ToString();
         }
 
         protected override void InitTotalPages()

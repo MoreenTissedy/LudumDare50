@@ -18,7 +18,6 @@ namespace CauldronCodebase
         //TODO: reactive UI
         public NightPanel nightPanel;
         public EndingScreen endingPanel;
-        public GameObject pauseMenu;
         
         
         [SerializeField] private bool gameEnded;
@@ -54,8 +53,6 @@ namespace CauldronCodebase
             gState = new GameState(settings.gameplay.statusBarsMax, 
                 settings.gameplay.statusBarsStart, 
                 cardDeck, nightEvents);
-            
-            pauseMenu.SetActive(false);
         }
 
 
@@ -71,14 +68,9 @@ namespace CauldronCodebase
                 }
                 else
                 {
-                    pauseMenu.SetActive(true);
+                    GameLoader.LoadMenu();
                 }
             }
-        }
-
-        public void Continue()
-        {
-            pauseMenu.SetActive(false);
         }
 
         private void Start()

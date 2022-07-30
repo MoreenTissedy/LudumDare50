@@ -11,7 +11,7 @@ namespace Editor
     public class ContentImportExport
     {
         private static string assetFolder = "Cards";
-        private static string CSVpath = "/Editor/Deck.csv";
+        private static string CSVpath = "/Editor/MyDeck.csv";
         [MenuItem("Utilities/Import cards")]
         public static void Import()
         {
@@ -22,16 +22,18 @@ namespace Editor
             string[] alllines = File.ReadAllLines(Application.dataPath + CSVpath);
             Villager[] allVillagers = ScriptableObjectHelper.LoadAllAssets<Villager>();
 
-            foreach (var line in alllines)
+            for (var index = 1; index < alllines.Length; index++)
             {
+                var line = alllines[index];
                 string[] data = line.Split(';');
-                
+
                 //if SO exists in folder - take it
                 bool newSO = false;
                 Encounter card = AssetDatabase.LoadAssetAtPath<Encounter>($"Assets/{assetFolder}/{data[0]}.asset");
                 if (card is null)
                 {
                     card = ScriptableObject.CreateInstance<Encounter>();
+                    card.name = data[0];
                     newSO = true;
                 }
                 else
@@ -39,6 +41,7 @@ namespace Editor
                     newSO = false;
                     Debug.Log($"found existing {data[0]}, will overwrite");
                 }
+
                 //AddOnDay
                 card.addToDeckOnDay = ConvertIntFromString(data[1]);
 
@@ -55,10 +58,11 @@ namespace Editor
                         }
                     }
                 }
+
                 card.villager = foundVillagers.ToArray();
-                
+
                 card.text = data[3];
-               
+
                 // 4. Starred — ставим +, если нужно пометить запрос для игрока звездочкой (обозначив сильное влияние на сюжет или получение предмета).
                 card.quest = data[4].Contains('+');
                 // 5. Hidden — ставим +, если нужно скрыть для игрока влияние на статы Primary и Secondary, заменив их значком вопроса.
@@ -78,14 +82,14 @@ namespace Editor
                 foreach (Potions potion in Enum.GetValues(typeof(Potions)))
                 {
                     if (!recipeProvider
-                        .GetRecipeForPotion(potion)?
-                        .magical ?? true)
+                            .GetRecipeForPotion(potion)?
+                            .magical ?? true)
                     {
                         //TODO Food import
                         continue;
                     }
 
-                    int value = ConvertIntFromString(data[column]);
+                    float value = ConvertFloatFromString(data[column]);
                     column++;
                     if (value == 0)
                         continue;
@@ -94,6 +98,11 @@ namespace Editor
                     bool overridden = false;
                     foreach (Encounter.PotionResult potionResult in card.resultsByPotion)
                     {
+                        if (potionResult is null)
+                        {
+                            continue;
+                        }
+
                         if (potionResult.potion == potion)
                         {
                             potionResult.influenceCoef = value;
@@ -122,6 +131,7 @@ namespace Editor
                     AssetDatabase.CreateAsset(card, $"Assets/{assetFolder}/{card.name}.asset");
                 }
             }
+
             AssetDatabase.SaveAssets();
         }
 

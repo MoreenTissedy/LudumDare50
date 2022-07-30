@@ -8,7 +8,7 @@ namespace CauldronCodebase
     {
         private void Start()
         {
-            if (!GameLoader.IsGameLoaded())
+            if (GameLoader.IsMenuOpen())
             {
                 gameObject.SetActive(false);
             }

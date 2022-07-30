@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EasyLoc;
 using UnityEngine;
 using Zenject;
@@ -18,7 +19,7 @@ namespace CauldronCodebase
         //TODO custom property drawer
         public class PotionResult
         {
-            public Potions potion;
+            public Potions potion = Potions.DEFAULT;
             [Range(-1, 1)]
             public float influenceCoef = 1;
             public NightEvent bonusEvent;
@@ -33,7 +34,7 @@ namespace CauldronCodebase
         public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
-        public PotionResult[] resultsByPotion = new PotionResult[3];
+        public PotionResult[] resultsByPotion = new PotionResult[1];
 
         [HideInInspector] public Villager actualVillager;
 
@@ -114,6 +115,16 @@ namespace CauldronCodebase
                 }
             }
 
+            PotionResult[] defaultResults = resultsByPotion.Where(result => result.potion == Potions.DEFAULT).ToArray();
+            if (defaultResults.Length > 0)
+            {
+                ModifyStat(primaryInfluence, primaryCoef, defaultResults[0].influenceCoef);
+                ModifyStat(secondaryInfluence, secondaryCoef, defaultResults[0].influenceCoef);
+                if (defaultResults[0].bonusCard!=null)
+                    gm.CardDeck.AddCardToPool(defaultResults[0].bonusCard);
+                if (defaultResults[0].bonusEvent!=null)
+                    gm.NightEvents.storyEvents.Add(defaultResults[0].bonusEvent);
+            }
             return false;
 
             void ModifyStat(Statustype type, float statCoef, float potionCoef)

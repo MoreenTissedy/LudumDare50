@@ -22,6 +22,15 @@ namespace Editor
             string[] alllines = File.ReadAllLines(Application.dataPath + CSVpath);
             Villager[] allVillagers = ScriptableObjectHelper.LoadAllAssets<Villager>();
 
+            string[] headers = alllines[0].Split(';');
+            List<Potions> includedPotionResults = new List<Potions>(10);
+            int i = 10;
+            while (Enum.TryParse(headers[i], true, out Potions potion))
+            {
+                includedPotionResults.Add(potion);
+                i++;
+            }
+            
             for (var index = 1; index < alllines.Length; index++)
             {
                 var line = alllines[index];
@@ -76,19 +85,10 @@ namespace Editor
                 // 9. SecondaryCoef — то же для второго стата.
                 card.secondaryCoef = ConvertFloatFromString(data[9]);
                 // 10 и далее — коэффициенты изменения статов по отдельным зельям (пустое поле будет принято за 0), любое число с точкой. Порядок столбцов должен совпадать с порядком магических зелий в enum Potions
-                RecipeProvider recipeProvider = ScriptableObjectHelper.LoadSingleAsset<RecipeProvider>();
                 int column = 10;
                 List<Encounter.PotionResult> newPotionResults = new List<Encounter.PotionResult>(3);
-                foreach (Potions potion in Enum.GetValues(typeof(Potions)))
+                foreach (Potions potion in includedPotionResults)
                 {
-                    if (!recipeProvider
-                            .GetRecipeForPotion(potion)?
-                            .magical ?? true)
-                    {
-                        //TODO Food import
-                        continue;
-                    }
-
                     float value = ConvertFloatFromString(data[column]);
                     column++;
                     if (value == 0)

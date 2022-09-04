@@ -93,37 +93,27 @@ namespace CauldronCodebase
 
         public bool EndEncounter(Potions potion, MainSettings settings)
         {
-            //compare potion
+            //compare distinct potion
             foreach (var filter in resultsByPotion)
             {
                 if (potion == filter.potion)
                 {
-                    ModifyStat(primaryInfluence, primaryCoef, filter.influenceCoef);
-                    ModifyStat(secondaryInfluence, secondaryCoef, filter.influenceCoef);
-                    if (filter.bonusCard!=null)
-                        gm.CardDeck.AddCardToPool(filter.bonusCard);
-                    if (filter.bonusEvent!=null)
-                        gm.NightEvents.storyEvents.Add(filter.bonusEvent);
-                    if (filter.influenceCoef > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    ApplyResult(filter);
+                    return true;
                 }
             }
 
-            PotionResult[] defaultResults = resultsByPotion.Where(result => result.potion == Potions.DEFAULT).ToArray();
-            if (defaultResults.Length > 0)
+            //evaluate potion filters
+            if (PotionInFilter(Potions.ALCOHOL)) return true;
+            if (PotionInFilter(Potions.DRINK)) return true;
+            if (PotionInFilter(Potions.FOOD)) return true;
+            if (PotionInFilter(Potions.MAGIC)) return true;
+            if (PotionInFilter(Potions.NONMAGIC)) return true;
+            var filterResult = resultsByPotion.FirstOrDefault(result => result.potion == Potions.DEFAULT);
+            if (filterResult != null)
             {
-                ModifyStat(primaryInfluence, primaryCoef, defaultResults[0].influenceCoef);
-                ModifyStat(secondaryInfluence, secondaryCoef, defaultResults[0].influenceCoef);
-                if (defaultResults[0].bonusCard!=null)
-                    gm.CardDeck.AddCardToPool(defaultResults[0].bonusCard);
-                if (defaultResults[0].bonusEvent!=null)
-                    gm.NightEvents.storyEvents.Add(defaultResults[0].bonusEvent);
+                ApplyResult(filterResult);
+                return true;
             }
             return false;
 
@@ -142,6 +132,27 @@ namespace CauldronCodebase
                     Mathf.FloorToInt(defaultStatChange
                                      * statCoef
                                      * potionCoef));
+            }
+
+            void ApplyResult(PotionResult potionResult)
+            {
+                ModifyStat(primaryInfluence, primaryCoef, potionResult.influenceCoef);
+                ModifyStat(secondaryInfluence, secondaryCoef, potionResult.influenceCoef);
+                if (potionResult.bonusCard != null)
+                    gm.CardDeck.AddCardToPool(potionResult.bonusCard);
+                if (potionResult.bonusEvent != null)
+                    gm.NightEvents.storyEvents.Add(potionResult.bonusEvent);
+            }
+
+            bool PotionInFilter(Potions filter)
+            {
+                PotionResult filterValue = resultsByPotion.FirstOrDefault(result => result.potion == filter);
+                if (filterValue != null && PotionFilter.Get(filter).Contains(potion))
+                {
+                    ApplyResult(filterValue);
+                    return true;
+                }
+                return false;
             }
         }
     }

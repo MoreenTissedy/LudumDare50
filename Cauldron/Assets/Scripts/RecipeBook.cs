@@ -9,11 +9,10 @@ namespace CauldronCodebase
 {
     public class RecipeBook : Book
     {   
-        [FormerlySerializedAs("entries")]
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntry[] recipeEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
-        [FormerlySerializedAs("recipes")] public List<Recipe> magicalRecipes;
+        public List<Recipe> magicalRecipes;
         public List<Recipe> herbalRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;

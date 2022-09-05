@@ -51,10 +51,12 @@ namespace CauldronCodebase
             if (card.quest)
             {
                 iconObjects[2]?.DisplayItem();
+                text.fontStyle = FontStyles.Italic;
             }
             else
             {
                 iconObjects[2]?.Hide();
+                text.fontStyle = FontStyles.Normal;
             }
         }
         

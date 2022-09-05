@@ -29,14 +29,18 @@ namespace EasyLoc
             Debug.Log("Found to localize: "+units.Length);
             foreach (LocalizableSO unit in units)
             {
-                if (!unit.Localize(selectLanguage))
+                try
                 {
-                    Debug.LogWarning(unit.name+" not found in "+unit.localizationCSV.name);
+                    if (!unit.Localize(selectLanguage))
+                    {
+                        Debug.LogWarning(unit.name + " not found in " + unit.localizationCSV.name);
+                    }
+                    else
+                    {
+                        EditorUtility.SetDirty(unit);
+                    }
                 }
-                else
-                {
-                    EditorUtility.SetDirty(unit);
-                }
+                catch {continue;}
             }
             AssetDatabase.SaveAssets();
             ImportUI();

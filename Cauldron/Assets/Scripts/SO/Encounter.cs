@@ -34,7 +34,7 @@ namespace CauldronCodebase
         public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
-        public PotionResult[] resultsByPotion = new PotionResult[1];
+        public PotionResult[] resultsByPotion = Array.Empty<PotionResult>();
 
         [HideInInspector] public Villager actualVillager;
 

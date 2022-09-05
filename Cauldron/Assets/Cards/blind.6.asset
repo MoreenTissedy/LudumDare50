@@ -10,27 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: witch-memory.4
+  m_Name: blind.6
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 0}
   addToDeckOnDay: -1
   villager:
-  - {fileID: 11400000, guid: f66094a76c380ae48b9716f39994b67c, type: 2}
-  text: I've made my choice, and sealed it with blood. You will stay with me forever.
-    Share my burden. Yes, my dear kitty? Are you happy now?
-  hidden: 0
-  quest: 1
-  primaryInfluence: 0
+  - {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
+  text: I may be blind but some things I see clearer than others. You should stick
+    with food and drinks if you know what's good for you.
+  hidden: 1
+  quest: 0
+  primaryInfluence: 3
   secondaryInfluence: 0
-  primaryCoef: 0
+  primaryCoef: 3
   secondaryCoef: 0
   resultsByPotion:
-  - potion: 100
+  - potion: 104
     influenceCoef: 1
     bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 11400000}
-  - potion: 16
-    influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: 201f4061d2fd16a4a9ab27fab78f4e2d, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 101
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 102
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
   actualVillager: {fileID: 0}

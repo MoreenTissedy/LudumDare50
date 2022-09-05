@@ -21,6 +21,7 @@ namespace CauldronCodebase
             {
                 icon.sprite = question;
                 gameObject.SetActive(true);
+                return;
             }
             switch (type)
             {

@@ -1,5 +1,28 @@
-﻿ID;Add On Day;Villager;Text;Starred;Hidden;Primary;Secondary;PrimaryCoef;SecondaryCoef;Love;Unlove;Strength;Curse;Poison;Healing;Chameleon;Beauty;Sleep;Wake;Laughter;Voice;Memory;Flying;Foolishness;Numb;Perception;Rejuvenation;Speed;Clumsiness
-witch-memory.1;1;WitchMemory;It's my fault. Everything is my fault. If only I could have done it the other way. I wish I could forget that. But there is no way back.;+;;None;None;0;0;;;;;;;;;;;;;1;;;;;;;
-witch-memory.2;1;WitchMemory;I remember us walking in the heather. Your smile. Your songs. Flowers you gave me. It all seems like a dream now.;+;;None;None;0;0;;;;;;;;;;1;;;;;;;;;;
-witch-memory.3;1;WitchMemory;How could you? After all we've said and done? Leave me? Laugh at me like that? One chance in a lifetime, thrown away like garbadge?;+;;None;None;0;0;;;;;;;;;;;1;;;;;;;;;
-witch-memory.4;1;WitchMemory;I've made my choice, and sealed it with blood. You will stay with me forever. Share my burden. Yes, my dear kitty? Are you happy now?;+;;None;None;0;0;;;;;;;;;;;;;;;;;1;;;
+﻿ID;Add On Day;Villager;Text;Starred;Hidden;Primary;Secondary;PrimaryCoef;SecondaryCoef;Wake;Laughter;Memory;Perception;Magic;Food;Drink;Healing;Flight;Sleep;Speed;default;Rejuvenation;Beauty;Poison;Placebo;Column1;Column2
+witch-memory.1;3;WitchMemory;It's my fault. Everything is my fault. If only I could have done it the other way. I wish I could forget that. But there is no way back.;+;;None;None;0;0;;;1;;;;;;;;;;;;;;;
+witch-memory.2;-1;WitchMemory;I remember us walking in the heather. Your smile. Your songs. Flowers you gave me. It all seems like a dream now.;+;;None;None;0;0;1;;;;;;;;;;;;;;;;;
+witch-memory.3;-1;WitchMemory;"How could you? After all we've said and done? Leave me? Laugh at me like that? One chance in a lifetime, thrown away like garbadge?";+;;None;None;0;0;;1;;;;;;;;;;;;;;;;
+witch-memory.4;-1;WitchMemory;"I've made my choice, and sealed it with blood. You will stay with me forever. Share my burden. Yes, my dear kitty? Are you happy now?";+;;None;None;0;0;;;;1;;;;;;;;;;;;;;
+blind.1;2;Villager_male;Sorry for interruption. My eyes are not as good as they used to be. What magnificent smells come out of this place! Can I taste something?;;+;Fame;None;2;0;;;;;1;-1;-1;;;;;;;;;;;
+blind.2;-1;Wealthy_Villager_female;Extravagant smells! I was told you were making exquisite dishes here! Surprise me!;;;Money;Fame;2;-1;;;;;-1;1;0.5;;;;;;;;;;;
+blind.3;-1;Wealthy_Villager_female;Ah! I was told you were making exquisite drinks here! Get me something... unique.;;;Money;Fame;2;-1;;;;;-1;0.5;1;;;;;;;;;;;
+blind.4;-1;Wealthy_Villager_male;What peculiar designs have this bar! If not for a friend of mine I would never… What do you have on the tap?;;;Money;Fame;2;-1;;;;;-1;0.5;1;;;;;;;;;;;
+blind.5;-1;Wealthy_Villager_male;What peculiar designs have this restaurant! If not for a friend of mine I would never… What do you have on the menu?;;;Money;Fame;2;-1;;;;;-1;1;0.5;;;;;;;;;;;
+blind.6;-1;Villager_male;I may be blind but some things I see clearer than others. You should stick with food and drinks if you know what's good for you.;;+;Fame;None;3;0;;;;;1;-1;-1;;;;;;;;;;;
+mary.1;3;Villager_female;"Wow, you're the witch they keep talking about? I need ailment for my father. He's got a terrible headache. I got some money for you!";;;Money;None;1;0;;;;;;;;1;0;1;;;;;;;;
+mary.2;-1;Villager_female;It's so awesome to have a real witch around! I bet you can even fly! Where is your broom? Do you have one?;;;Fear;None;0.5;0;;;;;0.5;-1;-1;;1;;;;;;;;;
+mary.3;-1;Villager_female;Just passing by. Do you need any help? Around the house? Maybe I could help you with some… mixing? Let's mix something crazy!;;;Fear;None;0.5;0;;;;;1;-1;-1;;;;;;;;;;;
+mary.4;-1;Villager_female;"You are so nice! I always wished I could… Nevermind. I'm going to the woods, can look for some herbs as well. Do you need some?";;;Money;None;0.5;0;;;;1;0.2;;;0.5;;;0.5;;;;;;;
+mary.5;high fame;Villager_female;"Heard some fishy people asking about you being a real witch or not. Told them, you're my old auntie who is completely out of her mind. Funny, is it?";;;Fame;None;-3;0;;;;;;;;;;;;1;;;;;;
+mary.6;high fear;Villager_female;"Can you believe what those people think about you? Blaming you for all sorts of stuff! But you're good, I know it! I'll think of something to shut them up.";;;Fear;None;-3;0;;;;;;;;;;;;1;;;;;;event
+mary.7;low fame;Villager_female;"Finest witch in the world right beneath their noses, and yet they don't recognize you! Be sure, I'll tell everyone of your feats!";;;Fame;None;3;0;;;;;;;;;;;;1;;;;;;
+mary.8;low fear;Villager_female;Can you believe what those people call you? A good-for-nothing old crone! But you're a real mage! I'll think of something to shut them up.;;;Fear;None;3;0;;;;;;;;;;;;1;;;;;;event
+mary.9;10 #mary;Villager_female;You know... I always wanted to be like you. To have a real power. To be above everyone and everything. Maybe… you can make something just for me?;;+;Fear;None;1;0;;;;;;;;;1;;;;1;1;1;;"repeat on fail; special events on success";
+devil.6;#mary;Villager_female;"Another poor soul caught in the web. Nice work, baby! Mix {0}, {1} and {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+devil.1;high fear;;"Haven't seen you for a while, darling! Wanna try something new? Mix {0}, {1} and {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+devil.2;high fear;;"Would you kindly mix something for me, will ya? It's {0}, {1} and {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+devil.3;high fear;;"Always a pleasure to see you, cutie! Try to add {0} to {1} and {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+devil.4;high fear;;"Did you miss me, sweetheart? I certainly did! Mix {0}, {1} and {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+devil.5;#cultists;;"My brother sends his regards. He's been asleep for a while. Mix {0}, {1}, {2}.";+;;;;;;;;;;;;;;;;;;;;;;;
+inquisitor.2;high fame;;"I know everything about you. Seen lots of those like you. You won't escape justice, you know it.";;+;Fame;None;3;;;;;;;0.1;0.1;;;;;1;;;;0.1;;
+inquisitor.3;high fame;;Don't fool around. I know what you're up to. You will burn... In a holy fire or in hell. You. Will. Burn.;;+;Fame;None;3;;;;;;;0.2;0.2;;;;;1;;;;0.2;;

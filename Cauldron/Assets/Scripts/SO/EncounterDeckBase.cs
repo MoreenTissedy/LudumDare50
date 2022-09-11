@@ -15,6 +15,6 @@ namespace CauldronCodebase
 
         public abstract void AddToDeck(Encounter card, bool asFirst = false);
 
-        public abstract Encounter GetTopCard();
+        public abstract Encounter GetTopCard(GameState game);
     }
 }

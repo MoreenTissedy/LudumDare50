@@ -13,6 +13,6 @@ namespace CauldronCodebase
 
         void AddCardToPool(Encounter card);
         void AddToDeck(Encounter card, bool asFirst = false);
-        Encounter GetTopCard();
+        Encounter GetTopCard(GameState game);
     }
 }

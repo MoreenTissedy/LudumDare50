@@ -119,10 +119,32 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
         
-        public override Encounter GetTopCard()
+        public override Encounter GetTopCard(GameState game)
         {
-            var card = deck.First();
-            deck.RemoveFirst();
+            Encounter card = null;
+            bool valid = false;
+            do
+            {
+                if (card != null)
+                {
+                    Debug.LogWarning($"Drawn card {card.name} with tag {card.requiredStoryTag}, returned it to deck");
+                    deck.AddLast(card);
+                }
+                card = deck.First();
+                deck.RemoveFirst();
+                if (string.IsNullOrEmpty(card.requiredStoryTag))
+                {
+                    break;
+                }
+                string[] tags = card.requiredStoryTag.Split(',');
+                valid = true;
+                foreach (var tag in tags)
+                {
+                    valid = valid && game.storyTags.Contains(tag.Trim());
+                }
+            } 
+            while (!valid);
+
             deckInfo = deck.ToArray();
             return card;
         }

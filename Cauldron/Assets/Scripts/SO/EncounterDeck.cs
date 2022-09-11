@@ -105,10 +105,21 @@ namespace CauldronCodebase
             }
         }
         
-        public override Encounter GetTopCard()
+        public override Encounter GetTopCard(GameState game)
         {
-            var card = deck.First();
-            deck.RemoveFirst();
+            Encounter card = null;
+            do
+            {
+                if (card != null)
+                {
+                    deck.AddLast(card);
+                }
+                card = deck.First();
+                deck.RemoveFirst();
+            } 
+            while (!string.IsNullOrEmpty(card.requiredStoryTag) &&
+                   !game.storyTags.Contains(card.requiredStoryTag));
+
             deckInfo = deck.ToArray();
             return card;
         }

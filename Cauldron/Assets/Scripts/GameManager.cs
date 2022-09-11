@@ -104,7 +104,7 @@ namespace CauldronCodebase
 
         public void DrawCard()
         {
-            Encounter currentCard = cardDeck.GetTopCard();
+            Encounter currentCard = cardDeck.GetTopCard(gState);
             gState.currentCard = currentCard;
             //in case we run out of cards
             if (gState.currentCard is null)

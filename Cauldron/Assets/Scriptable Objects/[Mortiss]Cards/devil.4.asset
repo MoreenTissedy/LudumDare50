@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: devil.3
+  m_Name: devil.4
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 0}
   addToDeckOnDay: -1
+  requiredStoryTag: high fear
   villager:
   - {fileID: 11400000, guid: 4dad8a4801aada04a8a09e3802e2e901, type: 2}
-  text: Always a pleasure to see you, cutie! Try to add {0} to {1} and {2}.
+  text: Did you miss me, sweetheart? I certainly did! Mix {0}, {1} and {2}.
   hidden: 0
   quest: 1
   primaryInfluence: 0
   secondaryInfluence: 0
   primaryCoef: 0
   secondaryCoef: 0
-  resultsByPotion: []
+  resultsByPotion:
+  - potion: 100
+    influenceCoef: 0
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 7c95f9538917c64498674aeb818cb5b0, type: 2}
   actualVillager: {fileID: 0}

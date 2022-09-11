@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: mary.9
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 0}
+  addToDeckOnDay: 10
+  requiredStoryTag: mary
+  villager:
+  - {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
+  text: "You know... I always wanted to be like you. To have a real power. To be
+    above everyone and everything. Maybe\u2026 you can make something just for me?"
+  hidden: 1
+  quest: 0
+  primaryInfluence: 2
+  secondaryInfluence: 0
+  primaryCoef: 1
+  secondaryCoef: 0
+  resultsByPotion:
+  - potion: 13
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: e37c179f4d4e4ad47b8e8170aeff029a, type: 2}
+    bonusCard: {fileID: 11400000, guid: 7d390a82669397b4e9fd70af6f43ce3a, type: 2}
+  - potion: 14
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 1386ff70a27b80448abd74e372f82053, type: 2}
+    bonusCard: {fileID: 11400000, guid: 7d390a82669397b4e9fd70af6f43ce3a, type: 2}
+  - potion: 4
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 4f51d12901a33854b83a92ceecc8c353, type: 2}
+    bonusCard: {fileID: 11400000, guid: 7d390a82669397b4e9fd70af6f43ce3a, type: 2}
+  - potion: 100
+    influenceCoef: 0
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000}
+  actualVillager: {fileID: 0}

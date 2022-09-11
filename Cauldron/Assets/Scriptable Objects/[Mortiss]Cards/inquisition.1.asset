@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: inquisition
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 4900000, guid: 9904824343798d2738acc620d6b62f7e, type: 3}
+  addToDeckOnDay: 1
+  requiredStoryTag: high fame
+  villager:
+  - {fileID: 11400000, guid: c608e2e087756c54e95bde0348c76335, type: 2}
+  text: "The word about you travels far and wide.  Make me your best potion, and
+    your reward will be great indeed.\r"
+  hidden: 1
+  quest: 0
+  primaryInfluence: 3
+  secondaryInfluence: 1
+  primaryCoef: 3
+  secondaryCoef: 2
+  resultsByPotion:
+  - potion: 104
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: b64c494ab74cf1845aa2fa8d8cc806c6, type: 2}
+  - potion: 100
+    influenceCoef: 0
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: b64c494ab74cf1845aa2fa8d8cc806c6, type: 2}
+  actualVillager: {fileID: 11400000, guid: c608e2e087756c54e95bde0348c76335, type: 2}

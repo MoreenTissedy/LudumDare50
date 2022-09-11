@@ -32,6 +32,8 @@ namespace CauldronCodebase
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
 
+        //TODO: separate entities
+        public List<string> storyTags;
         public IEncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
@@ -42,12 +44,20 @@ namespace CauldronCodebase
         public GameState(int max, int startValue, IEncounterDeck deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
-            
+            storyTags = new List<string>(5);
             statusMax = max;
             fear = startValue;
             fame = startValue;
             currentDeck = deck;
             currentEvents = events;
+        }
+
+        public void AddTag(string tag)
+        {
+            if (!storyTags.Contains(tag))
+            {
+                storyTags.Add(tag);
+            }
         }
         
         public int Get(Statustype type)

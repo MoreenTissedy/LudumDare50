@@ -14,12 +14,21 @@ namespace CauldronCodebase
         public Sprite picture;
         public float moneyCoef, fearCoef, fameCoef;
         public Encounter bonusCard;
+        public string storyTag;
 
         public void ApplyModifiers(GameState game, MainSettings settings)
         {
             game.Fame += CalculateModifier(Statustype.Fame, settings);
             game.Fear += CalculateModifier(Statustype.Fear, settings);
             game.Money += CalculateModifier(Statustype.Money, settings);
+            if (storyTag.StartsWith("-"))
+            {
+                game.storyTags.Remove(storyTag);
+            }
+            else if (!string.IsNullOrEmpty(storyTag))
+            {
+                game.AddTag(storyTag);
+            }
         }
 
         public int CalculateModifier(Statustype type, MainSettings settings)
@@ -75,7 +84,7 @@ namespace CauldronCodebase
             var events = Resources.FindObjectsOfTypeAll<NightEvent>();
             foreach (var nightEvent in events)
             {
-                file.WriteLine($"{nightEvent.name};{nightEvent.flavourText}");
+                file.WriteLine($"{nightEvent.name};{nightEvent.title};{nightEvent.flavourText}");
             }
             file.Close();
         }

@@ -14,6 +14,7 @@ namespace CauldronCodebase
         private GameManager gm;
 
         public int addToDeckOnDay = -1;
+        public string requiredStoryTag;
 
         [Serializable]
         //TODO custom property drawer

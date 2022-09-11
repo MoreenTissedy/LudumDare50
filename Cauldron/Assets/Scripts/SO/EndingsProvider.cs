@@ -11,6 +11,7 @@ namespace CauldronCodebase
         //TODO save this and init 
         public bool[] unlocked;
         public int threshold = 70;
+        public int lowThreshold = 20;
         public Encounter[] highFameCards, highFearCards;
 
         public void Init()
@@ -63,15 +64,22 @@ namespace CauldronCodebase
                 return;
             }
 
-            //high status cards
-            if (gm.GameState.Fame > threshold)
-            {
-                gm.CardDeck.AddToDeck(Encounter.GetRandom(highFameCards), true);
-            }
+            AddHighLowTag(gm.GameState.Fear, "high fear");
+            AddHighLowTag(gm.GameState.Fear, "low fear", false);
+            AddHighLowTag(gm.GameState.Fame, "high fame");
+            AddHighLowTag(gm.GameState.Fame, "low fame", false);
 
-            if (gm.GameState.Fear > threshold)
+            void AddHighLowTag(int status, string tag, bool checkHigh = true)
             {
-                gm.CardDeck.AddToDeck(Encounter.GetRandom(highFearCards), true);
+                bool thresholdReached = checkHigh ? status > threshold : status < lowThreshold;
+                if (thresholdReached)
+                {
+                    gm.GameState.AddTag(tag);
+                }
+                else
+                {
+                    gm.GameState.storyTags.Remove(tag);
+                }
             }
         }
         

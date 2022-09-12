@@ -40,7 +40,7 @@ namespace CauldronCodebase
 
         private void OnEnable()
         {
-            initialRotation = transform.rotation.eulerAngles.z;
+            initialRotation = image.gameObject.transform.rotation.eulerAngles.z;
             ingredientManager.AddIngredient(this);
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }

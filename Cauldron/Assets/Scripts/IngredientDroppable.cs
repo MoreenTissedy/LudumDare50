@@ -29,6 +29,7 @@ namespace CauldronCodebase
 
         private Cauldron cauldron;
         private TooltipManager ingredientManager;
+        private float initialRotation;
 
         [Inject]
         public void Construct(Cauldron cauldron, TooltipManager ingredientManager)
@@ -39,6 +40,7 @@ namespace CauldronCodebase
 
         private void OnEnable()
         {
+            initialRotation = transform.rotation.eulerAngles.z;
             ingredientManager.AddIngredient(this);
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
@@ -82,9 +84,9 @@ namespace CauldronCodebase
             tooltip.gameObject.SetActive(true);
             if (!cauldron.mix.Contains(ingredient))
                 image.gameObject.transform.
-                    DORotate(new Vector3(0,0, rotateAngle), rotateSpeed).
+                    DORotate(new Vector3(0,0, initialRotation+rotateAngle), rotateSpeed).
                     SetLoops(-1, LoopType.Yoyo).
-                    From(new Vector3(0, 0, -rotateAngle)).
+                    From(new Vector3(0, 0, initialRotation-rotateAngle)).
                     SetEase(Ease.InOutSine);
         }
 
@@ -94,7 +96,7 @@ namespace CauldronCodebase
                 return;
             tooltip.gameObject.SetActive(false);
             image.transform.DOKill();
-            image.transform.DORotate(new Vector3(0, 0, 0), rotateSpeed);
+            image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

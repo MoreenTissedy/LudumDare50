@@ -10,10 +10,10 @@ namespace Editor
 {
     public class ContentImportExport
     {
-        private static string assetFolder = "Scriptable Objects/Cards";
+        private static string assetFolder = "MyCards";
         private static string CSVpath = "/Editor/MyDeck.csv";
 
-        private static string eventFolder = "Scriptable Objects/Events";
+        private static string eventFolder = "MyEvents";
         private static string CSVpath4events = "/Editor/MyEvents.csv";
 
         [MenuItem("Utilities/Import events")]

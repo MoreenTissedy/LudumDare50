@@ -10,8 +10,79 @@ namespace Editor
 {
     public class ContentImportExport
     {
-        private static string assetFolder = "Cards";
+        private static string assetFolder = "Scriptable Objects/Cards";
         private static string CSVpath = "/Editor/MyDeck.csv";
+
+        private static string eventFolder = "Scriptable Objects/Events";
+        private static string CSVpath4events = "/Editor/MyEvents.csv";
+
+        [MenuItem("Utilities/Import events")]
+        public static void ImportEvents()
+        {
+            if (!AssetDatabase.GetSubFolders("Assets").Contains($"Assets/{eventFolder}"))
+            {
+                AssetDatabase.CreateFolder("Assets", eventFolder);
+            }
+            string[] alllines = File.ReadAllLines(Application.dataPath + CSVpath4events);
+            for (var index = 1; index < alllines.Length; index++)
+            {
+                var line = alllines[index];
+                string[] data = line.Split(';');
+
+                bool newSO = false;
+                NightEvent card;
+
+                //find or create night event of corresponding type
+                string[] randomData = data[1].Split(':');
+                if (ConvertIntFromString(randomData[0]) == -1)
+                {
+                    card = AssetDatabase.LoadAssetAtPath<NightEvent>($"Assets/{eventFolder}/{data[0]}.asset");
+                    if (card != null)
+                    {
+                        newSO = false;
+                        Debug.Log($"found existing {data[0]}, will overwrite");
+                    }
+                    else
+                    {
+                        card = ScriptableObject.CreateInstance<NightEvent>();
+                        card.name = data[0];
+                        newSO = true;
+                    }
+                }
+                else
+                {
+                    card = AssetDatabase.LoadAssetAtPath<RandomNightEvent>($"Assets/{eventFolder}/{data[0]}.asset");
+                    if (card != null)
+                    {
+                        newSO = false;
+                        Debug.Log($"found existing {data[0]}, will overwrite");
+                    }
+                    else
+                    {
+                        card = ScriptableObject.CreateInstance<RandomNightEvent>();
+                        card.name = data[0];
+                        newSO = true;
+                    }
+                    RandomNightEvent randomCard = (RandomNightEvent) card;
+                    randomCard.minDay = ConvertIntFromString(randomData[0]);
+                    randomCard.probability = ConvertIntFromString(randomData[1]);
+                }
+                //Title & Text
+                card.title = data[2];
+                card.flavourText = data[3];
+                //Coefs
+                card.moneyCoef = ConvertFloatFromString(data[4]);
+                card.fearCoef = ConvertFloatFromString(data[5]);
+                card.fameCoef = ConvertFloatFromString(data[6]);
+                if (newSO)
+                {
+                    AssetDatabase.CreateAsset(card, $"Assets/{eventFolder}/{card.name}.asset");
+                }
+
+                AssetDatabase.SaveAssets();
+            }
+        }
+        
         [MenuItem("Utilities/Import cards")]
         public static void Import()
         {

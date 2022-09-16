@@ -45,6 +45,7 @@ namespace CauldronCodebase
         private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
         private GameManager gm;
+        private Potions currentPotionBrewed;
 
         [Inject]
         public void Construct(GameManager gm, RecipeProvider recipeProvider, RecipeBook book)
@@ -155,6 +156,8 @@ namespace CauldronCodebase
             audios.PlayOneShot(brew);
             tooltipManager.DisableAllHIghlights();
             
+            potionPopup.ClearSubscriptions();
+            mix.Clear();
             //if (mixBonusTotal > mixBonusMin)
             {
                 foreach (var recipe in recipeProvider.allRecipes)
@@ -162,7 +165,6 @@ namespace CauldronCodebase
                     if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
                         mix.Contains(recipe.ingredient3))
                     {
-                        mix.Clear();
                         //color mix in the potion color
                         MixColor(recipe.color);
                         // Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal-mixBonusMin}");
@@ -182,7 +184,7 @@ namespace CauldronCodebase
                         {
                             potionPopup.Show(recipe);
                         }
-                        PotionBrewed?.Invoke(recipe.potion);
+                        potionPopup.OnAccept += () => PotionAccepted(recipe.potion);
                         return recipe.potion;
                     }
                 }
@@ -190,10 +192,15 @@ namespace CauldronCodebase
 
             recipeBook.RecordAttempt(mix.ToArray());
             RandomMixColor();
-            mix.Clear();
             potionPopup.Show(null);
-            PotionBrewed?.Invoke(Potions.Placebo);
+            potionPopup.OnAccept += () => PotionAccepted(Potions.Placebo);
             return Potions.Placebo;
+        }
+
+        private void PotionAccepted(Potions potion)
+        {
+            potionPopup.ClearSubscriptions();
+            PotionBrewed?.Invoke(potion);
         }
 
         public void OnPointerClick(PointerEventData eventData)

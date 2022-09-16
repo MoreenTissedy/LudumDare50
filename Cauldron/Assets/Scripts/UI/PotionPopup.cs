@@ -18,9 +18,13 @@ namespace CauldronCodebase
         public Image picture;
         public Sprite defaultPicture;
         public GameObject newPotionEffect;
-        public float popupDuration = 2f;
         public float tweenDuration = 0.3f;
         public float startTweenSize = 0.3f;
+        public Button accept;
+        public Button decline;
+        
+        public event Action OnAccept;
+        public event Action OnDecline;
 
         private void Start()
         {
@@ -44,13 +48,30 @@ namespace CauldronCodebase
                 wording.text = youBrewed + recipe.potionName;
                 picture.sprite = recipe.image;
             }
-            StartCoroutine(Hide());
+            accept.onClick.AddListener(Accept);
+            decline.onClick.AddListener(Decline);
         }
 
-
-        IEnumerator Hide()
+        private void Accept()
         {
-            yield return new WaitForSeconds(popupDuration);
+            OnAccept?.Invoke();
+            Hide();
+        }
+
+        private void Decline()
+        {
+            OnDecline?.Invoke();
+            Hide();
+        }
+
+        public void ClearSubscriptions()
+        {
+            OnAccept = null;
+            OnDecline = null;
+        }
+
+        void Hide()
+        {
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));

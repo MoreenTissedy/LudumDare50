@@ -75,6 +75,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
+            visitors.VisitorLeft += VisitorLeft;
             cardDeck.Init();
             CatTutorial catTutorial = GetComponent<CatTutorial>();
             if (catTutorial is null)
@@ -87,8 +88,19 @@ namespace CauldronCodebase
                 catTutorial.OnEnd += StartGame;
             }
         }
-        
-        
+
+        private void VisitorLeft()
+        {
+            if (gState.cardsDrawnToday >= Settings.gameplay.cardsPerDay)
+            {
+                StartCoroutine(StartNight());
+                
+            }
+            else
+            {
+                StartCoroutine(DrawCardWithDelay());
+            }
+        }
 
         private void StartGame()
         {
@@ -116,7 +128,6 @@ namespace CauldronCodebase
             
             currentCard.Init(this);
             gState.cardsDrawnToday ++;
-            Debug.Log(currentCard.text);
             visitors.Enter(currentCard);
             cauldron.PotionBrewed += EndEncounter;
         }

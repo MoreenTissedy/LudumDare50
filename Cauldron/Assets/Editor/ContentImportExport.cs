@@ -94,7 +94,6 @@ namespace Editor
             Villager[] allVillagers = ScriptableObjectHelper.LoadAllAssets<Villager>();
 
             string[] headers = alllines[0].Split(';');
-            Debug.LogError(headers.Length);
             List<Potions> includedPotionResults = new List<Potions>(10);
             int i = 10;
             while (i < headers.Length && Enum.TryParse(headers[i], true, out Potions potion))

@@ -29,6 +29,8 @@ namespace CauldronCodebase
         private void Start()
         {
             gameObject.SetActive(false);
+            accept.onClick.AddListener(Accept);
+            decline.onClick.AddListener(Decline);
         }
 
         public void Show(Recipe recipe, bool newPotion = false)
@@ -48,8 +50,7 @@ namespace CauldronCodebase
                 wording.text = youBrewed + recipe.potionName;
                 picture.sprite = recipe.image;
             }
-            accept.onClick.AddListener(Accept);
-            decline.onClick.AddListener(Decline);
+            //TODO remove accept button if no visitor
         }
 
         private void Accept()
@@ -64,10 +65,9 @@ namespace CauldronCodebase
             Hide();
         }
 
-        public void ClearSubscriptions()
+        public void ClearAcceptSubscriptions()
         {
             OnAccept = null;
-            OnDecline = null;
         }
 
         void Hide()

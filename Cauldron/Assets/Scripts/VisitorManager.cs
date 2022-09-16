@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -11,26 +12,47 @@ namespace CauldronCodebase
         public VisitorTextBox visitorText;
 
         private Visitor currentVisitor;
+        private int attemptsLeft;
+        private float attemptsTimerStep;
+
+        [Inject]
+        private Cauldron cauldron;
+        public event Action VisitorLeft;
 
         private void Awake()
         {
             HideText();
+            cauldron.PotionDeclined += Wait;
         }
 
-        public void ShowText(Encounter card)
+        private void ShowText(Encounter card)
         {
             visitorText.Display(card);
         }
 
-        public void HideText()
+        private void HideText()
         {
             visitorText.Hide();
+        }
+
+        private void Wait()
+        {
+            //TODO check if visitor exists
+            attemptsLeft--;
+            visitorText.ReduceTimer(attemptsTimerStep);
+            if (attemptsLeft <= 0)
+            {
+                Exit();
+                VisitorLeft?.Invoke();
+            }
         }
         
         public void Enter(Encounter card)
         {
             ShowText(card);
             Villager villager = card.actualVillager;
+            attemptsLeft = villager.patience;
+            attemptsTimerStep = 1f / attemptsLeft;
             for (int i = 0; i < villagers.Length; i++)
             {
                 if (villagers[i] == villager)

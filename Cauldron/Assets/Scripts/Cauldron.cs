@@ -41,6 +41,7 @@ namespace CauldronCodebase
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
+        public event Action PotionDeclined;
 
         private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
@@ -74,6 +75,7 @@ namespace CauldronCodebase
             }
             splash.Stop();
             audios = GetComponent<AudioSource>();
+            potionPopup.OnDecline += () => PotionDeclined?.Invoke();
         }
 
         private void OnValidate()
@@ -156,7 +158,7 @@ namespace CauldronCodebase
             audios.PlayOneShot(brew);
             tooltipManager.DisableAllHIghlights();
             
-            potionPopup.ClearSubscriptions();
+            potionPopup.ClearAcceptSubscriptions();
             mix.Clear();
             //if (mixBonusTotal > mixBonusMin)
             {
@@ -199,7 +201,7 @@ namespace CauldronCodebase
 
         private void PotionAccepted(Potions potion)
         {
-            potionPopup.ClearSubscriptions();
+            potionPopup.ClearAcceptSubscriptions();
             PotionBrewed?.Invoke(potion);
         }
 

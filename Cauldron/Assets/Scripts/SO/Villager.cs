@@ -8,9 +8,9 @@ namespace CauldronCodebase
     public class Villager : ScriptableObject
     {
         public Sprite image;
-        public SkeletonDataAsset animation;
         public int fameBonus;
         public int moneyBonus;
         public int fearBonus;
+        public int patience = 3;
     }
 }

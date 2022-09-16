@@ -10,8 +10,8 @@ namespace Editor
 {
     public class ContentImportExport
     {
-        private static string assetFolder = "MyCards";
-        private static string CSVpath = "/Editor/MyDeck.csv";
+        private static string assetFolder = "ThisDeck";
+        private static string CSVpath = "/Editor/ThisDeck.csv";
 
         private static string eventFolder = "MyEvents";
         private static string CSVpath4events = "/Editor/MyEvents.csv";
@@ -94,9 +94,10 @@ namespace Editor
             Villager[] allVillagers = ScriptableObjectHelper.LoadAllAssets<Villager>();
 
             string[] headers = alllines[0].Split(';');
+            Debug.LogError(headers.Length);
             List<Potions> includedPotionResults = new List<Potions>(10);
             int i = 10;
-            while (Enum.TryParse(headers[i], true, out Potions potion))
+            while (i < headers.Length && Enum.TryParse(headers[i], true, out Potions potion))
             {
                 includedPotionResults.Add(potion);
                 i++;

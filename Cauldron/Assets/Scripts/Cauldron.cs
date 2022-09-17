@@ -159,7 +159,6 @@ namespace CauldronCodebase
             tooltipManager.DisableAllHIghlights();
             
             potionPopup.ClearAcceptSubscriptions();
-            mix.Clear();
             //if (mixBonusTotal > mixBonusMin)
             {
                 foreach (var recipe in recipeProvider.allRecipes)
@@ -187,6 +186,7 @@ namespace CauldronCodebase
                             potionPopup.Show(recipe);
                         }
                         potionPopup.OnAccept += () => PotionAccepted(recipe.potion);
+                        mix.Clear();
                         return recipe.potion;
                     }
                 }
@@ -196,6 +196,7 @@ namespace CauldronCodebase
             RandomMixColor();
             potionPopup.Show(null);
             potionPopup.OnAccept += () => PotionAccepted(Potions.Placebo);
+            mix.Clear();
             return Potions.Placebo;
         }
 

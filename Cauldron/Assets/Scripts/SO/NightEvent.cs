@@ -21,6 +21,7 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, settings);
             game.Fear += CalculateModifier(Statustype.Fear, settings);
             game.Money += CalculateModifier(Statustype.Money, settings);
+            game.currentDeck.AddToDeck(bonusCard);
             if (storyTag.StartsWith("-"))
             {
                 game.storyTags.Remove(storyTag);

@@ -123,6 +123,7 @@ namespace CauldronCodebase
         {
             Encounter card = null;
             bool valid = false;
+            int numCards = deck.Count;
             do
             {
                 if (card != null)
@@ -132,6 +133,7 @@ namespace CauldronCodebase
                 }
                 card = deck.First();
                 deck.RemoveFirst();
+                numCards--;
                 if (string.IsNullOrEmpty(card.requiredStoryTag))
                 {
                     break;
@@ -142,8 +144,12 @@ namespace CauldronCodebase
                 {
                     valid = valid && game.storyTags.Contains(tag.Trim());
                 }
+                if (numCards == 0)
+                {
+                    DealCards(1);
+                }
             } 
-            while (!valid);
+            while (!valid && numCards > 0);
 
             deckInfo = deck.ToArray();
             return card;

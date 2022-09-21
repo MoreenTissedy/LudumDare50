@@ -12,7 +12,6 @@ namespace CauldronCodebase
         public bool[] unlocked;
         public int threshold = 70;
         public int lowThreshold = 20;
-        public Encounter[] highFameCards, highFearCards;
 
         public void Init()
         {

@@ -20,6 +20,7 @@ namespace CauldronCodebase
         public float timerChangeSpeed = 1f;
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
+        [Inject] private IngredientsData ingredients;
         
         [ContextMenu("Find Icon Objects")]
         private void FindIconObjects()
@@ -49,7 +50,7 @@ namespace CauldronCodebase
             {
                 //what if everything is unlocked?
                 Recipe unlockRecipe = GetRecipeToUnlock();
-                text.text = String.Format(card.text, unlockRecipe.ingredient1, unlockRecipe.ingredient2, unlockRecipe.ingredient3);
+                text.text = Format(card, unlockRecipe);
             }
             else
             {
@@ -67,6 +68,14 @@ namespace CauldronCodebase
             {
                 iconObjects[2]?.Hide();
                 text.fontStyle = FontStyles.Normal;
+            }
+
+            string Format(Encounter encounter, Recipe unlockRecipe)
+            {
+                string name1 = ingredients.Get(unlockRecipe.ingredient1).friendlyName;
+                string name2 = ingredients.Get(unlockRecipe.ingredient2).friendlyName;
+                string name3 = ingredients.Get(unlockRecipe.ingredient3).friendlyName;
+                return String.Format(encounter.text, name1, name2, name3);
             }
         }
         

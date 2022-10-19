@@ -11,7 +11,7 @@ namespace Editor
     public class ContentImportExport
     {
         private static string assetFolder = "ThisDeck";
-        private static string CSVpath = "/Editor/ThisDeck.csv";
+        private static string CSVpath = "/Editor/CardsForImport.csv";
 
         private static string eventFolder = "MyEvents";
         private static string CSVpath4events = "/Editor/MyEvents.csv";

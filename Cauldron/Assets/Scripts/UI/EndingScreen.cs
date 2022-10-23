@@ -16,7 +16,6 @@ namespace CauldronCodebase
         public TMP_Text title;
         public TMP_Text text;
         public Image image;
-        public Image lockedImage;
         public event Action<int> OnPageUpdate;
         
         

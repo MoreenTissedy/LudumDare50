@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using UnityEngine.PlayerLoop;
 
 namespace CauldronCodebase
 {
@@ -17,9 +15,11 @@ namespace CauldronCodebase
         
         
         public List<Encounter> cardPool;
+        private GameState game;
 
-        public override void Init()
+        public override void Init(GameState game)
         {
+            this.game = game;
             deck = new LinkedList<Encounter>();
             foreach (var card in Shuffle(startingCards))
             {
@@ -105,7 +105,7 @@ namespace CauldronCodebase
             }
         }
         
-        public override Encounter GetTopCard(GameState game)
+        public override Encounter GetTopCard()
         {
             Encounter card = null;
             do

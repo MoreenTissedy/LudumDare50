@@ -15,6 +15,8 @@ namespace CauldronCodebase
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
+        private GameState game;
+
         [Serializable]
         public struct CardPoolPerDay
         {
@@ -45,8 +47,9 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init()
+        public override void Init(GameState game)
         {
+            this.game = game;
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
             NewDayPool(0);
@@ -84,6 +87,28 @@ namespace CauldronCodebase
         /// <param name="num">X - number of cards</param>
         public override void DealCards(int num)
         {
+            //find story-related cards and add them as top-priority above count
+            List<Encounter> highPriorityCards = new List<Encounter>(3);
+            if (game.storyTags != null) Debug.Log("story tags: "+string.Join(" ", game.storyTags));
+            foreach (Encounter card in cardPool)
+            {
+                if (string.IsNullOrEmpty(card.requiredStoryTag))
+                {
+                    continue;
+                }
+                Debug.Log("checking card: "+card.requiredStoryTag);
+                if (CheckStoryTags(game, card))
+                {
+                    deck.AddFirst(card);
+                    highPriorityCards.Add(card);
+                }
+            }
+            foreach (Encounter highPriorityCard in highPriorityCards)
+            {
+                Debug.Log("card added as priority "+highPriorityCard.name);
+                cardPool.Remove(highPriorityCard);
+            }
+            
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count == 0)
@@ -119,7 +144,7 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
         
-        public override Encounter GetTopCard(GameState game)
+        public override Encounter GetTopCard()
         {
             Encounter card = null;
             bool valid = false;
@@ -138,12 +163,7 @@ namespace CauldronCodebase
                 {
                     break;
                 }
-                string[] tags = card.requiredStoryTag.Split(',');
-                valid = true;
-                foreach (var tag in tags)
-                {
-                    valid = valid && game.storyTags.Contains(tag.Trim());
-                }
+                valid = CheckStoryTags(game, card);
                 if (numCards == 0)
                 {
                     DealCards(1);
@@ -153,6 +173,17 @@ namespace CauldronCodebase
 
             deckInfo = deck.ToArray();
             return card;
+        }
+
+        private static bool CheckStoryTags(GameState game, Encounter card)
+        {
+            string[] tags = card.requiredStoryTag.Split(',');
+            bool valid = true;
+            foreach (var tag in tags)
+            {
+                valid = valid && game.storyTags.Contains(tag.Trim());
+            }
+            return valid;
         }
     }
 }

@@ -76,7 +76,7 @@ namespace CauldronCodebase
         private void Start()
         {
             visitors.VisitorLeft += VisitorLeft;
-            cardDeck.Init();
+            cardDeck.Init(gState);
             CatTutorial catTutorial = GetComponent<CatTutorial>();
             if (catTutorial is null)
             {
@@ -116,7 +116,7 @@ namespace CauldronCodebase
 
         public void DrawCard()
         {
-            Encounter currentCard = cardDeck.GetTopCard(gState);
+            Encounter currentCard = cardDeck.GetTopCard();
             gState.currentCard = currentCard;
             //in case we run out of cards
             if (gState.currentCard is null)

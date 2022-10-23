@@ -47,6 +47,7 @@ namespace CauldronCodebase
 
         private void UnlockThisEnding()
         {
+            Debug.Log("ending unlocked "+endings.endings[currentPage].title);
             endings.unlocked[currentPage] = true;
             image.DOFade(1, 3f);
             DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);

@@ -129,7 +129,6 @@ namespace CauldronCodebase
                 bonus = 0;
             }
             mixBonusTotal += bonus;
-            Debug.Log($"Added {ingredient} with bonus {bonus}");
             mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.DisableOneIngredient(ingredient);

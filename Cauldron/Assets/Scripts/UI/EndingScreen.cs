@@ -49,7 +49,7 @@ namespace CauldronCodebase
         private void UnlockThisEnding()
         {
             endings.unlocked[currentPage] = true;
-            image.DOFade(0, 3f);
+            image.DOFade(1, 3f);
             DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);
         }
 
@@ -61,12 +61,12 @@ namespace CauldronCodebase
             if (endings.unlocked[endings.GetIndexOf(ending)])
             {
                 text.alpha = 1;
-                lockedImage.color = Color.clear;
+                image.color = Color.white;
             }
             else
             {
                 text.alpha = 0;
-                lockedImage.color = Color.black;
+                image.color = Color.clear;
             }
         }
         

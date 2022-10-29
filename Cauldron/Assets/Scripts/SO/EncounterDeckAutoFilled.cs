@@ -109,11 +109,17 @@ namespace CauldronCodebase
                 cardPool.Remove(highPriorityCard);
             }
             
+            //ignore story-related cards
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count == 0)
                     return;
-                int randomIndex = Random.Range(0, cardPool.Count);
+                int randomIndex = 0;
+                do
+                {
+                    randomIndex = Random.Range(0, cardPool.Count);
+                } 
+                while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
                 deck.AddLast(cardPool[randomIndex]);
                 cardPool.RemoveAt(randomIndex);
             }

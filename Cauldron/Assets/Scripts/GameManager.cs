@@ -121,7 +121,7 @@ namespace CauldronCodebase
             //in case we run out of cards
             if (gState.currentCard is null)
             {
-                EndGameProcess(endings.endings[0]);
+                StartCoroutine(EndGameProcess(EndingsProvider.Unlocks.HighMoney));
                 return;
             }
             NewEncounter?.Invoke(gState.cardsDrawnToday, Settings.gameplay.cardsPerDay);
@@ -169,12 +169,12 @@ namespace CauldronCodebase
             DrawCard();
         }
 
-        public void EndGame(Ending ending)
+        public void EndGame(EndingsProvider.Unlocks ending)
         {
             StartCoroutine(EndGameProcess(ending));
         }
         
-        IEnumerator EndGameProcess(Ending ending)
+        IEnumerator EndGameProcess(EndingsProvider.Unlocks ending)
         {
             endingPanel.OpenBookWithEnding(ending);
             gameEnded = true;

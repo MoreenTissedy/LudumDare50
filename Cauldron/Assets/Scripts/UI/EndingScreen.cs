@@ -35,11 +35,11 @@ namespace CauldronCodebase
             InitTotalPages();
         }
 
-        public void OpenBookWithEnding(Ending ending)
+        public void OpenBookWithEnding(EndingsProvider.Unlocks ending)
         {
             currentPage = endings.GetIndexOf(ending);
             OpenBook();
-            if (!endings.unlocked[currentPage])
+            if (!endings.Unlocked(ending))
             {
                 UnlockThisEnding();
             }
@@ -47,9 +47,8 @@ namespace CauldronCodebase
 
         private void UnlockThisEnding()
         {
-            Debug.Log("ending unlocked "+endings.endings[currentPage].title);
-            endings.unlocked[currentPage] = true;
-            image.DOFade(1, 3f);
+            endings.Unlock(currentPage);
+            image.DOFade(1, 3f).From(0);
             DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);
         }
 
@@ -58,7 +57,7 @@ namespace CauldronCodebase
             title.text = ending.title;
             image.sprite = ending.image;
             text.text = ending.text;
-            if (endings.unlocked[endings.GetIndexOf(ending)])
+            if (endings.Unlocked(ending))
             {
                 text.alpha = 1;
                 image.color = Color.white;
@@ -73,12 +72,12 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            totalPages = endings.endings.Length;
+            totalPages = endings.Endings.Count;
         }
 
         protected override void UpdatePage()
         {
-            Show(endings.endings[currentPage]);
+            Show(endings.Get(currentPage));
             OnPageUpdate?.Invoke(currentPage);
         }
 

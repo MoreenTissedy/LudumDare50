@@ -78,17 +78,22 @@ namespace CauldronCodebase
 
         public virtual void OpenBook()
         {
-            if (openCloseSound != null)
-            {
-                leftPageSound.PlayOneShot(openCloseSound);
-                rightPageSound.PlayOneShot(openCloseSound);
-            }
+            PlayOpenCloseSound();
             bookObject.SetActive(true);
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
         }
-        
+
+        private void PlayOpenCloseSound()
+        {
+            if (openCloseSound)
+            {
+                leftPageSound?.PlayOneShot(openCloseSound);
+                rightPageSound?.PlayOneShot(openCloseSound);
+            }
+        }
+
         IEnumerator UpdateWithDelay()
         {
             yield return null;
@@ -97,12 +102,7 @@ namespace CauldronCodebase
         
         public virtual void CloseBook()
         {
-            if (openCloseSound != null)
-            {
-                leftPageSound.PlayOneShot(openCloseSound);
-                rightPageSound.PlayOneShot(openCloseSound);
-            }
-
+            PlayOpenCloseSound();
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() => bookObject.SetActive(false));
         }

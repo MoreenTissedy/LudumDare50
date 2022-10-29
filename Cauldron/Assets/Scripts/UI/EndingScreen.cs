@@ -9,11 +9,14 @@ namespace CauldronCodebase
 {
     public class EndingScreen : Book
     {
+        private const float unlockFadeDuration = 8f;
+
         [Inject]
         private EndingsProvider endings;
 
         [Header("Ending display")] 
         public TMP_Text title;
+
         public TMP_Text text;
         public Image image;
         public event Action<int> OnPageUpdate;
@@ -48,7 +51,7 @@ namespace CauldronCodebase
         private void UnlockThisEnding()
         {
             endings.Unlock(currentPage);
-            image.DOFade(1, 3f).From(0);
+            image.DOFade(1, unlockFadeDuration).From(0);
             DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);
         }
 

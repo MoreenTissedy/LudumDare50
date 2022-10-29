@@ -19,10 +19,10 @@ namespace CauldronCodebase
         }
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
         [SerializeField] private Ending[] endings;
-        [SerializeField] private Unlocks unlocked;
         [SerializeField] private int threshold = 70;
         [SerializeField] private int lowThreshold = 20;
 
+        private Unlocks unlocked;
         private const string _KEY_ = "Endings";
         public readonly Dictionary<Unlocks, Ending> Endings = new Dictionary<Unlocks, Ending>(10);
 
@@ -38,7 +38,15 @@ namespace CauldronCodebase
             {
                 unlocked = (Unlocks)PlayerPrefs.GetInt(_KEY_);
             }
-            unlocked = 0;
+            else
+            {
+                unlocked = 0;
+            }
+
+            foreach (var unlock in Endings.Keys)
+            {
+                Debug.Log($"ending {unlock} unlocked: {Unlocked(unlock)}");
+            }
         }
 
         public bool Unlocked(Unlocks ending)
@@ -48,7 +56,7 @@ namespace CauldronCodebase
 
         public bool Unlocked(int i)
         {
-            return ((int)unlocked & (1 >> i)) > 0;
+            return ((int)unlocked & (1 << i)) > 0;
         }
 
         public bool Unlocked(Ending ending)
@@ -65,13 +73,13 @@ namespace CauldronCodebase
 
         public Ending Get(int i)
         {
-            int index = 1 >> i;
+            int index = 1 << i;
             return Endings[(Unlocks)index];
         }
 
         public void Unlock(int i)
         {
-            unlocked += 1 >> i;
+            unlocked += 1 << i;
             PlayerPrefs.SetInt(_KEY_, (int)unlocked);
         }
 

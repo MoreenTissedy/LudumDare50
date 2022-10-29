@@ -58,7 +58,7 @@ namespace CauldronCodebase
                 image.sprite = unlocked;
                 image.color = Color.white;
             }
-            else if (provider.unlocked[number])
+            else if (provider.Unlocked(number))
             {
                 currentState = State.Unlocked;
                 image.sprite = unlocked;

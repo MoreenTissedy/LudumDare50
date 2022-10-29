@@ -28,9 +28,6 @@ namespace CauldronCodebase
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             endings.Init();
-            //test
-            endings.Unlock(EndingsProvider.Unlocks.HighFear);
-            endings.Unlock(4);
             
             //this can be made from a prefab
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();

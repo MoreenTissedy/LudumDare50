@@ -53,7 +53,7 @@ namespace CauldronCodebase
                 {
                     magicalRecipes.Add(recipe);
                 }
-                else if (!herbalRecipes.Contains(recipe))
+                else if (!recipe.magical && !herbalRecipes.Contains(recipe))
                 {
                     herbalRecipes.Add(recipe);
                 }

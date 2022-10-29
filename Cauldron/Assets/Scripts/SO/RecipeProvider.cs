@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -11,6 +12,38 @@ namespace CauldronCodebase
         //cache to dictionary?
         public Recipe[] allRecipes;
         
+        private const string _KEY_ = "Recipes";
+        
+        public void SaveRecipes(IEnumerable<Recipe> set)
+        {
+            string data = string.Join(",", set.Select(x => (int) x.potion));
+            PlayerPrefs.SetString(_KEY_, data);
+        }
+
+        public IEnumerable<Recipe> LoadRecipes()
+        {
+            if (PlayerPrefs.HasKey(_KEY_))
+            {
+                string data = PlayerPrefs.GetString(_KEY_);
+                foreach (var potion in data.Split(','))
+                {
+                    if (string.IsNullOrWhiteSpace(potion))
+                    {
+                        continue;
+                    }
+                    Recipe recipe = GetRecipeForPotion((Potions) int.Parse(potion));
+                    if (recipe != null)
+                    {
+                        yield return recipe;
+                        Debug.Log("recipe loaded: "+recipe.potionName);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("can't load recipe by number "+potion);
+                    }
+                }
+            }
+        }
         public Recipe GetRecipeForPotion(Potions potion)
         {
             var found = allRecipes.Where(x => x.potion == potion).ToArray();

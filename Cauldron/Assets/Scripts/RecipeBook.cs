@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -18,8 +19,10 @@ namespace CauldronCodebase
         [SerializeField] private GameObject recipesDisplay, attemptsDisplay;
         public event Action<Recipe> OnSelectRecipe;
 
+
         [Inject]
         private TooltipManager tooltipManager;
+        [Inject] private RecipeProvider recipeProvider;
 
         private Mode currentMode = Mode.Magical;
         public enum Mode
@@ -39,6 +42,22 @@ namespace CauldronCodebase
         private void Start()
         {
             ChangeMode(Mode.Magical);
+            LoadRecipes();
+        }
+
+        private void LoadRecipes()
+        {
+            foreach (Recipe recipe in recipeProvider.LoadRecipes())
+            {
+                if (recipe.magical && !magicalRecipes.Contains(recipe))
+                {
+                    magicalRecipes.Add(recipe);
+                }
+                else if (!herbalRecipes.Contains(recipe))
+                {
+                    herbalRecipes.Add(recipe);
+                }
+            }
         }
 
         public void RecordAttempt(Ingredients[] mix)
@@ -76,6 +95,7 @@ namespace CauldronCodebase
                 }
                 herbalRecipes.Add(recipe);
             }
+            recipeProvider.SaveRecipes(magicalRecipes.Union(herbalRecipes));
         }
 
         public void ChangeMode(Mode newMode)

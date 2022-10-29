@@ -41,11 +41,10 @@ namespace CauldronCodebase
         
         public void Display(Encounter card)
         {
-            gameObject.SetActive(true);
             timer.fillAmount = 1f;
             gameObject.transform.DOLocalMoveX(gameObject.transform.localPosition.x, animTime)
                 .From(offScreen);
-            
+
             if (card.name.Contains(DEVIL))
             {
                 //what if everything is unlocked?
@@ -56,7 +55,7 @@ namespace CauldronCodebase
             {
                 text.text = card.text;
             }
-            
+
             iconObjects[0]?.Display(card.primaryInfluence, card.hidden);
             iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
             if (card.quest)
@@ -77,6 +76,8 @@ namespace CauldronCodebase
                 string name3 = ingredients.Get(unlockRecipe.ingredient3).friendlyName;
                 return String.Format(encounter.text, name1, name2, name3);
             }
+
+            gameObject.SetActive(true);
         }
         
         //move?

@@ -42,6 +42,7 @@ namespace CauldronCodebase
             visitorText.ReduceTimer(attemptsTimerStep);
             if (attemptsLeft <= 0)
             {
+                Debug.LogError("visitor left while waiting");
                 Exit();
                 VisitorLeft?.Invoke();
             }
@@ -50,6 +51,7 @@ namespace CauldronCodebase
         public void Enter(Encounter card)
         {
             ShowText(card);
+            Debug.Log("enter card"+card.name);
             Villager villager = card.actualVillager;
             attemptsLeft = villager.patience;
             attemptsTimerStep = 1f / attemptsLeft;
@@ -72,6 +74,7 @@ namespace CauldronCodebase
 
         public void Exit()
         {
+            Debug.Log("exit visitor "+currentVisitor.name);
             HideText();
             currentVisitor.Exit();
         }

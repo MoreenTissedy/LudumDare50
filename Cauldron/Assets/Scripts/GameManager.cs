@@ -134,6 +134,7 @@ namespace CauldronCodebase
 
         public void EndEncounter(Potions potion)
         {
+            Debug.Log("end encounter with "+potion);
             cauldron.PotionBrewed -= EndEncounter;
             visitors.Exit();
             
@@ -238,6 +239,7 @@ namespace CauldronCodebase
             if (gameEnded)
                 return;
 
+            Debug.Log("new day "+gState.currentDay);
             DrawCard();
         }
     }

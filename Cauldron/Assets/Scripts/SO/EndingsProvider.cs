@@ -24,16 +24,19 @@ namespace CauldronCodebase
 
         private Unlocks unlocked;
         private const string _KEY_ = "Endings";
-        public readonly Dictionary<Unlocks, Ending> Endings = new Dictionary<Unlocks, Ending>(10);
+        public Dictionary<Unlocks, Ending> Endings;
 
         public void Init()
         {
-            Endings.Add(Unlocks.HighMoney, endings[0]);
-            Endings.Add(Unlocks.HighFame, endings[1]);
-            Endings.Add(Unlocks.HighFear, endings[2]);
-            Endings.Add(Unlocks.LowFame, endings[3]);
-            Endings.Add(Unlocks.LowFear, endings[4]);
-            
+            Endings = new Dictionary<Unlocks, Ending>(10)
+            {
+                {Unlocks.HighMoney, endings[0]},
+                {Unlocks.HighFame, endings[1]},
+                {Unlocks.HighFear, endings[2]},
+                {Unlocks.LowFame, endings[3]},
+                {Unlocks.LowFear, endings[4]}
+            };
+
             if (PlayerPrefs.HasKey(_KEY_))
             {
                 unlocked = (Unlocks)PlayerPrefs.GetInt(_KEY_);

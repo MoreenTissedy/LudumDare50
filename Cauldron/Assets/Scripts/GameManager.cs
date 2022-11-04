@@ -187,6 +187,7 @@ namespace CauldronCodebase
        
         public void ReloadGame()
         {
+            Debug.Log("reload scene");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }
 

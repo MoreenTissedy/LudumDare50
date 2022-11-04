@@ -40,6 +40,7 @@ namespace CauldronCodebase
 
         public void OpenBookWithEnding(EndingsProvider.Unlocks ending)
         {
+            Debug.Log("open book with ending "+ending);
             currentPage = endings.GetIndexOf(ending);
             OpenBook();
             if (!endings.Unlocked(ending))

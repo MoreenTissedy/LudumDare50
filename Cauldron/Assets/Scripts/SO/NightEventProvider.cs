@@ -15,6 +15,7 @@ namespace CauldronCodebase
         {
             inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
             inGameConditionals.AddRange(conditionalEvents);
+            storyEvents.Clear();
         }
 
         private NightEvent CheckConditions(GameState game)

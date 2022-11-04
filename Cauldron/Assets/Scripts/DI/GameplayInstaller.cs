@@ -26,6 +26,7 @@ namespace CauldronCodebase
             //these are scriptable objects
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
+            nightEvents.Init();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             endings.Init();
             

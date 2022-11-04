@@ -7,14 +7,22 @@ namespace CauldronCodebase
     public class NightEventProvider : ScriptableObject
     {
         public List<ConditionalEvent> conditionalEvents;
+        [Header("Readonly")]
         public List<NightEvent> storyEvents;
+        public List<ConditionalEvent> inGameConditionals;
 
-        public NightEvent CheckConditions(GameState game)
+        public void Init()
+        {
+            inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
+            inGameConditionals.AddRange(conditionalEvents);
+        }
+
+        private NightEvent CheckConditions(GameState game)
         {
             //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
             bool foundValid = false;
-            foreach (ConditionalEvent check in conditionalEvents)
+            foreach (ConditionalEvent check in inGameConditionals)
             {
                 if (check.Valid(game))
                 {
@@ -25,7 +33,7 @@ namespace CauldronCodebase
             }
             if (foundValid)
             {
-                conditionalEvents.Remove(validEvent);
+                inGameConditionals.Remove(validEvent);
             }
 
             return validEvent;

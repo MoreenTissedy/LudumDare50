@@ -23,14 +23,24 @@ namespace CauldronCodebase
         public virtual void Enter()
         {
             rend.enabled = true;
-            anim.AnimationState.SetAnimation(0, enter, false);
+            if (!string.IsNullOrEmpty(enter))
+            {
+                anim.AnimationState.SetAnimation(0, enter, false);
+            }
             anim.AnimationState.AddAnimation(0, idle, true, 0f);
         }
 
         public virtual void Exit()
         {
-            anim.AnimationState.SetAnimation(0, exit, false);
-            anim.AnimationState.Complete += Hide;
+            if (!string.IsNullOrEmpty(exit))
+            {
+                anim.AnimationState.SetAnimation(0, exit, false);
+                anim.AnimationState.Complete += Hide;
+            }
+            else
+            {
+                Hide(null);
+            }
         }
 
         void Hide(TrackEntry trackEntry)

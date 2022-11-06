@@ -6,6 +6,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "Event Provider", menuName = "Event Provider", order = 9)]
     public class NightEventProvider : ScriptableObject
     {
+        public NightEvent intro;
         public List<ConditionalEvent> conditionalEvents;
         [Header("Readonly")]
         public List<NightEvent> storyEvents;
@@ -42,6 +43,11 @@ namespace CauldronCodebase
 
         public NightEvent[] GetEvents(GameState game)
         {
+            if (!PlayerPrefs.HasKey("FirstNight"))
+            {
+                PlayerPrefs.SetInt("FirstNight", 1);
+                return new NightEvent[] {intro};
+            }
             List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count+1);
             returnEvents.AddRange(storyEvents);
             NightEvent conditionalEvent = CheckConditions(game);

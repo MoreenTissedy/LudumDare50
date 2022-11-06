@@ -9,6 +9,7 @@ namespace CauldronCodebase
     [CreateAssetMenu]
     public class EncounterDeckAutoFilled : EncounterDeckBase
     {
+        public Encounter[] introCards;
         public CardPoolPerDay[] cardPoolsByDay;
         public LinkedList<Encounter> deck;
         [Header("DEBUG")] 
@@ -53,7 +54,19 @@ namespace CauldronCodebase
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
             NewDayPool(0);
-            DealCards(3);
+            DealCards(1);
+            
+            //if first time
+            if (PlayerPrefs.HasKey("FirstTime"))
+            {
+                deck.AddFirst(introCards[2]);
+            }
+            else
+            {
+                deck.AddFirst(introCards[0]);
+                deck.AddLast(introCards[1]);
+                PlayerPrefs.SetInt("FirstTime", 1);
+            }
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)

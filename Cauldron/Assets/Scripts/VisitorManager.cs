@@ -6,6 +6,7 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour
     {
+        public GameObject witchCat;
         public Villager[] villagers;
         public Visitor[] visitors;
         
@@ -64,6 +65,9 @@ namespace CauldronCodebase
                     break;
                 }
             }
+            
+            //if cat - disable cat, else - enable cat
+            witchCat.SetActive(villager.name != "Cat");
         }
 
         public void EnterDefault()

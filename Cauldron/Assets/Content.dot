@@ -145,17 +145,20 @@ devil.4
 devil.4 -> devil.1 [color=red, label=DEFAULT, style=dotted]
 devil.5
 devil.6
-inquisition [style=filled, color=yellow]
-inquisition -> inquisitor.2 [color=green, label=MAGIC, style=solid]
-inquisition -> inquisitor.2 [color=red, label=DEFAULT, style=dotted]
+inquisition.1 [style=filled, color=yellow]
+inquisition.1 -> inquisitor.2 [color=green, label=MAGIC, style=solid]
+inquisition.1 -> inquisitor.2 [color=red, label=DEFAULT, style=dotted]
 inquisitor.2
 inquisitor.2 -> inquisitor.3 [color=green, label=NONMAGIC, style=dotted]
 inquisitor.2 -> inquisitor.3 [color=green, label=Placebo, style=dotted]
 inquisitor.2 -> inquisitor.3 [color=green, label=DEFAULT, style=solid]
 inquisitor.3
-inquisitor.3 -> inquisition [color=green, label=NONMAGIC, style=dotted]
-inquisitor.3 -> inquisition [color=green, label=Placebo, style=dotted]
-inquisitor.3 -> inquisition [color=green, label=DEFAULT, style=solid]
+inquisitor.3 -> inquisition.1 [color=green, label=NONMAGIC, style=dotted]
+inquisitor.3 -> inquisition.1 [color=green, label=Placebo, style=dotted]
+inquisitor.3 -> inquisition.1 [color=green, label=DEFAULT, style=solid]
+intro.1
+intro.2
+intro.3
 mary.1 [style=filled, color=yellow]
 mary.1 -> mary.2 [color=green, label=Healing, style=solid]
 mary.2
@@ -228,7 +231,7 @@ Chameleon_Hunter -> Beauty_Hunter [color=green, label=Strength, style=solid]
 Chameleon_Hunter -> AngryCitizen[color=red, label=Curse, style = dashed]
 AngryCitizen [shape = record]
 Chameleon_Potion_Fool [style=filled, color=yellow]
-Chameleon_Potion_Fool -> inquisition [color=green, label=Chameleon, style=solid]
+Chameleon_Potion_Fool -> inquisition.1 [color=green, label=Chameleon, style=solid]
 Chameleon_Potion_Fool -> GhostAtTheMill[color=green, label=Chameleon, style = solid]
 GhostAtTheMill [shape = record]
 Chameleon_Potion_Fool -> FoolDied[color=red, label=Poison, style = dotted]
@@ -331,6 +334,10 @@ Nightmare_Children
 Nightmare_Villager [style=filled, color=yellow]
 Poison_Potion_Villager [style=filled, color=yellow]
 Poison_Potion_Villager -> Healing_Potion_Villager [color=green, label=Poison, style=solid]
+Poison_Potion_Villager -> Healing_Potion_Villager [color=green, label=Curse, style=dashed]
+Poison_Potion_Villager -> Healing_Potion_Villager [color=green, label=Numb, style=dashed]
+Poison_Potion_Villager -> WhenPigsFly[color=red, label=Flying, style = dotted]
+WhenPigsFly [shape = record]
 Sleep_Potion_Children [style=filled, color=yellow]
 Strength_Bandit_EscapeFromPrison
 Strength_Bandit_EscapeFromPrison -> BanditReturn[color=green, label=Strength, style = solid]
@@ -360,7 +367,7 @@ TaxCollectorAwesome [shape = record]
 Tax_Collector.1 -> Chameleon_Bandit_RobTaxCollector [color=green, label=Love, style=dotted]
 Tax_Collector.1 -> TaxCollectorAwesome[color=green, label=Love, style = dotted]
 TaxCollectorAwesome [shape = record]
-Tax_Collector.1 -> inquisition [color=red, label=Poison, style=solid]
+Tax_Collector.1 -> inquisition.1 [color=red, label=Poison, style=solid]
 Tax_Collector.1 -> TaxCollectorFoundDead[color=red, label=Poison, style = solid]
 TaxCollectorFoundDead [shape = record]
 Tax_Collector.1 -> TaxCollectorFunnyVoice[color=red, label=VoiceChange, style = solid]

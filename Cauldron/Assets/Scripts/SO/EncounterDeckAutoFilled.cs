@@ -56,7 +56,7 @@ namespace CauldronCodebase
             NewDayPool(0);
             DealCards(1);
             
-            //if first time
+            //if not first time
             if (PlayerPrefs.HasKey("FirstTime"))
             {
                 deck.AddFirst(introCards[2]);

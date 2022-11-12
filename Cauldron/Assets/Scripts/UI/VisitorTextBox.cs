@@ -21,6 +21,8 @@ namespace CauldronCodebase
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private IngredientsData ingredients;
+
+        private float realTimerValue;
         
         [ContextMenu("Find Icon Objects")]
         private void FindIconObjects()
@@ -30,7 +32,8 @@ namespace CauldronCodebase
 
         public void ReduceTimer(float value)
         {
-            var newFillAmount = Mathf.Clamp(timer.fillAmount - value, 0, 1);
+            realTimerValue = Mathf.Clamp(realTimerValue-value, 0, 1);
+            var newFillAmount = Mathf.Lerp(0.5f, 1f, realTimerValue);
             timer.DOFillAmount(newFillAmount, timerChangeSpeed);
         }
 
@@ -42,6 +45,7 @@ namespace CauldronCodebase
         public void Display(Encounter card)
         {
             timer.fillAmount = 1f;
+            realTimerValue = 1f;
             gameObject.transform.DOLocalMoveX(gameObject.transform.localPosition.x, animTime)
                 .From(offScreen);
 

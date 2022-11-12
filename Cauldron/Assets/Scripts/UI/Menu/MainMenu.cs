@@ -28,6 +28,16 @@ namespace CauldronCodebase
             settings.onClick.AddListener(settingsMenu.Open);
         }
 
+        private void Update()
+        {
+            //for playtests
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                PlayerPrefs.DeleteAll();
+                Debug.LogWarning("Prefs cleared!");
+            }
+        }
+
         private void NewGameClick()
         {
             GameLoader.ReloadGame();

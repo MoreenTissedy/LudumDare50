@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace CauldronCodebase
         protected int totalPages = 3;
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
+        
+        public event Action OnClose;
 
         void OnValidate()
         {
@@ -103,8 +106,12 @@ namespace CauldronCodebase
         public virtual void CloseBook()
         {
             PlayOpenCloseSound();
+            OnClose?.Invoke();
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
-                OnComplete(() => bookObject.SetActive(false));
+                OnComplete(() =>
+                {
+                    bookObject.SetActive(false);
+                });
         }
         
         public virtual void NextPage()

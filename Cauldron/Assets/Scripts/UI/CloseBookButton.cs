@@ -7,7 +7,7 @@ namespace CauldronCodebase
 {
     public class CloseBookButton : GrowOnMouseEnter
     {
-        [Inject] private RecipeBook book;
+        [SerializeField] private Book book;
         public override void OnPointerClick(PointerEventData eventData)
         {
             base.OnPointerClick(eventData);

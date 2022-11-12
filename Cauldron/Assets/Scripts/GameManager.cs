@@ -66,6 +66,10 @@ namespace CauldronCodebase
                 {
                     recipeBook.CloseBook();
                 }
+                else if (endingPanel.bookObject.activeInHierarchy)
+                {
+                    endingPanel.CloseBook();
+                }
                 else
                 {
                     GameLoader.LoadMenu();
@@ -121,7 +125,7 @@ namespace CauldronCodebase
             //in case we run out of cards
             if (gState.currentCard is null)
             {
-                StartCoroutine(EndGameProcess(EndingsProvider.Unlocks.HighMoney));
+                EndGame(EndingsProvider.Unlocks.HighMoney);
                 return;
             }
             NewEncounter?.Invoke(gState.cardsDrawnToday, Settings.gameplay.cardsPerDay);
@@ -172,19 +176,11 @@ namespace CauldronCodebase
 
         public void EndGame(EndingsProvider.Unlocks ending)
         {
-            StartCoroutine(EndGameProcess(ending));
-        }
-        
-        IEnumerator EndGameProcess(EndingsProvider.Unlocks ending)
-        {
             endingPanel.OpenBookWithEnding(ending);
             gameEnded = true;
-            yield return new WaitForSeconds(1f);
-            yield return new WaitUntil(() => Input.anyKeyDown);
-            ReloadGame();
+            endingPanel.OnClose += ReloadGame;
         }
-        
-       
+
         public void ReloadGame()
         {
             Debug.Log("reload scene");

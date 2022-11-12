@@ -60,6 +60,7 @@ namespace CauldronCodebase
             if (PlayerPrefs.HasKey("FirstTime"))
             {
                 deck.AddFirst(introCards[2]);
+                DealCards(1);
             }
             else
             {

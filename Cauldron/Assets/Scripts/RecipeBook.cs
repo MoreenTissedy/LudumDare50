@@ -116,6 +116,7 @@ namespace CauldronCodebase
                 currentPage = 0;
                 InitTotalPages();
                 UpdatePage();
+                UpdateBookButtons();
             }
         }
 

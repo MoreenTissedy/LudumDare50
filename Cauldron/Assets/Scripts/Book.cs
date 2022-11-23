@@ -86,6 +86,7 @@ namespace CauldronCodebase
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
+            UpdateBookButtons();
         }
 
         private void PlayOpenCloseSound()

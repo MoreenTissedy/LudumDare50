@@ -1,7 +1,5 @@
 using System;
-using UnityEditor;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
@@ -9,18 +7,32 @@ namespace CauldronCodebase
     public class MainSettings : ScriptableObject
     {
         public Gameplay gameplay;
+        public StatusBars statusBars;
+        
         [Serializable]
         public class Gameplay
         {
              public int defaultStatChange = 10;
              public int defaultMoneyChangeCard = 10;
-             public int defaultMoneyChangeEvent = 10; 
-             public int statusBarsMax = 100;
-             public int statusBarsStart = 20;
+             public int defaultMoneyChangeEvent = 10;
              public int cardsPerDay = 3;
              public int cardsDealtAtNight = 3;
-             public float nightDelay = 4f;
              public float villagerDelay = 2f;
+        }
+
+        [Serializable]
+        public class StatusBars
+        {
+            public int Total = 100;
+            public int InitialValue = 50;
+            [Tooltip("Percent distance from a bar end")]
+            public float InitialThreshold = 30;
+            [SerializeField] private float thresholdDecrement = 10;
+            [SerializeField] private float minThreshold = 5;
+
+            public int ThresholdDecrement => (int)(thresholdDecrement/100 * Total);
+            public int GetMinThreshold => (int)(minThreshold/100 * Total);
+            public int GetMaxThreshold => (int)((100f - minThreshold)/100 * Total);
         }
     }
 }

@@ -109,23 +109,24 @@ namespace CauldronCodebase
             return -1;
         }
          
+        //TODO refactor statuses into structs and introduce a separate status checker entity - StatusChecker.Run()
         public void StatusChecks(GameManager gm)
         {
             //endings
             //[Tooltip("High money, high fame, high fear, low fame, low fear")]
-            if (gm.GameState.Fame >= gm.Settings.gameplay.statusBarsMax)
+            if (gm.GameState.Fame >= gm.Settings.statusBars.Total)
             {
                 gm.EndGame(Unlocks.HighFame);
                 return;
             }
 
-            if (gm.GameState.Fear >= gm.Settings.gameplay.statusBarsMax)
+            if (gm.GameState.Fear >= gm.Settings.statusBars.Total)
             {
                 gm.EndGame(Unlocks.HighFear);
                 return;
             }
 
-            if (gm.GameState.Money >= gm.Settings.gameplay.statusBarsMax)
+            if (gm.GameState.Money >= gm.Settings.statusBars.Total)
             {
                 gm.EndGame(Unlocks.HighMoney);
                 return;
@@ -144,23 +145,7 @@ namespace CauldronCodebase
                 return;
             }
 
-            AddHighLowTag(gm.GameState.Fear, "high fear");
-            AddHighLowTag(gm.GameState.Fear, "low fear", false);
-            AddHighLowTag(gm.GameState.Fame, "high fame");
-            AddHighLowTag(gm.GameState.Fame, "low fame", false);
-
-            void AddHighLowTag(int status, string tag, bool checkHigh = true)
-            {
-                bool thresholdReached = checkHigh ? status > threshold : status < lowThreshold;
-                if (thresholdReached)
-                {
-                    gm.GameState.AddTag(tag);
-                }
-                else
-                {
-                    gm.GameState.storyTags.Remove(tag);
-                }
-            }
+            gm.GameState.CheckStatusesThreshold();
         }
         
         [ContextMenu("Export Endings to CSV")]

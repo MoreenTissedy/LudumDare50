@@ -72,7 +72,7 @@ namespace CauldronCodebase
 
         private Vector2 CalculateMaskSize(int current)
         {
-            float ratio = (float) current / settings.gameplay.statusBarsMax;
+            float ratio = (float) current / settings.statusBars.Total;
             ratio = Mathf.Clamp(ratio, 0, 1);
             ratio *= initialDimension;
             Vector2 newSize;

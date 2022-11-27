@@ -50,9 +50,7 @@ namespace CauldronCodebase
             nightEvents = nightEventProvider;
             endings = endingsProvider;
             
-            gState = new GameState(settings.gameplay.statusBarsMax, 
-                settings.gameplay.statusBarsStart, 
-                cardDeck, nightEvents);
+            gState = new GameState(settings.statusBars, cardDeck, nightEvents);
         }
 
 
@@ -150,12 +148,12 @@ namespace CauldronCodebase
             }
 
             //status check
-            endings.StatusChecks(this);
+            //endings.StatusChecks(this);
             
-            if (gameEnded)
-            {
-                return;
-            }
+            //if (gameEnded)
+            //{
+           //     return;
+           // }
             
             if (gState.cardsDrawnToday >= Settings.gameplay.cardsPerDay)
             {
@@ -200,9 +198,9 @@ namespace CauldronCodebase
             //Witch.instance.Hide();
             NewDay?.Invoke(gState.currentDay + 1);
 
-            endings.StatusChecks(this);
-            if (gameEnded)
-                yield break;
+           // endings.StatusChecks(this);
+           // if (gameEnded)
+           //     yield break;
 
             //night events
             var events = nightEvents.GetEvents(gState);

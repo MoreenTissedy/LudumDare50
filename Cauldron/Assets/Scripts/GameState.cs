@@ -1,6 +1,5 @@
-
-using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CauldronCodebase
 {
@@ -25,6 +24,13 @@ namespace CauldronCodebase
             get => money;
             set => Set(Statustype.Money, value);
         }
+
+        //status struct?
+        private int fearThresholdLow;
+        private int fearThresholdHigh;
+        private int fameThresholdLow;
+        private int fameThresholdHigh;
+        
         public Phase phase;
         public int currentDay = 1;
         public int cardsDrawnToday;
@@ -37,17 +43,22 @@ namespace CauldronCodebase
         public IEncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
-        private int statusMax;
-        
+        private MainSettings.StatusBars statusSettings;
         public event System.Action StatusChanged;
 
-        public GameState(int max, int startValue, IEncounterDeck deck, NightEventProvider events)
+        public GameState(MainSettings.StatusBars settings, IEncounterDeck deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
             storyTags = new List<string>(5);
-            statusMax = max;
-            fear = startValue;
-            fame = startValue;
+            
+            statusSettings = settings;
+            fear = settings.InitialValue;
+            fame = settings.InitialValue;
+            fearThresholdLow = (int)(settings.InitialThreshold / 100 * settings.Total);
+            fameThresholdLow = fearThresholdLow;
+            fameThresholdHigh = (int)((100f - settings.InitialThreshold) / 100 * settings.Total);
+            fearThresholdHigh = fameThresholdHigh;
+            
             currentDeck = deck;
             currentEvents = events;
         }
@@ -74,6 +85,86 @@ namespace CauldronCodebase
             return -1000;
         }
 
+        public int GetThreshold(Statustype type, bool high)
+        {
+            switch (type)
+            {
+                case Statustype.Fear:
+                    return high ? fearThresholdHigh : fearThresholdLow;
+                case Statustype.Fame:
+                    return high ? fameThresholdHigh : fameThresholdLow;
+            }
+
+            return -1000;
+        }
+
+        private void ChangeThreshold(Statustype type, bool high)
+        {
+            switch (type)
+            {
+                case Statustype.Fear:
+                    if (high)
+                    {
+                        fearThresholdHigh += statusSettings.ThresholdDecrement;
+                        fearThresholdHigh = Mathf.Clamp(fearThresholdHigh, 0, statusSettings.GetMaxThreshold);
+                        Debug.Log("next high fear at "+fearThresholdHigh);
+                    }
+                    else
+                    {
+                        fearThresholdLow -= statusSettings.ThresholdDecrement;
+                        fearThresholdLow = Mathf.Clamp(fearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
+                        Debug.Log("next low fear at "+fearThresholdLow);
+                    }
+                    break;
+                case Statustype.Fame:
+                    if (high)
+                    {
+                        fameThresholdHigh += statusSettings.ThresholdDecrement;
+                        fameThresholdHigh = Mathf.Clamp(fameThresholdHigh, 0, statusSettings.GetMaxThreshold);
+                        Debug.Log("next high fame at "+fameThresholdHigh);
+                    }
+                    else
+                    {
+                        fameThresholdLow -= statusSettings.ThresholdDecrement;
+                        fameThresholdLow = Mathf.Clamp(fameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
+                        Debug.Log("next low fame at "+fameThresholdLow);
+                    }
+                    break;
+            }
+        }
+
+        private bool CheckThreshold(Statustype type, bool checkHigh)
+        {
+            int currentStatus = Get(type);
+            bool thresholdReached = checkHigh ? currentStatus > GetThreshold(type, true) : currentStatus < GetThreshold(type, false);
+            if (thresholdReached)
+            {
+                ChangeThreshold(type, checkHigh);
+            }
+            return thresholdReached;
+        }
+
+        private void AddHighLowTag(string tag, Statustype type, bool checkHigh = true)
+        {
+            bool thresholdReached = CheckThreshold(type, checkHigh);
+            if (thresholdReached)
+            {
+                AddTag(tag);
+            }
+            else
+            {
+                storyTags.Remove(tag);
+            }
+        }
+
+        public void CheckStatusesThreshold()
+        {
+            AddHighLowTag("high fear", Statustype.Fear);
+            AddHighLowTag("low fear", Statustype.Fear, false);
+            AddHighLowTag("high fame", Statustype.Fame);
+            AddHighLowTag("low fame", Statustype.Fame, false);
+        }
+
         private int Set(Statustype type, int newValue)
         {
             int statValue = Get(type);
@@ -83,8 +174,8 @@ namespace CauldronCodebase
             if (type == Statustype.Money && num < 0)
                 return statValue;
             statValue += num;
-            if (statValue > statusMax)
-                statValue = statusMax;
+            if (statValue > statusSettings.Total)
+                statValue = statusSettings.Total;
             else if (statValue < 0)
                 statValue = 0;
             switch (type)

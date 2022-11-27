@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Zenject;
 
 namespace CauldronCodebase
@@ -25,7 +23,7 @@ namespace CauldronCodebase
 
         private void UpdateMoney()
         {
-            text.text = $"{gm.GameState.Money} / {settings.gameplay.statusBarsMax}";
+            text.text = $"{gm.GameState.Money} / {settings.statusBars.Total}";
         }
     
     }

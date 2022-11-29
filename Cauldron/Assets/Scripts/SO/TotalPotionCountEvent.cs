@@ -11,7 +11,7 @@ namespace CauldronCodebase
         public Potions type;
         public int threshold = 3;
 
-        public override bool Valid(GameState game)
+        public override bool Valid(GameData game)
         {
             int count = 0;
             foreach (Potions potion in game.potionsTotal)

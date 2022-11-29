@@ -22,14 +22,14 @@ namespace CauldronCodebase
         
         private float initialDimension;
 
-        private GameManager gm;
+        private GameData gameData;
         private MainSettings settings;
         private int currentValue = Int32.MinValue;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameManager gm)
+        private void Construct(MainSettings mainSettings, GameData gameData)
         {
-           this.gm = gm;
+           this.gameData = gameData;
            settings = mainSettings;
            tooltip = GetComponentInChildren<Text>();
            if (tooltip != null)
@@ -38,13 +38,13 @@ namespace CauldronCodebase
            }
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
-           gm.GameState.StatusChanged += UpdateValue;
-           SetValue(gm.GameState.Get(type), false);
+           this.gameData.StatusChanged += UpdateValue;
+           SetValue(this.gameData.Get(type), false);
         }
 
         public void UpdateValue()
         {
-            SetValue(gm.GameState.Get(type));
+            SetValue(gameData.Get(type));
         }
 
         public void SetValue(int current, bool dotween = true)

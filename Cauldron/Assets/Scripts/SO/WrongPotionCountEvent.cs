@@ -8,7 +8,7 @@ namespace CauldronCodebase
         [Header("Wrong potion count threshold")]
         public int wrongPotions;
 
-        public override bool Valid(GameState game)
+        public override bool Valid(GameData game)
         {
             return game.wrongPotionsCount >= wrongPotions;
         }

@@ -4,6 +4,6 @@ namespace CauldronCodebase
     //because we need to find assets of this type with a generic method
     public abstract class ConditionalEvent:NightEvent
     {
-        public abstract bool Valid(GameState game);
+        public abstract bool Valid(GameData game);
     }
 }

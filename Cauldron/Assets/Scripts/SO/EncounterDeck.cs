@@ -15,9 +15,9 @@ namespace CauldronCodebase
         
         
         public List<Encounter> cardPool;
-        private GameState game;
+        private GameData game;
 
-        public override void Init(GameState game)
+        public override void Init(GameData game)
         {
             this.game = game;
             deck = new LinkedList<Encounter>();

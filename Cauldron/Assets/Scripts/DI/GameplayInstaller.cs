@@ -1,3 +1,4 @@
+using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
@@ -14,10 +15,13 @@ namespace CauldronCodebase
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
+        [SerializeField] private StateMachine stateMachine;
 
 
         public override void InstallBindings()
         {
+            Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle();
+            
             //these are SOs
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
@@ -38,6 +42,7 @@ namespace CauldronCodebase
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             //this one is a C# script
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
+            Container.Bind<StatusChecker>().AsSingle().NonLazy();
         }
     }
 }

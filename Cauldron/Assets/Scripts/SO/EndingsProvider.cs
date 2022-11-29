@@ -108,45 +108,6 @@ namespace CauldronCodebase
 
             return -1;
         }
-         
-        //TODO refactor statuses into structs and introduce a separate status checker entity - StatusChecker.Run()
-        public void StatusChecks(GameManager gm)
-        {
-            //endings
-            //[Tooltip("High money, high fame, high fear, low fame, low fear")]
-            if (gm.GameState.Fame >= gm.Settings.statusBars.Total)
-            {
-                gm.EndGame(Unlocks.HighFame);
-                return;
-            }
-
-            if (gm.GameState.Fear >= gm.Settings.statusBars.Total)
-            {
-                gm.EndGame(Unlocks.HighFear);
-                return;
-            }
-
-            if (gm.GameState.Money >= gm.Settings.statusBars.Total)
-            {
-                gm.EndGame(Unlocks.HighMoney);
-                return;
-
-            }
-
-            if (gm.GameState.Fame <= 0)
-            {
-                gm.EndGame(Unlocks.LowFame);
-                return;
-            }
-
-            if (gm.GameState.Fear <= 0)
-            {
-                gm.EndGame(Unlocks.LowFear);
-                return;
-            }
-
-            gm.GameState.CheckStatusesThreshold();
-        }
         
         [ContextMenu("Export Endings to CSV")]
         public void ExportEndings()

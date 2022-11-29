@@ -16,7 +16,7 @@ namespace CauldronCodebase
         public Encounter bonusCard;
         public string storyTag;
 
-        public void ApplyModifiers(GameState game, MainSettings settings)
+        public void ApplyModifiers(GameData game, MainSettings settings)
         {
             game.Fame += CalculateModifier(Statustype.Fame, settings);
             game.Fear += CalculateModifier(Statustype.Fear, settings);

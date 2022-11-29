@@ -8,22 +8,22 @@ namespace CauldronCodebase
     {
         private Text text;
         
-        private GameManager gm;
+        private GameData gameData;
         private MainSettings settings;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameManager gm)
+        private void Construct(MainSettings mainSettings, GameData gameData)
         {
-            this.gm = gm;
             settings = mainSettings;
+            this.gameData = gameData;
             text = GetComponent<Text>();
             UpdateMoney();
-            gm.GameState.StatusChanged += UpdateMoney;
+            this.gameData.StatusChanged += UpdateMoney;
         }
 
         private void UpdateMoney()
         {
-            text.text = $"{gm.GameState.Money} / {settings.statusBars.Total}";
+            text.text = $"{gameData.Money} / {settings.statusBars.Total}";
         }
     
     }

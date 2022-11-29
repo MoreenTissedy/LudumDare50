@@ -16,7 +16,7 @@ namespace CauldronCodebase
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
-        private GameState game;
+        private GameData game;
 
         [Serializable]
         public struct CardPoolPerDay
@@ -48,7 +48,7 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameState game)
+        public override void Init(GameData game)
         {
             this.game = game;
             deck = new LinkedList<Encounter>();
@@ -195,7 +195,7 @@ namespace CauldronCodebase
             return card;
         }
 
-        private static bool CheckStoryTags(GameState game, Encounter card)
+        private static bool CheckStoryTags(GameData game, Encounter card)
         {
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;

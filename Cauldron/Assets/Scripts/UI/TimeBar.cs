@@ -1,3 +1,4 @@
+using CauldronCodebase.GameStates;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace CauldronCodebase
         [Inject]
         private GameManager gm;
 
+        [Inject] private StateMachine _stateMachine;
+
         [Inject] private MainSettings settings;
 
         private void Awake()
@@ -32,8 +35,14 @@ namespace CauldronCodebase
         private void Start()
         {
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
-            gm.NewDay += OnNewDay;
-            gm.NewEncounter += OnNewVisitor;
+            _stateMachine.NightState.NewDay += OnNewDay;
+            _stateMachine.VisitorState.NewEncounter += OnNewVisitor;
+        }
+
+        private void OnDestroy()
+        {
+            _stateMachine.NightState.NewDay -= OnNewDay;
+            _stateMachine.VisitorState.NewEncounter -= OnNewVisitor;
         }
 
         private void OnNewVisitor(int arg1, int arg2)

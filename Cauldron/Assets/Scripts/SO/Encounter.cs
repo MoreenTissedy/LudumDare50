@@ -13,6 +13,10 @@ namespace CauldronCodebase
     {
         private GameManager gm;
 
+        private GameData gameData;
+        private EncounterDeckBase _encounterDeck;
+        private NightEventProvider _nightEventProvider;
+
         public int addToDeckOnDay = -1;
         public string requiredStoryTag;
 
@@ -41,7 +45,7 @@ namespace CauldronCodebase
 
 
         
-        public void Init(GameManager gameManager)
+        public void Init(GameData gameData, EncounterDeckBase deck, NightEventProvider events)
         {
             if (villager.Length > 0)
             {
@@ -49,7 +53,9 @@ namespace CauldronCodebase
                 actualVillager = villager[random];
             }
 
-            gm = gameManager;
+            this.gameData = gameData;
+            _encounterDeck = deck;
+            _nightEventProvider = events;
         }
 
         public static Encounter GetRandom(Encounter[] set)
@@ -129,7 +135,7 @@ namespace CauldronCodebase
                     ? settings.gameplay.defaultMoneyChangeCard
                     : settings.gameplay.defaultStatChange;
                 
-                gm.GameState.Add(type,
+                gameData.Add(type,
                     Mathf.FloorToInt(defaultStatChange
                                      * statCoef
                                      * potionCoef));
@@ -140,9 +146,9 @@ namespace CauldronCodebase
                 ModifyStat(primaryInfluence, primaryCoef, potionResult.influenceCoef);
                 ModifyStat(secondaryInfluence, secondaryCoef, potionResult.influenceCoef);
                 if (potionResult.bonusCard != null)
-                    gm.CardDeck.AddCardToPool(potionResult.bonusCard);
+                    _encounterDeck.AddCardToPool(potionResult.bonusCard);
                 if (potionResult.bonusEvent != null)
-                    gm.NightEvents.storyEvents.Add(potionResult.bonusEvent);
+                    _nightEventProvider.storyEvents.Add(potionResult.bonusEvent);
             }
 
             bool PotionInFilter(Potions filter)

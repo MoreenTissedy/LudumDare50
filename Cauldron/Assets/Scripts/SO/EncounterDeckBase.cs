@@ -5,7 +5,7 @@ namespace CauldronCodebase
     //This class is only to display interface in Unity inspector
     public abstract class EncounterDeckBase : ScriptableObject, IEncounterDeck
     {
-        public abstract void Init(GameState game);
+        public abstract void Init(GameData game);
 
         public abstract void NewDayPool(int day);
 

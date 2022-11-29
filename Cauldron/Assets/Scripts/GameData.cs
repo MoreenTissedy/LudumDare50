@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
+using CauldronCodebase.GameStates;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
     //Class holds the game state and can be used for saving and loading
-    public class GameState
+    public class GameData
     {
         private int fame;
         private int fear;
@@ -31,7 +34,6 @@ namespace CauldronCodebase
         private int fameThresholdLow;
         private int fameThresholdHigh;
         
-        public Phase phase;
         public int currentDay = 1;
         public int cardsDrawnToday;
         public Encounter currentCard;
@@ -44,9 +46,9 @@ namespace CauldronCodebase
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
-        public event System.Action StatusChanged;
+        public event Action StatusChanged;
 
-        public GameState(MainSettings.StatusBars settings, IEncounterDeck deck, NightEventProvider events)
+        public GameData(MainSettings.StatusBars settings, IEncounterDeck deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
             storyTags = new List<string>(5);
@@ -198,12 +200,6 @@ namespace CauldronCodebase
         {
             return Set(type, value + Get(type));
         }
-    }
 
-    public enum Phase
-    {
-        Night,
-        DayNoCustomer,
-        DayCustomer
     }
 }

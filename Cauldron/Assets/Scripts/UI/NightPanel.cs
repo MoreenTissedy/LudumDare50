@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using CauldronCodebase.GameStates;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
@@ -15,8 +16,7 @@ namespace CauldronCodebase
 {
     public class NightPanel : Book, IPointerClickHandler
     {
-        [Inject]
-        private GameManager gm;
+        [HideInInspector] public NightState NightState;
         [Inject] 
         private MainSettings settings;
 
@@ -235,7 +235,7 @@ namespace CauldronCodebase
                 CloseBook();
                 if (!test)
                 {
-                    gm.StartNewDay();
+                    NightState.Exit();
                 }   
             }
         }

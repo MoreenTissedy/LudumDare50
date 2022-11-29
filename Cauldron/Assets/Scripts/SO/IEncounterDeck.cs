@@ -2,7 +2,7 @@ namespace CauldronCodebase
 {
     public interface IEncounterDeck
     {
-        void Init(GameState game);
+        void Init(GameData game);
         void NewDayPool(int day);
 
         /// <summary>

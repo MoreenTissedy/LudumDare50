@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using CauldronCodebase.GameStates;
 using UnityEngine.EventSystems;
 using Zenject;
 using Random = UnityEngine.Random;
-#pragma warning disable CS0618
 
 
 namespace CauldronCodebase
@@ -43,18 +42,18 @@ namespace CauldronCodebase
         public event Action<Potions> PotionBrewed;
         public event Action PotionDeclined;
 
-        private RecipeProvider recipeProvider;
+        private RecipeProvider _recipeProvider;
         private RecipeBook recipeBook;
-        private GameManager gm;
+        //private GameManager gm;
+
         private Potions currentPotionBrewed;
 
         [Inject]
-        public void Construct(GameManager gm, RecipeProvider recipeProvider, RecipeBook book)
+        public void Construct(StateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book)
         {
-            this.recipeProvider = recipeProvider;
+            _recipeProvider = recipeProvider;
             recipeBook = book;
-            this.gm = gm;
-            gm.NewEncounter += (i, i1) => Clear();
+            stateMachine.VisitorState.NewEncounter += (i, i1) => Clear();
         }
         
         private void Awake()
@@ -160,7 +159,7 @@ namespace CauldronCodebase
             potionPopup.ClearAcceptSubscriptions();
             //if (mixBonusTotal > mixBonusMin)
             {
-                foreach (var recipe in recipeProvider.allRecipes)
+                foreach (var recipe in _recipeProvider.allRecipes)
                 {
                     if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
                         mix.Contains(recipe.ingredient3))

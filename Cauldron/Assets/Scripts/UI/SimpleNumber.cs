@@ -10,12 +10,12 @@ namespace CauldronCodebase
         private Text text;
 
         [Inject]
-        private GameManager gm;
+        private GameData gameData;
         private void Start()
         {
             text = GetComponent<Text>();
-            gm.GameState.StatusChanged += () => SetValue(gm.GameState.Get(type));
-            SetValue(gm.GameState.Get(type));
+            gameData.StatusChanged += () => SetValue(gameData.Get(type));
+            SetValue(gameData.Get(type));
         }
 
         void SetValue(int value)

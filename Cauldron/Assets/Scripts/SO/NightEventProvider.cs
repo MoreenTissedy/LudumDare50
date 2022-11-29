@@ -19,7 +19,7 @@ namespace CauldronCodebase
             storyEvents.Clear();
         }
 
-        private NightEvent CheckConditions(GameState game)
+        private NightEvent CheckConditions(GameData game)
         {
             //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
@@ -41,7 +41,7 @@ namespace CauldronCodebase
             return validEvent;
         }
 
-        public NightEvent[] GetEvents(GameState game)
+        public NightEvent[] GetEvents(GameData game)
         {
             if (!PlayerPrefs.HasKey("FirstNight"))
             {

@@ -16,23 +16,29 @@ namespace CauldronCodebase
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
         [SerializeField] private StateMachine stateMachine;
+        [SerializeField] private EncounterDeckBase encounterDeck;
 
 
         public override void InstallBindings()
         {
-            Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle();
+            Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             
             //these are SOs
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
+            Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle();
             //this can be made from a prefab
             Container.Bind<GameManager>().FromInstance(gameLoop).AsSingle();
             //these are scriptable objects
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
-            nightEvents.Init();
+            //
+            
+            
+            
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
-            endings.Init();
+            //
+            
             
             //this can be made from a prefab
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
@@ -42,7 +48,10 @@ namespace CauldronCodebase
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             //this one is a C# script
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
-            Container.Bind<StatusChecker>().AsSingle().NonLazy();
+
+            stateMachine.Construct(encounterDeck,settings,visitorManager,theCauldron,nightEvents);
+            nightEvents.Init();
+            endings.Init();
         }
     }
 }

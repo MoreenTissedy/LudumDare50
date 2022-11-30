@@ -1,3 +1,4 @@
+using CauldronCodebase.GameStates;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -8,9 +9,14 @@ namespace CauldronCodebase
     {
         public Statustype type;
         private Text text;
+        
+        private GameData gameData;
 
         [Inject]
-        private GameData gameData;
+        private void Construct(StateMachine stateMachine)
+        {
+            gameData = stateMachine.GameData;
+        }
         private void Start()
         {
             text = GetComponent<Text>();

@@ -1,5 +1,6 @@
 using System;
 using CauldronCodebase;
+using CauldronCodebase.GameStates;
 using DG.Tweening;
 using UnityEngine;
 using TMPro;
@@ -27,9 +28,9 @@ namespace CauldronCodebase
         private int currentValue = Int32.MinValue;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameData gameData)
-        {
-           this.gameData = gameData;
+        private void Construct(MainSettings mainSettings, StateMachine stateMachine)
+        { 
+           gameData = stateMachine.GameData;
            settings = mainSettings;
            tooltip = GetComponentInChildren<Text>();
            if (tooltip != null)
@@ -38,7 +39,7 @@ namespace CauldronCodebase
            }
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
-           this.gameData.StatusChanged += UpdateValue;
+           gameData.StatusChanged += UpdateValue;
            SetValue(this.gameData.Get(type), false);
         }
 

@@ -13,7 +13,7 @@ namespace CauldronCodebase.GameStates
         private NightPanel _nightPanel;
         private StateMachine _stateMachine;
 
-        [Inject] private StatusChecker _statusChecker;
+        private StatusChecker _statusChecker;
 
         public event Action<int> NewDay; 
         public NightState(GameData gameData,
@@ -29,6 +29,8 @@ namespace CauldronCodebase.GameStates
             _cardDeck = cardDeck;
             _nightPanel = nightPanel;
             _stateMachine = stateMachine;
+
+            _statusChecker = new StatusChecker(settings, stateMachine);
         }
         
         public override void Enter()

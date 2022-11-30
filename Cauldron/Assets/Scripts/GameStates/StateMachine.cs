@@ -15,7 +15,7 @@ namespace CauldronCodebase.GameStates
         [SerializeField] private EncounterDeckBase _cardDeck;
         private MainSettings _gameSettings;
         private NightEventProvider _nightEvents;
-        private GameData _gameData;
+        public GameData GameData;
         public NightEventProvider NightEvents => _nightEvents;
 
         private BaseGameState _currentGameState;
@@ -31,30 +31,31 @@ namespace CauldronCodebase.GameStates
         public EndGameState EndGameState => _endGameState;
 
         [Inject]
-        private void Construct(EncounterDeckBase deck,
+        public void Construct(EncounterDeckBase deck,
                                MainSettings settings,
-                               GameData gameData,
                                VisitorManager visitorManager,
                                Cauldron cauldron,
                                NightEventProvider nightEvents)
         {
             _gameSettings = settings;
             _nightEvents = nightEvents;
-            _gameData = gameData;
-            
-            _visitorWaitingState = new VisitorWaitingState(settings, _gameData, this);
-            _visitorState = new VisitorState(deck, settings, _gameData, visitorManager, cauldron, this);
-            _nightState = new NightState(_gameData, _gameSettings, _nightEvents, _cardDeck, _nightPanel, this);
+            GameData = new GameData(settings.statusBars, deck,nightEvents);
+
+            _visitorWaitingState = new VisitorWaitingState(settings, GameData, this);
+            _visitorState = new VisitorState(deck, settings, GameData, visitorManager, cauldron, this);
+            _nightState = new NightState(GameData, _gameSettings, _nightEvents, _cardDeck, _nightPanel, this);
             _endGameState = new EndGameState(_endingScreen);
             
             _currentGameState = _visitorWaitingState;
+            
+            
             Debug.Log("Run StateMachine Construct method");
         }
 
         private void Start()
         {
             Debug.Log("StateMachine Start");
-            _cardDeck.Init(_gameData);
+            _cardDeck.Init(GameData);
             CatTutorial catTutorial = GetComponent<CatTutorial>();
             if (catTutorial is null)
             {

@@ -2036,6 +2036,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2301198565061899768, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
   m_PrefabInstance: {fileID: 910958810}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &763255247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 763255248}
+  - component: {fileID: 763255249}
+  m_Layer: 0
+  m_Name: StateMachine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &763255248
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763255247}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1745953328}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &763255249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763255247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0d552e09e5048fb82030eee74fa1159, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nightPanel: {fileID: 7354000312683070564}
+  _endingScreen: {fileID: 2079205777}
+  _cardDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
 --- !u!4 &803513997 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2301198565061899768, guid: 6f370f81d47c1544089d1dcf35840b9a, type: 3}
@@ -3608,7 +3654,8 @@ MonoBehaviour:
   visitorManager: {fileID: 264877340}
   ingredientsData: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
   endings: {fileID: 11400000, guid: b0637f48345d84e2c887a048f1a71429, type: 2}
-  stateMachine: {fileID: 1745953330}
+  stateMachine: {fileID: 763255249}
+  encounterDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
 --- !u!4 &1171410290 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3042944657875605219, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
@@ -4783,7 +4830,6 @@ GameObject:
   - component: {fileID: 1745953328}
   - component: {fileID: 1745953327}
   - component: {fileID: 1745953329}
-  - component: {fileID: 1745953330}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4818,6 +4864,7 @@ Transform:
   - {fileID: 1846963702}
   - {fileID: 1153789304}
   - {fileID: 52409420}
+  - {fileID: 763255248}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4834,21 +4881,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameCursor: {fileID: 2800000, guid: 2bd37c77fcf954542b40e08d50fb943a, type: 3}
---- !u!114 &1745953330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745953326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d552e09e5048fb82030eee74fa1159, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _nightPanel: {fileID: 7354000312683070564}
-  _endingScreen: {fileID: 2079205777}
-  _cardDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
 --- !u!1 &1793745939
 GameObject:
   m_ObjectHideFlags: 0

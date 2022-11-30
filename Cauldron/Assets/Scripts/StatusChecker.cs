@@ -9,13 +9,12 @@ namespace CauldronCodebase
         private StateMachine _stateMachine;
 
         [Inject]
-        public StatusChecker(GameData gameData,
-                             MainSettings settings,
+        public StatusChecker(MainSettings settings,
                              StateMachine stateMachine)
         {
-            this.gameData = gameData;
             _settings = settings;
             _stateMachine = stateMachine;
+            gameData = stateMachine.GameData;
         }
         
         public void Run()

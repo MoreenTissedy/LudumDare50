@@ -68,10 +68,13 @@ namespace CauldronCodebase.GameStates
             Debug.Log("StateMachine Start");
             //Move to constructor, or better yet to GameplayInstaller if the deck is injectable (please bind it by interface)
             _cardDeck.Init(GameData);
-            //I removed cat tutorial it's not used anymore)
+            //I removed cat tutorial, it's not used anymore)
             _currentGameState.Enter();
         }
 
+        //No-no-no, please don't make states publicly accessible, it's the machine's responsibility to know about them.
+        //Make them private, collect them into a dictionary with Phase enum key and switch them by the key.
+        //That way we can also save the game state as a key, and check not to switch to the same state twice, and clear the current state by calling exit or whatever  
         public void SwitchState(BaseGameState state, bool wait)
         {
             _currentGameState = state;

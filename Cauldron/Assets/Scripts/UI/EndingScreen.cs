@@ -26,7 +26,7 @@ namespace CauldronCodebase
         protected override void Update()
         {
             base.Update();
-            if (!bookObject.activeInHierarchy && Input.GetKeyDown(KeyCode.K))
+            if (!bookObject.enabled && Input.GetKeyDown(KeyCode.K))
             {
                 OpenBook();
             }

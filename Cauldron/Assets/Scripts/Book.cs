@@ -8,7 +8,7 @@ namespace CauldronCodebase
 {
     public abstract class Book : MonoBehaviour
     {
-        [SerializeField] public GameObject bookObject;
+        [SerializeField] public Canvas bookObject;
         [SerializeField] protected RectTransform mainPanel;
         [SerializeField] protected bool keyboardControl;
         [SerializeField] protected bool buttonControl;
@@ -26,15 +26,15 @@ namespace CauldronCodebase
         public int TotalPages => totalPages;
         
         public event Action OnClose;
-
+/*
         void OnValidate()
         {
-            if (bookObject is null)
+            if (bookObject == null)
             {
-                bookObject = gameObject;
+                bookObject;
             }
         }
-
+*/
         protected virtual void Awake()
         {
             //cache initial position
@@ -42,7 +42,7 @@ namespace CauldronCodebase
             //cache offscreen position
             offScreenYPos = 1080+initialYPos;
             
-            bookObject.SetActive(false);
+            bookObject.enabled = false;
             UpdateBookButtons();
         }
 
@@ -69,7 +69,7 @@ namespace CauldronCodebase
         
         public void ToggleBook()
         {
-            if (bookObject.activeInHierarchy)
+            if (bookObject.enabled)
             {
                 CloseBook();
             }
@@ -82,7 +82,7 @@ namespace CauldronCodebase
         public virtual void OpenBook()
         {
             PlayOpenCloseSound();
-            bookObject.SetActive(true);
+            bookObject.enabled = true;
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
@@ -111,13 +111,13 @@ namespace CauldronCodebase
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>
                 {
-                    bookObject.SetActive(false);
+                    bookObject.enabled = false;
                 });
         }
         
         public virtual void NextPage()
         {
-            if (!bookObject.activeInHierarchy) return;
+            if (!bookObject.enabled) return;
             if (currentPage + 1 >= totalPages) return;
             currentPage++;
             UpdateBookButtons();
@@ -127,7 +127,7 @@ namespace CauldronCodebase
 
         public virtual void PrevPage()
         {
-            if (!bookObject.activeInHierarchy) return;
+            if (!bookObject.enabled) return;
             if (currentPage <= 0) return;
             currentPage--;
             UpdateBookButtons();

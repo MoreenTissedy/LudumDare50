@@ -11,12 +11,13 @@ namespace CauldronCodebase
     {   
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntry[] recipeEntries;
+        [SerializeField] protected RecipeBookEntry[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
         public List<Recipe> magicalRecipes;
         public List<Recipe> herbalRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
-        [SerializeField] private GameObject recipesDisplay, attemptsDisplay;
+        [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay;
         public event Action<Recipe> OnSelectRecipe;
 
 
@@ -24,7 +25,7 @@ namespace CauldronCodebase
         private TooltipManager tooltipManager;
         [Inject] private RecipeProvider recipeProvider;
 
-        private Mode currentMode = Mode.Magical;
+        private Mode currentMode;
         public enum Mode
         {
             Magical,
@@ -37,12 +38,18 @@ namespace CauldronCodebase
         {
             attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
             recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            foodEntries = foodDisplay.GetComponentsInChildren<RecipeBookEntry>();
         }
 
         private void Start()
         {
-            ChangeMode(Mode.Magical);
             LoadRecipes();
+        }
+
+        public override void OpenBook()
+        {
+            base.OpenBook();
+            ChangeMode(Mode.Magical);
         }
 
         private void LoadRecipes()
@@ -100,24 +107,28 @@ namespace CauldronCodebase
 
         public void ChangeMode(Mode newMode)
         {
-            if (currentMode != newMode)
+            switch (newMode)
             {
-                if (newMode == Mode.Attempts)
-                {
-                    recipesDisplay.SetActive(false);
-                    attemptsDisplay.SetActive(true);
-                }
-                else if (currentMode == Mode.Attempts)
-                {
+                case Mode.Magical:
+                    CloseAllPages();
                     recipesDisplay.SetActive(true);
-                    attemptsDisplay.SetActive(false);
-                }
-                currentMode = newMode;
-                currentPage = 0;
-                InitTotalPages();
-                UpdatePage();
-                UpdateBookButtons();
+                    break;
+                case Mode.Herbal:
+                    CloseAllPages();
+                    foodDisplay.SetActive(true);
+                    break;
+                case Mode.Attempts:
+                    CloseAllPages();
+                    attemptsDisplay.SetActive(true);
+                    break;
             }
+            
+            currentMode = newMode;
+            currentPage = 0;
+            InitTotalPages();
+            UpdatePage();
+            UpdateBookButtons();
+            
         }
 
         protected override void Update()
@@ -136,7 +147,7 @@ namespace CauldronCodebase
                     break;
                 case Mode.Herbal:
                     if (herbalRecipes != null)
-                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / recipeEntries.Length);
+                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / foodEntries.Length);
                     else totalPages = 1;
                     break;
                 case Mode.Attempts:
@@ -152,24 +163,35 @@ namespace CauldronCodebase
         {
             void DisplaySet(List<Recipe> set)
             {
+                RecipeBookEntry[] entries = new RecipeBookEntry[] { };
+                switch (currentMode)
+                {
+                    case Mode.Magical:
+                        entries = recipeEntries;
+                        break;
+                    case Mode.Herbal:
+                        entries = foodEntries;
+                        break;
+                }
+                
                 if (set is null || set.Count == 0)
                 {
-                    foreach (var entry in recipeEntries)
+                    foreach (var entry in entries)
                     {
                         entry.Clear();
                     }
                     return;   
                 }
-                for (int i = 0; i < recipeEntries.Length; i++)
+                for (int i = 0; i < entries.Length; i++)
                 {
-                    int num = currentPage * recipeEntries.Length + i;
+                    int num = currentPage * entries.Length + i;
                     if (num < set.Count)
                     {
-                        recipeEntries[i].Display(set[num]);
+                        entries[i].Display(set[num]);
                     }
                     else
                     {
-                        recipeEntries[i].Clear();
+                        entries[i].Clear();
                     }
                 }
             }
@@ -210,6 +232,12 @@ namespace CauldronCodebase
             }
         }
 
+        private void CloseAllPages()
+        {
+            recipesDisplay.SetActive(false);
+            foodDisplay.SetActive(false);
+            attemptsDisplay.SetActive(false);
+        }
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             CloseBook();

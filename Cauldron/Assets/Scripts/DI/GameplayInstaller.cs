@@ -21,6 +21,8 @@ namespace CauldronCodebase
 
         public override void InstallBindings()
         {
+            //Lots of things in here, I think it's time to make multiple installers))
+            //One for data providers, one for UI, one for gameplay
             Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();

@@ -50,6 +50,7 @@ namespace CauldronCodebase
                 return;
             }
 
+            //The checker should have this functionality, not gameData
             gameData.CheckStatusesThreshold();
         }
     }

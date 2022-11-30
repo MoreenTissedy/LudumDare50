@@ -23,33 +23,21 @@ namespace CauldronCodebase
         {
             Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             
-            //these are SOs
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
             Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle();
-            //this can be made from a prefab
             Container.Bind<GameManager>().FromInstance(gameLoop).AsSingle();
-            //these are scriptable objects
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
-            //
-            
-            
-            
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
-            //
-            
-            
-            //this can be made from a prefab
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
-            //these are scene objects
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
-            //this one can be made a prefab together with all visitors
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
-            //this one is a C# script
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
 
+            //[Inject] attribute invokes Construct() for us, just delete this line
             stateMachine.Construct(encounterDeck,settings,visitorManager,theCauldron,nightEvents);
+            
             nightEvents.Init();
             endings.Init();
         }

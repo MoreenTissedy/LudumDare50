@@ -53,6 +53,8 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
+            //status checker will end game and then state machine will switch one more time = bug)))
+            //the checker should not switch the machine, it should do the calculation and return the result (i.e. ending or None), then we shall switch here according to that result 
             _statusChecker.Run();
             Debug.Log("new day "+gameData.currentDay);
             

@@ -6,13 +6,17 @@ using Zenject;
 
 namespace CauldronCodebase.GameStates
 {
+    //Why?
     [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
+    //Let's rename it to GameStateMachine or smth
     public class StateMachine : MonoBehaviour
     {
+        //We can inject those through Zenject as well
         [SerializeField] private NightPanel _nightPanel;
         [SerializeField] private EndingScreen _endingScreen;
-        
         [SerializeField] private EncounterDeckBase _cardDeck;
+        
+        //Please don't use underscore for privates as I don't use underscore in this project^)
         private MainSettings _gameSettings;
         private NightEventProvider _nightEvents;
         public GameData GameData;
@@ -39,8 +43,15 @@ namespace CauldronCodebase.GameStates
         {
             _gameSettings = settings;
             _nightEvents = nightEvents;
+            //Create it in Zenject^)
             GameData = new GameData(settings.statusBars, deck,nightEvents);
 
+            //We can use Zenject to inject all necessary dependencies into states. 
+            //One way to do it is to use a state factory.
+            //We bind it in Inject as Container.Bind<StateFactory>().AsSingle(),
+            //it calls the constructor and injects everything in it automatically,
+            //then we use it as visitorWaitingState = factory.VisitorWaitingState()  
+            //This class would be super clean^)
             _visitorWaitingState = new VisitorWaitingState(settings, GameData, this);
             _visitorState = new VisitorState(deck, settings, GameData, visitorManager, cauldron, this);
             _nightState = new NightState(GameData, _gameSettings, _nightEvents, _cardDeck, _nightPanel, this);
@@ -55,27 +66,9 @@ namespace CauldronCodebase.GameStates
         private void Start()
         {
             Debug.Log("StateMachine Start");
+            //Move to constructor, or better yet to GameplayInstaller if the deck is injectable (please bind it by interface)
             _cardDeck.Init(GameData);
-            CatTutorial catTutorial = GetComponent<CatTutorial>();
-            if (catTutorial is null)
-            {
-                _currentGameState.Enter();
-            }
-            else 
-            {
-                catTutorial.Start();
-                catTutorial.OnEnd += StartGame;
-            }
-        }
-
-        private void StartGame()
-        {
-            CatTutorial catTutorial = GetComponent<CatTutorial>();
-            if (!(catTutorial is null))
-            {
-                catTutorial.OnEnd -= StartGame;
-            }
-
+            //I removed cat tutorial it's not used anymore)
             _currentGameState.Enter();
         }
 
@@ -98,6 +91,10 @@ namespace CauldronCodebase.GameStates
             SwitchState(_endGameState, false);
         }
         
+        //This is used only in visitor waiting state, let's move this delay there
+        //The state class can't use a coroutine but the delay can be made with await or through a stopwatch
+        //Imagine we decide that the witch can practice between visitors and invite a visitor (i.e. end visitor waiting state) with a user input.
+        //We can easily substitute the delay in that state.
         private IEnumerator WaitBeforeSwitch()
         {
             yield return new WaitForSeconds(_gameSettings.gameplay.villagerDelay);

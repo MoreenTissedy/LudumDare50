@@ -15,11 +15,11 @@ namespace CauldronCodebase
             if (Input.GetKeyDown(KeyCode.Escape))
             {
 
-                if (recipeBook.bookObject.activeInHierarchy)
+                if (recipeBook.bookObject.enabled)
                 {
                     recipeBook.CloseBook();
                 }
-                else if (endingPanel.bookObject.activeInHierarchy)
+                else if (endingPanel.bookObject.enabled)
                 {
                     endingPanel.CloseBook();
                 }

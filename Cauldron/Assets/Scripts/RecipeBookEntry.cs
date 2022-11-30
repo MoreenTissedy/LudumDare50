@@ -31,7 +31,9 @@ namespace CauldronCodebase
             ingredient1.enabled = true;
             ingredient2.enabled = true;
             ingredient3.enabled = true;
+            Debug.LogWarning(recipe.potionName);
             fullName.text = recipe.potionName;
+            Debug.LogWarning(recipe.name + " text view " + fullName.text);
             description.text = recipe.description;
             image.sprite = recipe.image;
     //        image.color = recipe.color;

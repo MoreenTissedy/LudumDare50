@@ -9,9 +9,6 @@ namespace CauldronCodebase
 {
     public class TimeBar : MonoBehaviour
     {
-        [HideInInspector] public VisitorState visitorState;
-        [HideInInspector] public NightState nightState;
-
         public Text dayNumber;
         public RectTransform timeBar;
         public Sprite fullCycleSample;
@@ -21,7 +18,19 @@ namespace CauldronCodebase
         [Localize]
         public string dayText = "День";
 
-        [Inject] private MainSettings settings;
+        private MainSettings settings;
+        private GameStateMachine gameStateMachine;
+        private GameData gameData;
+
+        [Inject]
+        private void Construct(MainSettings settings,
+                               GameStateMachine gameStateMachine,
+                               GameData gameData)
+        {
+            this.settings = settings;
+            this.gameStateMachine = gameStateMachine;
+            this.gameData = gameData;
+        }
 
         private void Awake()
         {
@@ -33,31 +42,34 @@ namespace CauldronCodebase
         private void Start()
         {
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
-            nightState.NewDay += OnNewDay;
-            visitorState.NewEncounter += OnNewVisitor;
+
+            gameStateMachine.OnChangeState += OnNewDay;
+            gameStateMachine.OnChangeState += OnNewVisitor;
         }
 
         private void OnDestroy()
         {
-            nightState.NewDay -= OnNewDay;
-            visitorState.NewEncounter -= OnNewVisitor;
+            gameStateMachine.OnChangeState -= OnNewDay;
+            gameStateMachine.OnChangeState -= OnNewVisitor;
         }
 
-        private void OnNewVisitor(int arg1, int arg2)
+        private void OnNewVisitor(GameStateMachine.GamePhase phase)
         {
+            if (phase != GameStateMachine.GamePhase.Visitor) return;
             float newStep = step;
             //longer shift after night
-            if (arg1 == 0)
+            if (gameData.cardsDrawnToday == 0)
                 newStep = step * 2;
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x-newStep, speed);
         }
 
-        private void OnNewDay(int obj)
+        private void OnNewDay(GameStateMachine.GamePhase phase)
         {
+            if (phase != GameStateMachine.GamePhase.Night) return;
             //longer shift before night
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x - step*2, speed).
                 SetEase(Ease.InOutSine).
-                OnComplete(() => NewDayReset(obj));
+                OnComplete(() => NewDayReset(gameData.currentDay + 1));
         }
 
         void NewDayReset(int day)

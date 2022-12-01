@@ -12,9 +12,6 @@ namespace CauldronCodebase.GameStates
         private Cauldron _cauldron;
         private GameStateMachine _stateMachine;
         private NightEventProvider nightEvents;
-        
-
-        public event Action<int, int> NewEncounter;
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
@@ -22,19 +19,16 @@ namespace CauldronCodebase.GameStates
                             VisitorManager visitorManager,
                             Cauldron cauldron,
                             GameStateMachine stateMachine,
-                            NightEventProvider nightEventProvider,
-                            TimeBar timeBar)
+                            NightEventProvider nightEventProvider)
         {
             _cardDeck = deck;
             _mainSettings = settings;
             this.gameData = gameData;
             _visitorManager = visitorManager;
-            _visitorManager.VisitorLeft += Exit;
+            _visitorManager.VisitorLeft += VisitorLeft;
             _cauldron = cauldron;
-            cauldron.visitorState = this;
             _stateMachine = stateMachine;
             nightEvents = nightEventProvider;
-            timeBar.visitorState = this;
         }
         
         public override void Enter()
@@ -47,33 +41,36 @@ namespace CauldronCodebase.GameStates
                 _stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
                 return;
             }
-            NewEncounter?.Invoke(gameData.cardsDrawnToday, _mainSettings.gameplay.cardsPerDay);
             
-            currentCard.Init(gameData, _cardDeck, nightEvents);
-            gameData.cardsDrawnToday ++;
+            currentCard.Init(gameData, _cardDeck, nightEvents);           
             _visitorManager.Enter(currentCard);
             _cauldron.PotionBrewed += EndEncounter;
         }
         
-        private void Exit()
+        public override void Exit()
         {
-            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+            gameData.cardsDrawnToday++;
+            _cauldron.PotionBrewed -= EndEncounter;
+            _visitorManager.Exit();           
         }
 
         private void EndEncounter(Potions potion)
         {
             Debug.Log("end encounter with "+potion);
-            _cauldron.PotionBrewed -= EndEncounter;
-            _visitorManager.Exit();
-            
+                                  
             gameData.potionsTotal.Add(potion);
 
             if (!gameData.currentCard.EndEncounter(potion, _mainSettings))
             {
                 gameData.wrongPotionsCount++;
             }
-            
-            Exit();
+
+            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+        }
+
+        private void VisitorLeft()
+        {
+            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
     }
 }

@@ -23,7 +23,6 @@ namespace CauldronCodebase
         [Header("UI")]
         [SerializeField] private EndingScreen endingScreen;
         [SerializeField] private NightPanel nightPanel;
-        [SerializeField] private TimeBar timeBar;
 
         private GameData gameData;
 
@@ -53,7 +52,6 @@ namespace CauldronCodebase
         {
             Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
-            Container.Bind<TimeBar>().FromInstance(timeBar).AsSingle();
         }
 
         private void BindGameplay()

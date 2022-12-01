@@ -16,9 +16,8 @@ namespace CauldronCodebase
 {
     public class NightPanel : Book, IPointerClickHandler
     {
-        [HideInInspector] public NightState NightState;
-        [Inject] 
-        private MainSettings settings;
+        [Inject] private MainSettings settings;
+        [Inject] private GameStateMachine gameStateMachine;
 
         public NightPanelCard eventCard;
         public TMP_Text flavour;
@@ -235,7 +234,7 @@ namespace CauldronCodebase
                 CloseBook();
                 if (!test)
                 {
-                    NightState.Exit();
+                    gameStateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
                 }   
             }
         }

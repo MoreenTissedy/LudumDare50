@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -21,6 +22,8 @@ namespace CauldronCodebase.GameStates
 
         private BaseGameState _currentGameState;
 
+        public event Action<GamePhase> OnChangeState;
+
 
         [Inject]
         public void Construct(StateFactory factory)
@@ -40,10 +43,12 @@ namespace CauldronCodebase.GameStates
  
         public void SwitchState(GamePhase phase)
         {
+            _currentGameState.Exit();
             currentGamePhase = phase;
             _currentGameState = gameStates[phase];
-
             _currentGameState.Enter();
+            OnChangeState?.Invoke(phase);
+
         }
     }
 }

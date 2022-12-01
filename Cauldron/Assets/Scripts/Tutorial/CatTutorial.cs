@@ -1,3 +1,4 @@
+using CauldronCodebase.GameStates;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -153,7 +154,7 @@ namespace CauldronCodebase
 
         public void ClearPot()
         {
-            pot.Clear();
+            pot.Clear(GameStateMachine.GamePhase.Visitor);
         }
     }
 }

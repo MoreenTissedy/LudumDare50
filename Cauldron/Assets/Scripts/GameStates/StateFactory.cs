@@ -16,7 +16,6 @@ namespace CauldronCodebase.GameStates
         EndingScreen endingScreen;
         GameData gameData;
         GameStateMachine gameStateMachine;
-        TimeBar timeBar;
 
         [Inject]
         public StateFactory(EncounterDeckBase deck,
@@ -27,8 +26,7 @@ namespace CauldronCodebase.GameStates
                             NightPanel nightPanel,
                             EndingScreen endingScreen,
                             GameData gameData,
-                            GameStateMachine gameStateMachine,
-                            TimeBar timeBar)
+                            GameStateMachine gameStateMachine)
         {
             this.deck = deck;
             this.settings = settings;
@@ -39,12 +37,11 @@ namespace CauldronCodebase.GameStates
             this.endingScreen = endingScreen;
             this.gameData = gameData;
             this.gameStateMachine = gameStateMachine;
-            this.timeBar = timeBar;
         }
 
         public VisitorState CreateVisitorState()
         {
-            return new VisitorState(deck, settings, gameData, visitorManager, cauldron, gameStateMachine, nightEvents, timeBar);
+            return new VisitorState(deck, settings, gameData, visitorManager, cauldron, gameStateMachine, nightEvents);
         }
 
         public VisitorWaitingState CreateVisitorWaitingState()
@@ -54,7 +51,7 @@ namespace CauldronCodebase.GameStates
 
         public NightState CreateNightState()
         {
-            return new NightState(gameData, settings, nightEvents, deck, nightPanel, gameStateMachine, timeBar);
+            return new NightState(gameData, settings, nightEvents, deck, nightPanel, gameStateMachine);
         }
 
         public EndGameState CreateEndGameState()

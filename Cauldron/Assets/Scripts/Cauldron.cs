@@ -13,8 +13,6 @@ namespace CauldronCodebase
 {
     public class Cauldron : MonoBehaviour
     {
-        [HideInInspector] public VisitorState visitorState;
-
         [Inject]
         TooltipManager tooltipManager;
         
@@ -61,7 +59,7 @@ namespace CauldronCodebase
         
         private void Awake()
         {
-            visitorState.NewEncounter += (i, i1) => Clear();
+            gameStateMachine.OnChangeState += Clear;
             fireScript = GetComponentInChildren<Fire>();
             if (fireScript is null)
                 fireFound = false;
@@ -79,6 +77,11 @@ namespace CauldronCodebase
             splash.Stop();
             audios = GetComponent<AudioSource>();
             potionPopup.OnDecline += () => PotionDeclined?.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            gameStateMachine.OnChangeState -= Clear;
         }
 
         private void OnValidate()
@@ -146,8 +149,10 @@ namespace CauldronCodebase
             }
         }
 
-        public void Clear()
+        public void Clear(GameStateMachine.GamePhase phase)
         {
+            if (phase != GameStateMachine.GamePhase.Visitor) return;
+
             mix.Clear();
             mixBonusTotal = 0;
             mixScript.RandomKey();

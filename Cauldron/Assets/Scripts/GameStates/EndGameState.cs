@@ -21,6 +21,11 @@ namespace CauldronCodebase.GameStates
             _endingScreen.OnClose += ReloadGame;
         }
 
+        public override void Exit()
+        {
+
+        }
+
         private void ReloadGame()
         {
             _endingScreen.OnClose -= ReloadGame;

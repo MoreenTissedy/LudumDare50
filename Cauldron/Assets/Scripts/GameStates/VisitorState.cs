@@ -10,7 +10,8 @@ namespace CauldronCodebase.GameStates
         private GameData gameData;
         private VisitorManager _visitorManager;
         private Cauldron _cauldron;
-        private StateMachine _stateMachine;
+        private GameStateMachine _stateMachine;
+        private NightEventProvider nightEvents;
         
 
         public event Action<int, int> NewEncounter;
@@ -20,7 +21,9 @@ namespace CauldronCodebase.GameStates
                             GameData gameData,
                             VisitorManager visitorManager,
                             Cauldron cauldron,
-                            StateMachine stateMachine)
+                            GameStateMachine stateMachine,
+                            NightEventProvider nightEventProvider,
+                            TimeBar timeBar)
         {
             _cardDeck = deck;
             _mainSettings = settings;
@@ -28,7 +31,10 @@ namespace CauldronCodebase.GameStates
             _visitorManager = visitorManager;
             _visitorManager.VisitorLeft += Exit;
             _cauldron = cauldron;
+            cauldron.visitorState = this;
             _stateMachine = stateMachine;
+            nightEvents = nightEventProvider;
+            timeBar.visitorState = this;
         }
         
         public override void Enter()
@@ -38,20 +44,20 @@ namespace CauldronCodebase.GameStates
             //in case we run out of cards
             if (gameData.currentCard is null)
             {
-                _stateMachine.SwitchState(_stateMachine.EndGameState, false);
+                _stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
                 return;
             }
             NewEncounter?.Invoke(gameData.cardsDrawnToday, _mainSettings.gameplay.cardsPerDay);
             
-            currentCard.Init(gameData, _cardDeck, _stateMachine.NightEvents);
+            currentCard.Init(gameData, _cardDeck, nightEvents);
             gameData.cardsDrawnToday ++;
             _visitorManager.Enter(currentCard);
             _cauldron.PotionBrewed += EndEncounter;
         }
         
-        public override void Exit()
+        private void Exit()
         {
-            _stateMachine.SwitchState(_stateMachine.VisitorWaitingState, false);
+            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
         private void EndEncounter(Potions potion)

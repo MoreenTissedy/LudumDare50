@@ -13,10 +13,10 @@ namespace CauldronCodebase
         private MainSettings settings;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, StateMachine stateMachine)
+        private void Construct(MainSettings mainSettings, GameData data)
         {
             settings = mainSettings;
-            gameData = stateMachine.GameData;
+            gameData = data;
             text = GetComponent<Text>();
             UpdateMoney();
             gameData.StatusChanged += UpdateMoney;

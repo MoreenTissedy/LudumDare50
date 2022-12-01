@@ -6,42 +6,70 @@ namespace CauldronCodebase
 {
     public class GameplayInstaller : MonoInstaller
     {
+        [Header("Data Providers")]
         [SerializeField] private MainSettings settings;
-        [SerializeField] private GameManager gameLoop;
         [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
+        [SerializeField] private EncounterDeckBase encounterDeck;
+        [SerializeField] private IngredientsData ingredientsData;
+        [SerializeField] private EndingsProvider endings;
+
+        [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
-        [SerializeField] private IngredientsData ingredientsData;
-        [SerializeField] private EndingsProvider endings;
-        [SerializeField] private StateMachine stateMachine;
-        [SerializeField] private EncounterDeckBase encounterDeck;
+        [SerializeField] private GameStateMachine stateMachine;
 
+        [Header("UI")]
+        [SerializeField] private EndingScreen endingScreen;
+        [SerializeField] private NightPanel nightPanel;
+        [SerializeField] private TimeBar timeBar;
+
+        private GameData gameData;
 
         public override void InstallBindings()
         {
-            //Lots of things in here, I think it's time to make multiple installers))
-            //One for data providers, one for UI, one for gameplay
-            Container.Bind<StateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
-            
+            BindDataProviders();
+            BindGameplay();
+            BindUI();
+            Initialize();
+        }
+
+        private void BindDataProviders()
+        {
+            gameData = new GameData(settings.statusBars, encounterDeck, nightEvents);
+            Container.Bind<GameData>().FromInstance(gameData).AsSingle();
+
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
             Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle();
-            Container.Bind<GameManager>().FromInstance(gameLoop).AsSingle();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
+            Container.Bind<StateFactory>().AsSingle();
+        }
+
+        private void BindUI()
+        {
+            Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
+            Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
+            Container.Bind<TimeBar>().FromInstance(timeBar).AsSingle();
+        }
+
+        private void BindGameplay()
+        {
+            Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
+        }
 
-            //[Inject] attribute invokes Construct() for us, just delete this line
-            stateMachine.Construct(encounterDeck,settings,visitorManager,theCauldron,nightEvents);
-            
+        private void Initialize()
+        {
             nightEvents.Init();
             endings.Init();
+            encounterDeck.Init(gameData);
         }
     }
 }

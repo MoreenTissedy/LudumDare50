@@ -6,12 +6,15 @@ using CauldronCodebase.GameStates;
 using UnityEngine.EventSystems;
 using Zenject;
 using Random = UnityEngine.Random;
+using UnityEditorInternal;
 
 
 namespace CauldronCodebase
 {
     public class Cauldron : MonoBehaviour
     {
+        [HideInInspector] public VisitorState visitorState;
+
         [Inject]
         TooltipManager tooltipManager;
         
@@ -44,20 +47,21 @@ namespace CauldronCodebase
 
         private RecipeProvider _recipeProvider;
         private RecipeBook recipeBook;
-        //private GameManager gm;
 
         private Potions currentPotionBrewed;
+        private GameStateMachine gameStateMachine;
 
         [Inject]
-        public void Construct(StateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book)
+        public void Construct(GameStateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book)
         {
             _recipeProvider = recipeProvider;
             recipeBook = book;
-            stateMachine.VisitorState.NewEncounter += (i, i1) => Clear();
+            gameStateMachine = stateMachine;            
         }
         
         private void Awake()
         {
+            visitorState.NewEncounter += (i, i1) => Clear();
             fireScript = GetComponentInChildren<Fire>();
             if (fireScript is null)
                 fireFound = false;

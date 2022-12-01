@@ -13,9 +13,9 @@ namespace CauldronCodebase
         private GameData gameData;
 
         [Inject]
-        private void Construct(StateMachine stateMachine)
+        private void Construct(GameData data)
         {
-            gameData = stateMachine.GameData;
+            gameData = data;
         }
         private void Start()
         {

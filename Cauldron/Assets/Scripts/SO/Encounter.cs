@@ -11,8 +11,6 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
-        private GameManager gm;
-
         private GameData gameData;
         private EncounterDeckBase _encounterDeck;
         private NightEventProvider _nightEventProvider;

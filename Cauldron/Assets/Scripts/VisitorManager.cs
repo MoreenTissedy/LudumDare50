@@ -52,7 +52,7 @@ namespace CauldronCodebase
         public void Enter(Encounter card)
         {
             ShowText(card);
-            Debug.Log("enter card"+card.name);
+            //Debug.Log("enter card"+card.name);
             Villager villager = card.actualVillager;
             attemptsLeft = villager.patience;
             attemptsTimerStep = 1f / attemptsLeft;

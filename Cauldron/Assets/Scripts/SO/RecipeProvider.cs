@@ -35,7 +35,7 @@ namespace CauldronCodebase
                     if (recipe != null)
                     {
                         yield return recipe;
-                        Debug.Log("recipe loaded: "+recipe.potionName);
+                        //Debug.Log("recipe loaded: "+recipe.potionName);
                     }
                     else
                     {

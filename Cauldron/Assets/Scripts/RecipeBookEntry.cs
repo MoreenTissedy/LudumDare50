@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -31,12 +29,9 @@ namespace CauldronCodebase
             ingredient1.enabled = true;
             ingredient2.enabled = true;
             ingredient3.enabled = true;
-            Debug.LogWarning(recipe.potionName);
             fullName.text = recipe.potionName;
-            Debug.LogWarning(recipe.name + " text view " + fullName.text);
             description.text = recipe.description;
             image.sprite = recipe.image;
-    //        image.color = recipe.color;
             ingredient1.sprite = ingredientsData.Get(recipe.ingredient1).image;
             ingredient2.sprite = ingredientsData.Get(recipe.ingredient2).image;
             ingredient3.sprite = ingredientsData.Get(recipe.ingredient3).image;

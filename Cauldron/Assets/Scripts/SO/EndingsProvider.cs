@@ -48,7 +48,7 @@ namespace CauldronCodebase
 
             foreach (var unlock in Endings.Keys)
             {
-                Debug.Log($"ending {unlock} unlocked: {Unlocked(unlock)}");
+                //Debug.Log($"ending {unlock} unlocked: {Unlocked(unlock)}");
             }
         }
 

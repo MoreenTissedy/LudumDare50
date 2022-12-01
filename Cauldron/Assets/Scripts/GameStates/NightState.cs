@@ -11,7 +11,7 @@ namespace CauldronCodebase.GameStates
         private NightEventProvider _nightEvents;
         private EncounterDeckBase _cardDeck;
         private NightPanel _nightPanel;
-        private StateMachine _stateMachine;
+        private GameStateMachine _stateMachine;
 
         private StatusChecker _statusChecker;
 
@@ -21,24 +21,26 @@ namespace CauldronCodebase.GameStates
                           NightEventProvider nightEvents,
                           EncounterDeckBase cardDeck,
                           NightPanel nightPanel,
-                          StateMachine stateMachine)
+                          GameStateMachine stateMachine,
+                          TimeBar timeBar)
         {
             this.gameData = gameData;
             _settings = settings;
             _nightEvents = nightEvents;
             _cardDeck = cardDeck;
             _nightPanel = nightPanel;
+            _nightPanel.NightState = this;
             _stateMachine = stateMachine;
+            timeBar.nightState = this;
 
-            _statusChecker = new StatusChecker(settings, stateMachine);
+            _statusChecker = new StatusChecker(settings, stateMachine, gameData);
         }
         
         public override void Enter()
         {
             NewDay?.Invoke(gameData.currentDay + 1);
             
-            var events = _nightEvents.GetEvents(gameData);
-            _nightPanel.NightState = this;
+            var events = _nightEvents.GetEvents(gameData);            
             _nightPanel.OpenBookWithEvents(events);
             foreach (NightEvent nightEvent in events)
             {
@@ -51,15 +53,19 @@ namespace CauldronCodebase.GameStates
             gameData.cardsDrawnToday = 0;
         }
 
-        public override void Exit()
-        {
-            //status checker will end game and then state machine will switch one more time = bug)))
-            //the checker should not switch the machine, it should do the calculation and return the result (i.e. ending or None), then we shall switch here according to that result 
-            _statusChecker.Run();
-            Debug.Log("new day "+gameData.currentDay);
-            
-            _stateMachine.SwitchState(_stateMachine.VisitorWaitingState, false);
+        public void Exit()
+        {            
+            var check = _statusChecker.Run();
+            if(check == EndingsProvider.Unlocks.None)
+            {
+                _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+                Debug.Log("new day " + gameData.currentDay);
+            }
+            else
+            {
+                _stateMachine.currentEnding = check;
+                _stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
+            }         
         }
-
     }
 }

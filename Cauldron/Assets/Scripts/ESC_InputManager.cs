@@ -3,11 +3,18 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class GameManager : MonoBehaviour
+    public class ESC_InputManager : MonoBehaviour
     {
         //TODO: reactive UI
-        public EndingScreen endingPanel;
-        [Inject] private RecipeBook recipeBook;
+        private EndingScreen endingPanel;
+        private RecipeBook recipeBook;
+
+        [Inject]
+        private void Construct(EndingScreen endingScreen, RecipeBook recipe)
+        {
+            endingPanel = endingScreen;
+            recipeBook = recipe;
+        }
         
         private void Update()
         {

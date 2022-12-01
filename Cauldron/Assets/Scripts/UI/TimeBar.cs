@@ -9,6 +9,9 @@ namespace CauldronCodebase
 {
     public class TimeBar : MonoBehaviour
     {
+        [HideInInspector] public VisitorState visitorState;
+        [HideInInspector] public NightState nightState;
+
         public Text dayNumber;
         public RectTransform timeBar;
         public Sprite fullCycleSample;
@@ -17,11 +20,6 @@ namespace CauldronCodebase
         public float speed = 2;
         [Localize]
         public string dayText = "День";
-
-        [Inject]
-        private GameManager gm;
-
-        [Inject] private StateMachine _stateMachine;
 
         [Inject] private MainSettings settings;
 
@@ -35,14 +33,14 @@ namespace CauldronCodebase
         private void Start()
         {
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
-            _stateMachine.NightState.NewDay += OnNewDay;
-            _stateMachine.VisitorState.NewEncounter += OnNewVisitor;
+            nightState.NewDay += OnNewDay;
+            visitorState.NewEncounter += OnNewVisitor;
         }
 
         private void OnDestroy()
         {
-            _stateMachine.NightState.NewDay -= OnNewDay;
-            _stateMachine.VisitorState.NewEncounter -= OnNewVisitor;
+            nightState.NewDay -= OnNewDay;
+            visitorState.NewEncounter -= OnNewVisitor;
         }
 
         private void OnNewVisitor(int arg1, int arg2)

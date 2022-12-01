@@ -1,12 +1,16 @@
-﻿namespace CauldronCodebase.GameStates
+﻿using System;
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace CauldronCodebase.GameStates
 {
     public class VisitorWaitingState : BaseGameState
     {
         private MainSettings _settings;
         private GameData gameData;
-        private StateMachine _stateMachine;
+        private GameStateMachine _stateMachine;
 
-        public VisitorWaitingState(MainSettings settings, GameData gameData, StateMachine stateMachine)
+        public VisitorWaitingState(MainSettings settings, GameData gameData, GameStateMachine stateMachine)
         {
             _settings = settings;
             this.gameData = gameData;
@@ -15,19 +19,20 @@
         
         public override void Enter()
         {
-            Exit();
+            ExitStateWithDelay();
         }
 
-        public override void Exit()
+        private async Task ExitStateWithDelay()
         {
+            await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
+
             if (gameData.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
             {
-                _stateMachine.SwitchState(_stateMachine.NightState, true);
-                
+                _stateMachine.SwitchState(GameStateMachine.GamePhase.Night);
             }
             else
             {
-                _stateMachine.SwitchState(_stateMachine.VisitorState, true);
+                _stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
             }
         }
     }

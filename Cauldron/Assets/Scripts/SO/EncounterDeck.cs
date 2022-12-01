@@ -27,7 +27,6 @@ namespace CauldronCodebase
             }
 
             cardPool = new List<Encounter>(15);
-            //cardPool.AddRange(pool1);
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)

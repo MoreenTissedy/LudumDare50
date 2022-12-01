@@ -28,9 +28,9 @@ namespace CauldronCodebase
         private int currentValue = Int32.MinValue;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, StateMachine stateMachine)
+        private void Construct(MainSettings mainSettings, GameData data)
         { 
-           gameData = stateMachine.GameData;
+           gameData = data;
            settings = mainSettings;
            tooltip = GetComponentInChildren<Text>();
            if (tooltip != null)

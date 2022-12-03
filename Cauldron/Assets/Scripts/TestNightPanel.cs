@@ -19,7 +19,7 @@ namespace CauldronCodebase
         {
             var newList = new NightEvent[3];
             events.CopyTo(newList, 0);
-            panel.OpenBookWithEvents(newList, true);
+            panel.OpenBookWithEvents(newList);
         }
     }
 }

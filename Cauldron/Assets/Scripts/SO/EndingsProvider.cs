@@ -19,8 +19,6 @@ namespace CauldronCodebase
         }
         [Tooltip("High money, high fame, high fear, low fame, low fear")]
         [SerializeField] private Ending[] endings;
-        [SerializeField] private int threshold = 70;
-        [SerializeField] private int lowThreshold = 20;
 
         private Unlocks unlocked;
         private const string _KEY_ = "Endings";

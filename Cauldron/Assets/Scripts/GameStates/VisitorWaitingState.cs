@@ -24,10 +24,10 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
-            
+            //It's not good to have empty implementations, but we'll leave it as is for now
         }
 
-        private async Task ExitStateWithDelay()
+        private async void ExitStateWithDelay()
         {
             await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
 

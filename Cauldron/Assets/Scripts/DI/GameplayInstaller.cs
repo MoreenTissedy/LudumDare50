@@ -6,6 +6,8 @@ namespace CauldronCodebase
 {
     public class GameplayInstaller : MonoInstaller
     {
+        //TODO: separate installers
+        //That looks nicer but it's not exactly what I meant)
         [Header("Data Providers")]
         [SerializeField] private MainSettings settings;
         [SerializeField] private RecipeProvider recipeProvider;
@@ -36,16 +38,12 @@ namespace CauldronCodebase
 
         private void BindDataProviders()
         {
-            gameData = new GameData(settings.statusBars, encounterDeck, nightEvents);
-            Container.Bind<GameData>().FromInstance(gameData).AsSingle();
-
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
-            Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle();
+            Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
-            Container.Bind<StateFactory>().AsSingle();
         }
 
         private void BindUI()
@@ -57,6 +55,8 @@ namespace CauldronCodebase
         private void BindGameplay()
         {
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
+            Container.Bind<StateFactory>().AsTransient();
+            Container.Bind<GameData>().AsSingle().NonLazy();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
@@ -65,9 +65,7 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
-            nightEvents.Init();
             endings.Init();
-            encounterDeck.Init(gameData);
         }
     }
 }

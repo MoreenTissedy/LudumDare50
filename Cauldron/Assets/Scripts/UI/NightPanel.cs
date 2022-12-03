@@ -1,13 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using CauldronCodebase.GameStates;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Zenject;
 using TMPro;
 using Random = UnityEngine.Random;
@@ -16,8 +14,8 @@ namespace CauldronCodebase
 {
     public class NightPanel : Book, IPointerClickHandler
     {
-        [Inject] private MainSettings settings;
-        [Inject] private GameStateMachine gameStateMachine;
+        private MainSettings settings;
+        private GameStateMachine gameStateMachine;
 
         public NightPanelCard eventCard;
         public TMP_Text flavour;
@@ -47,7 +45,8 @@ namespace CauldronCodebase
         private Vector3 cardInitialPos, newCardPosition;
         private int eventCardSiblingIndex;
         private bool firstCardDealt;
-        private bool test;
+
+        private EventResolver resolver;
 
         protected override void Awake()
         {
@@ -63,6 +62,15 @@ namespace CauldronCodebase
             eventCardSiblingIndex = eventCard.transform.GetSiblingIndex();
             eventCard.gameObject.SetActive(false);
             base.Awake();
+        }
+
+        [Inject]
+        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameData gameData)
+        {
+            this.settings = settings;
+            this.gameStateMachine = stateMachine;
+            
+            resolver = new EventResolver(settings, gameData);
         }
 
         private void ShowDefault()
@@ -89,9 +97,8 @@ namespace CauldronCodebase
             fame.text = "—";
         }
 
-        public void OpenBookWithEvents(NightEvent[] events, bool test = false)
+        public void OpenBookWithEvents(NightEvent[] events)
         {
-            this.test = test;
             content = events;
             InitTotalPages();
             currentPage = 0;
@@ -180,9 +187,9 @@ namespace CauldronCodebase
         {
             flavour.text = nightEvent.flavourText;
             DOTween.To(() => flavour.alpha, x => flavour.alpha = x, 1, 1).From(0);
-            money.text = nightEvent.CalculateModifier(Statustype.Money, settings).ToString();
-            fear.text = nightEvent.CalculateModifier(Statustype.Fear, settings).ToString();
-            fame.text = nightEvent.CalculateModifier(Statustype.Fame, settings).ToString();
+            money.text = resolver.CalculateModifier(Statustype.Money, nightEvent).ToString();
+            fear.text = resolver.CalculateModifier(Statustype.Fear, nightEvent).ToString();
+            fame.text = resolver.CalculateModifier(Statustype.Fame, nightEvent).ToString();
         }
 
         protected override void InitTotalPages()
@@ -231,11 +238,7 @@ namespace CauldronCodebase
                 {
                     nightPanelCard.Hide();
                 }
-                CloseBook();
-                if (!test)
-                {
-                    gameStateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
-                }   
+                CloseBook(); 
             }
         }
     }

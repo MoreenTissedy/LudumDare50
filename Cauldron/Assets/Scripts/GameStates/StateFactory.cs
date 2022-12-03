@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Zenject;
+﻿using Zenject;
 
 namespace CauldronCodebase.GameStates
 {
+    //it's a classic OOP factory pattern, unfortunately there is no sense in using Zenject factories here
     public class StateFactory
     {
         EncounterDeckBase deck;

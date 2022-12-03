@@ -16,37 +16,6 @@ namespace CauldronCodebase
         public Encounter bonusCard;
         public string storyTag;
 
-        public void ApplyModifiers(GameData game, MainSettings settings)
-        {
-            game.Fame += CalculateModifier(Statustype.Fame, settings);
-            game.Fear += CalculateModifier(Statustype.Fear, settings);
-            game.Money += CalculateModifier(Statustype.Money, settings);
-            game.currentDeck.AddToDeck(bonusCard);
-            if (storyTag.StartsWith("-"))
-            {
-                game.storyTags.Remove(storyTag);
-            }
-            else if (!string.IsNullOrEmpty(storyTag))
-            {
-                game.AddTag(storyTag);
-            }
-        }
-
-        public int CalculateModifier(Statustype type, MainSettings settings)
-        {
-            switch (type)
-            {
-                case Statustype.Money:
-                    return Mathf.FloorToInt(moneyCoef * settings.gameplay.defaultMoneyChangeEvent);
-                case Statustype.Fear:
-                    return Mathf.FloorToInt(fearCoef * settings.gameplay.defaultStatChange);
-                case Statustype.Fame:
-                    return Mathf.FloorToInt(fameCoef * settings.gameplay.defaultStatChange);
-            }
-
-            return 0;
-        }
-        
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

@@ -1,17 +1,18 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
     public class VisitorState : BaseGameState
     {
-        private EncounterDeckBase _cardDeck;
-        private MainSettings _mainSettings;
-        private GameData gameData;
-        private VisitorManager _visitorManager;
-        private Cauldron _cauldron;
-        private GameStateMachine _stateMachine;
-        private NightEventProvider nightEvents;
+        private readonly EncounterDeckBase cardDeck;
+        private readonly MainSettings mainSettings;
+        private readonly GameData gameData;
+        private readonly VisitorManager visitorManager;
+        private readonly Cauldron cauldron;
+        private readonly GameStateMachine stateMachine;
+        private readonly NightEventProvider nightEvents;
+
+        private readonly CardResolver resolver;
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
@@ -21,37 +22,39 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider)
         {
-            _cardDeck = deck;
-            _mainSettings = settings;
+            cardDeck = deck;
+            mainSettings = settings;
             this.gameData = gameData;
-            _visitorManager = visitorManager;
-            _visitorManager.VisitorLeft += VisitorLeft;
-            _cauldron = cauldron;
-            _stateMachine = stateMachine;
+            this.visitorManager = visitorManager;
+            this.visitorManager.VisitorLeft += VisitorLeft;
+            this.cauldron = cauldron;
+            this.stateMachine = stateMachine;
             nightEvents = nightEventProvider;
+
+            resolver = new CardResolver(settings, gameData, deck, nightEvents);
         }
         
         public override void Enter()
         {
-            Encounter currentCard = _cardDeck.GetTopCard();
+            Encounter currentCard = cardDeck.GetTopCard();
             gameData.currentCard = currentCard;
             //in case we run out of cards
             if (gameData.currentCard is null)
             {
-                _stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
+                stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
                 return;
             }
             
-            currentCard.Init(gameData, _cardDeck, nightEvents);           
-            _visitorManager.Enter(currentCard);
-            _cauldron.PotionBrewed += EndEncounter;
+            currentCard.Init(gameData, cardDeck, nightEvents);           
+            visitorManager.Enter(currentCard);
+            cauldron.PotionBrewed += EndEncounter;
         }
         
         public override void Exit()
         {
             gameData.cardsDrawnToday++;
-            _cauldron.PotionBrewed -= EndEncounter;
-            _visitorManager.Exit();           
+            cauldron.PotionBrewed -= EndEncounter;
+            visitorManager.Exit();           
         }
 
         private void EndEncounter(Potions potion)
@@ -60,17 +63,17 @@ namespace CauldronCodebase.GameStates
                                   
             gameData.potionsTotal.Add(potion);
 
-            if (!gameData.currentCard.EndEncounter(potion, _mainSettings))
+            if (!resolver.EndEncounter(potion))
             {
                 gameData.wrongPotionsCount++;
             }
 
-            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
         private void VisitorLeft()
         {
-            _stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
     }
 }

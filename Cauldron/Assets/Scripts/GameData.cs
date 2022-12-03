@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CauldronCodebase.GameStates;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
@@ -42,27 +40,29 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
-        public IEncounterDeck currentDeck;
+        public EncounterDeckBase currentDeck;
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
         public event Action StatusChanged;
 
-        public GameData(MainSettings.StatusBars settings, IEncounterDeck deck, NightEventProvider events)
+        public GameData(MainSettings settings, EncounterDeckBase deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
             storyTags = new List<string>(5);
             
-            statusSettings = settings;
-            fear = settings.InitialValue;
-            fame = settings.InitialValue;
-            fearThresholdLow = (int)(settings.InitialThreshold / 100 * settings.Total);
+            statusSettings = settings.statusBars;
+            fear = statusSettings.InitialValue;
+            fame = statusSettings.InitialValue;
+            fearThresholdLow = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
             fameThresholdLow = fearThresholdLow;
-            fameThresholdHigh = (int)((100f - settings.InitialThreshold) / 100 * settings.Total);
+            fameThresholdHigh = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
             fearThresholdHigh = fameThresholdHigh;
             
             currentDeck = deck;
+            currentDeck.Init(this);
             currentEvents = events;
+            currentEvents.Init();
         }
 
         public void AddTag(string tag)

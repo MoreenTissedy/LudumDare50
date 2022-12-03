@@ -23,12 +23,15 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
-
+            _endingScreen.OnClose -= ReloadGame;
+            if (_endingScreen.isActiveAndEnabled)
+            {
+                _endingScreen.CloseBook();
+            }
         }
 
         private void ReloadGame()
         {
-            _endingScreen.OnClose -= ReloadGame;
             Debug.Log("reload scene");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
         }

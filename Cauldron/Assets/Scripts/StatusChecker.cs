@@ -1,21 +1,15 @@
 ﻿using CauldronCodebase.GameStates;
-using UnityEngine;
-using Zenject;
 namespace CauldronCodebase
 {
     public class StatusChecker
     {
         private GameData gameData;
         private MainSettings _settings;
-        private GameStateMachine _stateMachine;
 
-        [Inject]
         public StatusChecker(MainSettings settings,
-                             GameStateMachine stateMachine,
                              GameData data)
         {
             _settings = settings;
-            _stateMachine = stateMachine;
             gameData = data;
         }
         
@@ -51,7 +45,7 @@ namespace CauldronCodebase
             return EndingsProvider.Unlocks.None;
         }
 
-        public void CheckStatusesThreshold()
+        private void CheckStatusesThreshold()
         {
             AddHighLowTag("high fear", Statustype.Fear);
             AddHighLowTag("low fear", Statustype.Fear, false);

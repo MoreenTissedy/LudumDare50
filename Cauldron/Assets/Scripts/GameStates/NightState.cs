@@ -1,19 +1,18 @@
-﻿using System;
-using UnityEngine;
-using Zenject;
+﻿using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
     public class NightState : BaseGameState
     {
-        private GameData gameData;
-        private MainSettings _settings;
-        private NightEventProvider _nightEvents;
-        private EncounterDeckBase _cardDeck;
-        private NightPanel _nightPanel;
-        private GameStateMachine _stateMachine;
+        private readonly GameData gameData;
+        private readonly MainSettings settings;
+        private readonly NightEventProvider nightEvents;
+        private readonly EncounterDeckBase cardDeck;
+        private readonly NightPanel nightPanel;
+        private readonly GameStateMachine stateMachine;
 
-        private StatusChecker _statusChecker;
+        private readonly StatusChecker statusChecker;
+        private readonly EventResolver eventResolver;
 
         public NightState(GameData gameData,
                           MainSettings settings,
@@ -23,42 +22,54 @@ namespace CauldronCodebase.GameStates
                           GameStateMachine stateMachine)
         {
             this.gameData = gameData;
-            _settings = settings;
-            _nightEvents = nightEvents;
-            _cardDeck = cardDeck;
-            _nightPanel = nightPanel;
-            _stateMachine = stateMachine;
+            this.settings = settings;
+            this.nightEvents = nightEvents;
+            this.cardDeck = cardDeck;
+            this.nightPanel = nightPanel;
+            this.stateMachine = stateMachine;
 
-            _statusChecker = new StatusChecker(settings, stateMachine, gameData);
+            statusChecker = new StatusChecker(settings, gameData);
+            eventResolver = new EventResolver(settings, gameData);
         }
         
         public override void Enter()
         {          
-            var events = _nightEvents.GetEvents(gameData);            
-            _nightPanel.OpenBookWithEvents(events);
+            var events = nightEvents.GetEvents(gameData);            
+            nightPanel.OpenBookWithEvents(events);
+            nightPanel.OnClose += NightPanelOnOnClose;
             foreach (NightEvent nightEvent in events)
             {
-                nightEvent.ApplyModifiers(gameData, _settings);
+                eventResolver.ApplyModifiers(nightEvent);
             }
 
-            _cardDeck.NewDayPool(gameData.currentDay);
-            _cardDeck.DealCards(_settings.gameplay.cardsDealtAtNight);
+            cardDeck.NewDayPool(gameData.currentDay);
+            cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
             gameData.currentDay++;
             gameData.cardsDrawnToday = 0;
         }
 
-        public override void Exit()
-        {            
-            var check = _statusChecker.Run();
+        private void NightPanelOnOnClose()
+        {
+            var check = statusChecker.Run();
             if(check == EndingsProvider.Unlocks.None)
             {
                 Debug.Log("new day " + gameData.currentDay);
+                stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
             }
             else
             {
-                _stateMachine.currentEnding = check;
-                _stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
+                stateMachine.currentEnding = check;
+                stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
             }         
+        }
+
+        public override void Exit()
+        {            
+            nightPanel.OnClose -= NightPanelOnOnClose;
+            if (nightPanel.isActiveAndEnabled)
+            {
+                nightPanel.CloseBook();
+            }
         }
     }
 }

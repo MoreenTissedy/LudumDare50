@@ -44,6 +44,7 @@ Transform:
   - {fileID: 960002053975836646}
   - {fileID: 960002055288260312}
   - {fileID: 7732081315638228743}
+  - {fileID: 1445961429}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -106,7 +107,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 96011887090573822}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 57d79818d63e780429073a7068869c46, type: 2}
   m_CullingMode: 0
@@ -536,7 +537,7 @@ GameObject:
   - component: {fileID: 960002053975836646}
   - component: {fileID: 960002053975836647}
   m_Layer: 0
-  m_Name: "_ot_3_\u0430"
+  m_Name: firewood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24981,7 +24982,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1779255451
   m_SortingLayer: 2
-  m_SortingOrder: 12
+  m_SortingOrder: 15
   m_Sprite: {fileID: 21300000, guid: 23d4b85b381cbd245947661063ef4e96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.85882354}
   m_FlipX: 0
@@ -30028,6 +30029,16 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 7276350213814554212, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
+--- !u!4 &8144629130793529343 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8959090960625613639, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
+  m_PrefabInstance: {fileID: 960002054242145464}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8629491801379967782 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8831701645660882846, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
+  m_PrefabInstance: {fileID: 960002054242145464}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &1758807850107906911 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1529559917066076135, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
@@ -30038,13 +30049,82 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 8065638912604451810, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
   m_PrefabInstance: {fileID: 960002054242145464}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8144629130793529343 stripped
+--- !u!1001 &3969646995947353302
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3622839891257624657}
+    m_Modifications:
+    - target: {fileID: 3722830317483031789, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_text
+      value: "\u041E\u0442\u0434\u0430\u0442\u044C"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498818, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_Name
+      value: Potion_brewed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.6200001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722434706397260468, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: m_text
+      value: "\u0415\u0449\u0435 \u0440\u0430\u0437\u043E\u043A\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098258743297008717, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: youBrewed
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5098258743297008717, guid: 039f33ec092e53942b97646431177760, type: 3}
+      propertyPath: noRecipeForThis
+      value: "\u0412\u044B \u0441\u0432\u0430\u0440\u0438\u043B\u0438 \u0447\u0442\u043E-\u0442\u043E
+        \u043D\u0435 \u0442\u043E"
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 039f33ec092e53942b97646431177760, type: 3}
+--- !u!4 &1445961429 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 8959090960625613639, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
-  m_PrefabInstance: {fileID: 960002054242145464}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &8629491801379967782 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 8831701645660882846, guid: 8b804a3273b92d4499cc1225d6491dab, type: 3}
-  m_PrefabInstance: {fileID: 960002054242145464}
+  m_CorrespondingSourceObject: {fileID: 3969646997254498819, guid: 039f33ec092e53942b97646431177760, type: 3}
+  m_PrefabInstance: {fileID: 3969646995947353302}
   m_PrefabAsset: {fileID: 0}

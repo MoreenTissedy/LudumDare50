@@ -3,7 +3,6 @@ using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace CauldronCodebase
@@ -16,13 +15,11 @@ namespace CauldronCodebase
         public float animTime = 0.5f;
         public TMP_Text text;
         public VisitorTextIcon[] iconObjects = new VisitorTextIcon[3];
-        public Image timer;
-        public float timerChangeSpeed = 1f;
+        
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private IngredientsData ingredients;
 
-        private float realTimerValue;
         
         [ContextMenu("Find Icon Objects")]
         private void FindIconObjects()
@@ -30,12 +27,7 @@ namespace CauldronCodebase
             iconObjects = GetComponentsInChildren<VisitorTextIcon>();
         }
 
-        public void ReduceTimer(float value)
-        {
-            realTimerValue = Mathf.Clamp(realTimerValue-value, 0, 1);
-            var newFillAmount = Mathf.Lerp(0.5f, 1f, realTimerValue);
-            timer.DOFillAmount(newFillAmount, timerChangeSpeed);
-        }
+        
 
         public void Hide()
         {
@@ -44,8 +36,6 @@ namespace CauldronCodebase
         
         public void Display(Encounter card)
         {
-            timer.fillAmount = 1f;
-            realTimerValue = 1f;
             gameObject.transform.DOLocalMoveX(gameObject.transform.localPosition.x, animTime)
                 .From(offScreen);
 

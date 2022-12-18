@@ -11,10 +11,10 @@ namespace CauldronCodebase
         public Visitor[] visitors;
         
         public VisitorTextBox visitorText;
+        public VisitorTimer visitorTimer;
 
         private Visitor currentVisitor;
         private int attemptsLeft;
-        private float attemptsTimerStep;
 
         [Inject]
         private Cauldron cauldron;
@@ -38,12 +38,14 @@ namespace CauldronCodebase
 
         private void Wait()
         {
-            //TODO check if visitor exists
+            if (currentVisitor is null)
+            {
+                return;
+            }
             attemptsLeft--;
-            visitorText.ReduceTimer(attemptsTimerStep);
+            visitorTimer.ReduceTimer();
             if (attemptsLeft <= 0)
             {
-                Debug.LogError("visitor left while waiting");
                 Exit();
                 VisitorLeft?.Invoke();
             }
@@ -52,10 +54,9 @@ namespace CauldronCodebase
         public void Enter(Encounter card)
         {
             ShowText(card);
-            //Debug.Log("enter card"+card.name);
             Villager villager = card.actualVillager;
             attemptsLeft = villager.patience;
-            attemptsTimerStep = 1f / attemptsLeft;
+            visitorTimer.ResetTimer(attemptsLeft);
             for (int i = 0; i < villagers.Length; i++)
             {
                 if (villagers[i] == villager)
@@ -70,17 +71,11 @@ namespace CauldronCodebase
             witchCat.SetActive(villager.name != "Cat");
         }
 
-        public void EnterDefault()
-        {
-            visitors[0].Enter();
-            currentVisitor = visitors[0];
-        }
-
         public void Exit()
         {
-            Debug.Log("exit visitor "+currentVisitor.name);
             HideText();
             currentVisitor.Exit();
+            currentVisitor = null;
         }
     }
 }

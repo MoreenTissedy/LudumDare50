@@ -100,7 +100,7 @@ namespace CauldronCodebase
         private void PotOnIngredientAdded(Ingredients ingredient)
         {
             scheme.SetTrigger(IngredientAdded);
-            scheme.SetInteger(MixCount, pot.mix.Count);
+            scheme.SetInteger(MixCount, pot.Mix.Count);
             bool valid = false;
             if (!(selectedRecipe is null))
             {

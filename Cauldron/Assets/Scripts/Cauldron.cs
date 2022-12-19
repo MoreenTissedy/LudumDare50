@@ -32,7 +32,7 @@ namespace CauldronCodebase
         public float lighterColorCoef = 0.2f;
         public float darkerColorCoef = 0.3f; 
 
-        public List<Ingredients> mix;
+        public List<Ingredients> Mix;
 
         public bool IsBoiling => fireScript?.boiling ?? false;
         public bool IsMixRight => mixScript?.IsWithinKeyWindow() ?? false;
@@ -135,10 +135,10 @@ namespace CauldronCodebase
                 bonus = 0;
             }
             mixBonusTotal += bonus;
-            mix.Add(ingredient);
+            Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
-            tooltipManager.DisableOneIngredient(ingredient);
-            if (mix.Count == 3)
+            tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
+            if (Mix.Count == 3)
             {
                 Brew();
             }
@@ -153,7 +153,7 @@ namespace CauldronCodebase
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
 
-            mix.Clear();
+            Mix.Clear();
             mixBonusTotal = 0;
             mixScript.RandomKey();
             mixScript.SetToKey();
@@ -163,15 +163,15 @@ namespace CauldronCodebase
         {
             //Witch.instance.Activate();
             audios.PlayOneShot(brew);
-            tooltipManager.DisableAllHIghlights();
+            tooltipManager.DisableAllHighlights();
             
             potionPopup.ClearAcceptSubscriptions();
             //if (mixBonusTotal > mixBonusMin)
             {
                 foreach (var recipe in _recipeProvider.allRecipes)
                 {
-                    if (mix.Contains(recipe.ingredient1) && mix.Contains(recipe.ingredient2) &&
-                        mix.Contains(recipe.ingredient3))
+                    if (Mix.Contains(recipe.ingredient1) && Mix.Contains(recipe.ingredient2) &&
+                        Mix.Contains(recipe.ingredient3))
                     {
                         //color mix in the potion color
                         MixColor(recipe.color);
@@ -193,17 +193,17 @@ namespace CauldronCodebase
                             potionPopup.Show(recipe);
                         }
                         potionPopup.OnAccept += () => PotionAccepted(recipe.potion);
-                        mix.Clear();
+                        Mix.Clear();
                         return recipe.potion;
                     }
                 }
             }
 
-            recipeBook.RecordAttempt(mix.ToArray());
+            recipeBook.RecordAttempt(Mix.ToArray());
             RandomMixColor();
             potionPopup.Show(null);
             potionPopup.OnAccept += () => PotionAccepted(Potions.Placebo);
-            mix.Clear();
+            Mix.Clear();
             return Potions.Placebo;
         }
 

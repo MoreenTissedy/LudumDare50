@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using EasyLoc;
 using System.Collections.Generic;
@@ -12,10 +13,17 @@ namespace CauldronCodebase
         public Color color;
         public bool magical;
         public Ingredients ingredient1, ingredient2, ingredient3;
+        public List<Ingredients> RecipeIngredients;
         public string potionName;
         [TextArea(2, 10)]
         public string description;
         public Sprite image;
+
+        private void OnEnable()
+        {
+            RecipeIngredients = new List<Ingredients>{ingredient1, ingredient2, ingredient3};
+        }
+
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

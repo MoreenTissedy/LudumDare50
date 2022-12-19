@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -7,6 +8,8 @@ public class TooltipManager
     private List<Ingredients> potionIngredients = new List<Ingredients>();
     private Recipe currentRecipe;
     private Dictionary<Ingredients, IngredientDroppable> dict;
+
+    [Inject] private Cauldron cauldron;
 
     public TooltipManager()
     {
@@ -18,92 +21,57 @@ public class TooltipManager
         dict.Add(button.ingredient, button);
     }
 
-    public bool RemoveIngredient(IngredientDroppable button)
+    public void RemoveIngredient(IngredientDroppable button)
     {
-        if (!dict.ContainsKey(button.ingredient))
-            return false;
+        if (!dict.ContainsKey(button.ingredient)) return;
+
         dict.Remove(button.ingredient);
-        return true;
     }
-    
-    // void Awake()
-    // {
-    //     dict = new Dictionary<Ingredients, IngredientDroppable>();
-    //     foreach (var i in FindObjectsOfType<IngredientDroppable>())
-    //     {
-    //         dict.Add(i.ingredient, i);
-    //     }
-    // }
 
     public void HighlightRecipe(Recipe recipe)
     {
-        if (recipe is null)
+        if (recipe is null) return;
+        
+        if (currentRecipe != null)
         {
-            return;
+            ChangeFewHighlights(currentRecipe,false);
         }
-        if (currentRecipe)
-        {
-            DisableRecipeHighlight(currentRecipe);
-        }
-        EnableRecipeHighlight(recipe);
+        ChangeFewHighlights(recipe, true);
+        currentRecipe = recipe;
     }
     
-    public void EnableOneHighlight(Ingredients ingredientToHighlight)
+    public void ChangeOneIngredientHighlight(Ingredients ingredientToHighlight, bool state)
     {
-        if (dict.TryGetValue(ingredientToHighlight, out var temp))
-            {temp.EnableHighlight();}
-    }
-
-    public void EnableFewHighlights(List<Ingredients> ingredientsToHighlight)
-    {
-        foreach(var i in ingredientsToHighlight)
+        if (dict.TryGetValue(ingredientToHighlight, out var ingredient))
         {
-            if(dict.TryGetValue(i, out var temp))
-            {temp.EnableHighlight();}
+            ingredient.ChangeHighlight(state);
         }
     }
 
-    public void DisableOneIngredient(Ingredients ingredientToHighlight)
+    private void ChangeFewHighlights(Recipe recipe, bool state)
     {
-        if(dict.TryGetValue(ingredientToHighlight, out var temp))
-            {temp.DisableHighlight();}
-    }
+        potionIngredients = recipe.RecipeIngredients;
 
-    public void DisableFewHighlights(List<Ingredients> ingredientsToHighlight)
-    {
-        foreach(var i in ingredientsToHighlight)
+        foreach(var i in potionIngredients)
         {
-            if(dict.TryGetValue(i, out var temp))
-                {temp.DisableHighlight();}
+            if(cauldron.Mix.Contains(i)) continue;
+
+            if (dict.TryGetValue(i, out var temp))
+            {
+                temp.ChangeHighlight(state);
+            }
         }
     }
-
-    public void DisableAllHIghlights()
+    
+    public void DisableAllHighlights()
     {
         foreach(var i in dict.Keys)
         {
-            if(dict.TryGetValue(i, out var temp))
-                {temp.DisableHighlight();}
+            if (dict.TryGetValue(i, out var ingredient))
+            {
+                ingredient.ChangeHighlight(false);
+            }
         }
-    }
-
-    void EnableRecipeHighlight(Recipe recipeToHighlight)
-    {
-        potionIngredients.Clear();
-        potionIngredients.Add(recipeToHighlight.ingredient1);
-        potionIngredients.Add(recipeToHighlight.ingredient2);
-        potionIngredients.Add(recipeToHighlight.ingredient3);
-        EnableFewHighlights(potionIngredients);
-        currentRecipe = recipeToHighlight;
-    }
-
-    void DisableRecipeHighlight(Recipe recipeToDisable)
-    {
-        potionIngredients.Clear();
-        potionIngredients.Add(recipeToDisable.ingredient1);
-        potionIngredients.Add(recipeToDisable.ingredient2);
-        potionIngredients.Add(recipeToDisable.ingredient3);
-        DisableFewHighlights(potionIngredients);
     }
 }
 }

@@ -18,7 +18,7 @@ namespace CauldronCodebase
         [Inject]
         public void Construct(IngredientsData data)
         {
-            this.ingredientsData = data;
+            ingredientsData = data;
             Clear();
         }
         

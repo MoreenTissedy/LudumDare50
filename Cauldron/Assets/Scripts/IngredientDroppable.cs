@@ -82,7 +82,7 @@ namespace CauldronCodebase
             if (tooltip is null)
                 return;
             tooltip.gameObject.SetActive(true);
-            if (!cauldron.mix.Contains(ingredient))
+            if (!cauldron.Mix.Contains(ingredient))
                 image.gameObject.transform.
                     DORotate(new Vector3(0,0, initialRotation+rotateAngle), rotateSpeed).
                     SetLoops(-1, LoopType.Yoyo).
@@ -101,7 +101,7 @@ namespace CauldronCodebase
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (cauldron.mix.Contains(ingredient))
+            if (cauldron.Mix.Contains(ingredient))
                 return;
             dragging = true;
             image.transform.DOKill(true);
@@ -159,6 +159,14 @@ namespace CauldronCodebase
                 isHighlighted = false;
             }
         }
-        
+
+        public void ChangeHighlight(bool state)
+        {
+            if(isHighlighted != state)
+            {
+                ingredientParticle?.SetActive(state);
+                isHighlighted = state;
+            }
+        }
     }
 }

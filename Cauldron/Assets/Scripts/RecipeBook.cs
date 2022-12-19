@@ -24,6 +24,7 @@ namespace CauldronCodebase
         [Inject]
         private TooltipManager tooltipManager;
         [Inject] private RecipeProvider recipeProvider;
+        [Inject] private Cauldron cauldron;
 
         private Mode currentMode;
         public enum Mode
@@ -240,9 +241,26 @@ namespace CauldronCodebase
         }
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
+            if (cauldron.Mix.Count != 0)
+            {
+                foreach (var ingredient in cauldron.Mix)
+                {
+                    if (recipeBookEntry.CurrentRecipe.RecipeIngredients.Contains(ingredient) == false)
+                    {
+                        TryHighlightIncorrectRecipe();
+                        return;
+                    }
+                }
+            }
+            
             CloseBook();
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
+        }
+
+        private void TryHighlightIncorrectRecipe()
+        {
+            Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
     }
 }

@@ -14,7 +14,7 @@ namespace CauldronCodebase
         public override bool Valid(GameData game)
         {
             int count = 0;
-            foreach (Potions potion in game.potionsTotal)
+            foreach (Potions potion in game.PotionsOnLastDays)
             {
                 if (potion == type)
                 {

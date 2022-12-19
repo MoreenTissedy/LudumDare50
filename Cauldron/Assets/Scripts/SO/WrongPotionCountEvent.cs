@@ -10,7 +10,7 @@ namespace CauldronCodebase
 
         public override bool Valid(GameData game)
         {
-            return game.wrongPotionsCount >= wrongPotions;
+            return game.WrongPotionsOnLastDays >= wrongPotions;
         }
     }
 }

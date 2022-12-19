@@ -60,12 +60,14 @@ namespace CauldronCodebase.GameStates
         private void EndEncounter(Potions potion)
         {
             Debug.Log("end encounter with "+potion);
-                                  
-            gameData.potionsTotal.Add(potion);
-
+            
             if (!resolver.EndEncounter(potion))
             {
-                gameData.wrongPotionsCount++;
+                gameData.AddPotion(potion, true);
+            }
+            else
+            {
+                gameData.AddPotion(potion, false);
             }
 
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);

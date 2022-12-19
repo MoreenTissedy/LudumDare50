@@ -46,6 +46,14 @@ namespace CauldronCodebase
         private MainSettings.StatusBars statusSettings;
         public event Action StatusChanged;
 
+
+        private PotionsBrewedInADay currentDayPotions;
+        private List<PotionsBrewedInADay> potionsBrewedInADays;
+
+        public List<Potions> PotionsOnLastDays = new List<Potions>(15);
+        public int WrongPotionsOnLastDays;
+        public int DayCountThreshold = 2;
+
         public GameData(MainSettings settings, EncounterDeckBase deck, NightEventProvider events)
         {
             potionsTotal = new List<Potions>(15);
@@ -63,6 +71,10 @@ namespace CauldronCodebase
             currentDeck.Init(this);
             currentEvents = events;
             currentEvents.Init();
+            
+            potionsBrewedInADays = new List<PotionsBrewedInADay>(3);
+            currentDayPotions = new PotionsBrewedInADay();
+            potionsBrewedInADays.Add(currentDayPotions);
         }
 
         public void AddTag(string tag)
@@ -99,9 +111,7 @@ namespace CauldronCodebase
 
             return -1000;
         }
-
-
-
+        
         private int Set(Statustype type, int newValue)
         {
             int statValue = Get(type);
@@ -171,5 +181,47 @@ namespace CauldronCodebase
             }
         }
 
+        public void AddPotion(Potions potion, bool wrong)
+        {
+            potionsTotal.Add(potion); // for global statistic
+            currentDayPotions.PotionsList.Add(potion);
+            if (wrong)
+            {
+                wrongPotionsCount++; // for global statistic
+                currentDayPotions.WrongPotions++;
+            }
+        }
+
+        public void NextCountDay()
+        {
+            currentDayPotions = new PotionsBrewedInADay();
+            potionsBrewedInADays.Add(currentDayPotions);
+            if (potionsBrewedInADays.Count > DayCountThreshold)
+            {
+                potionsBrewedInADays.RemoveAt(0);
+            }
+        }
+        
+        public void CalculatePotionsOnLastDays()
+        {
+            WrongPotionsOnLastDays = 0;
+            PotionsOnLastDays.Clear();
+            
+            foreach (var day in potionsBrewedInADays)
+            {
+                WrongPotionsOnLastDays += day.WrongPotions;
+                foreach (var potion in day.PotionsList)
+                {
+                    PotionsOnLastDays.Add(potion);
+                }
+            }
+        }
+    }
+    
+
+    class PotionsBrewedInADay
+    {
+        public List<Potions> PotionsList = new List<Potions>(15);
+        public int WrongPotions = 0;
     }
 }

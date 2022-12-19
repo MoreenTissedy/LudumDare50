@@ -33,7 +33,8 @@ namespace CauldronCodebase.GameStates
         }
         
         public override void Enter()
-        {          
+        { 
+            gameData.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameData);            
             nightPanel.OpenBookWithEvents(events);
             nightPanel.OnClose += NightPanelOnOnClose;
@@ -54,6 +55,7 @@ namespace CauldronCodebase.GameStates
             if(check == EndingsProvider.Unlocks.None)
             {
                 Debug.Log("new day " + gameData.currentDay);
+                gameData.NextCountDay();
                 stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
             }
             else

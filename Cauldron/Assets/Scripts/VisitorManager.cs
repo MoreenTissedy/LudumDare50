@@ -13,7 +13,7 @@ namespace CauldronCodebase
         public VisitorTextBox visitorText;
         public VisitorTimer visitorTimer;
 
-        private Visitor currentVisitor;
+        [SerializeField] private Visitor currentVisitor;
         private int attemptsLeft;
 
         [Inject]
@@ -73,6 +73,8 @@ namespace CauldronCodebase
 
         public void Exit()
         {
+            if(currentVisitor == null) return;
+            
             HideText();
             currentVisitor.Exit();
             currentVisitor = null;

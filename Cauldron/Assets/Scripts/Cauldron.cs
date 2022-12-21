@@ -172,7 +172,7 @@ namespace CauldronCodebase
                 foreach (var recipe in _recipeProvider.allRecipes)
                 {
                     if (recipe.RecipeIngredients.All(ingredient => Mix.Contains(ingredient)))
-                    { 
+                    {
                         //color mix in the potion color
                         MixColor(recipe.color);
                         // Debug.Log($"Mixed {recipe.name} with bonus {mixBonusTotal-mixBonusMin}");

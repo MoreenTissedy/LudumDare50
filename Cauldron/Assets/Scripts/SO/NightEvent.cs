@@ -15,7 +15,6 @@ namespace CauldronCodebase
         public float moneyCoef, fearCoef, fameCoef;
         public Encounter bonusCard;
         public string storyTag;
-        public bool Repeat;
 
         public override bool Localize(Language language)
         {

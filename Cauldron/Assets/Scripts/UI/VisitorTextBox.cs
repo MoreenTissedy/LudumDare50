@@ -65,9 +65,9 @@ namespace CauldronCodebase
 
             string Format(Encounter encounter, Recipe unlockRecipe)
             {
-                string name1 = ingredients.Get(unlockRecipe.RecipeIngredients[0]).friendlyName.ToLower();
-                string name2 = ingredients.Get(unlockRecipe.RecipeIngredients[1]).friendlyName.ToLower();
-                string name3 = ingredients.Get(unlockRecipe.RecipeIngredients[2]).friendlyName.ToLower();
+                string name1 = ingredients.Get(unlockRecipe.ingredient1).friendlyName.ToLower();
+                string name2 = ingredients.Get(unlockRecipe.ingredient2).friendlyName.ToLower();
+                string name3 = ingredients.Get(unlockRecipe.ingredient3).friendlyName.ToLower();
                 return String.Format(encounter.text, name1, name2, name3);
             }
 

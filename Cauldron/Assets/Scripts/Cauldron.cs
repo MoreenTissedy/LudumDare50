@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using CauldronCodebase.GameStates;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -171,7 +170,8 @@ namespace CauldronCodebase
             {
                 foreach (var recipe in _recipeProvider.allRecipes)
                 {
-                    if (recipe.RecipeIngredients.All(ingredient => Mix.Contains(ingredient)))
+                    if (Mix.Contains(recipe.ingredient1) && Mix.Contains(recipe.ingredient2) &&
+                        Mix.Contains(recipe.ingredient3))
                     {
                         //color mix in the potion color
                         MixColor(recipe.color);

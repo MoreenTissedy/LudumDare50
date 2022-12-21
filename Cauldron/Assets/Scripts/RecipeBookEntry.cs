@@ -32,9 +32,9 @@ namespace CauldronCodebase
             fullName.text = recipe.potionName;
             description.text = recipe.description;
             image.sprite = recipe.image;
-            ingredient1.sprite = ingredientsData.Get(recipe.RecipeIngredients[0]).image;
-            ingredient2.sprite = ingredientsData.Get(recipe.RecipeIngredients[1]).image;
-            ingredient3.sprite = ingredientsData.Get(recipe.RecipeIngredients[2]).image;
+            ingredient1.sprite = ingredientsData.Get(recipe.ingredient1).image;
+            ingredient2.sprite = ingredientsData.Get(recipe.ingredient2).image;
+            ingredient3.sprite = ingredientsData.Get(recipe.ingredient3).image;
         }
 
         public void Clear()

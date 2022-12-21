@@ -104,9 +104,7 @@ namespace CauldronCodebase
             bool valid = false;
             if (!(selectedRecipe is null))
             {
-                valid = selectedRecipe.ingredient1 == ingredient ||
-                             selectedRecipe.ingredient2 == ingredient ||
-                             selectedRecipe.ingredient3 == ingredient;
+                valid = selectedRecipe.RecipeIngredients.Contains(ingredient);
             }
 
             scheme.SetBool(Right, valid);

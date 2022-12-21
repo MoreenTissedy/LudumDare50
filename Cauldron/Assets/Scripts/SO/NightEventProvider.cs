@@ -33,7 +33,7 @@ namespace CauldronCodebase
                     break;
                 }
             }
-            if (foundValid)
+            if (foundValid && validEvent.Repeat == false)
             {
                 inGameConditionals.Remove(validEvent);
             }

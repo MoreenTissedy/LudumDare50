@@ -8,18 +8,19 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2735544184442072997}
+  - component: {fileID: 3725017058822203907}
   - component: {fileID: 2735544184442072999}
   - component: {fileID: 2735544184442072996}
+  - component: {fileID: 4729817040523749520}
   m_Layer: 5
-  m_Name: SampleParticles
+  m_Name: IconFire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2735544184442072997
-Transform:
+--- !u!224 &3725017058822203907
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -27,11 +28,16 @@ Transform:
   m_GameObject: {fileID: 2735544184442072994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2735544184442072999
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4842,9 +4848,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -813304103
-  m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingLayerID: 786958573
+  m_SortingLayer: 2
+  m_SortingOrder: 15
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -4870,3 +4876,11 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!222 &4729817040523749520
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735544184442072994}
+  m_CullTransparentMesh: 0

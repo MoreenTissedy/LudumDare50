@@ -1,16 +1,26 @@
-using System;
 using UnityEngine;
 
 namespace CauldronCodebase
 
 {
-    public class HudHideOnPause: MonoBehaviour
+    [RequireComponent(typeof (Camera))]
+    public class UIHideOnPause: MonoBehaviour
     {
+        [SerializeField] private Camera camera;
+
+        private void OnValidate()
+        {
+            if (!camera)
+            {
+                camera = GetComponent<Camera>();
+            }
+        }
+
         private void Start()
         {
             if (GameLoader.IsMenuOpen())
             {
-                gameObject.SetActive(false);
+                camera.enabled = false;
             }
 
             GameLoader.GamePaused += OnGamePaused;
@@ -18,7 +28,7 @@ namespace CauldronCodebase
 
         private void OnGamePaused(bool pause)
         {
-            gameObject.SetActive(!pause);
+            camera.enabled = !pause;
         }
 
         private void OnDestroy()

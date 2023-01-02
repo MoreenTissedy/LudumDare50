@@ -85,14 +85,19 @@ namespace CauldronCodebase
 
         private void CheckEventCooldown()
         {
+            List<CooldownEvent> endedEvents = new List<CooldownEvent>(1);
             foreach (var cooldownEvent in eventsOnCooldown)
             {
                 cooldownEvent.Days --;
                 if (cooldownEvent.Days == 0)
                 {
-                    eventsOnCooldown.Remove(cooldownEvent);
-                    inGameConditionals.Add(cooldownEvent.Event);
+                    endedEvents.Add(cooldownEvent);
                 }
+            }
+            foreach (var cooldownEvent in endedEvents)
+            {
+                eventsOnCooldown.Remove(cooldownEvent);
+                inGameConditionals.Add(cooldownEvent.Event);
             }
         }
     }

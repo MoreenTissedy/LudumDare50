@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: Laughter_Potion
+  m_Name: Fool_laughter
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 9904824343798d2738acc620d6b62f7e, type: 3}
-  addToDeckOnDay: 4
-  requiredStoryTag: 
+  addToDeckOnDay: 2
+  requiredStoryTag: '!fool_dead'
   villager:
   - {fileID: 11400000, guid: 4dad8a4801aada04a8a09e3802e2e901, type: 2}
   text: "\u041F\u0440\u0438\u0432\u0435\u0442\u0438\u043A, \u043A\u043E\u043B\u043B\u0435\u0433\u0430!
@@ -37,6 +37,10 @@ MonoBehaviour:
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
   - potion: 11
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 19
     influenceCoef: 0.5
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}

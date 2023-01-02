@@ -15,6 +15,8 @@ namespace CauldronCodebase
         public float moneyCoef, fearCoef, fameCoef;
         public Encounter bonusCard;
         public string storyTag;
+        [Header("Only for conditionals")]
+        public bool repeat;
 
         public override bool Localize(Language language)
         {

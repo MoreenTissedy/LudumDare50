@@ -201,7 +201,14 @@ namespace CauldronCodebase
             bool valid = true;
             foreach (var tag in tags)
             {
-                valid = valid && game.storyTags.Contains(tag.Trim());
+                if (tag.StartsWith("!"))
+                {
+                    valid = valid && !game.storyTags.Contains(tag.Trim().TrimStart('!'));
+                }
+                else
+                {
+                    valid = valid && game.storyTags.Contains(tag.Trim());
+                }
             }
             return valid;
         }

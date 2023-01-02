@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
+  m_Name: Healing_Potion_Villager 2
+  m_EditorClassIdentifier: 
+  localizationCSV: {fileID: 4900000, guid: 9904824343798d2738acc620d6b62f7e, type: 3}
+  addToDeckOnDay: -1
+  requiredStoryTag: 
+  villager:
+  - {fileID: 11400000, guid: 9f83eb14c18fd3b409b6c6c2f4c9bb80, type: 2}
+  text: "\u0411\u043B\u0430\u0433\u043E\u0434\u0430\u0440\u0441\u0442\u0432\u0443\u044E,
+    \u0433\u043E\u043B\u043E\u0432\u0430 \u043C\u043E\u044F \u043F\u0440\u043E\u0448\u043B\u0430,
+    \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u0441\u0435 \u043C\u0435\u0440\u0435\u0449\u0438\u0442\u0441\u044F
+    \u0447\u0442\u043E-\u0442\u043E, \u0442\u0435\u043D\u0438 \u043C\u0435\u043B\u044C\u043A\u0430\u044E\u0442
+    \u043A\u0430\u043A\u0438\u0435-\u0442\u043E. \u0422\u0440\u0435\u0432\u043E\u0436\u0430\u0442
+    \u043E\u043D\u0438 \u043C\u0435\u043D\u044F, \u0443\u0436 \u043D\u0435 \u0443\u043C\u043E\u043C
+    \u043B\u0438 \u044F \u0442\u0440\u043E\u043D\u0443\u043B\u0441\u044F."
+  hidden: 0
+  quest: 0
+  primaryInfluence: 3
+  secondaryInfluence: 0
+  primaryCoef: 0.5
+  secondaryCoef: 0
+  resultsByPotion:
+  - potion: 100
+    influenceCoef: 0
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: b51b391e26a89d74593075968a68db30, type: 2}
+  - potion: 16
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: ca38365e5a5cc6f4abe9892ad2a852a8, type: 2}
+  - potion: 4
+    influenceCoef: -1
+    bonusEvent: {fileID: 11400000, guid: ec1f945e4c3500c4fa8b70e95164d910, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 3
+    influenceCoef: -1
+    bonusEvent: {fileID: 11400000, guid: ec1f945e4c3500c4fa8b70e95164d910, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 18
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: ca38365e5a5cc6f4abe9892ad2a852a8, type: 2}
+  actualVillager: {fileID: 11400000, guid: 9f83eb14c18fd3b409b6c6c2f4c9bb80, type: 2}

@@ -37,12 +37,21 @@ namespace Editor
             List<ConditionalEvent> deck = new List<ConditionalEvent>(data.Count);
             //randomize
             int dataCount = data.Count;
+            List<ConditionalEvent> defaultEvents = new List<ConditionalEvent>(3);
             for (int i = 0; i < dataCount; i++)
             {
                 int dice = Random.Range(0, data.Count);
-                deck.Add(data[dice]);
+                if (data[dice].defaultEvent)
+                {
+                    defaultEvents.Add(data[dice]);
+                }
+                else
+                {
+                    deck.Add(data[dice]);
+                }
                 data.RemoveAt(dice);
             }
+            deck.AddRange(defaultEvents);
             provider.conditionalEvents = deck;
             EditorUtility.SetDirty(provider);
         }

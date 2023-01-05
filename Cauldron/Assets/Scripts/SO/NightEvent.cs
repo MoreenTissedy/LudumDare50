@@ -17,7 +17,6 @@ namespace CauldronCodebase
         public string storyTag;
         [Header("Only for conditionals")]
         public bool repeat;
-        public bool defaultEvent;
 
         public override bool Localize(Language language)
         {

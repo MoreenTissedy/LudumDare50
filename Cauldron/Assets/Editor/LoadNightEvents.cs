@@ -41,7 +41,7 @@ namespace Editor
             for (int i = 0; i < dataCount; i++)
             {
                 int dice = Random.Range(0, data.Count);
-                if (data[dice].defaultEvent)
+                if (data[dice] is RandomNightEvent)
                 {
                     defaultEvents.Add(data[dice]);
                 }

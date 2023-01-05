@@ -122,7 +122,7 @@ namespace CauldronCodebase
             currentPage++;
             UpdateBookButtons();
             UpdatePage();
-            rightPageSound?.Play();
+            if (rightPageSound) rightPageSound.Play();
         }
 
         public virtual void PrevPage()
@@ -132,7 +132,7 @@ namespace CauldronCodebase
             currentPage--;
             UpdateBookButtons();
             UpdatePage();
-            leftPageSound?.Play();
+            if (leftPageSound) leftPageSound.Play();
         }
 
         public void OpenPage(int i)

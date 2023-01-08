@@ -9,6 +9,7 @@ namespace CauldronCodebase
     public class NightPanelCard : MonoBehaviour
     {
         [SerializeField] private Image cardImage;
+        [SerializeField] private Sprite defaultSprite;
         [SerializeField] private float offscreenLeft = -100, offScreenRight = 2000;
 
         [Header("Animation settings")] [SerializeField] [Tooltip("Время анимаций в секундах")]
@@ -32,6 +33,10 @@ namespace CauldronCodebase
             if (picture != null)
             {
                 cardImage.sprite = picture;
+            }
+            else
+            {
+                cardImage.sprite = defaultSprite;
             }
             this.initialPosition = initialPosition;
             imagesToFade = GetComponentsInChildren<Image>();

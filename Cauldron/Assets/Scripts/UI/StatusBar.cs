@@ -6,15 +6,23 @@ using UnityEngine;
 using TMPro;
 using  UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
 {
+    //TODO: 3 separate scripts, bar, icon, tooltip
     public class StatusBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public RectTransform mask;
-        public RectTransform sign;
+        public GameObject effect;
+        public RectTransform maskTemp;
+        public GameObject effectTemp;
         public float gradualReduce = 3f;
+        public float effectDelay = 1.5f;
+        [FormerlySerializedAs("sign")] public RectTransform symbol;
+        public GameObject signCritical;
+        public float criticalThreshold = 0.2f;
         public float signSizeChangeTime = 0.5f;
         public float signSizeChange = 1.3f;
         public bool vertical;
@@ -41,34 +49,44 @@ namespace CauldronCodebase
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
            gameData.StatusChanged += UpdateValue;
            SetValue(this.gameData.Get(type), false);
+           effect.SetActive(false);
+           effectTemp.SetActive(false);
+           signCritical.SetActive(false);
         }
 
-        public void UpdateValue()
+        private void UpdateValue()
         {
             SetValue(gameData.Get(type));
         }
 
-        public void SetValue(int current, bool dotween = true)
+        private void SetValue(int current, bool animate = true)
         {
             if (current == currentValue)
             {
                 return;
             }
+            bool statusIncrease = currentValue < current;
             currentValue = current;
             var newSize = CalculateMaskSize(current);
-            if (dotween)
+            if (animate)
             {
-                
-                    mask.DOSizeDelta(newSize, gradualReduce)
-                        .SetEase(Ease.InOutCirc);
+                var animations = DOTween.Sequence();
+                RectTransform firstMask = statusIncrease ? maskTemp : mask;
+                GameObject theEffect = statusIncrease ? effectTemp : effect;
+                RectTransform secondMask = statusIncrease ? mask : maskTemp;
+                GrowSymbol();
+                animations
+                    .AppendCallback(() => theEffect.SetActive(true))
+                    .Append(firstMask.DOSizeDelta(newSize, gradualReduce))
+                    .AppendInterval(effectDelay)
+                    .AppendCallback(() => theEffect.SetActive(false))
+                    .Append(secondMask.DOSizeDelta(newSize, gradualReduce));
             }
             else
             {
                 mask.sizeDelta = newSize;
+                maskTemp.sizeDelta = newSize;
             }
-            
-            //grow symbol
-            GrowSymbol();
         }
 
         private Vector2 CalculateMaskSize(int current)
@@ -91,7 +109,16 @@ namespace CauldronCodebase
 
         void GrowSymbol()
         {
-            sign.DOSizeDelta(sign.sizeDelta * signSizeChange, signSizeChangeTime).
+            if (currentValue < criticalThreshold * settings.statusBars.Total 
+                || currentValue > (1-criticalThreshold) * settings.statusBars.Total)
+            {
+                signCritical.SetActive(true);
+            }
+            else
+            {
+                signCritical.SetActive(false);
+            }
+            symbol.DOSizeDelta(symbol.sizeDelta * signSizeChange, signSizeChangeTime).
                 SetLoops(2, LoopType.Yoyo).
                 SetEase(Ease.InQuad);
         }

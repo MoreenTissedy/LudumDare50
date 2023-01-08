@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,7 +13,9 @@ namespace CauldronCodebase
         public Encounter[] introCards;
         public CardPoolPerDay[] cardPoolsByDay;
         public LinkedList<Encounter> deck;
+        
         [Header("DEBUG")] 
+        public Encounter currentCard;
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
@@ -165,33 +168,10 @@ namespace CauldronCodebase
         
         public override Encounter GetTopCard()
         {
-            Encounter card = null;
-            bool valid = false;
-            int numCards = deck.Count;
-            do
-            {
-                if (card != null)
-                {
-                    Debug.LogWarning($"Drawn card {card.name} with tag {card.requiredStoryTag}, returned it to deck");
-                    deck.AddLast(card);
-                }
-                card = deck.First();
-                deck.RemoveFirst();
-                numCards--;
-                if (string.IsNullOrEmpty(card.requiredStoryTag))
-                {
-                    break;
-                }
-                valid = CheckStoryTags(game, card);
-                if (numCards == 0)
-                {
-                    DealCards(1);
-                }
-            } 
-            while (!valid && numCards > 0);
-
-            deckInfo = deck.ToArray();
-            return card;
+            var topCard = deck.First();
+            deck.RemoveFirst();
+            currentCard = topCard;
+            return topCard;
         }
 
         private static bool CheckStoryTags(GameData game, Encounter card)

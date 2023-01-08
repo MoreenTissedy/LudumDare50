@@ -441,7 +441,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 554379938}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7354000312683070564}
+        m_TargetAssemblyTypeName: CauldronCodebase.Book, Assembly-CSharp
+        m_MethodName: NextPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &3176428861658897746
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1846,7 +1858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4adc2fed0b7460298addb741fc7bddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bookObject: {fileID: 7354000313373256632}
+  bookObject: {fileID: 7354000312667767104}
   mainPanel: {fileID: 6505342717496045355}
   keyboardControl: 0
   buttonControl: 0

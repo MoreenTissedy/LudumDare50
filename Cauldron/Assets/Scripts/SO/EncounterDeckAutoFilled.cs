@@ -103,7 +103,6 @@ namespace CauldronCodebase
         {
             //find story-related cards and add them as top-priority above count
             List<Encounter> highPriorityCards = new List<Encounter>(3);
-            //if (game.storyTags != null) Debug.Log("story tags: "+string.Join(" ", game.storyTags));
             foreach (Encounter card in cardPool)
             {
                 if (string.IsNullOrEmpty(card.requiredStoryTag))

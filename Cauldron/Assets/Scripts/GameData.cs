@@ -192,8 +192,10 @@ namespace CauldronCodebase
             }
         }
 
-        public void NextCountDay()
+        public void NextDay()
         {
+            currentDay++;
+            cardsDrawnToday = 0;
             currentDayPotions = new PotionsBrewedInADay();
             potionsBrewedInADays.Add(currentDayPotions);
             if (potionsBrewedInADays.Count > DayCountThreshold)

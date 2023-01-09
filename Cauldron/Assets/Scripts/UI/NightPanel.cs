@@ -224,6 +224,7 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            resolver.ApplyModifiers(content[currentPage]);
             if (currentPage + 1 < totalPages)
             {
                 activeCards[0].Exit();

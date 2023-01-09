@@ -39,22 +39,15 @@ namespace CauldronCodebase.GameStates
             var events = nightEvents.GetEvents(gameData);            
             nightPanel.OpenBookWithEvents(events);
             nightPanel.OnClose += NightPanelOnOnClose;
-            foreach (NightEvent nightEvent in events)
-            {
-                eventResolver.ApplyModifiers(nightEvent);
-            }
-
             cardDeck.NewDayPool(gameData.currentDay);
             cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
-            gameData.currentDay++;
-            gameData.cardsDrawnToday = 0;
         }
 
         private void NightPanelOnOnClose()
         {
             if (IsGameEnd()) return;
             Debug.Log("new day " + gameData.currentDay);
-            gameData.NextCountDay();
+            gameData.NextDay();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }
 

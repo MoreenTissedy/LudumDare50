@@ -1,4 +1,5 @@
 using System.Linq;
+using CauldronCodebase.Sounds;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -64,6 +65,8 @@ namespace CauldronCodebase
 
             void ApplyResult(Encounter.PotionResult potionResult)
             {
+                if (potionResult.influenceCoef > 0) SoundManager.theOne.PlaySuccess();
+                else if (potionResult.influenceCoef < 0) SoundManager.theOne.PLayFailure();
                 ModifyStat(encounter.primaryInfluence, encounter.primaryCoef, potionResult.influenceCoef);
                 ModifyStat(encounter.secondaryInfluence, encounter.secondaryCoef, potionResult.influenceCoef);
                 if (potionResult.bonusCard != null)

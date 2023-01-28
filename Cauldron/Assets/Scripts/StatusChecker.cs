@@ -1,4 +1,6 @@
-﻿using CauldronCodebase.GameStates;
+using Universal;
+
+using CauldronCodebase.GameStates;
 using Zenject;
 
 namespace CauldronCodebase
@@ -112,6 +114,7 @@ namespace CauldronCodebase
                     : currentStatus < gameDataHandler.GetThreshold(type, false);
                 if (nextThreshold)
                 {
+                    LoggerTool.TheOne.Log("Status reached: "+(checkHigh?"high ":"low ")+type);
                     thresholdReached = true;
                 }
             } while (nextThreshold && gameDataHandler.ChangeThreshold(type, checkHigh));

@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using DG.Tweening;
+using Universal;
 using Spine.Unity;
 
 namespace CauldronCodebase
@@ -67,6 +69,7 @@ namespace CauldronCodebase
 
         public void Open(string endingTag = "none")
         {
+            LoggerTool.TheOne.Log("ENDING: "+endingTag);
             if (active)
             {
                 return;

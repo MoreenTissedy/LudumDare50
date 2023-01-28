@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System.Linq;
+using Universal;
 
 namespace CauldronCodebase.GameStates
 {
@@ -60,6 +62,7 @@ namespace CauldronCodebase.GameStates
 
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler).ToList();
+            LoggerTool.TheOne.Log("Night events: "+string.Join(", ", events.Select(x => x.name)));
             CheckStoryEnding(events);
             nightPanel.OpenBookWithEvents(events.ToArray());
             nightPanel.OnClose += NightPanelOnOnClose;
@@ -94,6 +97,7 @@ namespace CauldronCodebase.GameStates
         {
             if (IsGameEnd()) return;
             UpdateDeck();
+            LoggerTool.TheOne.Log("NEW DAY " + gameData.currentDay);
             await gameFXManager.ShowSunrise();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }

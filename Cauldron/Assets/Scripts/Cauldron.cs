@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
+using UnityEngine.EventSystems;
+using Universal;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -140,10 +142,12 @@ namespace CauldronCodebase
                         if (!recipeBook.IsRecipeInBook(recipe))
                         {
                             potionPopup.Show(recipe, true);
+                            LoggerTool.TheOne.Log("UNLOCK: "+recipe.potionName);
                             recipeBook.RecordRecipe(recipe);
                         }
                         else
                         {
+                            LoggerTool.TheOne.Log("Potion: "+recipe.potionName);
                             potionPopup.Show(recipe);
                         }
 
@@ -155,6 +159,7 @@ namespace CauldronCodebase
                 }
             }
 
+            LoggerTool.TheOne.Log("Potion fail");
             recipeBook.RecordAttempt(new WrongPotion(mix));
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);

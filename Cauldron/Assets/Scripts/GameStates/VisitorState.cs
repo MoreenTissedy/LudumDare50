@@ -1,6 +1,7 @@
-﻿using Save;
+using Save;
 using System.Linq;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase.GameStates
 {
@@ -53,7 +54,9 @@ namespace CauldronCodebase.GameStates
                 Debug.LogError("Run out of cards!");
                 return;
             }
-                     
+            LoggerTool.TheOne.Log(currentCard.name+" | "+currentCard.text);
+            LoggerTool.TheOne.StartTimer();
+            
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
         }
@@ -67,6 +70,7 @@ namespace CauldronCodebase.GameStates
 
         private void EndEncounter(Potions potion)
         {
+            LoggerTool.TheOne.LogTimer();
             PlayRelevantSound(potion);
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
@@ -87,6 +91,8 @@ namespace CauldronCodebase.GameStates
 
         private void VisitorLeft()
         {
+            LoggerTool.TheOne.Log("visitor left");
+            LoggerTool.TheOne.LogTimer();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
     }

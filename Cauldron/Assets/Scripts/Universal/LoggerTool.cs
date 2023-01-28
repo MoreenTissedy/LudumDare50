@@ -37,7 +37,7 @@ namespace Universal
 
         private void OpenFile()
         {
-            var path = $"{userId}-{System.DateTime.Now.ToString("M-d-HHmm")}.txt";
+            var path = $"Logs/{userId}-{System.DateTime.Now.ToString("M-d-HHmm")}.txt";
             stream = new StreamWriter(new FileStream(path, FileMode.Create));
         }
 

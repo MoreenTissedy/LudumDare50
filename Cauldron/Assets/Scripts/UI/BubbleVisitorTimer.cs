@@ -1,9 +1,11 @@
+using Spine.Unity;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
     public class BubbleVisitorTimer: VisitorTimer
     {
+        public SkeletonGraphic clockAnimation;
         public Transform prefab;
         public float angleSpan = 15f;
 
@@ -19,6 +21,8 @@ namespace CauldronCodebase
         public override void ReduceTimer()
         {
             currentAttempts--;
+            clockAnimation.AnimationState.SetAnimation(1, "Active", false);
+            clockAnimation.AnimationState.AddEmptyAnimation(1, 0.2f, 0f);
             items[currentAttempts].SetTrigger(Use);
         }
 

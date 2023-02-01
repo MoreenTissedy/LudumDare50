@@ -1,9 +1,11 @@
+using Spine.Unity;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
     public class BubbleVisitorTimer: VisitorTimer
     {
+        public SkeletonGraphic clockAnimation;
         public Transform prefab;
         public float angleSpan = 15f;
 
@@ -19,6 +21,8 @@ namespace CauldronCodebase
         public override void ReduceTimer()
         {
             currentAttempts--;
+            clockAnimation.AnimationState.SetAnimation(1, "Active", false);
+            clockAnimation.AnimationState.AddEmptyAnimation(1, 0.2f, 0f);
             items[currentAttempts].SetTrigger(Use);
         }
 
@@ -31,10 +35,7 @@ namespace CauldronCodebase
             for (int i = 0; i < attempts; i++)
             {
                 items[i] = Instantiate(prefab, transform).GetComponent<Animator>();
-                int sign = (i % 2 == 1) ? 1 : -1;
-                items[i].transform.localPosition =
-                    //    Quaternion.Euler(0, 0, angleSpan * i) * position;
-                    position + Vector3.right * (angleSpan * Mathf.CeilToInt((float)i/2) * sign);  
+                items[i].transform.localPosition = position + Vector3.left * angleSpan * i;  
                 items[i].gameObject.SetActive(true);
             }
             currentAttempts = attempts;

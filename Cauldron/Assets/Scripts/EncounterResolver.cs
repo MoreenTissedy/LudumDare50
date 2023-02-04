@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    public class CardResolver
+    public class EncounterResolver
     {
         private readonly GameData game;
         private readonly EncounterDeckBase deck;
         private readonly NightEventProvider nightEvents;
         private readonly MainSettings settings;
 
-        public CardResolver(MainSettings settings, GameData game, EncounterDeckBase deck, NightEventProvider nightEvents)
+        public EncounterResolver(MainSettings settings, GameData game, EncounterDeckBase deck, NightEventProvider nightEvents)
         {
             this.game = game;
             this.deck = deck;

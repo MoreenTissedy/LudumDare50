@@ -12,7 +12,7 @@ namespace CauldronCodebase.GameStates
         private readonly GameStateMachine stateMachine;
         private readonly NightEventProvider nightEvents;
 
-        private readonly CardResolver resolver;
+        private readonly EncounterResolver resolver;
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
@@ -31,7 +31,7 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             nightEvents = nightEventProvider;
 
-            resolver = new CardResolver(settings, gameData, deck, nightEvents);
+            resolver = new EncounterResolver(settings, gameData, deck, nightEvents);
         }
         
         public override void Enter()

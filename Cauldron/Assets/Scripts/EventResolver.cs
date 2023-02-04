@@ -18,7 +18,7 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, nightEvent);
             game.Fear += CalculateModifier(Statustype.Fear, nightEvent);
             game.Money += CalculateModifier(Statustype.Money, nightEvent);
-            game.currentDeck.AddToDeck(nightEvent.bonusCard);
+            game.currentDeck.AddToDeck(nightEvent.bonusCard, true);
             string storyTag = nightEvent.storyTag;
             if (storyTag.StartsWith("-"))
             {

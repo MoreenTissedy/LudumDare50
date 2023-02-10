@@ -31,14 +31,14 @@ namespace CauldronCodebase
         
         private float initialDimension;
 
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
         private MainSettings settings;
         private int currentValue = Int32.MinValue;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameData data)
+        private void Construct(MainSettings mainSettings, GameDataHandler dataHandler)
         { 
-           gameData = data;
+           gameDataHandler = dataHandler;
            settings = mainSettings;
            tooltip = GetComponentInChildren<Text>();
            if (tooltip != null)
@@ -47,16 +47,21 @@ namespace CauldronCodebase
            }
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
-           gameData.StatusChanged += UpdateValue;
-           SetValue(this.gameData.Get(type), false);
+           gameDataHandler.StatusChanged += UpdateValue;
+           
            effect.SetActive(false);
            effectTemp.SetActive(false);
            signCritical.SetActive(false);
         }
 
+        private void Start()
+        {
+            SetValue(this.gameDataHandler.Get(type), false);
+        }
+
         private void UpdateValue()
         {
-            SetValue(gameData.Get(type));
+            SetValue(gameDataHandler.Get(type));
         }
 
         private void SetValue(int current, bool animate = true)

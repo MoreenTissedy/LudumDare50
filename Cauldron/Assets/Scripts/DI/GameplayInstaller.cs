@@ -1,4 +1,5 @@
 using CauldronCodebase.GameStates;
+using Save;
 using UnityEngine;
 using Zenject;
 
@@ -9,7 +10,7 @@ namespace CauldronCodebase
         //TODO: separate installers
         //That looks nicer but it's not exactly what I meant)
         [Header("Data Providers")]
-        [SerializeField] private MainSettings settings;
+        
         [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
         [SerializeField] private EncounterDeckBase encounterDeck;
@@ -21,12 +22,15 @@ namespace CauldronCodebase
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
+        [SerializeField] private GameDataHandler gameDataHandler;
 
         [Header("UI")]
         [SerializeField] private EndingScreen endingScreen;
+
         [SerializeField] private NightPanel nightPanel;
 
-        private GameData gameData;
+        [Inject] private MainSettings mainSettings;
+        [Inject] private DataPersistenceManager dataPersistenceManager;
 
         public override void InstallBindings()
         {
@@ -39,7 +43,7 @@ namespace CauldronCodebase
         private void BindDataProviders()
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
-            Container.Bind<MainSettings>().FromInstance(settings).AsSingle().NonLazy();
+            
             Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
@@ -56,11 +60,11 @@ namespace CauldronCodebase
         {
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
-            Container.Bind<GameData>().AsSingle().NonLazy();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
+            Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }
 
         private void Initialize()

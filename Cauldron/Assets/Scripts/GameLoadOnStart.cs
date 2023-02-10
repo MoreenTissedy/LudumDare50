@@ -17,6 +17,7 @@ namespace CauldronCodebase
         IEnumerator LoadNextFrame()
         {
             yield return null;
+            Time.timeScale = 0;
             GameLoader.LoadGameInBackground();
         }
     }

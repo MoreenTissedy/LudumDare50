@@ -1,12 +1,15 @@
+using System;
+using Save;
 using UnityEngine;
 using Zenject;
 
 namespace CauldronCodebase
 {
     //This class is only to display interface in Unity inspector
-    public abstract class EncounterDeckBase : ScriptableObject, IEncounterDeck
-    {
-        public abstract void Init(GameData game);
+    [Serializable]
+    public abstract class EncounterDeckBase : ScriptableObject, IEncounterDeck, IDataPersistence
+    { 
+        public abstract void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager);
 
         public abstract void NewDayPool(int day);
 
@@ -17,5 +20,9 @@ namespace CauldronCodebase
         public abstract void AddToDeck(Encounter card, bool asFirst = false);
 
         public abstract Encounter GetTopCard();
+
+        public abstract void LoadData(GameData data, bool newGame);
+        public abstract void SaveData(ref GameData data);
+
     }
 }

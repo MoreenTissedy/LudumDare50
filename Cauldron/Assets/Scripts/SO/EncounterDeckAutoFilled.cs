@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Save;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,7 +20,7 @@ namespace CauldronCodebase
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
-        private GameData game;
+        private GameDataHandler gameDataHandler;
 
         [Serializable]
         public struct CardPoolPerDay
@@ -51,26 +52,43 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameData game)
+        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager)
         {
-            this.game = game;
+            gameDataHandler = game;
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
+
+            /*
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
-            NewDayPool(0);
-            DealCards(1);
             
-            //if not first time
-            if (PlayerPrefs.HasKey("FirstTime"))
+            
+            if (game.loadedNewGame == false)
             {
-                deck.AddFirst(introCards[2]);
-                DealCards(1);
+                //deck.AddFirst(game.currentCard);
             }
             else
             {
-                deck.AddFirst(introCards[0]);
-                deck.AddLast(introCards[1]);
-                PlayerPrefs.SetInt("FirstTime", 1);
+                deck = new LinkedList<Encounter>();
+                cardPool = new List<Encounter>(15);
+                NewDayPool(0);
+                
+                //if not first time
+                if (PlayerPrefs.HasKey("FirstTime"))
+                {
+                    Debug.Log("Fucking cat!");
+                    deck.AddFirst(introCards[2]);
+                    DealCards(1);
+                }
+                else
+                {
+                    deck.AddFirst(introCards[0]);
+                    deck.AddLast(introCards[1]);
+                    PlayerPrefs.SetInt("FirstTime", 1);
+                }
             }
+
+            DealCards(1);
+            */
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)
@@ -104,6 +122,7 @@ namespace CauldronCodebase
         /// <param name="num">X - number of cards</param>
         public override void DealCards(int num)
         {
+            
             //find story-related cards and add them as top-priority above count
             List<Encounter> highPriorityCards = new List<Encounter>(3);
             foreach (Encounter card in cardPool)
@@ -113,7 +132,7 @@ namespace CauldronCodebase
                     continue;
                 }
                 Debug.Log("checking card: "+card.requiredStoryTag);
-                if (CheckStoryTags(game, card))
+                if (CheckStoryTags(gameDataHandler, card))
                 {
                     deck.AddFirst(card);
                     highPriorityCards.Add(card);
@@ -136,6 +155,7 @@ namespace CauldronCodebase
                     randomIndex = Random.Range(0, cardPool.Count);
                 } 
                 while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
+                if(deck == null) Debug.LogWarning("deck == null");
                 deck.AddLast(cardPool[randomIndex]);
                 cardPool.RemoveAt(randomIndex);
             }
@@ -174,7 +194,48 @@ namespace CauldronCodebase
             return topCard;
         }
 
-        private static bool CheckStoryTags(GameData game, Encounter card)
+        public override void LoadData(GameData data, bool newGame)
+        {
+            deck = new LinkedList<Encounter>();
+            cardPool = new List<Encounter>(15);
+            
+            switch (newGame)
+            {
+                case true:
+                    
+                    NewDayPool(0);
+                
+                    //if not first time
+                    if (PlayerPrefs.HasKey("FirstTime"))
+                    {
+                        deck.AddFirst(introCards[2]);
+                        DealCards(1);
+                    }
+                    else
+                    {
+                        deck.AddFirst(introCards[0]);
+                        deck.AddLast(introCards[1]);
+                        PlayerPrefs.SetInt("FirstTime", 1);
+                    }
+                    break;
+                case false:
+                    cardPool = data.CardPool;
+                    deck = new LinkedList<Encounter>(data.CurrentDeck);
+                    break;
+            }
+            
+            DealCards(1);
+        }
+
+        public override void SaveData(ref GameData data)
+        {
+            if(data == null) return;
+            data.CardPool = cardPool;
+            
+            data.CurrentDeck = deck.ToList();
+        }
+
+        private static bool CheckStoryTags(GameDataHandler game, Encounter card)
         {
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;

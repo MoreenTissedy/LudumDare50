@@ -6,12 +6,12 @@ namespace CauldronCodebase
 {
     public class CardResolver
     {
-        private readonly GameData game;
+        private readonly GameDataHandler game;
         private readonly EncounterDeckBase deck;
         private readonly NightEventProvider nightEvents;
         private readonly MainSettings settings;
 
-        public CardResolver(MainSettings settings, GameData game, EncounterDeckBase deck, NightEventProvider nightEvents)
+        public CardResolver(MainSettings settings, GameDataHandler game, EncounterDeckBase deck, NightEventProvider nightEvents)
         {
             this.game = game;
             this.deck = deck;

@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using Save;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Event Provider", menuName = "Event Provider", order = 9)]
-    public class NightEventProvider : ScriptableObject
+    [Serializable]
+    public class NightEventProvider : ScriptableObject, IDataPersistence
     {
         private const int _EVENT_COOLDOWN_ = 2;
 
@@ -29,15 +32,16 @@ namespace CauldronCodebase
         public List<ConditionalEvent> inGameConditionals;
         public List<CooldownEvent> eventsOnCooldown;
 
-        public void Init()
+        public void Init(DataPersistenceManager dataPersistenceManager)
         {
             eventsOnCooldown = new List<CooldownEvent>(5);
             inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
             inGameConditionals.AddRange(conditionalEvents);
-            storyEvents.Clear();
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
+            //storyEvents.Clear();
         }
 
-        private NightEvent CheckConditions(GameData game)
+        private NightEvent CheckConditions(GameDataHandler game)
         {
             //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
@@ -64,7 +68,7 @@ namespace CauldronCodebase
             return validEvent;
         }
 
-        public NightEvent[] GetEvents(GameData game)
+        public NightEvent[] GetEvents(GameDataHandler game)
         {
             if (!PlayerPrefs.HasKey("FirstNight"))
             {
@@ -99,6 +103,18 @@ namespace CauldronCodebase
                 eventsOnCooldown.Remove(cooldownEvent);
                 inGameConditionals.Add(cooldownEvent.Event);
             }
+        }
+
+        public void LoadData(GameData data, bool newGame)
+        {
+            storyEvents = data.CurrentEvents;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            if(data == null) return;
+            
+            data.CurrentEvents = storyEvents;
         }
     }
 }

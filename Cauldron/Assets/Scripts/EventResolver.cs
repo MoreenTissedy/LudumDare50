@@ -4,10 +4,10 @@ namespace CauldronCodebase
 {
     public class EventResolver
     {
-        private readonly GameData game;
+        private readonly GameDataHandler game;
         private readonly MainSettings settings;
 
-        public EventResolver(MainSettings settings, GameData game)
+        public EventResolver(MainSettings settings, GameDataHandler game)
         {
             this.game = game;
             this.settings = settings;
@@ -27,6 +27,7 @@ namespace CauldronCodebase
             else if (!string.IsNullOrEmpty(storyTag))
             {
                 game.AddTag(storyTag);
+                Debug.Log($"Add story tag: {storyTag}");
             }
         }
 

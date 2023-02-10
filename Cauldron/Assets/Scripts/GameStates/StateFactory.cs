@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using Save;
+using Zenject;
 
 namespace CauldronCodebase.GameStates
 {
@@ -12,8 +13,9 @@ namespace CauldronCodebase.GameStates
         NightEventProvider nightEvents;
         NightPanel nightPanel;
         EndingScreen endingScreen;
-        GameData gameData;
+        GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
+        DataPersistenceManager dataPersistenceManager;
 
         [Inject]
         public StateFactory(EncounterDeckBase deck,
@@ -23,8 +25,9 @@ namespace CauldronCodebase.GameStates
                             NightEventProvider nightEvents,
                             NightPanel nightPanel,
                             EndingScreen endingScreen,
-                            GameData gameData,
-                            GameStateMachine gameStateMachine)
+                            GameDataHandler gameDataHandler,
+                            GameStateMachine gameStateMachine,
+                            DataPersistenceManager dataPersistenceManager)
         {
             this.deck = deck;
             this.settings = settings;
@@ -33,23 +36,24 @@ namespace CauldronCodebase.GameStates
             this.nightEvents = nightEvents;
             this.nightPanel = nightPanel;
             this.endingScreen = endingScreen;
-            this.gameData = gameData;
+            this.gameDataHandler = gameDataHandler;
             this.gameStateMachine = gameStateMachine;
+            this.dataPersistenceManager = dataPersistenceManager;
         }
 
         public VisitorState CreateVisitorState()
         {
-            return new VisitorState(deck, settings, gameData, visitorManager, cauldron, gameStateMachine, nightEvents);
+            return new VisitorState(deck, settings, dataPersistenceManager, gameDataHandler, visitorManager, cauldron, gameStateMachine, nightEvents);
         }
 
         public VisitorWaitingState CreateVisitorWaitingState()
         {
-            return new VisitorWaitingState(settings, gameData, gameStateMachine);
+            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine);
         }
 
         public NightState CreateNightState()
         {
-            return new NightState(gameData, settings, nightEvents, deck, nightPanel, gameStateMachine);
+            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, gameStateMachine);
         }
 
         public EndGameState CreateEndGameState()

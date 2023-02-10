@@ -1,10 +1,11 @@
 using System;
+using Save;
 using UnityEngine;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class VisitorManager : MonoBehaviour
+    public class VisitorManager : MonoBehaviour, IDataPersistence
     {
         public GameObject witchCat;
         public Villager[] villagers;
@@ -15,11 +16,19 @@ namespace CauldronCodebase
 
         [SerializeField] private Visitor currentVisitor;
         private int attemptsLeft;
-
-        [Inject]
+        
         private Cauldron cauldron;
         public event Action VisitorLeft;
 
+        private bool ignoreSavedAttempts = false;
+        private GameData gameData;
+
+        [Inject]
+        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager)
+        {
+            this.cauldron = cauldron;
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
+        }
         private void Awake()
         {
             HideText();
@@ -55,8 +64,20 @@ namespace CauldronCodebase
         {
             ShowText(card);
             Villager villager = card.actualVillager;
-            attemptsLeft = villager.patience;
+
+            switch (ignoreSavedAttempts)
+            {
+                case true:
+                    attemptsLeft = villager.patience;
+                    break;
+                case false:
+                    attemptsLeft = gameData.AttemptsLeft;
+                    ignoreSavedAttempts = true;
+                    break;
+            }
+            
             visitorTimer.ResetTimer(attemptsLeft);
+            
             for (int i = 0; i < villagers.Length; i++)
             {
                 if (villagers[i] == villager)
@@ -78,6 +99,19 @@ namespace CauldronCodebase
             HideText();
             currentVisitor.Exit();
             currentVisitor = null;
+        }
+
+        public void LoadData(GameData data, bool newGame)
+        {
+            ignoreSavedAttempts = newGame;
+            gameData = data;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            if(data == null) return;
+            
+            data.AttemptsLeft = attemptsLeft;
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Save;
+using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
     public class VisitorState : BaseGameState
     {
         private readonly EncounterDeckBase cardDeck;
-        private readonly MainSettings mainSettings;
-        private readonly GameData gameData;
+        private readonly DataPersistenceManager dataPersistenceManager;
+        private readonly GameDataHandler gameDataHandler;
         private readonly VisitorManager visitorManager;
         private readonly Cauldron cauldron;
         private readonly GameStateMachine stateMachine;
@@ -16,43 +17,69 @@ namespace CauldronCodebase.GameStates
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
-                            GameData gameData,
+                            DataPersistenceManager dataPersistenceManager,
+                            GameDataHandler gameDataHandler,
                             VisitorManager visitorManager,
                             Cauldron cauldron,
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider)
         {
             cardDeck = deck;
-            mainSettings = settings;
-            this.gameData = gameData;
+            this.dataPersistenceManager = dataPersistenceManager;
+            this.gameDataHandler = gameDataHandler;
             this.visitorManager = visitorManager;
             this.visitorManager.VisitorLeft += VisitorLeft;
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             nightEvents = nightEventProvider;
 
-            resolver = new CardResolver(settings, gameData, deck, nightEvents);
+            resolver = new CardResolver(settings, gameDataHandler, deck, nightEvents);
         }
         
         public override void Enter()
         {
-            Encounter currentCard = cardDeck.GetTopCard();
-            gameData.currentCard = currentCard;
+            Encounter currentCard;
+
+            void NewCard()
+            {
+                currentCard = cardDeck.GetTopCard();
+                gameDataHandler.currentCard = currentCard;
+            }
+            
+            if (gameDataHandler.loadIgnoreSaveFile == false)
+            {
+                if (gameDataHandler.currentCard is null)
+                {
+                    NewCard();
+                }
+                else
+                {
+                    currentCard = gameDataHandler.currentCard;
+                }
+
+                gameDataHandler.loadIgnoreSaveFile = true;
+            }
+            else
+            {
+                NewCard();
+            }
+            
             //in case we run out of cards
-            if (gameData.currentCard is null)
+            if (gameDataHandler.currentCard is null)
             {
                 stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
                 return;
             }
             
-            currentCard.Init(gameData, cardDeck, nightEvents);           
+            currentCard.Init(gameDataHandler, cardDeck, nightEvents);           
             visitorManager.Enter(currentCard);
             cauldron.PotionBrewed += EndEncounter;
+            dataPersistenceManager.SaveGame();
         }
         
         public override void Exit()
         {
-            gameData.cardsDrawnToday++;
+            gameDataHandler.cardsDrawnToday++;
             cauldron.PotionBrewed -= EndEncounter;
             visitorManager.Exit();           
         }
@@ -63,11 +90,11 @@ namespace CauldronCodebase.GameStates
             
             if (!resolver.EndEncounter(potion))
             {
-                gameData.AddPotion(potion, true);
+                gameDataHandler.AddPotion(potion, true);
             }
             else
             {
-                gameData.AddPotion(potion, false);
+                gameDataHandler.AddPotion(potion, false);
             }
 
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);

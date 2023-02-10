@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Save;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Zenject;
 
 namespace CauldronCodebase
 {
     //Class holds the game state and can be used for saving and loading
-    public class GameData
+    [Serializable]
+    public class GameDataHandler : MonoBehaviour,IDataPersistence
     {
         private int fame;
         private int fear;
@@ -44,9 +48,10 @@ namespace CauldronCodebase
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
+
+        private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
-
-
+        
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
 
@@ -54,23 +59,30 @@ namespace CauldronCodebase
         public int WrongPotionsOnLastDays;
         public int DayCountThreshold = 2;
 
-        public GameData(MainSettings settings, EncounterDeckBase deck, NightEventProvider events)
+        public bool loadIgnoreSaveFile;
+        
+        [Inject]
+        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataPersistenceManager)
         {
+            this.dataPersistenceManager = dataPersistenceManager;
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
+
             potionsTotal = new List<Potions>(15);
-            storyTags = new List<string>(5);
             
             statusSettings = settings.statusBars;
-            fear = statusSettings.InitialValue;
-            fame = statusSettings.InitialValue;
             fearThresholdLow = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
             fameThresholdLow = fearThresholdLow;
             fameThresholdHigh = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
             fearThresholdHigh = fameThresholdHigh;
+
+            fear = statusSettings.InitialValue;
+            fame = statusSettings.InitialValue;
+            storyTags = new List<string>(5);
             
             currentDeck = deck;
-            currentDeck.Init(this);
+            currentDeck.Init(this, this.dataPersistenceManager);
             currentEvents = events;
-            currentEvents.Init();
+            currentEvents.Init(this.dataPersistenceManager);
             
             potionsBrewedInADays = new List<PotionsBrewedInADay>(3);
             currentDayPotions = new PotionsBrewedInADay();
@@ -217,6 +229,32 @@ namespace CauldronCodebase
                     PotionsOnLastDays.Add(potion);
                 }
             }
+        }
+
+        public void LoadData(GameData data, bool newGame)
+        {
+            loadIgnoreSaveFile = newGame;
+
+            fame = data.Fame;
+            fear = data.Fear;
+            money = data.Money;
+            currentDay = data.CurrentDay;
+            cardsDrawnToday = data.CardDrawnToday;
+            storyTags = data.storyTags;
+            currentCard = data.CurrentVisitor;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            if(data == null) return;
+            
+            data.Fame = fame;
+            data.Fear = Fear;
+            data.Money = money;
+            data.CurrentDay = currentDay;
+            data.CardDrawnToday = cardsDrawnToday;
+            data.storyTags = storyTags;
+            data.CurrentVisitor = currentCard;
         }
     }
     

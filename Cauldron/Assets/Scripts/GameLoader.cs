@@ -1,4 +1,5 @@
 using System;
+using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,12 +9,13 @@ namespace CauldronCodebase
     public static class GameLoader
     {
         public static event Action<bool> GamePaused;
+        public static event Action OnGameLoadComplete;
 
         public static bool IsMenuOpen()
         {
             return SceneManager.GetSceneByBuildIndex(0).isLoaded;
         }
-        
+
         public static void ReloadGame()
         {
             //TODO: new game through saving and loading, much better management
@@ -31,12 +33,21 @@ namespace CauldronCodebase
         private static void OnUnloadComplete(AsyncOperation unloadOperation)
         {
             var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-            operation.completed += (_) => UnloadMenu();
+            operation.completed += (_) =>
+            {
+                OnGameLoadComplete?.Invoke();
+                UnloadMenu();
+            };
         }
 
         public static bool IsGameLoaded()
         {
             return SceneManager.GetSceneByBuildIndex(1).isLoaded;
+        }
+
+        public static bool IsMenuLoaded()
+        {
+            return SceneManager.GetSceneByBuildIndex(0).isLoaded;
         }
 
         public static void LoadGameInBackground()
@@ -59,6 +70,7 @@ namespace CauldronCodebase
         {
             if (!SceneManager.GetSceneByBuildIndex(0).isLoaded)
                 return;
+            
             Time.timeScale = 1;
             SceneManager.UnloadSceneAsync(0);
             GamePaused?.Invoke(false);

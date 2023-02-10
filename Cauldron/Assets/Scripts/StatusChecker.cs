@@ -3,40 +3,40 @@ namespace CauldronCodebase
 {
     public class StatusChecker
     {
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
         private MainSettings _settings;
 
         public StatusChecker(MainSettings settings,
-                             GameData data)
+                             GameDataHandler dataHandler)
         {
             _settings = settings;
-            gameData = data;
+            gameDataHandler = dataHandler;
         }
         
         public EndingsProvider.Unlocks Run()
         {
-            if (gameData.Fame >= _settings.statusBars.Total)
+            if (gameDataHandler.Fame >= _settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFame;
             }
 
-            if (gameData.Fear >= _settings.statusBars.Total)
+            if (gameDataHandler.Fear >= _settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFear;
             }
 
-            if (gameData.Money >= _settings.statusBars.Total)
+            if (gameDataHandler.Money >= _settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighMoney;
 
             }
 
-            if (gameData.Fame <= 0)
+            if (gameDataHandler.Fame <= 0)
             {
                 return EndingsProvider.Unlocks.LowFame;
             }
 
-            if (gameData.Fear <= 0)
+            if (gameDataHandler.Fear <= 0)
             {
                 return EndingsProvider.Unlocks.LowFear;
             }
@@ -55,11 +55,11 @@ namespace CauldronCodebase
 
         private bool CheckThreshold(Statustype type, bool checkHigh)
         {
-            int currentStatus = gameData.Get(type);
-            bool thresholdReached = checkHigh ? currentStatus > gameData.GetThreshold(type, true) : currentStatus < gameData.GetThreshold(type, false);
+            int currentStatus = gameDataHandler.Get(type);
+            bool thresholdReached = checkHigh ? currentStatus > gameDataHandler.GetThreshold(type, true) : currentStatus < gameDataHandler.GetThreshold(type, false);
             if (thresholdReached)
             {
-                gameData.ChangeThreshold(type, checkHigh);
+                gameDataHandler.ChangeThreshold(type, checkHigh);
             }
             return thresholdReached;
         }
@@ -69,11 +69,12 @@ namespace CauldronCodebase
             bool thresholdReached = CheckThreshold(type, checkHigh);
             if (thresholdReached)
             {
-                gameData.AddTag(tag);
+                gameDataHandler.AddTag(tag);
             }
             else
             {
-                gameData.storyTags.Remove(tag);
+                if(gameDataHandler.storyTags.Contains(tag))
+                    gameDataHandler.storyTags.Remove(tag);
             }
         }
     }

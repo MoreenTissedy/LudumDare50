@@ -10,7 +10,7 @@ namespace CauldronCodebase
         [Range(0, 100)] 
         public int probability;
 
-        public override bool Valid(GameData game)
+        public override bool Valid(GameDataHandler game)
         {
             if (game.currentDay < minDay)
             {

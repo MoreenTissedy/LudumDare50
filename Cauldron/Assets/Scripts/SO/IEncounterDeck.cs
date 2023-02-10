@@ -1,8 +1,10 @@
+using Save;
+
 namespace CauldronCodebase
 {
     public interface IEncounterDeck
     {
-        void Init(GameData game);
+        void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager);
         void NewDayPool(int day);
 
         /// <summary>

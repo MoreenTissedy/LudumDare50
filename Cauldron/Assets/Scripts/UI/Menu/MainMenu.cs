@@ -1,7 +1,9 @@
 using System;
+using Save;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -13,6 +15,8 @@ namespace CauldronCodebase
         public Button settings;
         public SettingsMenu settingsMenu;
 
+        [Inject] private DataPersistenceManager dataPersistenceManager;
+
         private void OnValidate()
         {
             if (!settingsMenu)
@@ -22,7 +26,7 @@ namespace CauldronCodebase
         //TODO: if there is no save - hide New Game button and replace Continue text with New
         private void Start()
         {
-            continueGame.onClick.AddListener(GameLoader.UnloadMenu);
+            continueGame.onClick.AddListener(ContinueClick);
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
             settings.onClick.AddListener(settingsMenu.Open);
@@ -40,7 +44,29 @@ namespace CauldronCodebase
 
         private void NewGameClick()
         {
+            switch (dataPersistenceManager.CheckTheExistenceOfGameData())
+            {
+                case true:  // A place to open the menu to confirm the start of a new game
+                    Debug.LogWarning("The saved data has been deleted and a new game has been started");
+                    StartNewGame();
+                    break;
+                
+                case false:
+                    StartNewGame();
+                    break;
+            }
+        }
+
+        private void ContinueClick()
+        {
             GameLoader.ReloadGame();
+            dataPersistenceManager.LoadGame();
+        }
+
+        public void StartNewGame()
+        {
+            GameLoader.ReloadGame();
+            dataPersistenceManager.NewGame();
         }
     }
 }

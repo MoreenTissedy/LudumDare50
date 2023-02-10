@@ -38,6 +38,7 @@ namespace CauldronCodebase.GameStates
 
         private void Start()
         {
+            if(GameLoader.IsMenuLoaded()) return;
             _currentGameState.Enter();
         }
  

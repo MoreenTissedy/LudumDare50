@@ -65,12 +65,12 @@ namespace CauldronCodebase
         }
 
         [Inject]
-        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameData gameData)
+        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameDataHandler gameDataHandler)
         {
             this.settings = settings;
             this.gameStateMachine = stateMachine;
             
-            resolver = new EventResolver(settings, gameData);
+            resolver = new EventResolver(settings, gameDataHandler);
         }
 
         private void ShowDefault()

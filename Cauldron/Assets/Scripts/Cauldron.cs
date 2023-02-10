@@ -141,6 +141,7 @@ namespace CauldronCodebase
             if (Mix.Count == 3)
             {
                 Brew();
+                
             }
             else
             {

@@ -20,16 +20,16 @@ namespace CauldronCodebase
 
         private MainSettings settings;
         private GameStateMachine gameStateMachine;
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
 
         [Inject]
         private void Construct(MainSettings settings,
                                GameStateMachine gameStateMachine,
-                               GameData gameData)
+                               GameDataHandler gameDataHandler)
         {
             this.settings = settings;
             this.gameStateMachine = gameStateMachine;
-            this.gameData = gameData;
+            this.gameDataHandler = gameDataHandler;
         }
 
         private void Awake()
@@ -58,7 +58,7 @@ namespace CauldronCodebase
             if (phase != GameStateMachine.GamePhase.Visitor) return;
             float newStep = step;
             //longer shift after night
-            if (gameData.cardsDrawnToday == 0)
+            if (gameDataHandler.cardsDrawnToday == 0)
                 newStep = step * 2;
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x-newStep, speed);
         }
@@ -69,7 +69,7 @@ namespace CauldronCodebase
             //longer shift before night
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x - step*2, speed).
                 SetEase(Ease.InOutSine).
-                OnComplete(() => NewDayReset(gameData.currentDay + 1));
+                OnComplete(() => NewDayReset(gameDataHandler.currentDay + 1));
         }
 
         void NewDayReset(int day)

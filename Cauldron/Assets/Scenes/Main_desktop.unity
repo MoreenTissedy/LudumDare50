@@ -1794,6 +1794,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+--- !u!1 &484183962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 484183963}
+  - component: {fileID: 484183964}
+  m_Layer: 0
+  m_Name: GameDataHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &484183963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484183962}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1745953328}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &484183964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484183962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b0a30e5cc24b6bb11464a49c644810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentDay: 1
+  cardsDrawnToday: 0
+  currentCard: {fileID: 0}
+  potionsTotal: 
+  wrongPotionsCount: 0
+  storyTags: []
+  currentDeck: {fileID: 0}
+  currentEvents: {fileID: 0}
+  PotionsOnLastDays: 
+  WrongPotionsOnLastDays: 0
+  DayCountThreshold: 2
+  GameHasBeenLoaded: 0
 --- !u!1001 &527143313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3774,7 +3829,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5622affbbf64d1aa292e64a77bb8dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 7e9d60718430cf52ebb4e7b4aa946680, type: 2}
   recipeProvider: {fileID: 11400000, guid: 13277fc82c941ed92b77870f6ea189e3, type: 2}
   nightEvents: {fileID: 11400000, guid: 2c8ed395dcf99dc93bdf5778f7335d9f, type: 2}
   encounterDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
@@ -3784,6 +3838,7 @@ MonoBehaviour:
   theCauldron: {fileID: 400047806}
   visitorManager: {fileID: 264877340}
   stateMachine: {fileID: 763255249}
+  gameDataHandler: {fileID: 484183964}
   endingScreen: {fileID: 2079205777}
   nightPanel: {fileID: 7354000312683070564}
 --- !u!4 &1171410290 stripped
@@ -5354,6 +5409,7 @@ Transform:
   - {fileID: 1153789304}
   - {fileID: 52409420}
   - {fileID: 763255248}
+  - {fileID: 484183963}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

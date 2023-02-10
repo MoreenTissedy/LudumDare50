@@ -1,32 +1,28 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Save;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Encounter Deck", menuName = "Encounter Deck", order = 0)]
-    public class EncounterDeck : EncounterDeckBase
+    [Serializable]
+    public class EncounterDeck : EncounterDeckBase, IDataPersistence
     {
         public Encounter[] startingCards;
         public Encounter[] pool1, pool2, pool3, pool4, pool5;
         public LinkedList<Encounter> deck;
         [Header("Deck info")] public Encounter[] deckInfo;
-
-        
         
         public List<Encounter> cardPool;
-        private GameData game;
+        private GameDataHandler game;
 
-        public override void Init(GameData game)
+        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager)
         {
             this.game = game;
-            deck = new LinkedList<Encounter>();
-            foreach (var card in Shuffle(startingCards))
-            {
-                deck.AddLast(card);
-            }
-
-            cardPool = new List<Encounter>(15);
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)
@@ -121,6 +117,36 @@ namespace CauldronCodebase
 
             deckInfo = deck.ToArray();
             return card;
+        }
+
+        public override void LoadData(GameData data, bool newGame)
+        {
+            if (data.CardPool != null)
+            {
+                cardPool = data.CardPool;
+                Debug.Log("New CardPool");
+            }
+
+
+            if (data.CurrentDeck != null)
+            {
+                deck = new LinkedList<Encounter>(data.CurrentDeck);
+                Debug.Log("New Deck");
+            }
+
+            if (deck.Count == 0)
+            {
+                foreach (var card in Shuffle(startingCards))
+                {
+                    deck.AddLast(card);
+                }
+            }
+        }
+
+        public override void SaveData(ref GameData data)
+        {
+            data.CardPool = cardPool;
+            data.CurrentDeck = deck.ToList();
         }
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
 using DG.Tweening;
+using Save;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -22,6 +24,8 @@ namespace CauldronCodebase
         public float startTweenSize = 0.3f;
         public Button accept;
         public Button decline;
+
+        [Inject] private DataPersistenceManager dataPersistenceManager;
         
         public event Action OnAccept;
         public event Action OnDecline;
@@ -75,6 +79,8 @@ namespace CauldronCodebase
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
+            
+            dataPersistenceManager.SaveGame();
         }
     }
 }

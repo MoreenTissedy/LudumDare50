@@ -1,4 +1,3 @@
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -9,22 +8,26 @@ namespace CauldronCodebase
     {
         private Text text;
         
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
         private MainSettings settings;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameData data)
+        private void Construct(MainSettings mainSettings, GameDataHandler dataHandler)
         {
             settings = mainSettings;
-            gameData = data;
+            gameDataHandler = dataHandler;
             text = GetComponent<Text>();
+            gameDataHandler.StatusChanged += UpdateMoney;
+        }
+
+        private void Start()
+        {
             UpdateMoney();
-            gameData.StatusChanged += UpdateMoney;
         }
 
         private void UpdateMoney()
         {
-            text.text = $"{gameData.Money} / {settings.statusBars.Total}";
+            text.text = $"{gameDataHandler.Money} / {settings.statusBars.Total}";
         }
     
     }

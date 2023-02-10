@@ -7,13 +7,13 @@ namespace CauldronCodebase.GameStates
     public class VisitorWaitingState : BaseGameState
     {
         private MainSettings _settings;
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
         private GameStateMachine _stateMachine;
 
-        public VisitorWaitingState(MainSettings settings, GameData gameData, GameStateMachine stateMachine)
+        public VisitorWaitingState(MainSettings settings, GameDataHandler gameDataHandler, GameStateMachine stateMachine)
         {
             _settings = settings;
-            this.gameData = gameData;
+            this.gameDataHandler = gameDataHandler;
             _stateMachine = stateMachine;
         }
         
@@ -31,14 +31,13 @@ namespace CauldronCodebase.GameStates
         {
             await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
 
-            if (gameData.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
+            if (gameDataHandler.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
             {
                 Debug.Log("switch to night");
                 _stateMachine.SwitchState(GameStateMachine.GamePhase.Night);
             }
             else
             {
-                Debug.Log("switch to Visitor");
                 _stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
             }
         }

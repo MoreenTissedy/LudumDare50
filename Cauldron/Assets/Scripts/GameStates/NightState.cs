@@ -4,7 +4,7 @@ namespace CauldronCodebase.GameStates
 {
     public class NightState : BaseGameState
     {
-        private readonly GameData gameData;
+        private readonly GameDataHandler gameDataHandler;
         private readonly MainSettings settings;
         private readonly NightEventProvider nightEvents;
         private readonly EncounterDeckBase cardDeck;
@@ -14,40 +14,40 @@ namespace CauldronCodebase.GameStates
         private readonly StatusChecker statusChecker;
         private readonly EventResolver eventResolver;
 
-        public NightState(GameData gameData,
+        public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
                           NightEventProvider nightEvents,
                           EncounterDeckBase cardDeck,
                           NightPanel nightPanel,
                           GameStateMachine stateMachine)
         {
-            this.gameData = gameData;
+            this.gameDataHandler = gameDataHandler;
             this.settings = settings;
             this.nightEvents = nightEvents;
             this.cardDeck = cardDeck;
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
 
-            statusChecker = new StatusChecker(settings, gameData);
-            eventResolver = new EventResolver(settings, gameData);
+            statusChecker = new StatusChecker(settings, gameDataHandler);
+            eventResolver = new EventResolver(settings, gameDataHandler);
         }
         
         public override void Enter()
         {
             if (IsGameEnd()) return;
-            gameData.CalculatePotionsOnLastDays();
-            var events = nightEvents.GetEvents(gameData);            
+            gameDataHandler.CalculatePotionsOnLastDays();
+            var events = nightEvents.GetEvents(gameDataHandler);            
             nightPanel.OpenBookWithEvents(events);
             nightPanel.OnClose += NightPanelOnOnClose;
-            cardDeck.NewDayPool(gameData.currentDay);
+            cardDeck.NewDayPool(gameDataHandler.currentDay);
             cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
         }
 
         private void NightPanelOnOnClose()
         {
             if (IsGameEnd()) return;
-            Debug.Log("new day " + gameData.currentDay);
-            gameData.NextDay();
+            Debug.Log("new day " + gameDataHandler.currentDay);
+            gameDataHandler.NextDay();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }
 

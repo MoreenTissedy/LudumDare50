@@ -10,18 +10,18 @@ namespace CauldronCodebase
         public Statustype type;
         private Text text;
         
-        private GameData gameData;
+        private GameDataHandler gameDataHandler;
 
         [Inject]
-        private void Construct(GameData data)
+        private void Construct(GameDataHandler dataHandler)
         {
-            gameData = data;
+            gameDataHandler = dataHandler;
         }
         private void Start()
         {
             text = GetComponent<Text>();
-            gameData.StatusChanged += () => SetValue(gameData.Get(type));
-            SetValue(gameData.Get(type));
+            gameDataHandler.StatusChanged += () => SetValue(gameDataHandler.Get(type));
+            SetValue(gameDataHandler.Get(type));
         }
 
         void SetValue(int value)

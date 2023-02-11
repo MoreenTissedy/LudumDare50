@@ -36,6 +36,10 @@ namespace Save
 
         private void Start()
         {
+            if (CheckTheExistenceOfGameData() == false)
+            {
+                NewGame();
+            }
             LoadDataPersistenceObj();
         }
 
@@ -44,16 +48,6 @@ namespace Save
             gameData = new GameData(settings.statusBars.InitialValue);
 
             newGame = true;
-        }
-
-        public void LoadGame()
-        {
-            if (gameData == null)
-            {
-                NewGame();
-            }
-
-            newGame = false;
         }
 
         public void SaveGame()

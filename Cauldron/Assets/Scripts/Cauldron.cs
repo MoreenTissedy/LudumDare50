@@ -41,6 +41,7 @@ namespace CauldronCodebase
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
+        public event Action<Potions> PotionAccepted;
         public event Action PotionDeclined;
 
         private RecipeProvider _recipeProvider;
@@ -191,7 +192,8 @@ namespace CauldronCodebase
                         {
                             potionPopup.Show(recipe);
                         }
-                        potionPopup.OnAccept += () => PotionAccepted(recipe.potion);
+                        PotionBrewed?.Invoke(recipe.potion);
+                        potionPopup.OnAccept += () => OnPotionAccepted(recipe.potion);
                         Mix.Clear();
                         return recipe.potion;
                     }
@@ -201,15 +203,16 @@ namespace CauldronCodebase
             recipeBook.RecordAttempt(Mix.ToArray());
             RandomMixColor();
             potionPopup.Show(null);
-            potionPopup.OnAccept += () => PotionAccepted(Potions.Placebo);
+            PotionBrewed?.Invoke(Potions.Placebo);
+            potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);
             Mix.Clear();
             return Potions.Placebo;
         }
 
-        private void PotionAccepted(Potions potion)
+        private void OnPotionAccepted(Potions potion)
         {
             potionPopup.ClearAcceptSubscriptions();
-            PotionBrewed?.Invoke(potion);
+            PotionAccepted?.Invoke(potion);
         }
 
         public void OnPointerClick(PointerEventData eventData)

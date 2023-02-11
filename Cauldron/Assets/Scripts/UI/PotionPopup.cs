@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
@@ -19,7 +17,7 @@ namespace CauldronCodebase
         public Sprite defaultPicture;
         public GameObject newPotionEffect;
         public float tweenDuration = 0.3f;
-        public float startTweenSize = 0.3f;
+        public float startTweenSize = 0f;
         public Button accept;
         public Button decline;
         
@@ -38,7 +36,8 @@ namespace CauldronCodebase
             gameObject.SetActive(true);
             newPotionEffect.SetActive(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
-                OnComplete(() => newPotionEffect.SetActive(newPotion));
+                OnComplete(() => newPotionEffect.SetActive(newPotion)).
+                SetDelay(PotionExplosion.EFFECT_DURATION);
             
             if (recipe is null)
             {

@@ -47,13 +47,13 @@ namespace CauldronCodebase.GameStates
             
             currentCard.Init(gameData, cardDeck, nightEvents);           
             visitorManager.Enter(currentCard);
-            cauldron.PotionBrewed += EndEncounter;
+            cauldron.PotionAccepted += EndEncounter;
         }
         
         public override void Exit()
         {
             gameData.cardsDrawnToday++;
-            cauldron.PotionBrewed -= EndEncounter;
+            cauldron.PotionAccepted -= EndEncounter;
             visitorManager.Exit();           
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Save
@@ -35,7 +34,6 @@ namespace Save
                     }
 
                     loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
-                    //loadedData = JsonConvert.DeserializeObject<GameData>(dataToLoad);
                     Debug.LogWarning($"Data loaded from {fullPath}");
                 }
                 catch (Exception e)
@@ -56,7 +54,6 @@ namespace Save
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
                 string dataToStore = JsonUtility.ToJson(data, true);
-                //string dataToStore = JsonConvert.SerializeObject(data, true);
                 using (FileStream stream = new FileStream(fullPath, FileMode.Create))
                 {
                     using (StreamWriter writer = new StreamWriter(stream))

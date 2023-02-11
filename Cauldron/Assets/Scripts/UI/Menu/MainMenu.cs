@@ -27,6 +27,10 @@ namespace CauldronCodebase
         private void Start()
         {
             continueGame.onClick.AddListener(ContinueClick);
+            if (dataPersistenceManager.CheckTheExistenceOfGameData() == false)
+            {
+                continueGame.gameObject.SetActive(false);
+            }
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
             settings.onClick.AddListener(settingsMenu.Open);
@@ -59,11 +63,10 @@ namespace CauldronCodebase
 
         private void ContinueClick()
         {
-            GameLoader.ReloadGame();
-            dataPersistenceManager.LoadGame();
+            GameLoader.UnloadMenu();
         }
 
-        public void StartNewGame()
+        private void StartNewGame()
         {
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();

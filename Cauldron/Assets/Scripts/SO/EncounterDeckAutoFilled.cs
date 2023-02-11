@@ -196,6 +196,8 @@ namespace CauldronCodebase
 
         public override void LoadData(GameData data, bool newGame)
         {
+            if(data is null) return;
+            
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
             

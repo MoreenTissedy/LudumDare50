@@ -233,6 +233,7 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
+            if(data is null) return;
             loadIgnoreSaveFile = newGame;
 
             fame = data.Fame;

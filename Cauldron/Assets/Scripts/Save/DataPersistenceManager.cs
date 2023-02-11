@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CauldronCodebase;
 using UnityEngine;
 using Zenject;
@@ -18,6 +19,8 @@ namespace Save
 
         private bool newGame;
 
+        public event Action OnLoadDataPersistenceObjComplete;
+
         [Inject]
         private void Construct(MainSettings mainSettings)
         {
@@ -25,10 +28,15 @@ namespace Save
             fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         }
 
-        private void Start()
+        private void Awake()
         {
             gameData = fileDataHandler.Load();
             GameLoader.OnGameLoadComplete += LoadDataPersistenceObj;
+        }
+
+        private void Start()
+        {
+            LoadDataPersistenceObj();
         }
 
         public void NewGame()
@@ -80,6 +88,7 @@ namespace Save
             {
                 dataPersistenceObj.LoadData(gameData, newGame);
             }
+            OnLoadDataPersistenceObjComplete?.Invoke();
         }
 
         private void OnDestroy()

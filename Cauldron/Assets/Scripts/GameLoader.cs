@@ -45,16 +45,15 @@ namespace CauldronCodebase
             return SceneManager.GetSceneByBuildIndex(1).isLoaded;
         }
 
-        public static bool IsMenuLoaded()
-        {
-            return SceneManager.GetSceneByBuildIndex(0).isLoaded;
-        }
-
         public static void LoadGameInBackground()
         {
             if (IsGameLoaded())
                 return;
-            SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            operation.completed += (_) =>
+            {
+                OnGameLoadComplete?.Invoke();
+            };
         }
 
         public static void LoadMenu()

@@ -1,4 +1,5 @@
 using System;
+using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -23,14 +24,14 @@ namespace CauldronCodebase
                 settingsMenu = FindObjectOfType<SettingsMenu>();
         }
 
-        //TODO: if there is no save - hide New Game button and replace Continue text with New
+        private void Awake()
+        {
+            dataPersistenceManager.OnDontExistSave += HideContinueButton;
+        }
+        
         private void Start()
         {
             continueGame.onClick.AddListener(ContinueClick);
-            if (dataPersistenceManager.CheckTheExistenceOfGameData() == false)
-            {
-                continueGame.gameObject.SetActive(false);
-            }
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
             settings.onClick.AddListener(settingsMenu.Open);
@@ -44,6 +45,16 @@ namespace CauldronCodebase
                 PlayerPrefs.DeleteAll();
                 Debug.LogWarning("Prefs cleared!");
             }
+        }
+
+        private void OnDestroy()
+        {
+            dataPersistenceManager.OnDontExistSave += HideContinueButton;
+        }
+
+        public void HideContinueButton()
+        {
+            continueGame.gameObject.SetActive(false);
         }
 
         private void NewGameClick()
@@ -64,6 +75,7 @@ namespace CauldronCodebase
         private void ContinueClick()
         {
             GameLoader.UnloadMenu();
+            dataPersistenceManager.PlayGame();
         }
 
         private void StartNewGame()

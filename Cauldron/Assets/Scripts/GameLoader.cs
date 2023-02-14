@@ -11,11 +11,6 @@ namespace CauldronCodebase
         public static event Action<bool> GamePaused;
         public static event Action OnGameLoadComplete;
 
-        public static bool IsMenuOpen()
-        {
-            return SceneManager.GetSceneByBuildIndex(0).isLoaded;
-        }
-
         public static void ReloadGame()
         {
             //TODO: new game through saving and loading, much better management
@@ -35,9 +30,14 @@ namespace CauldronCodebase
             var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
             operation.completed += (_) =>
             {
-                OnGameLoadComplete?.Invoke();
                 UnloadMenu();
+                OnGameLoadComplete?.Invoke();
             };
+        }
+
+        public static bool IsMenuOpen()
+        {
+            return SceneManager.GetSceneByBuildIndex(0).isLoaded;
         }
 
         public static bool IsGameLoaded()

@@ -27,6 +27,8 @@ namespace CauldronCodebase.GameStates
 
         public event Action<GamePhase> OnChangeState;
 
+        private bool stateMachineIsRunning = false;
+
 
         [Inject]
         public void Construct(StateFactory factory, DataPersistenceManager persistenceManager)
@@ -38,13 +40,15 @@ namespace CauldronCodebase.GameStates
             
             _currentGameState = gameStates[GamePhase.VisitorWaiting];
             dataPersistenceManager = persistenceManager;
-            dataPersistenceManager.OnLoadDataPersistenceObjComplete += RunStateMachine;
+            dataPersistenceManager.OnPlayGame += RunStateMachine;
         }
 
         private void RunStateMachine()
         {
-            if(dataPersistenceManager.CheckTheExistenceOfGameData() == false) return;
+            if(stateMachineIsRunning || GameLoader.IsMenuOpen()) return;
+
             _currentGameState.Enter();
+            stateMachineIsRunning = true;
         }
  
         public void SwitchState(GamePhase phase)
@@ -59,7 +63,7 @@ namespace CauldronCodebase.GameStates
 
         private void OnDestroy()
         {
-            dataPersistenceManager.OnLoadDataPersistenceObjComplete -= RunStateMachine;
+            dataPersistenceManager.OnPlayGame -= RunStateMachine;
         }
     }
 }

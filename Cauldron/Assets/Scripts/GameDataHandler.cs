@@ -67,26 +67,16 @@ namespace CauldronCodebase
             this.dataPersistenceManager = dataPersistenceManager;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
-            potionsTotal = new List<Potions>(15);
-            
             statusSettings = settings.statusBars;
             fearThresholdLow = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
             fameThresholdLow = fearThresholdLow;
             fameThresholdHigh = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
             fearThresholdHigh = fameThresholdHigh;
 
-            fear = statusSettings.InitialValue;
-            fame = statusSettings.InitialValue;
-            storyTags = new List<string>(5);
-            
             currentDeck = deck;
             currentDeck.Init(this, this.dataPersistenceManager);
             currentEvents = events;
             currentEvents.Init(this.dataPersistenceManager);
-            
-            potionsBrewedInADays = new List<PotionsBrewedInADay>(3);
-            currentDayPotions = new PotionsBrewedInADay();
-            potionsBrewedInADays.Add(currentDayPotions);
         }
 
         public void AddTag(string tag)
@@ -241,8 +231,14 @@ namespace CauldronCodebase
             money = data.Money;
             currentDay = data.CurrentDay;
             cardsDrawnToday = data.CardDrawnToday;
-            storyTags = data.storyTags;
+            storyTags = data.StoryTags;
             currentCard = data.CurrentVisitor;
+
+            potionsTotal = data.PotionsTotalOnRun;
+            wrongPotionsCount = data.WrongPotionsCountOnRun;
+
+            currentDayPotions = data.CurrentDayPotions;
+            potionsBrewedInADays = data.PotionsBrewedInADays;
         }
 
         public void SaveData(ref GameData data)
@@ -254,13 +250,20 @@ namespace CauldronCodebase
             data.Money = money;
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
-            data.storyTags = storyTags;
+            data.StoryTags = storyTags;
             data.CurrentVisitor = currentCard;
+
+            data.PotionsTotalOnRun = potionsTotal;
+            data.WrongPotionsCountOnRun = wrongPotionsCount;
+
+            data.CurrentDayPotions = currentDayPotions;
+            data.PotionsBrewedInADays = potionsBrewedInADays;
         }
     }
     
 
-    class PotionsBrewedInADay
+    [Serializable]
+    public class PotionsBrewedInADay
     {
         public List<Potions> PotionsList = new List<Potions>(15);
         public int WrongPotions = 0;

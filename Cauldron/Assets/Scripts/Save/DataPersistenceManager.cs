@@ -12,6 +12,8 @@ namespace Save
         [SerializeField] private string fileName;
         
         private GameData gameData;
+        //TODO: Create global stat
+        
         [SerializeField] private List<IDataPersistence> iDataPersistenceObj;
         private FileDataHandler fileDataHandler;
 
@@ -19,7 +21,8 @@ namespace Save
 
         private bool newGame;
 
-        public event Action OnLoadDataPersistenceObjComplete;
+        public event Action OnPlayGame;
+        public event Action OnDontExistSave;
 
         [Inject]
         private void Construct(MainSettings mainSettings)
@@ -48,6 +51,13 @@ namespace Save
             gameData = new GameData(settings.statusBars.InitialValue);
 
             newGame = true;
+            
+            OnDontExistSave?.Invoke();
+        }
+
+        public void PlayGame()
+        {
+            OnPlayGame?.Invoke();
         }
 
         public void SaveGame()
@@ -82,7 +92,7 @@ namespace Save
             {
                 dataPersistenceObj.LoadData(gameData, newGame);
             }
-            OnLoadDataPersistenceObjComplete?.Invoke();
+            PlayGame();
         }
 
         private void OnDestroy()

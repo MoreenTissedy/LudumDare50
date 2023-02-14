@@ -7,7 +7,6 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    //Class holds the game state and can be used for saving and loading
     [Serializable]
     public class GameDataHandler : MonoBehaviour,IDataPersistence
     {
@@ -30,11 +29,7 @@ namespace CauldronCodebase
             set => Set(Statustype.Money, value);
         }
 
-        //status struct?
-        private int fearThresholdLow;
-        private int fearThresholdHigh;
-        private int fameThresholdLow;
-        private int fameThresholdHigh;
+        private Status status;
         
         public int currentDay = 1;
         public int cardsDrawnToday;
@@ -68,10 +63,6 @@ namespace CauldronCodebase
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
-            fearThresholdLow = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
-            fameThresholdLow = fearThresholdLow;
-            fameThresholdHigh = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
-            fearThresholdHigh = fameThresholdHigh;
 
             currentDeck = deck;
             currentDeck.Init(this, this.dataPersistenceManager);
@@ -106,9 +97,9 @@ namespace CauldronCodebase
             switch (type)
             {
                 case Statustype.Fear:
-                    return high ? fearThresholdHigh : fearThresholdLow;
+                    return high ? status.FearThresholdHigh : status.FearThresholdLow;
                 case Statustype.Fame:
-                    return high ? fameThresholdHigh : fameThresholdLow;
+                    return high ? status.FameThresholdHigh : status.FameThresholdLow;
             }
 
             return -1000;
@@ -155,29 +146,29 @@ namespace CauldronCodebase
                 case Statustype.Fear:
                     if (high)
                     {
-                        fearThresholdHigh += statusSettings.ThresholdDecrement;
-                        fearThresholdHigh = Mathf.Clamp(fearThresholdHigh, 0, statusSettings.GetMaxThreshold);
-                        Debug.Log("next high fear at " + fearThresholdHigh);
+                        status.FearThresholdHigh += statusSettings.ThresholdDecrement;
+                        status.FearThresholdHigh = Mathf.Clamp(status.FearThresholdHigh, 0, statusSettings.GetMaxThreshold);
+                        Debug.Log("next high fear at " + status.FearThresholdHigh);
                     }
                     else
                     {
-                        fearThresholdLow -= statusSettings.ThresholdDecrement;
-                        fearThresholdLow = Mathf.Clamp(fearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
-                        Debug.Log("next low fear at " + fearThresholdLow);
+                        status.FearThresholdLow -= statusSettings.ThresholdDecrement;
+                        status.FearThresholdLow = Mathf.Clamp(status.FearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
+                        Debug.Log("next low fear at " + status.FearThresholdLow);
                     }
                     break;
                 case Statustype.Fame:
                     if (high)
                     {
-                        fameThresholdHigh += statusSettings.ThresholdDecrement;
-                        fameThresholdHigh = Mathf.Clamp(fameThresholdHigh, 0, statusSettings.GetMaxThreshold);
-                        Debug.Log("next high fame at " + fameThresholdHigh);
+                        status.FameThresholdHigh += statusSettings.ThresholdDecrement;
+                        status.FameThresholdHigh = Mathf.Clamp(status.FameThresholdHigh, 0, statusSettings.GetMaxThreshold);
+                        Debug.Log("next high fame at " + status.FameThresholdHigh);
                     }
                     else
                     {
-                        fameThresholdLow -= statusSettings.ThresholdDecrement;
-                        fameThresholdLow = Mathf.Clamp(fameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
-                        Debug.Log("next low fame at " + fameThresholdLow);
+                        status.FameThresholdLow -= statusSettings.ThresholdDecrement;
+                        status.FameThresholdLow = Mathf.Clamp(status.FameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
+                        Debug.Log("next low fame at " + status.FameThresholdLow);
                     }
                     break;
             }
@@ -226,6 +217,18 @@ namespace CauldronCodebase
             if(data is null) return;
             loadIgnoreSaveFile = newGame;
 
+            status = data.Status;
+            if (newGame)
+            {
+                int highThreshold = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
+                int lowThreshold = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
+
+                status.FameThresholdHigh = highThreshold;
+                status.FearThresholdHigh = highThreshold;
+                status.FameThresholdLow = lowThreshold;
+                status.FearThresholdLow = lowThreshold;
+            }
+
             fame = data.Fame;
             fear = data.Fear;
             money = data.Money;
@@ -244,6 +247,7 @@ namespace CauldronCodebase
         public void SaveData(ref GameData data)
         {
             if(data == null) return;
+            data.Status = status;
             
             data.Fame = fame;
             data.Fear = Fear;
@@ -259,13 +263,5 @@ namespace CauldronCodebase
             data.CurrentDayPotions = currentDayPotions;
             data.PotionsBrewedInADays = potionsBrewedInADays;
         }
-    }
-    
-
-    [Serializable]
-    public class PotionsBrewedInADay
-    {
-        public List<Potions> PotionsList = new List<Potions>(15);
-        public int WrongPotions = 0;
     }
 }

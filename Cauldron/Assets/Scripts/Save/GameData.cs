@@ -28,6 +28,8 @@ namespace Save
         public PotionsBrewedInADay CurrentDayPotions;  //GameDataHandler
         public List<PotionsBrewedInADay> PotionsBrewedInADays;  //GameDataHandler
 
+        public Status Status;  //GameDataHandler
+
 
         public GameData(int initialValue)
         {
@@ -53,6 +55,8 @@ namespace Save
 
             CurrentDayPotions = new PotionsBrewedInADay();
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
+
+            Status = new Status();
         }
     }
 }

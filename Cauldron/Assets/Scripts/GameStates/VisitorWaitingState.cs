@@ -6,9 +6,9 @@ namespace CauldronCodebase.GameStates
 {
     public class VisitorWaitingState : BaseGameState
     {
-        private MainSettings _settings;
-        private GameDataHandler gameDataHandler;
-        private GameStateMachine _stateMachine;
+        private readonly MainSettings _settings;
+        private readonly GameDataHandler gameDataHandler;
+        private readonly GameStateMachine _stateMachine;
 
         public VisitorWaitingState(MainSettings settings, GameDataHandler gameDataHandler, GameStateMachine stateMachine)
         {
@@ -29,7 +29,11 @@ namespace CauldronCodebase.GameStates
 
         private async void ExitStateWithDelay()
         {
-            await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
+            if (gameDataHandler.loadIgnoreSaveFile)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
+            }
+            
 
             if (gameDataHandler.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
             {

@@ -34,6 +34,7 @@ namespace CauldronCodebase
         public int currentDay = 1;
         public int cardsDrawnToday;
         public Encounter currentCard;
+        public Villager CurrentVillager;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
 
@@ -235,7 +236,9 @@ namespace CauldronCodebase
             currentDay = data.CurrentDay;
             cardsDrawnToday = data.CardDrawnToday;
             storyTags = data.StoryTags;
+            
             currentCard = data.CurrentVisitor;
+            CurrentVillager = data.CurrentVillager;
 
             potionsTotal = data.PotionsTotalOnRun;
             wrongPotionsCount = data.WrongPotionsCountOnRun;
@@ -255,7 +258,9 @@ namespace CauldronCodebase
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
+            
             data.CurrentVisitor = currentCard;
+            data.CurrentVillager = CurrentVillager;
 
             data.PotionsTotalOnRun = potionsTotal;
             data.WrongPotionsCountOnRun = wrongPotionsCount;

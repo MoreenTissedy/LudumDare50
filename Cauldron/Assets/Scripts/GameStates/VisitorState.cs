@@ -39,10 +39,12 @@ namespace CauldronCodebase.GameStates
         public override void Enter()
         {
             Encounter currentCard;
+            Villager currentVillager;
 
             void NewCard()
             {
                 currentCard = cardDeck.GetTopCard();
+                currentVillager = null;
                 gameDataHandler.currentCard = currentCard;
             }
             
@@ -55,6 +57,7 @@ namespace CauldronCodebase.GameStates
                 else
                 {
                     currentCard = gameDataHandler.currentCard;
+                    currentVillager = gameDataHandler.CurrentVillager;
                 }
 
                 gameDataHandler.loadIgnoreSaveFile = true;
@@ -71,9 +74,10 @@ namespace CauldronCodebase.GameStates
                 return;
             }
             
-            currentCard.Init(gameDataHandler, cardDeck, nightEvents);           
+            currentCard.Init(currentVillager);           
             visitorManager.Enter(currentCard);
             cauldron.PotionBrewed += EndEncounter;
+            gameDataHandler.CurrentVillager = currentCard.actualVillager;
             dataPersistenceManager.SaveGame();
         }
         

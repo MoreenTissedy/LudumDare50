@@ -6,6 +6,7 @@ using Spine.Unity;
 
 namespace CauldronCodebase
 {
+    [Serializable]
     public class Visitor : MonoBehaviour
     {
         private SkeletonAnimation anim;

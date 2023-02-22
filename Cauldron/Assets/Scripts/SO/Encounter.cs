@@ -11,9 +11,6 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
-        private EncounterDeckBase _encounterDeck;
-        private NightEventProvider _nightEventProvider;
-
         public int addToDeckOnDay = -1;
         public string requiredStoryTag;
 
@@ -42,16 +39,17 @@ namespace CauldronCodebase
 
 
         
-        public void Init(GameDataHandler gameDataHandler, EncounterDeckBase deck, NightEventProvider events)
+        public void Init(Villager actual)
         {
-            if (villager.Length > 0)
+            if (actual != null)
+            {
+                actualVillager = actual;
+            }
+            else if (villager.Length > 0)
             {
                 int random = Random.Range(0, villager.Length);
                 actualVillager = villager[random];
             }
-            
-            _encounterDeck = deck;
-            _nightEventProvider = events;
         }
 
         public static Encounter GetRandom(Encounter[] set)
@@ -93,7 +91,5 @@ namespace CauldronCodebase
 
             return false;
         }
-
-        
     }
 }

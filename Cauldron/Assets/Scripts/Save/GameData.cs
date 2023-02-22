@@ -19,6 +19,7 @@ namespace Save
         public int CardDrawnToday; // GameDataHandler
 
         public Encounter CurrentVisitor;  // GameDataHandler
+        public Villager CurrentVillager;
 
         public List<string> StoryTags;  // GameDataHandler
         
@@ -47,6 +48,7 @@ namespace Save
             CardDrawnToday = 0;
 
             CurrentVisitor = null;
+            CurrentVillager = null;
 
             StoryTags = new List<string>(5);
             

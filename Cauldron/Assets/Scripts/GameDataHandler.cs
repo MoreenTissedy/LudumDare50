@@ -237,7 +237,7 @@ namespace CauldronCodebase
             cardsDrawnToday = data.CardDrawnToday;
             storyTags = data.StoryTags;
             
-            currentCard = data.CurrentVisitor;
+            currentCard = data.CurrentEncounter;
             CurrentVillager = data.CurrentVillager;
 
             potionsTotal = data.PotionsTotalOnRun;
@@ -259,7 +259,7 @@ namespace CauldronCodebase
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
             
-            data.CurrentVisitor = currentCard;
+            data.CurrentEncounter = currentCard;
             data.CurrentVillager = CurrentVillager;
 
             data.PotionsTotalOnRun = potionsTotal;

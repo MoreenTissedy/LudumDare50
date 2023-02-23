@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CauldronCodebase;
+using UnityEngine.Serialization;
 
 namespace Save
 {
@@ -18,7 +19,7 @@ namespace Save
         public int CurrentDay; // GameDataHandler
         public int CardDrawnToday; // GameDataHandler
 
-        public Encounter CurrentVisitor;  // GameDataHandler
+        public Encounter CurrentEncounter;  // GameDataHandler
         public Villager CurrentVillager;
 
         public List<string> StoryTags;  // GameDataHandler
@@ -47,7 +48,7 @@ namespace Save
 
             CardDrawnToday = 0;
 
-            CurrentVisitor = null;
+            CurrentEncounter = null;
             CurrentVillager = null;
 
             StoryTags = new List<string>(5);

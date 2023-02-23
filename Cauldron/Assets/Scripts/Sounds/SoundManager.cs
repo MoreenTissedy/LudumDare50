@@ -1,27 +1,38 @@
 using UnityEngine;
 
-namespace CauldronCodebase.Sounds
+namespace CauldronCodebase
 {
-    [RequireComponent(typeof(AudioSource))]
-    public class SoundManager : MonoBehaviour
+    public enum Sounds
     {
-        public AudioClip success;
-        public AudioClip failure;
-        public static SoundManager theOne;
+        Music,
+        Bubbling,
+        Splash,
+        PotionReady,
+        Success,
+        Failure
+    }
 
-        private void Awake()
+    public struct BookSounds
+    {
+        public AudioClip Open;
+        public AudioClip Close;
+        public AudioClip Left;
+        public AudioClip Right;
+    }
+
+    [CreateAssetMenu]
+    public class SoundManager : ScriptableObject
+    {
+        public AudioClip[] sounds;
+
+        public void Init()
         {
-            theOne = this;
+            Debug.LogError("start music");
         }
 
-        public void PlaySuccess()
+        public void Play(Sounds sound)
         {
-            GetComponent<AudioSource>().PlayOneShot(success);
-        }
-
-        public void PLayFailure()
-        {
-            GetComponent<AudioSource>().PlayOneShot(failure);
+            Debug.LogError(sounds[(int) sound].name);
         }
     }
 }

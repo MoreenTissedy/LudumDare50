@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
@@ -11,6 +12,7 @@ namespace CauldronCodebase.GameStates
         private readonly Cauldron cauldron;
         private readonly GameStateMachine stateMachine;
         private readonly NightEventProvider nightEvents;
+        private readonly SoundManager soundManager;
 
         private readonly EncounterResolver resolver;
 
@@ -20,7 +22,8 @@ namespace CauldronCodebase.GameStates
                             VisitorManager visitorManager,
                             Cauldron cauldron,
                             GameStateMachine stateMachine,
-                            NightEventProvider nightEventProvider)
+                            NightEventProvider nightEventProvider, 
+                            SoundManager soundManager)
         {
             cardDeck = deck;
             mainSettings = settings;
@@ -30,6 +33,7 @@ namespace CauldronCodebase.GameStates
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             nightEvents = nightEventProvider;
+            this.soundManager = soundManager;
 
             resolver = new EncounterResolver(settings, gameData, deck, nightEvents);
         }
@@ -59,8 +63,8 @@ namespace CauldronCodebase.GameStates
 
         private void EndEncounter(Potions potion)
         {
-            Debug.Log("end encounter with "+potion);
-            
+            PlayRelevantSound(potion);
+
             if (!resolver.EndEncounter(potion))
             {
                 gameData.AddPotion(potion, true);
@@ -71,6 +75,19 @@ namespace CauldronCodebase.GameStates
             }
 
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+        }
+
+        private void PlayRelevantSound(Potions potion)
+        {
+            var potionCoef = gameData.currentCard.resultsByPotion.FirstOrDefault(x => x.potion == potion)?.influenceCoef ?? 0;
+            if (potionCoef > 0)
+            {
+                soundManager.Play(Sounds.Success);
+            }
+            else if (potionCoef < 0)
+            {
+                soundManager.Play(Sounds.Failure);
+            }
         }
 
         private void VisitorLeft()

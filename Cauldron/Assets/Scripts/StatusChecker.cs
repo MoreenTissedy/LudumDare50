@@ -1,5 +1,4 @@
-﻿using CauldronCodebase.GameStates;
-namespace CauldronCodebase
+﻿namespace CauldronCodebase
 {
     public class StatusChecker
     {

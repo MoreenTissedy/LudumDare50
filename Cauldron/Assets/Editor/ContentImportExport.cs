@@ -210,21 +210,28 @@ namespace Editor
         [MenuItem("Utilities/Export for GraphViz")]
         public static void ExportToDot()
         {
-            //skip this for now
             RandomNightEvent[] startingEvents = ScriptableObjectHelper.LoadAllAssets<RandomNightEvent>();
             Encounter[] encounters = ScriptableObjectHelper.LoadAllAssets<Encounter>();
 
             List<NightEvent> storyEvents = new List<NightEvent>(30);
             string dotNotation = "digraph{\n";
+            
+            foreach (var randomNightEvent in startingEvents)
+            {
+                string name = randomNightEvent.name.Replace(".", "_").Replace("-", "_");
+                dotNotation += $"{name} [shape = record]\n";
+            }
+            
             foreach (var encounter in encounters)
             {
+                string encounterName = encounter.name.Replace(".", "_").Replace("-", "_");
                 if (encounter.addToDeckOnDay >= 0)
                 {
-                    dotNotation += $"{encounter.name} [style=filled, color=yellow]\n";
+                    dotNotation += $"{encounterName} [style=filled, color=yellow]\n";
                 }
                 else
                 {
-                    dotNotation += $"{encounter.name}\n";
+                    dotNotation += $"{encounterName}\n";
                 }
                 
                 bool endNode = true;
@@ -237,16 +244,18 @@ namespace Editor
                     
                     if (result.bonusCard != null)
                     {
+                        string bonusCard = result.bonusCard.name.Replace(".", "_").Replace("-", "_");
                         endNode = false;
                         dotNotation +=
-                            $"{encounter.name} -> {result.bonusCard.name} [color={color}, label={result.potion}, style={style}]\n";
+                            $"{encounterName} -> {bonusCard} [color={color}, label={result.potion}, style={style}]\n";
                     }
                     if (result.bonusEvent != null)
                     {
+                        string bonusEvent = result.bonusEvent.name.Replace(".", "_").Replace("-", "_");
                         endNode = false;
                         storyEvents.Add(result.bonusEvent);
-                        dotNotation += $"{encounter.name} -> {result.bonusEvent.name}[color={color}, label={result.potion}, style = {style}]\n";
-                        dotNotation += $"{result.bonusEvent.name} [shape = record]\n";
+                        dotNotation += $"{encounterName} -> {bonusEvent} [color={color}, label={result.potion}, style = {style}]\n";
+                        dotNotation += $"{bonusEvent} [shape = record]\n";
                     }
                 }
                 if (endNode == true)
@@ -254,11 +263,13 @@ namespace Editor
                     //dotNotation += $"{encounter.name} [color=purple]\n";
                 }
             }
-            foreach (NightEvent storyEvent in storyEvents)
+            foreach (NightEvent storyEvent in storyEvents.Union(startingEvents))
             {
+                string eventName = storyEvent.name.Replace(".", "_").Replace("-", "_");
                 if (storyEvent.bonusCard != null)
                 {
-                    dotNotation += $"{storyEvent.name} -> {storyEvent.bonusCard.name}\n";
+                    string bonusCard = storyEvent.bonusCard.name.Replace(".", "_").Replace("-", "_");
+                    dotNotation += $"{eventName} -> {bonusCard}\n";
                 }
             }
             dotNotation += "}";

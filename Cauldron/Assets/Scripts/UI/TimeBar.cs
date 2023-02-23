@@ -1,6 +1,7 @@
 using CauldronCodebase.GameStates;
 using DG.Tweening;
 using EasyLoc;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -9,7 +10,7 @@ namespace CauldronCodebase
 {
     public class TimeBar : MonoBehaviour
     {
-        public Text dayNumber;
+        public TMP_Text dayNumber;
         public RectTransform timeBar;
         public Sprite fullCycleSample;
         private float rectWidth;

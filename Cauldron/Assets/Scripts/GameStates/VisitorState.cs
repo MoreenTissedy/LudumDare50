@@ -13,7 +13,7 @@ namespace CauldronCodebase.GameStates
         private readonly GameStateMachine stateMachine;
         private readonly NightEventProvider nightEvents;
 
-        private readonly CardResolver resolver;
+        private readonly EncounterResolver resolver;
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
@@ -33,7 +33,7 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             nightEvents = nightEventProvider;
 
-            resolver = new CardResolver(settings, gameDataHandler, deck, nightEvents);
+            resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEvents);
         }
         
         public override void Enter()
@@ -76,7 +76,7 @@ namespace CauldronCodebase.GameStates
             
             currentCard.Init(currentVillager);           
             visitorManager.Enter(currentCard);
-            cauldron.PotionBrewed += EndEncounter;
+            cauldron.PotionAccepted += EndEncounter;
             gameDataHandler.CurrentVillager = currentCard.actualVillager;
             dataPersistenceManager.SaveGame();
         }
@@ -84,7 +84,7 @@ namespace CauldronCodebase.GameStates
         public override void Exit()
         {
             gameDataHandler.cardsDrawnToday++;
-            cauldron.PotionBrewed -= EndEncounter;
+            cauldron.PotionAccepted -= EndEncounter;
             visitorManager.Exit();           
         }
 

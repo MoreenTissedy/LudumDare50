@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
 using DG.Tweening;
 using Save;
 using Zenject;
+using TMPro;
 
 namespace CauldronCodebase
 {
@@ -16,12 +15,13 @@ namespace CauldronCodebase
         public string youBrewed = "Вы сварили: ";
         [Localize]
         public string noRecipeForThis = "Вы сварили что-то не то";
-        public Text wording;
+        public TMP_Text wording;
+        public GameObject pictureContainer;
         public Image picture;
         public Sprite defaultPicture;
         public GameObject newPotionEffect;
         public float tweenDuration = 0.3f;
-        public float startTweenSize = 0.3f;
+        public float startTweenSize = 0f;
         public Button accept;
         public Button decline;
 
@@ -42,15 +42,17 @@ namespace CauldronCodebase
             gameObject.SetActive(true);
             newPotionEffect.SetActive(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
-                OnComplete(() => newPotionEffect.SetActive(newPotion));
+                OnComplete(() => newPotionEffect.SetActive(newPotion)).
+                SetDelay(PotionExplosion.EFFECT_DURATION);
             
             if (recipe is null)
             {
                 wording.text = noRecipeForThis;
-                picture.sprite = defaultPicture;
+                pictureContainer.SetActive(false);
             }
             else
             {
+                pictureContainer.SetActive(true);
                 wording.text = youBrewed + recipe.potionName;
                 picture.sprite = recipe.image;
             }

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
 using DG.Tweening;
+using TMPro;
 
 namespace CauldronCodebase
 {
@@ -12,7 +13,8 @@ namespace CauldronCodebase
         public string youBrewed = "Вы сварили: ";
         [Localize]
         public string noRecipeForThis = "Вы сварили что-то не то";
-        public Text wording;
+        public TMP_Text wording;
+        public GameObject pictureContainer;
         public Image picture;
         public Sprite defaultPicture;
         public GameObject newPotionEffect;
@@ -42,10 +44,11 @@ namespace CauldronCodebase
             if (recipe is null)
             {
                 wording.text = noRecipeForThis;
-                picture.sprite = defaultPicture;
+                pictureContainer.SetActive(false);
             }
             else
             {
+                pictureContainer.SetActive(true);
                 wording.text = youBrewed + recipe.potionName;
                 picture.sprite = recipe.image;
             }

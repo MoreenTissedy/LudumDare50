@@ -1,4 +1,5 @@
 using System;
+using FMODUnity;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,8 +10,15 @@ namespace CauldronCodebase
         Bubbling,
         Splash,
         PotionReady,
-        Success,
-        Failure
+        PotionUnlock,
+        PotionPopupClick,
+        PotionSuccess,
+        PotionFailure,
+        BookFocus,
+        BookClick,
+        BookSwitch,
+        MenuFocus,
+        MenuClick
     }
     
     public enum BookSound
@@ -24,30 +32,37 @@ namespace CauldronCodebase
     [Serializable]
     public struct BookSounds
     {
-        public AudioClip Open;
-        public AudioClip Close;
-        public AudioClip Left;
-        public AudioClip Right;
+        public EventReference Open;
+        public EventReference Close;
+        public EventReference Left;
+        public EventReference Right;
     }
 
     [CreateAssetMenu]
     public class SoundManager : ScriptableObject
     {
-        public AudioClip[] sounds;
+        public EventReference[] sounds;
 
         public void Init()
         {
-            Debug.LogError("start music");
+            Play(Sounds.Music);
+            Play(Sounds.Bubbling);
+            RuntimeManager.GetVCA("vca:/Music").setVolume(0.3f);
         }
 
         public void Play(Sounds sound)
         {
-            Debug.LogError(sounds[(int) sound].name);
+            EventReference reference = sounds[(int) sound];
+            if (reference.IsNull)
+            {
+                return;
+            }
+            RuntimeManager.PlayOneShot(reference);
         }
 
         public void PlayBook(BookSounds collection, BookSound type)
         {
-            AudioClip sound = null;
+            EventReference sound = new EventReference();
             switch (type)
             {
                 case BookSound.Open:
@@ -63,7 +78,7 @@ namespace CauldronCodebase
                     sound = collection.Right;
                     break;
             } 
-            Debug.LogError(sound?.name ?? "not defined");
+            RuntimeManager.PlayOneShot(sound);
         }
     }
 }

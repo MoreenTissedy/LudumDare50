@@ -82,11 +82,11 @@ namespace CauldronCodebase.GameStates
             var potionCoef = gameData.currentCard.resultsByPotion.FirstOrDefault(x => x.potion == potion)?.influenceCoef ?? 0;
             if (potionCoef > 0)
             {
-                soundManager.Play(Sounds.Success);
+                soundManager.Play(Sounds.PotionSuccess);
             }
             else if (potionCoef < 0)
             {
-                soundManager.Play(Sounds.Failure);
+                soundManager.Play(Sounds.PotionFailure);
             }
         }
 

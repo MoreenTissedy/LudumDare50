@@ -6,8 +6,6 @@ namespace CauldronCodebase
     public class Tutorial : MonoBehaviour
     {
         public RectTransform[] pages;
-
-        private int helpAsked = 0;
         private void Start()
         {
             CloseAllPages();
@@ -26,28 +24,33 @@ namespace CauldronCodebase
             if (page>=pages.Length)
                 return;
             pages[page].gameObject.SetActive(true);
-            StartCoroutine(WaitForInput());
         }
 
         public void ShowGameplay()
         {
-            Debug.Log("show gameplay");
-            //show 1 and 2 interchangeably
-            if (helpAsked%2 == 1)
-                Show(2);
-            else if (helpAsked%2 == 0)
-                Show(0);
-            helpAsked++;
+            StartCoroutine(GameplayTutorialCoroutine());
         }
 
         public void ShowOnBook()
         {
-            Debug.Log("show tutorial book");
             Show(1);
+            StartCoroutine(WaitForInput());
         }
 
+        IEnumerator GameplayTutorialCoroutine()
+        {
+            Show(0);
+            yield return new WaitForSeconds(1);
+            yield return new WaitUntil(() => Input.anyKeyDown);
+            Show(2);
+            yield return new WaitForSeconds(1);
+            yield return new WaitUntil(() => Input.anyKeyDown);
+            CloseAllPages();
+        }
+        
         IEnumerator WaitForInput()
         {
+            yield return new WaitForSeconds(1);
             yield return new WaitUntil(() => Input.anyKeyDown);
             CloseAllPages();
         }

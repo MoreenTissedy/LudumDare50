@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Save;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace CauldronCodebase.GameStates
@@ -9,11 +10,15 @@ namespace CauldronCodebase.GameStates
         
         private EndingScreen _endingScreen;
 
+        private DataPersistenceManager dataPersistenceManager;
+
         public EndGameState(EndingScreen endingScreen,
-                            GameStateMachine stateMachine)
+                            GameStateMachine stateMachine,
+                            DataPersistenceManager persistenceManager)
         {
             _endingScreen = endingScreen;
             gameStateMachine = stateMachine;
+            dataPersistenceManager = persistenceManager;
         }
         public override void Enter()
         {
@@ -23,7 +28,7 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
-            _endingScreen.OnClose -= ReloadGame;
+            
             if (_endingScreen.isActiveAndEnabled)
             {
                 _endingScreen.CloseBook();
@@ -33,7 +38,9 @@ namespace CauldronCodebase.GameStates
         private void ReloadGame()
         {
             Debug.Log("reload scene");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+            _endingScreen.OnClose -= ReloadGame;
+            dataPersistenceManager.NewGame();
+            GameLoader.RestartGame();
         }
     }
 }

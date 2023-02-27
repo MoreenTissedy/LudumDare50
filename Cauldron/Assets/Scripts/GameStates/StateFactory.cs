@@ -54,7 +54,9 @@ namespace CauldronCodebase.GameStates
 
         public VisitorState CreateVisitorState()
         {
-            return new VisitorState(deck, settings, dataPersistenceManager, gameDataHandler, visitorManager, cauldron, gameStateMachine, nightEvents, soundManager);
+            return new VisitorState(deck, settings, dataPersistenceManager, gameDataHandler, visitorManager, cauldron,
+                gameStateMachine, nightEvents, soundManager);
+        }
 
 
         public VisitorWaitingState CreateVisitorWaitingState()
@@ -69,7 +71,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, gameStateMachine);
+            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager);
         }
 
     }

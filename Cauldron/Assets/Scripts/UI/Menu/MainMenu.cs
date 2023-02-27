@@ -49,7 +49,7 @@ namespace CauldronCodebase
 
         private void OnDestroy()
         {
-            dataPersistenceManager.OnDontExistSave += HideContinueButton;
+            dataPersistenceManager.OnDontExistSave -= HideContinueButton;
         }
 
         public void HideContinueButton()

@@ -87,6 +87,7 @@ namespace Save
 
         private void LoadDataPersistenceObj()
         {
+            Debug.Log("Load data persistence obj");
             if(iDataPersistenceObj == null) return;
             foreach (var dataPersistenceObj in iDataPersistenceObj)
             {

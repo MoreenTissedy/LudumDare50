@@ -43,6 +43,10 @@ namespace CauldronCodebase
             {
                 //what if everything is unlocked?
                 Recipe unlockRecipe = GetRecipeToUnlock();
+                if (unlockRecipe == null)
+                {
+                    text.text = "Свари мне что нибудь";
+                }
                 text.text = Format(card, unlockRecipe);
             }
             else
@@ -77,9 +81,12 @@ namespace CauldronCodebase
         //move?
         private Recipe GetRecipeToUnlock()
         {
-            return recipeProvider.allRecipes.
+            Recipe recipe = recipeProvider.allRecipes.
                 Where(x => x.magical).
                 FirstOrDefault(x => !recipeBook.IsRecipeInBook(x));
+            
+            Debug.Log($"Get recipe to unlock {recipe}");
+            return recipe;
         }
     }
 }

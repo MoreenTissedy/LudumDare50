@@ -113,7 +113,7 @@ namespace CauldronCodebase.GameStates
 
         private void PlayRelevantSound(Potions potion)
         {
-            var potionCoef = gameData.currentCard.resultsByPotion.FirstOrDefault(x => x.potion == potion)?.influenceCoef ?? 0;
+            var potionCoef = gameDataHandler.currentCard.resultsByPotion.FirstOrDefault(x => x.potion == potion)?.influenceCoef ?? 0;
             if (potionCoef > 0)
             {
                 soundManager.Play(Sounds.PotionSuccess);

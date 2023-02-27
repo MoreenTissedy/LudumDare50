@@ -25,6 +25,13 @@ namespace CauldronCodebase
             }
         }
 
+        public static void RestartGame()
+        {
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
+
+            LoadGameInBackground();
+        }
+
         private static void OnUnloadComplete(AsyncOperation unloadOperation)
         {
             var operation = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);

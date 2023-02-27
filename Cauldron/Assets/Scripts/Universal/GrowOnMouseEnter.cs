@@ -20,13 +20,13 @@ namespace Universal
             initialScale = transf.sizeDelta;
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             
             transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed);
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             transf.DOSizeDelta((initialScale), sizeSpeed);
         }

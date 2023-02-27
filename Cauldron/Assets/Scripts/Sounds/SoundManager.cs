@@ -1,27 +1,84 @@
+using System;
+using FMODUnity;
 using UnityEngine;
 
-namespace CauldronCodebase.Sounds
+namespace CauldronCodebase
 {
-    [RequireComponent(typeof(AudioSource))]
-    public class SoundManager : MonoBehaviour
+    public enum Sounds
     {
-        public AudioClip success;
-        public AudioClip failure;
-        public static SoundManager theOne;
+        Music,
+        Bubbling,
+        Splash,
+        PotionReady,
+        PotionUnlock,
+        PotionPopupClick,
+        PotionSuccess,
+        PotionFailure,
+        BookFocus,
+        BookClick,
+        BookSwitch,
+        MenuFocus,
+        MenuClick
+    }
+    
+    public enum BookSound
+    {
+        Open,
+        Close,
+        Left,
+        Right
+    }
 
-        private void Awake()
+    [Serializable]
+    public struct BookSounds
+    {
+        public EventReference Open;
+        public EventReference Close;
+        public EventReference Left;
+        public EventReference Right;
+    }
+
+    [CreateAssetMenu]
+    public class SoundManager : ScriptableObject
+    {
+        public EventReference[] sounds;
+
+        public void Init()
         {
-            theOne = this;
+            Play(Sounds.Music);
+            Play(Sounds.Bubbling);
+            RuntimeManager.GetVCA("vca:/Music").setVolume(0.3f);
         }
 
-        public void PlaySuccess()
+        public void Play(Sounds sound)
         {
-            GetComponent<AudioSource>().PlayOneShot(success);
+            EventReference reference = sounds[(int) sound];
+            if (reference.IsNull)
+            {
+                return;
+            }
+            RuntimeManager.PlayOneShot(reference);
         }
 
-        public void PLayFailure()
+        public void PlayBook(BookSounds collection, BookSound type)
         {
-            GetComponent<AudioSource>().PlayOneShot(failure);
+            EventReference sound = new EventReference();
+            switch (type)
+            {
+                case BookSound.Open:
+                    sound = collection.Open;
+                    break;
+                case BookSound.Close:
+                    sound = collection.Close;
+                    break;
+                case BookSound.Left:
+                    sound = collection.Left;
+                    break;
+                case BookSound.Right:
+                    sound = collection.Right;
+                    break;
+            } 
+            RuntimeManager.PlayOneShot(sound);
         }
     }
 }

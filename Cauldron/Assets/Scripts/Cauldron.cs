@@ -21,8 +21,6 @@ namespace CauldronCodebase
         public SpriteRenderer baseMix, effectMix;
         public ParticleSystem bubbleColor, splash;
         public float splashDelay = 2f;
-        public AudioClip brew, add;
-        private AudioSource audios;
         private Mix mixScript;
         private Fire fireScript;
         private bool mixFound, fireFound;
@@ -44,18 +42,20 @@ namespace CauldronCodebase
         public event Action<Potions> PotionAccepted;
         public event Action PotionDeclined;
 
-        private RecipeProvider _recipeProvider;
+        private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
 
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
+        private SoundManager soundManager;
 
         [Inject]
-        public void Construct(GameStateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book)
+        public void Construct(GameStateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book, SoundManager sounds)
         {
-            _recipeProvider = recipeProvider;
+            this.recipeProvider = recipeProvider;
             recipeBook = book;
-            gameStateMachine = stateMachine;            
+            gameStateMachine = stateMachine;
+            soundManager = sounds;
         }
         
         private void Awake()
@@ -76,7 +76,6 @@ namespace CauldronCodebase
                 mixFound = true;
             }
             splash.Stop();
-            audios = GetComponent<AudioSource>();
             potionPopup.OnDecline += () => PotionDeclined?.Invoke();
         }
 
@@ -123,7 +122,7 @@ namespace CauldronCodebase
         {
             //Witch.instance.Activate();
             splash.Play();
-            audios.PlayOneShot(add);
+            soundManager.Play(Sounds.Splash);
 
             float bonus = 0;
             if (mixFound)
@@ -164,13 +163,13 @@ namespace CauldronCodebase
         private Potions Brew()
         {
             //Witch.instance.Activate();
-            audios.PlayOneShot(brew);
+            soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             
             potionPopup.ClearAcceptSubscriptions();
             //if (mixBonusTotal > mixBonusMin)
             {
-                foreach (var recipe in _recipeProvider.allRecipes)
+                foreach (var recipe in recipeProvider.allRecipes)
                 {
                     if (recipe.RecipeIngredients.All(ingredient => Mix.Contains(ingredient)))
                     {

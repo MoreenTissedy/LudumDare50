@@ -15,7 +15,10 @@ namespace CauldronCodebase.GameStates
         EndingScreen endingScreen;
         GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
+
         DataPersistenceManager dataPersistenceManager;
+
+        private readonly SoundManager soundManager;
 
         [Inject]
         public StateFactory(EncounterDeckBase deck,
@@ -25,9 +28,13 @@ namespace CauldronCodebase.GameStates
                             NightEventProvider nightEvents,
                             NightPanel nightPanel,
                             EndingScreen endingScreen,
+
                             GameDataHandler gameDataHandler,
+                            DataPersistenceManager dataPersistenceManager,
+                            
                             GameStateMachine gameStateMachine,
-                            DataPersistenceManager dataPersistenceManager)
+                            SoundManager soundManager)
+
         {
             this.deck = deck;
             this.settings = settings;
@@ -38,13 +45,17 @@ namespace CauldronCodebase.GameStates
             this.endingScreen = endingScreen;
             this.gameDataHandler = gameDataHandler;
             this.gameStateMachine = gameStateMachine;
+
             this.dataPersistenceManager = dataPersistenceManager;
+
+            this.soundManager = soundManager;
+
         }
 
         public VisitorState CreateVisitorState()
         {
-            return new VisitorState(deck, settings, dataPersistenceManager, gameDataHandler, visitorManager, cauldron, gameStateMachine, nightEvents);
-        }
+            return new VisitorState(deck, settings, dataPersistenceManager, gameDataHandler, visitorManager, cauldron, gameStateMachine, nightEvents, soundManager);
+
 
         public VisitorWaitingState CreateVisitorWaitingState()
         {

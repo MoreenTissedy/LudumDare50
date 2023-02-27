@@ -6,6 +6,7 @@ using DG.Tweening;
 using Save;
 using Zenject;
 using TMPro;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -25,7 +26,11 @@ namespace CauldronCodebase
         public Button accept;
         public Button decline;
 
+
         [Inject] private DataPersistenceManager dataPersistenceManager;
+
+        [Inject] private SoundManager soundManager;
+
         
         public event Action OnAccept;
         public event Action OnDecline;
@@ -78,6 +83,7 @@ namespace CauldronCodebase
 
         void Hide()
         {
+            soundManager.Play(Sounds.PotionPopupClick);
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));

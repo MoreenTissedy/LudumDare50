@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -14,9 +15,7 @@ namespace CauldronCodebase
         [SerializeField] protected bool buttonControl;
         [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
         [FormerlySerializedAs("leftCorner")] [SerializeField] protected GameObject prevPageButton;
-        [FormerlySerializedAs("left")] [SerializeField] protected AudioSource leftPageSound;
-        [FormerlySerializedAs("right")] [SerializeField] protected AudioSource rightPageSound;
-        [SerializeField] protected AudioClip openCloseSound;
+        [SerializeField] protected BookSounds sounds;
         [SerializeField] private float openCloseAnimationTime = 0.5f;
 
         private float offScreenYPos, initialYPos;
@@ -24,17 +23,10 @@ namespace CauldronCodebase
         protected int totalPages = 3;
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
+
+        [Inject] private SoundManager soundManager;
         
         public event Action OnClose;
-/*
-        void OnValidate()
-        {
-            if (bookObject == null)
-            {
-                bookObject;
-            }
-        }
-*/
         protected virtual void Awake()
         {
             //cache initial position
@@ -81,21 +73,12 @@ namespace CauldronCodebase
 
         public virtual void OpenBook()
         {
-            PlayOpenCloseSound();
+            soundManager.PlayBook(sounds, BookSound.Open);
             bookObject.enabled = true;
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
             UpdateBookButtons();
-        }
-
-        private void PlayOpenCloseSound()
-        {
-            if (openCloseSound)
-            {
-                leftPageSound?.PlayOneShot(openCloseSound);
-                rightPageSound?.PlayOneShot(openCloseSound);
-            }
         }
 
         IEnumerator UpdateWithDelay()
@@ -106,7 +89,7 @@ namespace CauldronCodebase
         
         public virtual void CloseBook()
         {
-            PlayOpenCloseSound();
+            soundManager.PlayBook(sounds, BookSound.Close);
             OnClose?.Invoke();
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>
@@ -122,7 +105,7 @@ namespace CauldronCodebase
             currentPage++;
             UpdateBookButtons();
             UpdatePage();
-            if (rightPageSound) rightPageSound.Play();
+            soundManager.PlayBook(sounds, BookSound.Right);
         }
 
         public virtual void PrevPage()
@@ -132,23 +115,21 @@ namespace CauldronCodebase
             currentPage--;
             UpdateBookButtons();
             UpdatePage();
-            if (leftPageSound) leftPageSound.Play();
+            soundManager.PlayBook(sounds, BookSound.Left);
         }
 
         public void OpenPage(int i)
         {
             if (i < 0 || i >= totalPages) return;
             if (i == currentPage) return;
-            //sound
             if (i < currentPage)
             {
-                leftPageSound?.Play();   
+                soundManager.PlayBook(sounds, BookSound.Left);  
             }
             else if (i > currentPage)
             {
-                rightPageSound?.Play();
+                soundManager.PlayBook(sounds, BookSound.Right);
             }
-
             currentPage = i;
             UpdateBookButtons();
             UpdatePage();

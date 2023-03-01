@@ -43,7 +43,8 @@ namespace CauldronCodebase
             if (Input.GetKeyDown(KeyCode.Delete))
             {
                 PlayerPrefs.DeleteAll();
-                Debug.LogWarning("Prefs cleared!");
+                dataPersistenceManager.NewGame();
+                Debug.LogWarning("All data cleared!");
             }
         }
 

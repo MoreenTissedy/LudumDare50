@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 
@@ -6,13 +7,13 @@ namespace CauldronCodebase
     [RequireComponent(typeof (Camera))]
     public class UIHideOnPause: MonoBehaviour
     {
-        [SerializeField] private Camera camera;
+        [FormerlySerializedAs("camera")] [SerializeField] private Camera mainCamera;
 
         private void OnValidate()
         {
-            if (!camera)
+            if (!mainCamera)
             {
-                camera = GetComponent<Camera>();
+                mainCamera = GetComponent<Camera>();
             }
         }
 
@@ -20,7 +21,7 @@ namespace CauldronCodebase
         {
             if (GameLoader.IsMenuOpen())
             {
-                camera.enabled = false;
+                mainCamera.enabled = false;
             }
 
             GameLoader.GamePaused += OnGamePaused;
@@ -28,7 +29,7 @@ namespace CauldronCodebase
 
         private void OnGamePaused(bool pause)
         {
-            camera.enabled = !pause;
+            mainCamera.enabled = !pause;
         }
 
         private void OnDestroy()

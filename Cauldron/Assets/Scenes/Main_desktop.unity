@@ -6737,6 +6737,7 @@ MonoBehaviour:
   currentDay: 1
   cardsDrawnToday: 0
   currentCard: {fileID: 0}
+  CurrentVillager: {fileID: 0}
   potionsTotal: 
   wrongPotionsCount: 0
   storyTags: []
@@ -6745,7 +6746,7 @@ MonoBehaviour:
   PotionsOnLastDays: 
   WrongPotionsOnLastDays: 0
   DayCountThreshold: 2
-  GameHasBeenLoaded: 0
+  loadIgnoreSaveFile: 0
 --- !u!1001 &527143313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13671,7 +13672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 1
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13697,6 +13698,30 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[5]
       value: 
       objectReference: {fileID: 2100000, guid: bf4faeb3b19533240a87ad55eb553406, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[6]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9adc1e60d1c748846bb72f91874c58da, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[7]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf4faeb3b19533240a87ad55eb553406, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[8]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9adc1e60d1c748846bb72f91874c58da, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[9]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf4faeb3b19533240a87ad55eb553406, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[10]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9adc1e60d1c748846bb72f91874c58da, type: 2}
+    - target: {fileID: 1209882819795528711, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: m_Materials.Array.data[11]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf4faeb3b19533240a87ad55eb553406, type: 2}
     - target: {fileID: 1209882819795528713, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
       propertyPath: loop
       value: 0
@@ -13704,6 +13729,10 @@ PrefabInstance:
     - target: {fileID: 1209882819795528713, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
       propertyPath: _animationName
       value: Active_end
+      objectReference: {fileID: 0}
+    - target: {fileID: 1209882819795528713, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
+      propertyPath: initialSkinName
+      value: solder
       objectReference: {fileID: 0}
     - target: {fileID: 1209882819795528713, guid: 0d470b4f39da8c2faa26706ae24d61c4, type: 3}
       propertyPath: skeletonDataAsset

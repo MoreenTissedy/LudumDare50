@@ -4,7 +4,7 @@ namespace CauldronCodebase
 {
     public interface IEncounterDeck
     {
-        void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager);
+        void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary);
         void NewDayPool(int day);
 
         /// <summary>

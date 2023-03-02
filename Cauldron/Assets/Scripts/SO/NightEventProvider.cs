@@ -31,12 +31,14 @@ namespace CauldronCodebase
         public List<NightEvent> storyEvents;
         public List<ConditionalEvent> inGameConditionals;
         public List<CooldownEvent> eventsOnCooldown;
+        private SODictionary soDictionary;
 
-        public void Init(DataPersistenceManager dataPersistenceManager)
+        public void Init(DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
             eventsOnCooldown = new List<CooldownEvent>(5);
             inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
             inGameConditionals.AddRange(conditionalEvents);
+            soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             //storyEvents.Clear();
         }
@@ -108,14 +110,22 @@ namespace CauldronCodebase
         public void LoadData(GameData data, bool newGame)
         {
             if(data is null) return;
-            storyEvents = data.CurrentEvents;
+            //storyEvents = data.CurrentEvents;
+            storyEvents = new List<NightEvent>();
+            foreach (var eventKey in data.CurrentEvents)
+            {
+                storyEvents.Add((NightEvent)soDictionary.AllScriptableObjects[eventKey]);
+            }
         }
 
         public void SaveData(ref GameData data)
         {
             if(data == null) return;
-            
-            data.CurrentEvents = storyEvents;
+            data.CurrentEvents.Clear();
+            foreach (var storyEvent in storyEvents)
+            {
+                data.CurrentEvents.Add(storyEvent.Id);
+            }
         }
     }
 }

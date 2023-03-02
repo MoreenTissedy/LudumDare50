@@ -21,6 +21,7 @@ namespace CauldronCodebase
         public List<Encounter> cardPool;
 
         private GameDataHandler gameDataHandler;
+        private SODictionary soDictionary;
 
         [Serializable]
         public struct CardPoolPerDay
@@ -52,9 +53,10 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager)
+        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
             gameDataHandler = game;
+            soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             /*
@@ -125,8 +127,10 @@ namespace CauldronCodebase
             
             //find story-related cards and add them as top-priority above count
             List<Encounter> highPriorityCards = new List<Encounter>(3);
+
             foreach (Encounter card in cardPool)
             {
+                //if(card == null) return;
                 if (string.IsNullOrEmpty(card.requiredStoryTag))
                 {
                     continue;
@@ -211,7 +215,6 @@ namespace CauldronCodebase
                     if (PlayerPrefs.HasKey("FirstTime"))
                     {
                         deck.AddFirst(introCards[2]);
-                        DealCards(1);
                     }
                     else
                     {
@@ -221,8 +224,27 @@ namespace CauldronCodebase
                     }
                     break;
                 case false:
-                    cardPool = data.CardPool;
-                    deck = new LinkedList<Encounter>(data.CurrentDeck);
+                    cardPool = new List<Encounter>();
+                    if (data.CardPool != null)
+                    {
+                        foreach (var key in data.CardPool)
+                        {
+                            cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                        }
+                        Debug.Log("New CardPool");
+                    }
+                    if (data.CurrentDeck != null)
+                    {
+                        List<Encounter> currentDeck = new List<Encounter>();
+                        foreach (var key in data.CurrentDeck)
+                        {
+                            currentDeck.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                        }
+
+                        deck = new LinkedList<Encounter>(currentDeck);
+                
+                        Debug.Log("New Deck");
+                    }
                     break;
             }
             
@@ -232,9 +254,16 @@ namespace CauldronCodebase
         public override void SaveData(ref GameData data)
         {
             if(data == null) return;
-            data.CardPool = cardPool;
-            
-            data.CurrentDeck = deck.ToList();
+            data.CardPool.Clear();
+            foreach (var card in cardPool)
+            {
+                data.CardPool.Add(card.Id);
+            }
+            data.CurrentDeck.Clear();
+            foreach (var card in deck)
+            {
+                data.CurrentDeck.Add(card.Id);
+            }
         }
 
         private static bool CheckStoryTags(GameDataHandler game, Encounter card)

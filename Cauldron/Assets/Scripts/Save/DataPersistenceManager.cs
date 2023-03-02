@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CauldronCodebase;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Save
@@ -43,12 +44,17 @@ namespace Save
             {
                 NewGame();
             }
-            LoadDataPersistenceObj();
+
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+            {
+                LoadDataPersistenceObj();
+            }
         }
 
         public void NewGame()
         {
             gameData = new GameData(settings.statusBars.InitialValue);
+            Debug.Log("Create new game data");
 
             newGame = true;
             

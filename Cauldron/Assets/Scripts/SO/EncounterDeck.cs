@@ -18,10 +18,12 @@ namespace CauldronCodebase
         
         public List<Encounter> cardPool;
         private GameDataHandler game;
+        private SODictionary soDictionary;
 
-        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager)
+        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
             this.game = game;
+            soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -121,16 +123,27 @@ namespace CauldronCodebase
 
         public override void LoadData(GameData data, bool newGame)
         {
+            cardPool = new List<Encounter>();
             if (data.CardPool != null)
             {
-                cardPool = data.CardPool;
+                foreach (var key in data.CardPool)
+                {
+                    cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                }
                 Debug.Log("New CardPool");
             }
 
 
             if (data.CurrentDeck != null)
             {
-                deck = new LinkedList<Encounter>(data.CurrentDeck);
+                List<Encounter> currentDeck = new List<Encounter>();
+                foreach (var key in data.CurrentDeck)
+                {
+                    currentDeck.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                }
+
+                deck = new LinkedList<Encounter>(currentDeck);
+                
                 Debug.Log("New Deck");
             }
 
@@ -145,8 +158,16 @@ namespace CauldronCodebase
 
         public override void SaveData(ref GameData data)
         {
-            data.CardPool = cardPool;
-            data.CurrentDeck = deck.ToList();
+            data.CardPool.Clear();
+            foreach (var card in cardPool)
+            {
+                data.CardPool.Add(card.Id);
+            }
+            data.CurrentDeck.Clear();
+            foreach (var card in deck)
+            {
+                data.CurrentDeck.Add(card.Id);
+            }
         }
     }
 }

@@ -9,12 +9,15 @@ namespace CauldronCodebase
         [SerializeField] private GameObject mainCamera;
         [SerializeField] private MainSettings mainSettings;
         [SerializeField] private GameObject dataPersistenceManager;
+        [SerializeField] private SODictionary soDictionary;
         
         [SerializeField] private SoundManager soundManager;
         public override void InstallBindings()
         {
             Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
             Container.Bind<Camera>().FromInstance(mainCameraScript).AsSingle();
+            Container.Bind<SODictionary>().FromInstance(soDictionary).AsSingle();
+            soDictionary.LoadDictionary();
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
             

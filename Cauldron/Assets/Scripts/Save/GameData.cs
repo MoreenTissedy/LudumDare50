@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CauldronCodebase;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Save
@@ -10,17 +11,17 @@ namespace Save
     {
         public int AttemptsLeft; // VisitorManager
 
-        public List<Encounter> CardPool; // EncounterDeck
-        public List<Encounter> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
+        public List<string> CardPool; // EncounterDeck
+        public List<string> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
 
-        public List<NightEvent> CurrentEvents; // NightEventProvider
+        public List<string> CurrentEvents; // NightEventProvider
         
         public int Fear, Fame, Money; // GameDataHandler
         public int CurrentDay; // GameDataHandler
         public int CardDrawnToday; // GameDataHandler
 
-        public Encounter CurrentEncounter;  // GameDataHandler
-        public Villager CurrentVillager;
+        public string CurrentEncounter;  // GameDataHandler
+        public string CurrentVillager;
 
         public List<string> StoryTags;  // GameDataHandler
         
@@ -37,10 +38,10 @@ namespace Save
         {
             AttemptsLeft = 3;
 
-            CardPool = new List<Encounter>(15);
-            CurrentDeck = new List<Encounter>();
+            CardPool = new List<string>(15);
+            CurrentDeck = new List<string>();
 
-            CurrentEvents = new List<NightEvent>();
+            CurrentEvents = new List<string>();
             
             Fear = initialValue;
             Fame = initialValue;
@@ -60,6 +61,8 @@ namespace Save
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
+            
+            Debug.Log("GameData has been created");
         }
     }
 }

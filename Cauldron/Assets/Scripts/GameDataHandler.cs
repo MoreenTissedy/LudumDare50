@@ -56,19 +56,22 @@ namespace CauldronCodebase
         public int DayCountThreshold = 2;
 
         public bool loadIgnoreSaveFile;
+        private SODictionary soDictionary;
         
         [Inject]
-        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataPersistenceManager)
+        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
+            soDictionary = dictionary;
+
             this.dataPersistenceManager = dataPersistenceManager;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
 
             currentDeck = deck;
-            currentDeck.Init(this, this.dataPersistenceManager);
+            currentDeck.Init(this, this.dataPersistenceManager, dictionary);
             currentEvents = events;
-            currentEvents.Init(this.dataPersistenceManager);
+            currentEvents.Init(this.dataPersistenceManager, dictionary);
         }
 
         public void AddTag(string tag)
@@ -236,10 +239,25 @@ namespace CauldronCodebase
             currentDay = data.CurrentDay;
             cardsDrawnToday = data.CardDrawnToday;
             storyTags = data.StoryTags;
-            
-            currentCard = data.CurrentEncounter;
-            CurrentVillager = data.CurrentVillager;
 
+            if (string.IsNullOrEmpty(data.CurrentEncounter))
+            {
+                currentCard = null;
+            }
+            else
+            {
+                currentCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
+            }
+            
+            if (string.IsNullOrEmpty(data.CurrentVillager))
+            {
+                CurrentVillager = null;
+            }
+            else
+            {
+                CurrentVillager = (Villager)soDictionary.AllScriptableObjects[data.CurrentVillager];
+            }
+            
             potionsTotal = data.PotionsTotalOnRun;
             wrongPotionsCount = data.WrongPotionsCountOnRun;
 
@@ -258,10 +276,20 @@ namespace CauldronCodebase
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
-            
-            data.CurrentEncounter = currentCard;
-            data.CurrentVillager = CurrentVillager;
 
+            if (CurrentVillager != null)
+            {
+                Debug.Log("Current villager id = " + CurrentVillager.Id);
+                data.CurrentVillager = CurrentVillager.Id;
+            }
+                
+            else
+            {
+                Debug.LogWarning("Lost current villager");
+            }
+            
+            if(currentCard != null)
+                data.CurrentEncounter = currentCard.Id;
             data.PotionsTotalOnRun = potionsTotal;
             data.WrongPotionsCountOnRun = wrongPotionsCount;
 

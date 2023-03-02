@@ -1,9 +1,10 @@
 using System;
+using CauldronCodebase;
 using UnityEngine;
 
 namespace EasyLoc
 {
-    public abstract class LocalizableSO : ScriptableObject, ILocalize
+    public abstract class LocalizableSO : ScriptableObjectWithId, ILocalize
     {
         public TextAsset localizationCSV;
         

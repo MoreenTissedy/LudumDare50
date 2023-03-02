@@ -9,7 +9,7 @@ namespace CauldronCodebase
     [Serializable]
     public abstract class EncounterDeckBase : ScriptableObject, IEncounterDeck, IDataPersistence
     { 
-        public abstract void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager);
+        public abstract void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary);
 
         public abstract void NewDayPool(int day);
 

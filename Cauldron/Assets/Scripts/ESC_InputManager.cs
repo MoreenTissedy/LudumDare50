@@ -30,6 +30,10 @@ namespace CauldronCodebase
                 {
                     endingPanel.CloseBook();
                 }
+                else if (GameLoader.IsMenuOpen())
+                {
+                    GameLoader.UnloadMenu();
+                }
                 else
                 {
                     GameLoader.LoadMenu();

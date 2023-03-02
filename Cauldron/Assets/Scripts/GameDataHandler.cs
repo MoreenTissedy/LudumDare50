@@ -31,7 +31,7 @@ namespace CauldronCodebase
 
         private Status status;
         
-        public int currentDay = 1;
+        public int currentDay = 0;
         public int cardsDrawnToday;
         public Encounter currentCard;
         public Villager CurrentVillager;
@@ -276,20 +276,18 @@ namespace CauldronCodebase
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
+            
 
             if (CurrentVillager != null)
             {
-                Debug.Log("Current villager id = " + CurrentVillager.Id);
                 data.CurrentVillager = CurrentVillager.Id;
             }
-                
-            else
+
+            if (currentCard != null)
             {
-                Debug.LogWarning("Lost current villager");
+                data.CurrentEncounter = currentCard.Id;
             }
             
-            if(currentCard != null)
-                data.CurrentEncounter = currentCard.Id;
             data.PotionsTotalOnRun = potionsTotal;
             data.WrongPotionsCountOnRun = wrongPotionsCount;
 

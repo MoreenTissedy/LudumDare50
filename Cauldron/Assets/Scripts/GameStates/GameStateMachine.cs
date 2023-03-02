@@ -45,7 +45,8 @@ namespace CauldronCodebase.GameStates
 
         private void RunStateMachine()
         {
-            if(stateMachineIsRunning || GameLoader.IsMenuOpen()) return;
+            if(stateMachineIsRunning || dataPersistenceManager.GameSaveData.GameHasBeenStarted == false) return;
+            PlayerPrefs.SetInt("FirstTime", 1);
 
             _currentGameState.Enter();
             stateMachineIsRunning = true;

@@ -1,8 +1,5 @@
-using System;
-using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -26,7 +23,11 @@ namespace CauldronCodebase
 
         private void Awake()
         {
-            dataPersistenceManager.OnDontExistSave += HideContinueButton;
+            if (dataPersistenceManager.GameSaveData == null ||
+                dataPersistenceManager.GameSaveData.GameHasBeenStarted == false)
+            {
+                HideContinueButton();
+            }
         }
         
         private void Start()
@@ -44,16 +45,12 @@ namespace CauldronCodebase
             {
                 PlayerPrefs.DeleteAll();
                 dataPersistenceManager.NewGame();
+                HideContinueButton();
                 Debug.LogWarning("All data cleared!");
             }
         }
 
-        private void OnDestroy()
-        {
-            dataPersistenceManager.OnDontExistSave -= HideContinueButton;
-        }
-
-        public void HideContinueButton()
+        private void HideContinueButton()
         {
             continueGame.gameObject.SetActive(false);
         }
@@ -83,6 +80,7 @@ namespace CauldronCodebase
         {
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
+            dataPersistenceManager.GameSaveData.GameHasBeenStarted = true;
         }
     }
 }

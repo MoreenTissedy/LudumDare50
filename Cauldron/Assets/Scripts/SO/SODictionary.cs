@@ -20,8 +20,6 @@ namespace CauldronCodebase
             {
                 AllScriptableObjects.Add(AllSOKeys[i], AllSOValues[i]);
             }
-            
-            Debug.Log("All so count = " + AllScriptableObjects.Count);
         }
     }
 }

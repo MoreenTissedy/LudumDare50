@@ -13,6 +13,8 @@ namespace Save
         [SerializeField] private string fileName;
         
         private GameData gameData;
+
+        public GameData GameSaveData => gameData;
         //TODO: Create global stat
         
         [SerializeField] private List<IDataPersistence> iDataPersistenceObj;
@@ -23,7 +25,6 @@ namespace Save
         private bool newGame;
 
         public event Action OnPlayGame;
-        public event Action OnDontExistSave;
 
         [Inject]
         private void Construct(MainSettings mainSettings)
@@ -35,7 +36,7 @@ namespace Save
         private void Awake()
         {
             gameData = fileDataHandler.Load();
-            GameLoader.OnGameLoadComplete += LoadDataPersistenceObj;
+            SceneManager.sceneLoaded += LoadDataPersistenceObj;
         }
 
         private void Start()
@@ -44,21 +45,15 @@ namespace Save
             {
                 NewGame();
             }
-
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
-            {
-                LoadDataPersistenceObj();
-            }
         }
 
         public void NewGame()
         {
+            fileDataHandler.Delete();
             gameData = new GameData(settings.statusBars.InitialValue);
             Debug.Log("Create new game data");
 
             newGame = true;
-            
-            OnDontExistSave?.Invoke();
         }
 
         public void PlayGame()
@@ -91,9 +86,9 @@ namespace Save
             return gameData != null;
         }
 
-        private void LoadDataPersistenceObj()
+        private void LoadDataPersistenceObj(Scene scene, LoadSceneMode mode)
         {
-            Debug.Log("Load data persistence obj");
+            if(scene.buildIndex != 1) return;
             if(iDataPersistenceObj == null) return;
             foreach (var dataPersistenceObj in iDataPersistenceObj)
             {
@@ -104,7 +99,7 @@ namespace Save
 
         private void OnDestroy()
         {
-            GameLoader.OnGameLoadComplete -= LoadDataPersistenceObj;
+            SceneManager.sceneLoaded += LoadDataPersistenceObj;
         }
     }
 }

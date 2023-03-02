@@ -208,19 +208,19 @@ namespace CauldronCodebase
             switch (newGame)
             {
                 case true:
-                    
                     NewDayPool(0);
                 
                     //if not first time
                     if (PlayerPrefs.HasKey("FirstTime"))
                     {
+                        DealCards(2);
                         deck.AddFirst(introCards[2]);
                     }
                     else
                     {
+                        DealCards(1);
                         deck.AddFirst(introCards[0]);
                         deck.AddLast(introCards[1]);
-                        PlayerPrefs.SetInt("FirstTime", 1);
                     }
                     break;
                 case false:
@@ -247,8 +247,6 @@ namespace CauldronCodebase
                     }
                     break;
             }
-            
-            DealCards(1);
         }
 
         public override void SaveData(ref GameData data)

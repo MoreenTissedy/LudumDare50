@@ -8,16 +8,17 @@ namespace Save
     {
         private string dataDirPath;
         private string dataFileName;
+        private string fullPath;
 
         public FileDataHandler(string dataDirPath, string dataFileName)
         {
             this.dataDirPath = dataDirPath;
             this.dataFileName = dataFileName;
+            fullPath = Path.Combine(dataDirPath, dataFileName);
         }
 
         public GameData Load()
         {
-            string fullPath = Path.Combine(dataDirPath, dataFileName);
             GameData loadedData = null;
             if (File.Exists(fullPath))
             {
@@ -47,8 +48,6 @@ namespace Save
 
         public void Save(GameData data)
         {
-            string fullPath = Path.Combine(dataDirPath, dataFileName);
-
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -66,6 +65,11 @@ namespace Save
             {
                 Debug.LogError("Error occured  when trying to save data to file: " + fullPath + "\n" + e);
             }
+        }
+
+        public void Delete()
+        {
+            File.Delete(fullPath);
         }
     }
 }

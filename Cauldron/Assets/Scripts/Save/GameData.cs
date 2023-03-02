@@ -9,6 +9,8 @@ namespace Save
     [Serializable]
     public class GameData
     {
+        public bool GameHasBeenStarted;
+        
         public int AttemptsLeft; // VisitorManager
 
         public List<string> CardPool; // EncounterDeck
@@ -36,6 +38,7 @@ namespace Save
 
         public GameData(int initialValue)
         {
+            GameHasBeenStarted = false;
             AttemptsLeft = 3;
 
             CardPool = new List<string>(15);

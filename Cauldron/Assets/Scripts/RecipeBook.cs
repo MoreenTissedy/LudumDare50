@@ -264,7 +264,7 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
                 
-                ingredientsEntries[i].RebuildLayout();
+                //ingredientsEntries[i].RebuildLayout();
             }
         }
 

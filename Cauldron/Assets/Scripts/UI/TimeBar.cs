@@ -10,7 +10,7 @@ namespace CauldronCodebase
 {
     public class TimeBar : MonoBehaviour
     {
-        public TMP_Text dayNumber;
+        public Text dayNumber;
         public RectTransform timeBar;
         public Sprite fullCycleSample;
         private float rectWidth;
@@ -36,14 +36,16 @@ namespace CauldronCodebase
         private void Awake()
         {
             rectWidth = fullCycleSample.rect.width;
+            
             dayNumber.text = $"{dayText} 1";
+            
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
         }
 
         private void Start()
         {
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
-
+            
             gameStateMachine.OnChangeState += OnNewDay;
             gameStateMachine.OnChangeState += OnNewVisitor;
         }
@@ -67,14 +69,21 @@ namespace CauldronCodebase
         private void OnNewDay(GameStateMachine.GamePhase phase)
         {
             if (phase != GameStateMachine.GamePhase.Night) return;
+            //int day = gameDataHandler.currentDay;
             //longer shift before night
+            if (gameDataHandler == null || gameDataHandler.currentDay == null)
+            {
+                Debug.Log("Troubles with game data handler");
+                return;
+            }
             timeBar.DOLocalMoveX(timeBar.anchoredPosition.x - step*2, speed).
                 SetEase(Ease.InOutSine).
-                OnComplete(() => NewDayReset(gameDataHandler.currentDay + 1));
+                OnComplete(() => NewDayReset(gameDataHandler.currentDay));
         }
 
         void NewDayReset(int day)
         {
+            
             dayNumber.text = $"{dayText} {day}";
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
         }

@@ -13,6 +13,11 @@ namespace CauldronCodebase
             public Ingredients type;
             public string friendlyName;
             public Sprite image;
+
+            [Header("For ingredients book")] 
+            public Sprite TopImage;
+            public Sprite BottomImage;
+            public string TextInABook;
         }
         
         public Ingredient[] book;

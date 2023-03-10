@@ -13,11 +13,13 @@ namespace CauldronCodebase
         [SerializeField] protected RecipeBookEntry[] recipeEntries;
         [SerializeField] protected RecipeBookEntry[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
+        [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
+        [SerializeField] protected IngredientsData ingredientsData;
         public List<Recipe> magicalRecipes;
         public List<Recipe> herbalRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
-        [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay;
+        [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
         public event Action<Recipe> OnSelectRecipe;
 
 
@@ -31,7 +33,8 @@ namespace CauldronCodebase
         {
             Magical,
             Herbal,
-            Attempts
+            Attempts,
+            Ingredients
         }
 
         [ContextMenu("Find Entries")]
@@ -122,6 +125,10 @@ namespace CauldronCodebase
                     CloseAllPages();
                     attemptsDisplay.SetActive(true);
                     break;
+                case Mode.Ingredients:
+                    CloseAllPages();
+                    ingredientsDisplay.SetActive(true);
+                    break;
             }
             
             currentMode = newMode;
@@ -154,6 +161,9 @@ namespace CauldronCodebase
                 case Mode.Attempts:
                     if (attempts != null) totalPages = Mathf.CeilToInt((float) attempts.Count / attemptEntries.Length);
                     else totalPages = 1;
+                    break;
+                case Mode.Ingredients:
+                    totalPages = Mathf.CeilToInt((float)ingredientsData.book.Length / ingredientsEntries.Length);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -208,11 +218,54 @@ namespace CauldronCodebase
                 case Mode.Attempts:
                     DisplayAttempts();
                     break;
+                case Mode.Ingredients:
+                    DisplayIngredients();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             nextPageNum.text = (currentPage *2+2).ToString();
             prevPageNum.text = (currentPage*2+1).ToString();
+        }
+
+        private void DisplayIngredients()
+        {
+            for (int i = 0; i < ingredientsEntries.Length; i++)
+            {
+                int num = currentPage * ingredientsEntries.Length + i;
+                
+                if (ingredientsData.book[num].TopImage == null)
+                {
+                    ingredientsEntries[i].topImage.gameObject.SetActive(false);
+                }
+                else
+                {
+                    ingredientsEntries[i].topImage.gameObject.SetActive(true);
+                    ingredientsEntries[i].topImage.sprite = ingredientsData.book[num].TopImage;
+                }
+                
+                if (ingredientsData.book[num].BottomImage == null)
+                {
+                    ingredientsEntries[i].bottomImage.gameObject.SetActive(false);
+                }
+                else
+                {
+                    ingredientsEntries[i].bottomImage.gameObject.SetActive(true);
+                    ingredientsEntries[i].bottomImage.sprite = ingredientsData.book[num].BottomImage;
+                }
+                
+                if (ingredientsData.book[num].TextInABook == null)
+                {
+                    ingredientsEntries[i].text.gameObject.SetActive(false);
+                }
+                else
+                {
+                    ingredientsEntries[i].text.gameObject.SetActive(true);
+                    ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
+                }
+                
+                ingredientsEntries[i].RebuildLayout();
+            }
         }
 
         private void DisplayAttempts()
@@ -238,6 +291,7 @@ namespace CauldronCodebase
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);
             attemptsDisplay.SetActive(false);
+            ingredientsDisplay.SetActive(false);
         }
         public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {

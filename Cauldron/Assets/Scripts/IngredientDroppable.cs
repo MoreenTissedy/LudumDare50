@@ -38,6 +38,13 @@ namespace CauldronCodebase
             this.ingredientManager = ingredientManager;
         }
 
+        //TODO: find a way to inject
+        private void Awake()
+        {
+            this.cauldron = FindObjectOfType<Cauldron>();
+            ingredientManager = cauldron.tooltipManager;
+        }
+
         private void OnEnable()
         {
             initialRotation = image.gameObject.transform.rotation.eulerAngles.z;

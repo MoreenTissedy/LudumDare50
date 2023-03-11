@@ -50,6 +50,18 @@ namespace CauldronCodebase
             }
         }
 
+        public int GetUnlockedEndingsCount()
+        {
+            int count = 0;
+            //TODO: find a better way
+            if (unlocked.HasFlag(Unlocks.HighFame)) count++;
+            if (unlocked.HasFlag(Unlocks.HighFear)) count++;
+            if (unlocked.HasFlag(Unlocks.HighMoney)) count++;
+            if (unlocked.HasFlag(Unlocks.LowFame)) count++;
+            if (unlocked.HasFlag(Unlocks.LowFear)) count++;
+            return count;
+        }
+
         public bool Unlocked(Unlocks ending)
         {
             return unlocked.HasFlag(ending);

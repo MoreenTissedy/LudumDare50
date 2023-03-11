@@ -14,7 +14,7 @@ namespace CauldronCodebase
     public class Cauldron : MonoBehaviour
     {
         [Inject]
-        TooltipManager tooltipManager;
+        public TooltipManager tooltipManager;
         
         public PotionPopup potionPopup;
 

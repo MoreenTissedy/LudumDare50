@@ -77,13 +77,18 @@ namespace CauldronCodebase
                 PlayerPrefs.SetInt("FirstNight", 1);
                 return new NightEvent[] {intro};
             }
-            List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count+1);
+
+            List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count + 1);
             returnEvents.AddRange(storyEvents);
-            NightEvent conditionalEvent = CheckConditions(game);
-            if (!(conditionalEvent is null))
+            if (storyEvents.Count < 2)
             {
-                returnEvents.Add(conditionalEvent);
+                NightEvent conditionalEvent = CheckConditions(game);
+                if (!(conditionalEvent is null))
+                {
+                    returnEvents.Add(conditionalEvent);
+                }
             }
+
             storyEvents.Clear();
             CheckEventCooldown();
             return returnEvents.ToArray();

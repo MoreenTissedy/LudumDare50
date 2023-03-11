@@ -1,7 +1,6 @@
 using CauldronCodebase.GameStates;
 using DG.Tweening;
 using EasyLoc;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

@@ -44,7 +44,7 @@
             return EndingsProvider.Unlocks.None;
         }
 
-        private void CheckStatusesThreshold()
+        public void CheckStatusesThreshold()
         {
             AddHighLowTag("high fear", Statustype.Fear);
             AddHighLowTag("low fear", Statustype.Fear, false);

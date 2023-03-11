@@ -48,6 +48,7 @@ namespace CauldronCodebase.GameStates
         private void NightPanelOnOnClose()
         {
             if (IsGameEnd()) return;
+            statusChecker.CheckStatusesThreshold();
             Debug.Log("new day " + gameDataHandler.currentDay);
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }

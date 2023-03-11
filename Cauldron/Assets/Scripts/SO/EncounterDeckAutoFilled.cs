@@ -124,30 +124,9 @@ namespace CauldronCodebase
         /// <param name="num">X - number of cards</param>
         public override void DealCards(int num)
         {
-            
-            //find story-related cards and add them as top-priority above count
-            List<Encounter> highPriorityCards = new List<Encounter>(3);
+            //TODO: separate array for story-related cards
+            AddStoryCards();
 
-            foreach (Encounter card in cardPool)
-            {
-                //if(card == null) return;
-                if (string.IsNullOrEmpty(card.requiredStoryTag))
-                {
-                    continue;
-                }
-                Debug.Log("checking card: "+card.requiredStoryTag);
-                if (CheckStoryTags(gameDataHandler, card))
-                {
-                    deck.AddFirst(card);
-                    highPriorityCards.Add(card);
-                }
-            }
-            foreach (Encounter highPriorityCard in highPriorityCards)
-            {
-                Debug.Log("card added as priority "+highPriorityCard.name);
-                cardPool.Remove(highPriorityCard);
-            }
-            
             //ignore story-related cards
             for (int i = 0; i < num; i++)
             {
@@ -166,6 +145,34 @@ namespace CauldronCodebase
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
+        }
+
+        public override void AddStoryCards()
+        {
+            //find story-related cards and add them as top-priority above count
+            List<Encounter> highPriorityCards = new List<Encounter>(3);
+
+            foreach (Encounter card in cardPool)
+            {
+                //if(card == null) return;
+                if (string.IsNullOrEmpty(card.requiredStoryTag))
+                {
+                    continue;
+                }
+
+                Debug.Log("checking card: " + card.requiredStoryTag);
+                if (CheckStoryTags(gameDataHandler, card))
+                {
+                    deck.AddFirst(card);
+                    highPriorityCards.Add(card);
+                }
+            }
+
+            foreach (Encounter highPriorityCard in highPriorityCards)
+            {
+                Debug.Log("card added as priority " + highPriorityCard.name);
+                cardPool.Remove(highPriorityCard);
+            }
         }
 
         public override void AddCardToPool(Encounter card)

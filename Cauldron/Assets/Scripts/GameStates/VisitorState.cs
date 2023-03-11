@@ -19,6 +19,7 @@ namespace CauldronCodebase.GameStates
         private readonly SoundManager soundManager;
 
         private readonly EncounterResolver resolver;
+        private readonly StatusChecker statusChecker;
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
@@ -40,6 +41,7 @@ namespace CauldronCodebase.GameStates
             nightEvents = nightEventProvider;
             this.soundManager = soundManager;
 
+            statusChecker = new StatusChecker(settings, gameDataHandler);
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEvents);
         }
         
@@ -98,16 +100,10 @@ namespace CauldronCodebase.GameStates
         private void EndEncounter(Potions potion)
         {
             PlayRelevantSound(potion);
+            gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
 
-            if (!resolver.EndEncounter(potion))
-            {
-                gameDataHandler.AddPotion(potion, true);
-            }
-            else
-            {
-                gameDataHandler.AddPotion(potion, false);
-            }
-
+            statusChecker.CheckStatusesThreshold();
+            cardDeck.AddStoryCards();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 

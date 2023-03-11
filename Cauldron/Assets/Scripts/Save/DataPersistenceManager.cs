@@ -22,7 +22,7 @@ namespace Save
 
         private MainSettings settings;
 
-        private bool newGame;
+        private bool newGame = false;
 
         public event Action OnPlayGame;
 

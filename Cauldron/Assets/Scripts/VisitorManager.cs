@@ -76,7 +76,14 @@ namespace CauldronCodebase
                     break;
             }
             
-            visitorTimer.ResetTimer(attemptsLeft);
+            visitorTimer.ResetTimer(villager.patience);
+            if (attemptsLeft != villager.patience)
+            {
+                for (int i = 0; i < villager.patience - attemptsLeft; i++)
+                {
+                    visitorTimer.ReduceTimer();
+                }
+            }
             
             for (int i = 0; i < villagers.Length; i++)
             {

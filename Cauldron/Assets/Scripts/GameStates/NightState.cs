@@ -34,9 +34,13 @@ namespace CauldronCodebase.GameStates
         
         public override void Enter()
         {
+            Debug.Log("Night has been started");
             if (IsGameEnd()) return;
+            Debug.Log("Start calculate potions");
             gameDataHandler.CalculatePotionsOnLastDays();
-            var events = nightEvents.GetEvents(gameDataHandler);            
+            Debug.Log("Start get events");
+            var events = nightEvents.GetEvents(gameDataHandler);
+            Debug.Log("Open book");
             nightPanel.OpenBookWithEvents(events);
             nightPanel.OnClose += NightPanelOnOnClose;
             gameDataHandler.NextDay();

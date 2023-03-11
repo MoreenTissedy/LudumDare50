@@ -36,16 +36,10 @@ namespace CauldronCodebase
         public PotionResult[] resultsByPotion = Array.Empty<PotionResult>();
 
         [HideInInspector] public Villager actualVillager;
-
-
         
-        public void Init(Villager actual)
+        public void Init()
         {
-            if (actual != null)
-            {
-                actualVillager = actual;
-            }
-            else if (villager.Length > 0)
+            if (villager.Length > 0)
             {
                 int random = Random.Range(0, villager.Length);
                 actualVillager = villager[random];

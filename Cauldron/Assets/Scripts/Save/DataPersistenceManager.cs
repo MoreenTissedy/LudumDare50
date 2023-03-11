@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CauldronCodebase;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Save
@@ -24,8 +22,6 @@ namespace Save
 
         private bool newGame;
 
-        public event Action OnPlayGame;
-
         [Inject]
         private void Construct(MainSettings mainSettings)
         {
@@ -35,13 +31,12 @@ namespace Save
 
         private void Awake()
         {
-            gameData = fileDataHandler.Load();
-            SceneManager.sceneLoaded += LoadDataPersistenceObj;
-        }
-
-        private void Start()
-        {
-            if (CheckTheExistenceOfGameData() == false)
+            if (CheckForGameSave())
+            {
+                gameData = fileDataHandler.Load();
+                newGame = false;
+            }
+            else
             {
                 NewGame();
             }
@@ -51,14 +46,7 @@ namespace Save
         {
             fileDataHandler.Delete();
             gameData = new GameData(settings.statusBars.InitialValue);
-            Debug.Log("Create new game data");
-
             newGame = true;
-        }
-
-        public void PlayGame()
-        {
-            OnPlayGame?.Invoke();
         }
 
         public void SaveGame()
@@ -77,29 +65,25 @@ namespace Save
             {
                 iDataPersistenceObj = new List<IDataPersistence>(6);
             }
-            if(iDataPersistenceObj.Contains(obj)) return;
+            if (iDataPersistenceObj.Contains(obj)) 
+            {
+                return;
+            }
             iDataPersistenceObj.Add(obj);
         }
 
-        public bool CheckTheExistenceOfGameData()
+        private bool CheckForGameSave()
         {
-            return gameData != null;
+            return PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey);
         }
 
-        private void LoadDataPersistenceObj(Scene scene, LoadSceneMode mode)
+        public void LoadDataPersistenceObj()
         {
-            if(scene.buildIndex != 1) return;
             if(iDataPersistenceObj == null) return;
             foreach (var dataPersistenceObj in iDataPersistenceObj)
             {
                 dataPersistenceObj.LoadData(gameData, newGame);
             }
-            PlayGame();
-        }
-
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded += LoadDataPersistenceObj;
         }
     }
 }

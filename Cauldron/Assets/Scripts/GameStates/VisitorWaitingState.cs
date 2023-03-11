@@ -29,11 +29,7 @@ namespace CauldronCodebase.GameStates
 
         private async void ExitStateWithDelay()
         {
-            if (gameDataHandler.loadIgnoreSaveFile)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
-            }
-            
+            await Task.Delay(TimeSpan.FromSeconds(_settings.gameplay.villagerDelay));
 
             if (gameDataHandler.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
             {

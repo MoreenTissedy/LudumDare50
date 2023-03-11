@@ -11,7 +11,6 @@ namespace CauldronCodebase
 
         public static void ReloadGame()
         {
-            //TODO: new game through saving and loading, much better management
             if (IsGameLoaded())
             {
                 var operation = SceneManager.UnloadSceneAsync(1);

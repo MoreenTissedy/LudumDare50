@@ -84,7 +84,7 @@ namespace CauldronCodebase
         void NewDayReset(int day)
         {
             
-            dayNumber.text = $"{dayText} {day}";
+            dayNumber.text = $"{dayText} {day + 1}";
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
         }
 

@@ -45,7 +45,7 @@ namespace CauldronCodebase
                 Recipe unlockRecipe = GetRecipeToUnlock();
                 if (unlockRecipe == null)
                 {
-                    text.text = "Свари мне что нибудь";
+                    text.text = "Свари мне что-нибудь.";
                 }
                 text.text = Format(card, unlockRecipe);
             }
@@ -58,7 +58,7 @@ namespace CauldronCodebase
             iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
             if (card.quest)
             {
-                iconObjects[2]?.DisplayItem();
+                iconObjects[2]?.DisplayItem(card.actualVillager);
                 text.fontStyle = FontStyles.Italic;
             }
             else

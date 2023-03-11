@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class NightPanel : Book, IPointerClickHandler
+    public class NightPanel : Book
     {
         private MainSettings settings;
         private GameStateMachine gameStateMachine;
@@ -222,7 +222,7 @@ namespace CauldronCodebase
             fame.text = String.Empty;
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void OnNextCard()
         {
             resolver.ApplyModifiers(content[currentPage]);
             if (currentPage + 1 < totalPages)
@@ -239,7 +239,8 @@ namespace CauldronCodebase
                 {
                     nightPanelCard.Hide();
                 }
-                CloseBook(); 
+
+                CloseBook();
             }
         }
     }

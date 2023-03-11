@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameplay:
     defaultStatChange: 10
-    defaultMoneyChangeCard: 10
-    defaultMoneyChangeEvent: 10
-    statusBarsMax: 100
-    statusBarsStart: 20
+    defaultMoneyChangeCard: 15
+    defaultMoneyChangeEvent: 15
     cardsPerDay: 3
     cardsDealtAtNight: 3
-    nightDelay: 4
     villagerDelay: 2
+  statusBars:
+    Total: 100
+    InitialValue: 50
+    InitialThreshold: 30
+    thresholdDecrement: 10
+    minThreshold: 5

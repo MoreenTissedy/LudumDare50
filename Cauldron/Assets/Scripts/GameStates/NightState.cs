@@ -49,6 +49,7 @@ namespace CauldronCodebase.GameStates
         {
             if (IsGameEnd()) return;
             statusChecker.CheckStatusesThreshold();
+            cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }

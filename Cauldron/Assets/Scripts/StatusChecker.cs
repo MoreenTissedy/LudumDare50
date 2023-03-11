@@ -40,7 +40,6 @@
                 return EndingsProvider.Unlocks.LowFear;
             }
 
-            CheckStatusesThreshold();
             return EndingsProvider.Unlocks.None;
         }
 
@@ -55,11 +54,20 @@
         private bool CheckThreshold(Statustype type, bool checkHigh)
         {
             int currentStatus = gameDataHandler.Get(type);
-            bool thresholdReached = checkHigh ? currentStatus > gameDataHandler.GetThreshold(type, true) : currentStatus < gameDataHandler.GetThreshold(type, false);
-            if (thresholdReached)
+            bool thresholdReached = false;
+            bool nextThreshold = false;
+            do
             {
-                gameDataHandler.ChangeThreshold(type, checkHigh);
-            }
+                nextThreshold = checkHigh
+                    ? currentStatus > gameDataHandler.GetThreshold(type, true)
+                    : currentStatus < gameDataHandler.GetThreshold(type, false);
+                if (nextThreshold)
+                {
+                    thresholdReached = true;
+                    gameDataHandler.ChangeThreshold(type, checkHigh);
+                }
+            } while (nextThreshold);
+
             return thresholdReached;
         }
 

@@ -160,7 +160,7 @@ namespace CauldronCodebase
                     continue;
                 }
 
-                Debug.Log("checking card: " + card.requiredStoryTag);
+                Debug.Log("checking card: " + card.name);
                 if (CheckStoryTags(gameDataHandler, card))
                 {
                     deck.AddFirst(card);

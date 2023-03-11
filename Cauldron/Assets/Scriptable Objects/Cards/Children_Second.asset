@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 6cf8bf46042aff844ab6c755c48684eb
   localizationCSV: {fileID: 4900000, guid: 9904824343798d2738acc620d6b62f7e, type: 3}
-  addToDeckOnDay: -1
+  addToDeckOnDay: 5
   requiredStoryTag: 
   villager:
   - {fileID: 11400000, guid: 0c5be769e6859c64484e0a27d9bd1851, type: 2}
@@ -30,9 +30,9 @@ MonoBehaviour:
   hidden: 0
   quest: 0
   primaryInfluence: 3
-  secondaryInfluence: 0
-  primaryCoef: 0
-  secondaryCoef: 0
+  secondaryInfluence: 2
+  primaryCoef: 0.5
+  secondaryCoef: -1
   resultsByPotion:
   - potion: 5
     influenceCoef: 1
@@ -41,9 +41,21 @@ MonoBehaviour:
   - potion: 2
     influenceCoef: 0.5
     bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 6d00cfbf801c7e54fa8e0f4169bddbf3, type: 2}
   - potion: 4
     influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 14
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 3
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 104
+    influenceCoef: -0.5
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
   actualVillager: {fileID: 0}

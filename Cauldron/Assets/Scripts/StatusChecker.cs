@@ -64,9 +64,8 @@
                 if (nextThreshold)
                 {
                     thresholdReached = true;
-                    gameDataHandler.ChangeThreshold(type, checkHigh);
                 }
-            } while (nextThreshold);
+            } while (nextThreshold && gameDataHandler.ChangeThreshold(type, checkHigh));
 
             return thresholdReached;
         }

@@ -143,39 +143,48 @@ namespace CauldronCodebase
             return Set(type, value + Get(type));
         }
 
-        public void ChangeThreshold(Statustype type, bool high)
+        public bool ChangeThreshold(Statustype type, bool high)
         {
             switch (type)
             {
                 case Statustype.Fear:
                     if (high)
                     {
+                        if (status.FearThresholdHigh == statusSettings.GetMaxThreshold)
+                            return false;
                         status.FearThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FearThresholdHigh = Mathf.Clamp(status.FearThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fear at " + status.FearThresholdHigh);
                     }
                     else
                     {
+                        if (status.FearThresholdLow == statusSettings.GetMinThreshold)
+                            return false;
                         status.FearThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FearThresholdLow = Mathf.Clamp(status.FearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fear at " + status.FearThresholdLow);
                     }
-                    break;
+                    return true;
                 case Statustype.Fame:
                     if (high)
                     {
+                        if (status.FameThresholdHigh == statusSettings.GetMaxThreshold)
+                            return false;
                         status.FameThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FameThresholdHigh = Mathf.Clamp(status.FameThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fame at " + status.FameThresholdHigh);
                     }
                     else
                     {
+                        if (status.FameThresholdLow == statusSettings.GetMinThreshold)
+                            return false;
                         status.FameThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FameThresholdLow = Mathf.Clamp(status.FameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fame at " + status.FameThresholdLow);
                     }
-                    break;
+                    return true;
             }
+            return false;
         }
 
         public void AddPotion(Potions potion, bool wrong)

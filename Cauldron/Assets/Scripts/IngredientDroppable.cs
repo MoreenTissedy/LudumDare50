@@ -31,7 +31,7 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
 
-        [Inject]
+        //[Inject]
         public void Construct(Cauldron cauldron, TooltipManager ingredientManager)
         {
             this.cauldron = cauldron;

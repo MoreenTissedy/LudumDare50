@@ -31,30 +31,27 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
 
-        //[Inject]
-        public void Construct(Cauldron cauldron, TooltipManager ingredientManager)
+        [Inject]
+        public void Construct(Cauldron cauldron)
         {
             this.cauldron = cauldron;
-            this.ingredientManager = ingredientManager;
-        }
-
-        //TODO: find a way to inject
-        private void Awake()
-        {
-            this.cauldron = FindObjectOfType<Cauldron>();
             ingredientManager = cauldron.tooltipManager;
+            ingredientManager.AddIngredient(this);
         }
 
         private void OnEnable()
         {
             initialRotation = image.gameObject.transform.rotation.eulerAngles.z;
-            ingredientManager.AddIngredient(this);
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         private void OnDisable()
         {
             DisableHighlight();
+        }
+
+        private void OnDestroy()
+        {
             ingredientManager.RemoveIngredient(this);
         }
 

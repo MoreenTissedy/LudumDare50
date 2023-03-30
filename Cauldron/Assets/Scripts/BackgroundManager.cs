@@ -9,7 +9,7 @@ namespace CauldronCodebase
 
         [Inject] private EndingsProvider endings;
 
-        private void Awake()
+        private void Start()
         {
             Instantiate(backgrounds[endings.GetUnlockedEndingsCount() % backgrounds.Length], transform);
         }

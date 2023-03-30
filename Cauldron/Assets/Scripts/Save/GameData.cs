@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CauldronCodebase;
+using CauldronCodebase.GameStates;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,8 +10,6 @@ namespace Save
     [Serializable]
     public class GameData
     {
-        public bool GameHasBeenStarted;
-        
         public int AttemptsLeft; // VisitorManager
 
         public List<string> CardPool; // EncounterDeck
@@ -34,11 +33,10 @@ namespace Save
         public List<PotionsBrewedInADay> PotionsBrewedInADays;  //GameDataHandler
 
         public Status Status;  //GameDataHandler
-
+        public GameStateMachine.GamePhase Phase;
 
         public GameData(int initialValue)
         {
-            GameHasBeenStarted = false;
             AttemptsLeft = 3;
 
             CardPool = new List<string>(15);
@@ -51,6 +49,7 @@ namespace Save
             Money = 0;
 
             CardDrawnToday = 0;
+            Phase = GameStateMachine.GamePhase.VisitorWaiting;
 
             CurrentEncounter = null;
             CurrentVillager = null;

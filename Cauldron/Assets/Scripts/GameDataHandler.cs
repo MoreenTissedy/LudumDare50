@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -33,8 +33,9 @@ namespace CauldronCodebase
         
         public int currentDay = 0;
         public int cardsDrawnToday;
+        public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
-        public Villager CurrentVillager;
+        public Villager currentVillager;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
 
@@ -55,23 +56,22 @@ namespace CauldronCodebase
         public int WrongPotionsOnLastDays;
         public int DayCountThreshold = 2;
 
-        public bool loadIgnoreSaveFile;
         private SODictionary soDictionary;
         
         [Inject]
-        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
+        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataManager, SODictionary dictionary)
         {
             soDictionary = dictionary;
 
-            this.dataPersistenceManager = dataPersistenceManager;
-            dataPersistenceManager.AddToDataPersistenceObjList(this);
+            dataPersistenceManager = dataManager;
+            dataManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
 
             currentDeck = deck;
-            currentDeck.Init(this, this.dataPersistenceManager, dictionary);
+            currentDeck.Init(this, dataPersistenceManager, dictionary);
             currentEvents = events;
-            currentEvents.Init(this.dataPersistenceManager, dictionary);
+            currentEvents.Init(dataPersistenceManager, dictionary);
         }
 
         public void AddTag(string tag)
@@ -228,7 +228,6 @@ namespace CauldronCodebase
         public void LoadData(GameData data, bool newGame)
         {
             if(data is null) return;
-            loadIgnoreSaveFile = newGame;
 
             status = data.Status;
             if (newGame)
@@ -247,6 +246,7 @@ namespace CauldronCodebase
             money = data.Money;
             currentDay = data.CurrentDay;
             cardsDrawnToday = data.CardDrawnToday;
+            gamePhase = data.Phase;
             storyTags = data.StoryTags;
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
@@ -260,11 +260,11 @@ namespace CauldronCodebase
             
             if (string.IsNullOrEmpty(data.CurrentVillager))
             {
-                CurrentVillager = null;
+                currentVillager = null;
             }
             else
             {
-                CurrentVillager = (Villager)soDictionary.AllScriptableObjects[data.CurrentVillager];
+                currentVillager = (Villager)soDictionary.AllScriptableObjects[data.CurrentVillager];
             }
             
             potionsTotal = data.PotionsTotalOnRun;
@@ -285,11 +285,11 @@ namespace CauldronCodebase
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
-            
+            data.Phase = gamePhase;
 
-            if (CurrentVillager != null)
+            if (currentVillager != null)
             {
-                data.CurrentVillager = CurrentVillager.Id;
+                data.CurrentVillager = currentVillager.Id;
             }
 
             if (currentCard != null)

@@ -86,8 +86,6 @@ namespace CauldronCodebase
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
-            
-            dataPersistenceManager.SaveGame();
         }
     }
 }

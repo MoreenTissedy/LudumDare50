@@ -224,6 +224,10 @@ namespace CauldronCodebase
 
         public void OnNextCard()
         {
+            if (content.Length == 0)
+            {
+                CloseBook();
+            }
             resolver.ApplyModifiers(content[currentPage]);
             if (currentPage + 1 < totalPages)
             {

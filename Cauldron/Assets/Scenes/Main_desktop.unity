@@ -1508,8 +1508,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentDay: 0
   cardsDrawnToday: 0
+  gamePhase: 0
   currentCard: {fileID: 0}
-  CurrentVillager: {fileID: 0}
+  currentVillager: {fileID: 0}
   potionsTotal: 
   wrongPotionsCount: 0
   storyTags: []
@@ -1518,7 +1519,6 @@ MonoBehaviour:
   PotionsOnLastDays: 
   WrongPotionsOnLastDays: 0
   DayCountThreshold: 2
-  loadIgnoreSaveFile: 0
 --- !u!1001 &543856995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4390,7 +4390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: 32aa4419dff691747b45715ecb5c88b7, type: 2}
   initialSkinName: 
-  initialFlipX: 1
+  initialFlipX: 0
   initialFlipY: 0
   updateWhenInvisible: 3
   separatorSlotNames: []
@@ -4410,7 +4410,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: idle
+  _animationName: Idle
   loop: 1
   timeScale: 1
 --- !u!23 &1617289281
@@ -5057,7 +5057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: 32aa4419dff691747b45715ecb5c88b7, type: 2}
   initialSkinName: 
-  initialFlipX: 0
+  initialFlipX: 1
   initialFlipY: 0
   updateWhenInvisible: 3
   separatorSlotNames: []

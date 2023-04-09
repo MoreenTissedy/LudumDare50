@@ -18,6 +18,11 @@ namespace CauldronCodebase
         {
             for (int i = 0; i < AllSOKeys.Count; i++)
             {
+                if (AllScriptableObjects.ContainsKey(AllSOKeys[i]))
+                {
+                    Debug.LogError(i + " "+ AllSOValues[i]);
+                    continue;
+                }
                 AllScriptableObjects.Add(AllSOKeys[i], AllSOValues[i]);
             }
         }

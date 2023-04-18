@@ -1,9 +1,5 @@
-﻿
-using Save;
-
+﻿using Save;
 using System.Linq;
-
-using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
@@ -15,7 +11,6 @@ namespace CauldronCodebase.GameStates
         private readonly VisitorManager visitorManager;
         private readonly Cauldron cauldron;
         private readonly GameStateMachine stateMachine;
-        private readonly NightEventProvider nightEvents;
         private readonly SoundManager soundManager;
 
         private readonly EncounterResolver resolver;
@@ -38,56 +33,28 @@ namespace CauldronCodebase.GameStates
             this.visitorManager.VisitorLeft += VisitorLeft;
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
-            nightEvents = nightEventProvider;
             this.soundManager = soundManager;
 
             statusChecker = new StatusChecker(settings, gameDataHandler);
-            resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEvents);
+            resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
         
         public override void Enter()
         {
-            Encounter currentCard;
-            Villager currentVillager;
+            Encounter currentCard = cardDeck.GetTopCard();
+            gameDataHandler.currentCard = currentCard;
 
-            void NewCard()
-            {
-                currentCard = cardDeck.GetTopCard();
-                currentVillager = null;
-                gameDataHandler.currentCard = currentCard;
-            }
-            
-            if (gameDataHandler.loadIgnoreSaveFile == false)
-            {
-                if (gameDataHandler.currentCard is null)
-                {
-                    NewCard();
-                }
-                else
-                {
-                    currentCard = gameDataHandler.currentCard;
-                    currentVillager = gameDataHandler.CurrentVillager;
-                }
-
-                gameDataHandler.loadIgnoreSaveFile = true;
-            }
-            else
-            {
-                NewCard();
-            }
-            
             //in case we run out of cards
             if (gameDataHandler.currentCard is null)
             {
+                stateMachine.currentEnding = EndingsProvider.Unlocks.HighMoney;
                 stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
                 return;
             }
-            
-            currentCard.Init(currentVillager);           
+                     
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
-            gameDataHandler.CurrentVillager = currentCard.actualVillager;
-            dataPersistenceManager.SaveGame();
+            gameDataHandler.currentVillager = currentCard.actualVillager;
         }
         
         public override void Exit()

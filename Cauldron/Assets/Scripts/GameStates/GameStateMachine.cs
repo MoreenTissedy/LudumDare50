@@ -19,52 +19,50 @@ namespace CauldronCodebase.GameStates
         [HideInInspector] public EndingsProvider.Unlocks currentEnding = EndingsProvider.Unlocks.None;
         [HideInInspector] public GamePhase currentGamePhase = GamePhase.VisitorWaiting;
 
-        private Dictionary<GamePhase, BaseGameState> gameStates = new Dictionary<GamePhase, BaseGameState>();
+        private readonly Dictionary<GamePhase, BaseGameState> gameStates = new Dictionary<GamePhase, BaseGameState>();
 
-        private BaseGameState _currentGameState;
+        private BaseGameState currentGameState;
 
         private DataPersistenceManager dataPersistenceManager;
+        private GameDataHandler gameData;
 
         public event Action<GamePhase> OnChangeState;
 
-        private bool stateMachineIsRunning = false;
-
 
         [Inject]
-        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager)
+        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData)
         {
             gameStates.Add(GamePhase.VisitorWaiting, factory.CreateVisitorWaitingState());
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
             gameStates.Add(GamePhase.Night, factory.CreateNightState());
             gameStates.Add(GamePhase.EndGame, factory.CreateEndGameState());
             
-            _currentGameState = gameStates[GamePhase.VisitorWaiting];
             dataPersistenceManager = persistenceManager;
-            dataPersistenceManager.OnPlayGame += RunStateMachine;
+            this.gameData = gameData;
         }
 
-        private void RunStateMachine()
+        private void Start()
         {
-            if(stateMachineIsRunning || dataPersistenceManager.GameSaveData.GameHasBeenStarted == false) return;
-            PlayerPrefs.SetInt("FirstTime", 1);
+            RunStateMachine();
+        }
 
-            _currentGameState.Enter();
-            stateMachineIsRunning = true;
+        public void RunStateMachine()
+        {
+            dataPersistenceManager.LoadDataPersistenceObj();
+            currentGameState = gameStates[gameData.gamePhase];
+            PlayerPrefs.SetInt("FirstTime", 1);
+            currentGameState.Enter();
         }
  
         public void SwitchState(GamePhase phase)
         {
-            _currentGameState.Exit();
+            currentGameState.Exit();
             currentGamePhase = phase;
-            _currentGameState = gameStates[phase];
-            _currentGameState.Enter();
+            currentGameState = gameStates[phase];
+            gameData.gamePhase = phase;
+            currentGameState.Enter();
             OnChangeState?.Invoke(phase);
             dataPersistenceManager.SaveGame();
-        }
-
-        private void OnDestroy()
-        {
-            dataPersistenceManager.OnPlayGame -= RunStateMachine;
         }
     }
 }

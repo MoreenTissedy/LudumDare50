@@ -46,7 +46,6 @@ namespace CauldronCodebase.GameStates
             gameDataHandler.NextDay();
             cardDeck.NewDayPool(gameDataHandler.currentDay);
             cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
-            
         }
 
         private void NightPanelOnOnClose()

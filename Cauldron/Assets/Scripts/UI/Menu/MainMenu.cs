@@ -20,18 +20,13 @@ namespace CauldronCodebase
             if (!settingsMenu)
                 settingsMenu = FindObjectOfType<SettingsMenu>();
         }
-
-        private void Awake()
-        {
-            if (dataPersistenceManager.GameSaveData == null ||
-                dataPersistenceManager.GameSaveData.GameHasBeenStarted == false)
-            {
-                HideContinueButton();
-            }
-        }
         
         private void Start()
         {
+            if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
+            {
+                HideContinueButton();
+            }
             continueGame.onClick.AddListener(ContinueClick);
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
@@ -57,7 +52,7 @@ namespace CauldronCodebase
 
         private void NewGameClick()
         {
-            switch (dataPersistenceManager.CheckTheExistenceOfGameData())
+            switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 case true:  // A place to open the menu to confirm the start of a new game
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
@@ -73,14 +68,12 @@ namespace CauldronCodebase
         private void ContinueClick()
         {
             GameLoader.UnloadMenu();
-            dataPersistenceManager.PlayGame();
         }
 
         private void StartNewGame()
         {
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
-            dataPersistenceManager.GameSaveData.GameHasBeenStarted = true;
         }
     }
 }

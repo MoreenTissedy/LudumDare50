@@ -6,6 +6,8 @@ namespace Save
 {
     public class FileDataHandler
     {
+        public const string PrefSaveKey = "SaveExists";
+        
         private string dataDirPath;
         private string dataFileName;
         private string fullPath;
@@ -58,6 +60,7 @@ namespace Save
                     using (StreamWriter writer = new StreamWriter(stream))
                     {
                         writer.Write(dataToStore);
+                        PlayerPrefs.SetInt(PrefSaveKey, 1);
                     }
                 }
             }
@@ -70,6 +73,7 @@ namespace Save
         public void Delete()
         {
             File.Delete(fullPath);
+            PlayerPrefs.DeleteKey(PrefSaveKey);
         }
     }
 }

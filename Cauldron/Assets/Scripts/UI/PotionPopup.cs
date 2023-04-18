@@ -11,6 +11,7 @@ namespace CauldronCodebase
 {
     public class PotionPopup : MonoBehaviour
     {
+        private const float EFFECT_DURATION = 1.5f;
         [Localize]
         public string youBrewed = "Вы сварили: ";
         [Localize]
@@ -47,7 +48,7 @@ namespace CauldronCodebase
             newPotionEffect.SetActive(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
                 OnComplete(() => newPotionEffect.SetActive(newPotion)).
-                SetDelay(PotionExplosion.EFFECT_DURATION);
+                SetDelay(EFFECT_DURATION);
             
             if (recipe is null)
             {
@@ -86,8 +87,6 @@ namespace CauldronCodebase
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
-            
-            dataPersistenceManager.SaveGame();
         }
     }
 }

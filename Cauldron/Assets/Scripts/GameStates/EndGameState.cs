@@ -40,7 +40,6 @@ namespace CauldronCodebase.GameStates
             Debug.Log("reload scene");
             _endingScreen.OnClose -= ReloadGame;
             dataPersistenceManager.NewGame();
-            dataPersistenceManager.GameSaveData.GameHasBeenStarted = true;
             SceneManager.LoadScene(1);
         }
     }

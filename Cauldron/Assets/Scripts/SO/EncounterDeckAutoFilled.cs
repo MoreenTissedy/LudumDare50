@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Save;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,6 +21,7 @@ namespace CauldronCodebase
 
         private GameDataHandler gameDataHandler;
         private SODictionary soDictionary;
+        private Encounter loadedCard;
 
         [Serializable]
         public struct CardPoolPerDay
@@ -47,7 +47,7 @@ namespace CauldronCodebase
                     return pool.cards;
                 }
             }
-            return new Encounter[0];
+            return Array.Empty<Encounter>();
         }
         
         /// <summary>
@@ -58,39 +58,6 @@ namespace CauldronCodebase
             gameDataHandler = game;
             soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
-
-            /*
-            deck = new LinkedList<Encounter>();
-            cardPool = new List<Encounter>(15);
-            
-            
-            if (game.loadedNewGame == false)
-            {
-                //deck.AddFirst(game.currentCard);
-            }
-            else
-            {
-                deck = new LinkedList<Encounter>();
-                cardPool = new List<Encounter>(15);
-                NewDayPool(0);
-                
-                //if not first time
-                if (PlayerPrefs.HasKey("FirstTime"))
-                {
-                    Debug.Log("Fucking cat!");
-                    deck.AddFirst(introCards[2]);
-                    DealCards(1);
-                }
-                else
-                {
-                    deck.AddFirst(introCards[0]);
-                    deck.AddLast(introCards[1]);
-                    PlayerPrefs.SetInt("FirstTime", 1);
-                }
-            }
-
-            DealCards(1);
-            */
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)
@@ -199,15 +166,29 @@ namespace CauldronCodebase
         
         public override Encounter GetTopCard()
         {
-            var topCard = deck.First();
-            deck.RemoveFirst();
-            currentCard = topCard;
-            return topCard;
+            if (loadedCard != null)
+            {
+                currentCard = loadedCard;
+                loadedCard = null;
+            }
+            else
+            {
+                var topCard = deck.First();
+                deck.RemoveFirst();
+                currentCard = topCard;
+                currentCard.Init();
+            }
+
+            return currentCard;
         }
 
         public override void LoadData(GameData data, bool newGame)
         {
-            if(data is null) return;
+            loadedCard = gameDataHandler.currentCard;
+            if (loadedCard != null)
+            {
+                loadedCard.actualVillager = gameDataHandler.currentVillager;
+            }
             
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
@@ -238,7 +219,6 @@ namespace CauldronCodebase
                         {
                             cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
                         }
-                        Debug.Log("New CardPool");
                     }
                     if (data.CurrentDeck != null)
                     {
@@ -249,8 +229,7 @@ namespace CauldronCodebase
                         }
 
                         deck = new LinkedList<Encounter>(currentDeck);
-                
-                        Debug.Log("New Deck");
+                        Debug.Log("New deck");
                     }
                     break;
             }

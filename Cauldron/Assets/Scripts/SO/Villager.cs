@@ -1,6 +1,3 @@
-using System;
-using Spine;
-using Spine.Unity;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,9 +6,7 @@ namespace CauldronCodebase
     public class Villager : ScriptableObjectWithId
     {
         public Sprite image;
-        public int fameBonus;
-        public int moneyBonus;
-        public int fearBonus;
         public int patience = 3;
+        public VisitorSounds sounds;
     }
 }

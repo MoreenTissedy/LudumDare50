@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
@@ -10,8 +9,9 @@ namespace CauldronCodebase
 {
     public class PotionExplosion : MonoBehaviour
     {
-        public const float EFFECT_DURATION = 1.5f;
         public GameObject defaultEffect;
+        
+        private GameObject currentEffect;
 
         [Serializable]
         public class ExplosionItem
@@ -61,16 +61,18 @@ namespace CauldronCodebase
             }
         }
 
-        private async void PlayEffect(Potions potion)
+        private void PlayEffect(Potions potion)
         {
-            var effect = effects.FirstOrDefault(x => x.potion == potion)?.effect;
-            if (effect is null)
+            if (currentEffect)
+            {
+                currentEffect.SetActive(false);
+            }
+            currentEffect = effects.FirstOrDefault(x => x.potion == potion)?.effect;
+            if (currentEffect is null)
             {
                 return;
             }
-            effect.SetActive(true);
-            await Task.Delay(TimeSpan.FromSeconds(EFFECT_DURATION));
-            effect.SetActive(false);
+            currentEffect.SetActive(true);
         }
 
         private void OnDestroy()

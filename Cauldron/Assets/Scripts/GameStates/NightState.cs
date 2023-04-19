@@ -13,13 +13,15 @@ namespace CauldronCodebase.GameStates
 
         private readonly StatusChecker statusChecker;
         private readonly EventResolver eventResolver;
+        private readonly RecipeBook recipeBook;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
                           NightEventProvider nightEvents,
                           EncounterDeckBase cardDeck,
                           NightPanel nightPanel,
-                          GameStateMachine stateMachine)
+                          GameStateMachine stateMachine,
+                          RecipeBook book)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -27,6 +29,7 @@ namespace CauldronCodebase.GameStates
             this.cardDeck = cardDeck;
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
+            recipeBook = book;
 
             statusChecker = new StatusChecker(settings, gameDataHandler);
             eventResolver = new EventResolver(settings, gameDataHandler);
@@ -34,13 +37,13 @@ namespace CauldronCodebase.GameStates
         
         public override void Enter()
         {
-            Debug.Log("Night has been started");
+            if (recipeBook.enabled)
+            {
+                recipeBook.CloseBook();
+            }
             if (IsGameEnd()) return;
-            Debug.Log("Start calculate potions");
             gameDataHandler.CalculatePotionsOnLastDays();
-            Debug.Log("Start get events");
             var events = nightEvents.GetEvents(gameDataHandler);
-            Debug.Log("Open book");
             nightPanel.OpenBookWithEvents(events);
             nightPanel.OnClose += NightPanelOnOnClose;
             gameDataHandler.NextDay();

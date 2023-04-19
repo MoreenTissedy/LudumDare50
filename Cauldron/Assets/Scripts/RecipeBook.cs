@@ -8,8 +8,18 @@ using Zenject;
 namespace CauldronCodebase
 {
     public class RecipeBook : Book
-    {   
-        [Header("Recipe Book")]
+    {
+        [Header("Bookmark")] 
+        [SerializeField] private Image bookmark;
+
+        [SerializeField] private Sprite recipeBookmarkSprite;
+        [SerializeField] private Sprite foodBookmarkSprite;
+        [SerializeField] private Sprite attemptsBookmarkSprite;
+        [SerializeField] private Sprite ingredientsBookmarkSprite;
+        
+        
+        [Header("Recipe Book")] 
+        
         [SerializeField] protected RecipeBookEntry[] recipeEntries;
         [SerializeField] protected RecipeBookEntry[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
@@ -116,18 +126,22 @@ namespace CauldronCodebase
                 case Mode.Magical:
                     CloseAllPages();
                     recipesDisplay.SetActive(true);
+                    bookmark.sprite = recipeBookmarkSprite;
                     break;
                 case Mode.Herbal:
                     CloseAllPages();
                     foodDisplay.SetActive(true);
+                    bookmark.sprite = foodBookmarkSprite;
                     break;
                 case Mode.Attempts:
                     CloseAllPages();
                     attemptsDisplay.SetActive(true);
+                    bookmark.sprite = attemptsBookmarkSprite;
                     break;
                 case Mode.Ingredients:
                     CloseAllPages();
                     ingredientsDisplay.SetActive(true);
+                    bookmark.sprite = ingredientsBookmarkSprite;
                     break;
             }
             

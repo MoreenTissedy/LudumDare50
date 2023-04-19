@@ -1,5 +1,6 @@
 using Spine.Unity;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -13,6 +14,8 @@ namespace CauldronCodebase
         private int currentAttempts;
         private static readonly int Use = Animator.StringToHash("Use");
 
+        [Inject] private SoundManager soundManager;
+
         private void Start()
         {
             prefab.gameObject.SetActive(false);
@@ -20,6 +23,7 @@ namespace CauldronCodebase
 
         public override void ReduceTimer()
         {
+            soundManager.Play(Sounds.TimerBreak);
             currentAttempts--;
             clockAnimation.AnimationState.SetAnimation(1, "Active", false);
             clockAnimation.AnimationState.AddEmptyAnimation(1, 0.2f, 0f);

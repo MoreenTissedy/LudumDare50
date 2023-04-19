@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
+    //Please add sounds to the end
     public enum Sounds
     {
         Music,
@@ -18,7 +19,12 @@ namespace CauldronCodebase
         BookClick,
         BookSwitch,
         MenuFocus,
-        MenuClick
+        MenuClick,
+        TimerBreak,
+        GameStart,
+        GameEnd,
+        NightCardEnter,
+        NightCardExit
     }
 
     public enum VisitorSound
@@ -29,10 +35,9 @@ namespace CauldronCodebase
         Speech
     }
 
-    public enum CatSounds
+    public enum CatSound
     {
-        PurrShort,
-        PurrLong,
+        Purr,
         Conversation,
         Attention,
         Annoyed
@@ -63,12 +68,23 @@ namespace CauldronCodebase
         public EventReference Exit;
         public EventReference Speech;
     }
+    
+    [Serializable]
+    public struct CatSounds
+    {
+        public EventReference PurrShort;
+        public EventReference PurrLong;
+        public EventReference Conversation;
+        public EventReference Attention;
+        public EventReference Annoyed;
+    }
 
     [CreateAssetMenu]
     public class SoundManager : ScriptableObject
     {
         public EventReference[] sounds;
         public VisitorSounds defaultVisitorSounds;
+        public CatSounds catSounds;
 
         public void Init()
         {
@@ -79,6 +95,7 @@ namespace CauldronCodebase
 
         public void Play(Sounds sound)
         {
+            Debug.LogError("play "+sound);
             EventReference reference = sounds[(int) sound];
             if (reference.IsNull)
             {
@@ -126,6 +143,27 @@ namespace CauldronCodebase
                     sound = collection.Speech.IsNull ? defaultVisitorSounds.Speech : collection.Speech;
                     break;
             } 
+            RuntimeManager.PlayOneShot(sound);
+        }
+
+        public void PlayCat(CatSound type, bool prolonged = false)
+        {
+            EventReference sound = new EventReference();
+            switch (type)
+            {
+                case CatSound.Purr:
+                    sound = prolonged ? catSounds.PurrLong : catSounds.PurrShort;
+                    break;
+                case CatSound.Conversation:
+                    sound = catSounds.Conversation;
+                    break;
+                case CatSound.Attention:
+                    sound = catSounds.Attention;
+                    break;
+                case CatSound.Annoyed:
+                    sound = catSounds.Annoyed;
+                    break;
+            }
             RuntimeManager.PlayOneShot(sound);
         }
     }

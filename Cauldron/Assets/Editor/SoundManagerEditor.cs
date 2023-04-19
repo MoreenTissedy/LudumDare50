@@ -19,8 +19,12 @@ namespace CauldronCodebase.Editor
                 EditorGUILayout.PropertyField(values.GetArrayElementAtIndex(i), new GUIContent(Enum.GetName(typeof(Sounds), i)));
                 EditorGUILayout.EndHorizontal();
             }
+            EditorGUILayout.Separator();
             var visitors = serializedObject.FindProperty("defaultVisitorSounds");
             EditorGUILayout.PropertyField(visitors);
+            EditorGUILayout.Separator();
+            var cat = serializedObject.FindProperty("catSounds");
+            EditorGUILayout.PropertyField(cat);
             serializedObject.ApplyModifiedProperties();
         }
     }

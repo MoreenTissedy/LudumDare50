@@ -8,18 +8,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670492457073022}
+  - component: {fileID: 7846116615072560754}
   - component: {fileID: 2996670492457073008}
   - component: {fileID: 2996670492457073023}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: DustCloud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670492457073022
-Transform:
+--- !u!224 &7846116615072560754
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -29,9 +29,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2996670493935120404}
+  m_Father: {fileID: 5750739107083044541}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670492457073008
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4806,18 +4811,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670492506215834}
+  - component: {fileID: 7050751486358484081}
   - component: {fileID: 2996670492506215836}
   - component: {fileID: 2996670492506215835}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670492506215834
-Transform:
+--- !u!224 &7050751486358484081
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4827,9 +4832,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2996670492695044335}
+  m_Father: {fileID: 450026784356202083}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670492506215836
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9640,18 +9650,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670492695044335}
+  - component: {fileID: 450026784356202083}
   - component: {fileID: 2996670492695044334}
   - component: {fileID: 2996670492695044333}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Foundry_Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670492695044335
-Transform:
+--- !u!224 &450026784356202083
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -9661,13 +9671,18 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2996670493935120404}
-  - {fileID: 2996670493022935767}
-  - {fileID: 2996670492506215834}
-  - {fileID: 2996670493841117596}
+  - {fileID: 5750739107083044541}
+  - {fileID: 5895500338966126114}
+  - {fileID: 7050751486358484081}
+  - {fileID: 1643277627286741246}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670492695044334
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -14424,18 +14439,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670493022935767}
+  - component: {fileID: 5895500338966126114}
   - component: {fileID: 2996670493022935753}
   - component: {fileID: 2996670493022935752}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Glow_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670493022935767
-Transform:
+--- !u!224 &5895500338966126114
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -14445,9 +14460,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2996670492695044335}
+  m_Father: {fileID: 450026784356202083}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670493022935753
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -19213,18 +19233,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670493841117596}
+  - component: {fileID: 1643277627286741246}
   - component: {fileID: 2996670493841117598}
   - component: {fileID: 2996670493841117597}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670493841117596
-Transform:
+--- !u!224 &1643277627286741246
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -19234,9 +19254,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2996670492695044335}
+  m_Father: {fileID: 450026784356202083}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670493841117598
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -24011,18 +24036,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670493935120404}
+  - component: {fileID: 5750739107083044541}
   - component: {fileID: 2996670493935120406}
   - component: {fileID: 2996670493935120405}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: GibletExplodeDirt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670493935120404
-Transform:
+--- !u!224 &5750739107083044541
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -24032,11 +24057,16 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2996670494004708515}
-  - {fileID: 2996670492457073022}
-  m_Father: {fileID: 2996670492695044335}
+  - {fileID: 4136695246476165704}
+  - {fileID: 7846116615072560754}
+  m_Father: {fileID: 450026784356202083}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670493935120406
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -28829,18 +28859,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2996670494004708515}
+  - component: {fileID: 4136695246476165704}
   - component: {fileID: 2996670494004708517}
   - component: {fileID: 2996670494004708516}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Glow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2996670494004708515
-Transform:
+--- !u!224 &4136695246476165704
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -28850,9 +28880,14 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2996670493935120404}
+  m_Father: {fileID: 5750739107083044541}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!198 &2996670494004708517
 ParticleSystem:
   m_ObjectHideFlags: 0

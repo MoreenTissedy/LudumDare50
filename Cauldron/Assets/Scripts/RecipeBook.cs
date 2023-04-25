@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -11,11 +12,19 @@ namespace CauldronCodebase
     {
         [Header("Bookmark")] 
         [SerializeField] private Image bookmark;
+        [SerializeField] private Image bookmarkMask;
+        [SerializeField] private float bookmarkAnimationSpeed = 0.5f;
 
         [SerializeField] private Sprite recipeBookmarkSprite;
         [SerializeField] private Sprite foodBookmarkSprite;
         [SerializeField] private Sprite attemptsBookmarkSprite;
         [SerializeField] private Sprite ingredientsBookmarkSprite;
+
+        [Header("Side Bookmarks")] 
+        [SerializeField] private Transform recipeSideBookmark;
+        [SerializeField] private Transform foodSideBookmark;
+        [SerializeField] private Transform attemptsSideBookmark;
+        [SerializeField] private Transform ingredientsSideBookmark;
         
         
         [Header("Recipe Book")] 
@@ -121,29 +130,27 @@ namespace CauldronCodebase
 
         public void ChangeMode(Mode newMode)
         {
+
             switch (newMode)
             {
                 case Mode.Magical:
                     CloseAllPages();
                     recipesDisplay.SetActive(true);
-                    bookmark.sprite = recipeBookmarkSprite;
                     break;
                 case Mode.Herbal:
                     CloseAllPages();
                     foodDisplay.SetActive(true);
-                    bookmark.sprite = foodBookmarkSprite;
                     break;
                 case Mode.Attempts:
                     CloseAllPages();
                     attemptsDisplay.SetActive(true);
-                    bookmark.sprite = attemptsBookmarkSprite;
                     break;
                 case Mode.Ingredients:
                     CloseAllPages();
                     ingredientsDisplay.SetActive(true);
-                    bookmark.sprite = ingredientsBookmarkSprite;
                     break;
             }
+            ChangeBookmarksOrder(newMode);
             
             currentMode = newMode;
             currentPage = 0;
@@ -151,6 +158,63 @@ namespace CauldronCodebase
             UpdatePage();
             UpdateBookButtons();
             
+        }
+
+        private void ChangeBookmarksOrder(Mode newMode)
+        {
+            Transform GetTransformFromMode(Mode mode)
+            {
+                switch (mode)
+                {
+                    case Mode.Magical:
+                        return recipeSideBookmark;
+
+                    case Mode.Herbal:
+                        return foodSideBookmark;
+
+                    case Mode.Attempts:
+                        return attemptsSideBookmark;
+
+                    case Mode.Ingredients:
+                        return ingredientsSideBookmark;
+                    
+                    default: return recipeSideBookmark;
+                }
+            }
+
+            void SetBookmarkSprite()
+            {
+                switch (newMode)
+                {
+                    case Mode.Magical:
+                        bookmark.sprite = recipeBookmarkSprite;
+                        break;
+                    case Mode.Herbal:
+                        bookmark.sprite = foodBookmarkSprite;
+                        break;
+                    case Mode.Attempts:
+                        bookmark.sprite = attemptsBookmarkSprite;
+                        break;
+                    case Mode.Ingredients:
+                        bookmark.sprite = ingredientsBookmarkSprite;
+                        break;
+                }
+            }
+
+            var oldTransform = GetTransformFromMode(currentMode);
+            var newTransform = GetTransformFromMode(newMode);
+            
+            int oldBookmarkOrder = oldTransform.GetSiblingIndex();
+            int newBookmarkOrder = newTransform.GetSiblingIndex();
+            
+            oldTransform.SetSiblingIndex(newBookmarkOrder);
+            newTransform.SetSiblingIndex(oldBookmarkOrder);
+            
+            Sequence mySequence = DOTween.Sequence();
+            mySequence.Append(bookmarkMask.DOFillAmount(0, bookmarkAnimationSpeed))
+                      .AppendCallback(SetBookmarkSprite)
+                      .Append(bookmarkMask.DOFillAmount(1, bookmarkAnimationSpeed));
+
         }
 
         protected override void Update()

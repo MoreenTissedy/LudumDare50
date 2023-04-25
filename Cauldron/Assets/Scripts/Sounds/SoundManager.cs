@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
+    //Please add sounds to the end
     public enum Sounds
     {
         Music,
@@ -18,9 +19,30 @@ namespace CauldronCodebase
         BookClick,
         BookSwitch,
         MenuFocus,
-        MenuClick
+        MenuClick,
+        TimerBreak,
+        GameStart,
+        GameEnd,
+        NightCardEnter,
+        NightCardExit
     }
-    
+
+    public enum VisitorSound
+    {
+        Door,
+        Enter,
+        Exit,
+        Speech
+    }
+
+    public enum CatSound
+    {
+        Purr,
+        Conversation,
+        Attention,
+        Annoyed
+    }
+
     public enum BookSound
     {
         Open,
@@ -37,11 +59,32 @@ namespace CauldronCodebase
         public EventReference Left;
         public EventReference Right;
     }
+    
+    [Serializable]
+    public struct VisitorSounds
+    {
+        public EventReference Door;
+        public EventReference Enter;
+        public EventReference Exit;
+        public EventReference Speech;
+    }
+    
+    [Serializable]
+    public struct CatSounds
+    {
+        public EventReference PurrShort;
+        public EventReference PurrLong;
+        public EventReference Conversation;
+        public EventReference Attention;
+        public EventReference Annoyed;
+    }
 
     [CreateAssetMenu]
     public class SoundManager : ScriptableObject
     {
         public EventReference[] sounds;
+        public VisitorSounds defaultVisitorSounds;
+        public CatSounds catSounds;
 
         public void Init()
         {
@@ -52,6 +95,7 @@ namespace CauldronCodebase
 
         public void Play(Sounds sound)
         {
+            Debug.LogError("play "+sound);
             EventReference reference = sounds[(int) sound];
             if (reference.IsNull)
             {
@@ -78,6 +122,48 @@ namespace CauldronCodebase
                     sound = collection.Right;
                     break;
             } 
+            RuntimeManager.PlayOneShot(sound);
+        }
+        
+        public void PlayVisitor(VisitorSounds collection, VisitorSound type)
+        {
+            EventReference sound = new EventReference();
+            switch (type)
+            {
+                case VisitorSound.Enter:
+                    sound = collection.Enter.IsNull ? defaultVisitorSounds.Enter : collection.Enter;
+                    break;
+                case VisitorSound.Door:
+                    sound = collection.Door.IsNull ? defaultVisitorSounds.Door : collection.Door;
+                    break;
+                case VisitorSound.Exit:
+                    sound = collection.Exit.IsNull ? defaultVisitorSounds.Exit : collection.Exit;
+                    break;
+                case VisitorSound.Speech:
+                    sound = collection.Speech.IsNull ? defaultVisitorSounds.Speech : collection.Speech;
+                    break;
+            } 
+            RuntimeManager.PlayOneShot(sound);
+        }
+
+        public void PlayCat(CatSound type, bool prolonged = false)
+        {
+            EventReference sound = new EventReference();
+            switch (type)
+            {
+                case CatSound.Purr:
+                    sound = prolonged ? catSounds.PurrLong : catSounds.PurrShort;
+                    break;
+                case CatSound.Conversation:
+                    sound = catSounds.Conversation;
+                    break;
+                case CatSound.Attention:
+                    sound = catSounds.Attention;
+                    break;
+                case CatSound.Annoyed:
+                    sound = catSounds.Annoyed;
+                    break;
+            }
             RuntimeManager.PlayOneShot(sound);
         }
     }

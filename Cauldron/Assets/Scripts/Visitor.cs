@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Spine;
 using UnityEngine;
@@ -14,6 +16,7 @@ namespace CauldronCodebase
         [SpineAnimation]
         public string idle, enter, exit;
 
+
         protected virtual void Awake()
         {
             anim = GetComponent<SkeletonAnimation>();
@@ -21,7 +24,7 @@ namespace CauldronCodebase
             rend.enabled = false;
         }
 
-        public virtual void Enter()
+        public void Enter()
         {
             rend.enabled = true;
             if (!string.IsNullOrEmpty(enter))

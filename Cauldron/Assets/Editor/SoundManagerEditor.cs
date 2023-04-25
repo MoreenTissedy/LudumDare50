@@ -15,10 +15,16 @@ namespace CauldronCodebase.Editor
             for (int i = 0; i < values.arraySize; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(Enum.GetName(typeof(Sounds), i), GUILayout.Width(100));
-                EditorGUILayout.PropertyField(values.GetArrayElementAtIndex(i), GUIContent.none);
+                //EditorGUILayout.LabelField(Enum.GetName(typeof(Sounds), i), GUILayout.Width(1));
+                EditorGUILayout.PropertyField(values.GetArrayElementAtIndex(i), new GUIContent(Enum.GetName(typeof(Sounds), i)));
                 EditorGUILayout.EndHorizontal();
             }
+            EditorGUILayout.Separator();
+            var visitors = serializedObject.FindProperty("defaultVisitorSounds");
+            EditorGUILayout.PropertyField(visitors);
+            EditorGUILayout.Separator();
+            var cat = serializedObject.FindProperty("catSounds");
+            EditorGUILayout.PropertyField(cat);
             serializedObject.ApplyModifiedProperties();
         }
     }

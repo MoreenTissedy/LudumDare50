@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Zenject;
 
 namespace CauldronCodebase
 { 
@@ -27,6 +28,8 @@ namespace CauldronCodebase
         private Vector3 initialPosition;
         public event Action<NightPanelCard> InPlace;
         private Image[] imagesToFade;
+
+        [Inject] private SoundManager soundManager;
         
         public void Init(Sprite picture, Vector3 initialPosition)
         {
@@ -44,6 +47,7 @@ namespace CauldronCodebase
 
         public void Enter(Vector3 point, float zRotation)
         {
+            soundManager.Play(Sounds.NightCardEnter);
             gameObject.SetActive(true);
             foreach (var image in imagesToFade)
             {
@@ -71,6 +75,7 @@ namespace CauldronCodebase
 
         public void Exit()
         {
+            soundManager.Play(Sounds.NightCardExit);
             Sequence sequence = DOTween.Sequence();
             sequence.Append(transform.DOLocalMoveX(initialPosition.x - exitStartDist, exitStartTime));
             sequence.Append(transform.DOLocalMoveX(offScreenRight, exitTime).SetEase(exitMotion));

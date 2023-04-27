@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 
@@ -34,25 +35,25 @@ namespace Editor
         private void LoadConditionalEvents()
         {
             List<ConditionalEvent> data = ScriptableObjectHelper.LoadAllAssetsList<ConditionalEvent>();
-            List<ConditionalEvent> deck = new List<ConditionalEvent>(data.Count);
+            List<ConditionalEvent> conditionalDeck = new List<ConditionalEvent>(data.Count);
+            List<RandomNightEvent> randomDeck = new List<RandomNightEvent>(data.Count);
             //randomize
             int dataCount = data.Count;
-            List<ConditionalEvent> defaultEvents = new List<ConditionalEvent>(3);
             for (int i = 0; i < dataCount; i++)
             {
                 int dice = Random.Range(0, data.Count);
-                if (data[dice] is RandomNightEvent)
+                if (data[dice] as RandomNightEvent)
                 {
-                    defaultEvents.Add(data[dice]);
+                    randomDeck.Add((RandomNightEvent) data[dice]);
                 }
                 else
                 {
-                    deck.Add(data[dice]);
+                    conditionalDeck.Add(data[dice]);
                 }
                 data.RemoveAt(dice);
             }
-            deck.AddRange(defaultEvents);
-            provider.conditionalEvents = deck;
+            provider.conditionalEvents = conditionalDeck;
+            provider.randomEvents = randomDeck;
             EditorUtility.SetDirty(provider);
         }
     }

@@ -7,8 +7,6 @@ namespace CauldronCodebase
     {
         [Header("Random parameters")] 
         public int minDay;
-        [Range(0, 100)] 
-        public int probability;
 
         public override bool Valid(GameDataHandler game)
         {
@@ -16,14 +14,7 @@ namespace CauldronCodebase
             {
                 return false;
             }
-
-            int random = Random.Range(0, 100);
-            if (random <= probability)
-            {
-                return true;
-            }
-            return false;
-            
+            return true;
         }
     }
 }

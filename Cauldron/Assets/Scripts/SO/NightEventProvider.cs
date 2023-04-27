@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Save;
 using UnityEngine;
-using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -27,9 +27,11 @@ namespace CauldronCodebase
 
         public NightEvent intro;
         public List<ConditionalEvent> conditionalEvents;
+        public List<RandomNightEvent> randomEvents;
         [Header("Readonly")]
         public List<NightEvent> storyEvents;
         public List<ConditionalEvent> inGameConditionals;
+        public List<RandomNightEvent> inGameRandoms;
         public List<CooldownEvent> eventsOnCooldown;
         private SODictionary soDictionary;
 
@@ -38,12 +40,28 @@ namespace CauldronCodebase
             eventsOnCooldown = new List<CooldownEvent>(5);
             inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
             inGameConditionals.AddRange(conditionalEvents);
+            inGameRandoms = new List<RandomNightEvent>(randomEvents.Count);
+            inGameRandoms.AddRange(randomEvents);
             soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
-            //storyEvents.Clear();
         }
 
-        private NightEvent CheckConditions(GameDataHandler game)
+        private NightEvent GetRandomEvent(int day)
+        {
+            var validEvents = new List<RandomNightEvent>(inGameRandoms.Count);
+            foreach (var randomNightEvent in inGameRandoms)
+            {
+                if (randomNightEvent.minDay <= day)
+                {
+                    validEvents.Add(randomNightEvent);
+                }
+            }
+            var result = validEvents[Random.Range(0, validEvents.Count)];
+            inGameRandoms.Remove(result);
+            return result;
+        }
+
+        private NightEvent GetConditionalEvent(GameDataHandler game)
         {
             //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
@@ -80,13 +98,14 @@ namespace CauldronCodebase
 
             List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count + 1);
             returnEvents.AddRange(storyEvents);
-            if (storyEvents.Count < 2)
+            NightEvent conditionalEvent = GetConditionalEvent(game);
+            if (!(conditionalEvent is null))
             {
-                NightEvent conditionalEvent = CheckConditions(game);
-                if (!(conditionalEvent is null))
-                {
-                    returnEvents.Add(conditionalEvent);
-                }
+                returnEvents.Add(conditionalEvent);
+            }
+            if (returnEvents.Count <= 2)
+            {
+                returnEvents.Add(GetRandomEvent(game.currentDay));
             }
 
             storyEvents.Clear();

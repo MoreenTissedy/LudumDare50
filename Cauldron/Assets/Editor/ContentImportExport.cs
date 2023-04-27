@@ -65,7 +65,6 @@ namespace Editor
                     }
                     RandomNightEvent randomCard = (RandomNightEvent) card;
                     randomCard.minDay = ConvertIntFromString(randomData[0]);
-                    randomCard.probability = ConvertIntFromString(randomData[1]);
                 }
                 //Title & Text
                 card.title = data[2];

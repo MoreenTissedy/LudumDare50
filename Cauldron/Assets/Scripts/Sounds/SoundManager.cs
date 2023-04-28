@@ -95,7 +95,6 @@ namespace CauldronCodebase
 
         public void Play(Sounds sound)
         {
-            Debug.LogError("play "+sound);
             EventReference reference = sounds[(int) sound];
             if (reference.IsNull)
             {

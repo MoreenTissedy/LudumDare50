@@ -29,9 +29,9 @@ namespace CauldronCodebase
         public event Action<NightPanelCard> InPlace;
         private Image[] imagesToFade;
 
-        [Inject] private SoundManager soundManager;
+        private SoundManager soundManager;
         
-        public void Init(Sprite picture, Vector3 initialPosition)
+        public void Init(Sprite picture, Vector3 initialPosition, SoundManager soundManager)
         {
             if (picture != null)
             {
@@ -41,14 +41,16 @@ namespace CauldronCodebase
             {
                 cardImage.sprite = defaultSprite;
             }
+
+            this.soundManager = soundManager;
             this.initialPosition = initialPosition;
             imagesToFade = GetComponentsInChildren<Image>();
         }
 
         public void Enter(Vector3 point, float zRotation)
         {
-            soundManager.Play(Sounds.NightCardEnter);
             gameObject.SetActive(true);
+            soundManager.Play(Sounds.NightCardEnter);
             foreach (var image in imagesToFade)
             {
                 image.color = Color.white;

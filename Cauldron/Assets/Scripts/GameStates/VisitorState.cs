@@ -6,7 +6,6 @@ namespace CauldronCodebase.GameStates
     public class VisitorState : BaseGameState
     {
         private readonly EncounterDeckBase cardDeck;
-        private readonly DataPersistenceManager dataPersistenceManager;
         private readonly GameDataHandler gameDataHandler;
         private readonly VisitorManager visitorManager;
         private readonly Cauldron cauldron;
@@ -18,7 +17,6 @@ namespace CauldronCodebase.GameStates
 
         public VisitorState(EncounterDeckBase deck,
                             MainSettings settings,
-                            DataPersistenceManager dataPersistenceManager,
                             GameDataHandler gameDataHandler,
                             VisitorManager visitorManager,
                             Cauldron cauldron,
@@ -27,7 +25,6 @@ namespace CauldronCodebase.GameStates
                             SoundManager soundManager)
         {
             cardDeck = deck;
-            this.dataPersistenceManager = dataPersistenceManager;
             this.gameDataHandler = gameDataHandler;
             this.visitorManager = visitorManager;
             this.visitorManager.VisitorLeft += VisitorLeft;

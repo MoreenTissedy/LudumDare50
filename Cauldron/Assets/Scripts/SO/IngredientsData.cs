@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -25,6 +26,18 @@ namespace CauldronCodebase
         public Ingredient Get(Ingredients type)
         {
             return (book.Where(x => x.type == type).ToArray()[0]);
+        }
+        
+        [ContextMenu("Export ingredients data to csv")]
+        public void ExportAllNightEvents()
+        {
+            var file = File.CreateText(Application.dataPath+"/Localize/Ingredients.csv");
+            file.WriteLine("type;title_RU;title_EN;description_RU;description_EN");
+            foreach (var element in book)
+            {
+                file.WriteLine($"{element.type};{element.friendlyName};;{element.TextInABook}");
+            }
+            file.Close();
         }
     }
 }

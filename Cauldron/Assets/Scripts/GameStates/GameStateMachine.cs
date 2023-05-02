@@ -50,17 +50,7 @@ namespace CauldronCodebase.GameStates
         {
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGameState = gameStates[gameData.gamePhase];
-            
-            if (!PlayerPrefs.HasKey("CurrentRound"))
-            {
-                PlayerPrefs.SetInt("CurrentRound", 0);
-                gameData.currentDeck.ForgetCards();
-            }
-            else
-            {
-                gameData.currentRound = PlayerPrefs.GetInt("CurrentRound");
-            }
-            
+            PlayerPrefs.SetInt("FirstTime", 1);
             currentGameState.Enter();
         }
  

@@ -18,6 +18,8 @@ namespace CauldronCodebase
              public int cardsPerDay = 3;
              public int cardsDealtAtNight = 3;
              public float villagerDelay = 2f;
+             public int roundsToSaveCards = 2; //Первые N-1 кругов необходимо сохранять все карты
+             public int daysToSaveCard = 3; // выпавшие в первые три X дня игры
         }
 
         [Serializable]

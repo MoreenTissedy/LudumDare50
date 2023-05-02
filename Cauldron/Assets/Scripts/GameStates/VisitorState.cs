@@ -1,5 +1,6 @@
 ﻿using Save;
 using System.Linq;
+using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
@@ -46,6 +47,7 @@ namespace CauldronCodebase.GameStates
             {
                 stateMachine.currentEnding = EndingsProvider.Unlocks.HighMoney;
                 stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
+                gameDataHandler.RememberRound();
                 return;
             }
                      

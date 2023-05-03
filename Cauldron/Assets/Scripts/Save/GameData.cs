@@ -19,7 +19,8 @@ namespace Save
         public string[] CurrentStoryEvents;
         public string[] CurrentRandomEvents;
         public string[] CurrentConditionals;
-        public (string, int)[] Cooldowns;
+        public string[] CooldownEvents;
+        public int[] CooldownDays;
         
         public int Fear, Fame, Money; // GameDataHandler
         public int CurrentDay; // GameDataHandler

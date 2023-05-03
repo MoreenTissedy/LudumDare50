@@ -15,7 +15,11 @@ namespace Save
         public List<string> CardPool; // EncounterDeck
         public List<string> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
 
-        public List<string> CurrentEvents; // NightEventProvider
+        // NightEventProvider
+        public string[] CurrentStoryEvents;
+        public string[] CurrentRandomEvents;
+        public string[] CurrentConditionals;
+        public (string, int)[] Cooldowns;
         
         public int Fear, Fame, Money; // GameDataHandler
         public int CurrentDay; // GameDataHandler
@@ -41,8 +45,6 @@ namespace Save
 
             CardPool = new List<string>(15);
             CurrentDeck = new List<string>();
-
-            CurrentEvents = new List<string>();
             
             Fear = initialValue;
             Fame = initialValue;

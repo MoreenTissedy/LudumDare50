@@ -13,8 +13,8 @@ namespace CauldronCodebase
         [SerializeField] protected RectTransform mainPanel;
         [SerializeField] protected bool keyboardControl;
         [SerializeField] protected bool buttonControl;
-        [FormerlySerializedAs("rightCorner")] [SerializeField] protected GameObject nextPageButton;
-        [FormerlySerializedAs("leftCorner")] [SerializeField] protected GameObject prevPageButton;
+        [SerializeField] protected GameObject nextPageButton;
+        [SerializeField] protected GameObject prevPageButton;
         [SerializeField] protected BookSounds sounds;
         [SerializeField] private float openCloseAnimationTime = 0.5f;
 

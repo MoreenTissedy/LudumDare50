@@ -47,6 +47,7 @@ namespace CauldronCodebase
         private bool firstCardDealt;
 
         private EventResolver resolver;
+        private SoundManager soundManager;
 
         protected override void Awake()
         {
@@ -65,10 +66,11 @@ namespace CauldronCodebase
         }
 
         [Inject]
-        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameDataHandler gameDataHandler)
+        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameDataHandler gameDataHandler, SoundManager soundManager)
         {
             this.settings = settings;
             this.gameStateMachine = stateMachine;
+            this.soundManager = soundManager;
             
             resolver = new EventResolver(settings, gameDataHandler);
         }
@@ -122,7 +124,7 @@ namespace CauldronCodebase
             {
                 yield return new WaitForSeconds(enterTimeInterval);
                 NightPanelCard card = GetCard();
-                card.Init(nightEvent.picture, cardInitialPos);
+                card.Init(nightEvent.picture, cardInitialPos, soundManager);
                 card.Enter(newPosition, newAngle);
                 foreach (var activeCard in activeCards)
                 {

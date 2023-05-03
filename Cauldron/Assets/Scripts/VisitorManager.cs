@@ -24,6 +24,7 @@ namespace CauldronCodebase
         private bool ignoreSavedAttempts = false;
         private GameData gameData;
         private SoundManager soundManager;
+        private DataPersistenceManager dataPersistenceManager;
 
         [Inject]
         private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager)
@@ -31,6 +32,7 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.cauldron = cauldron;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
+            this.dataPersistenceManager = dataPersistenceManager;
         }
         private void Awake()
         {
@@ -60,6 +62,10 @@ namespace CauldronCodebase
             {
                 Exit();
                 VisitorLeft?.Invoke();
+            }
+            else
+            {
+                dataPersistenceManager.SaveGame();
             }
         }
         

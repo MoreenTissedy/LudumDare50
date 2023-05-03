@@ -24,7 +24,7 @@ namespace CauldronCodebase
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
 
-        [Inject] private SoundManager soundManager;
+        [Inject] protected SoundManager soundManager;
         
         public event Action OnClose;
         protected virtual void Awake()

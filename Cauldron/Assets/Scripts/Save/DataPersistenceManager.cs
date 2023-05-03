@@ -21,6 +21,7 @@ namespace Save
         private MainSettings settings;
 
         private bool newGame = false;
+        public bool IsNewGame => newGame;
 
         [Inject]
         private void Construct(MainSettings mainSettings)

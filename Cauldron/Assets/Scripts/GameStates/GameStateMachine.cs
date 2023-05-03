@@ -26,11 +26,13 @@ namespace CauldronCodebase.GameStates
         private DataPersistenceManager dataPersistenceManager;
         private GameDataHandler gameData;
 
+        private GameFXManager gameFXManager;
+
         public event Action<GamePhase> OnChangeState;
 
 
         [Inject]
-        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData)
+        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData, GameFXManager fxManager)
         {
             gameStates.Add(GamePhase.VisitorWaiting, factory.CreateVisitorWaitingState());
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
@@ -39,6 +41,7 @@ namespace CauldronCodebase.GameStates
             
             dataPersistenceManager = persistenceManager;
             this.gameData = gameData;
+            gameFXManager = fxManager;
         }
 
         private void Start()
@@ -52,6 +55,7 @@ namespace CauldronCodebase.GameStates
             currentGameState = gameStates[gameData.gamePhase];
             PlayerPrefs.SetInt("FirstTime", 1);
             currentGameState.Enter();
+            gameFXManager.ShowStartGameFX();
         }
  
         public void SwitchState(GamePhase phase)

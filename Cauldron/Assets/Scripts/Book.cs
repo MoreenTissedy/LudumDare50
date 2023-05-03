@@ -24,7 +24,7 @@ namespace CauldronCodebase
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
 
-        [Inject] private SoundManager soundManager;
+        [Inject] protected SoundManager SoundManager;
         
         public event Action OnClose;
         protected virtual void Awake()
@@ -73,7 +73,7 @@ namespace CauldronCodebase
 
         public virtual void OpenBook()
         {
-            soundManager.PlayBook(sounds, BookSound.Open);
+            SoundManager.PlayBook(sounds, BookSound.Open);
             bookObject.enabled = true;
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
@@ -89,7 +89,7 @@ namespace CauldronCodebase
         
         public virtual void CloseBook()
         {
-            soundManager.PlayBook(sounds, BookSound.Close);
+            SoundManager.PlayBook(sounds, BookSound.Close);
             OnClose?.Invoke();
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>
@@ -105,7 +105,7 @@ namespace CauldronCodebase
             currentPage++;
             UpdateBookButtons();
             UpdatePage();
-            soundManager.PlayBook(sounds, BookSound.Right);
+            SoundManager.PlayBook(sounds, BookSound.Right);
         }
 
         public virtual void PrevPage()
@@ -115,7 +115,7 @@ namespace CauldronCodebase
             currentPage--;
             UpdateBookButtons();
             UpdatePage();
-            soundManager.PlayBook(sounds, BookSound.Left);
+            SoundManager.PlayBook(sounds, BookSound.Left);
         }
 
         public void OpenPage(int i)
@@ -124,11 +124,11 @@ namespace CauldronCodebase
             if (i == currentPage) return;
             if (i < currentPage)
             {
-                soundManager.PlayBook(sounds, BookSound.Left);  
+                SoundManager.PlayBook(sounds, BookSound.Left);  
             }
             else if (i > currentPage)
             {
-                soundManager.PlayBook(sounds, BookSound.Right);
+                SoundManager.PlayBook(sounds, BookSound.Right);
             }
             currentPage = i;
             UpdateBookButtons();

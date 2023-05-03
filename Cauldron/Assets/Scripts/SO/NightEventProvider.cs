@@ -11,7 +11,7 @@ namespace CauldronCodebase
     [Serializable]
     public class NightEventProvider : ScriptableObject, IDataPersistence
     {
-        private const int _EVENT_COOLDOWN_ = 2;
+        private const int _EVENT_COOLDOWN_ = 3;
         private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 1;
 
         [Serializable]
@@ -156,9 +156,13 @@ namespace CauldronCodebase
             inGameRandoms = data.CurrentRandomEvents.
                 Select(x => (RandomNightEvent) soDictionary.AllScriptableObjects[x]).
                 ToList();
-            eventsOnCooldown = data.Cooldowns.
-                Select(x => new CooldownEvent ((ConditionalEvent)soDictionary.AllScriptableObjects[x.Item1], x.Item2)).
-                ToList();
+            eventsOnCooldown.Clear();
+            for (var index = 0; index < data.CooldownEvents.Length; index++)
+            {
+                var key = data.CooldownEvents[index];
+                eventsOnCooldown.Add(new CooldownEvent((ConditionalEvent) soDictionary.AllScriptableObjects[key],
+                    data.CooldownDays[index]));
+            }
         }
 
         public void SaveData(ref GameData data)
@@ -170,7 +174,8 @@ namespace CauldronCodebase
             data.CurrentStoryEvents = storyEvents.Select(x => x.Id).ToArray();
             data.CurrentConditionals = inGameConditionals.Select(x => x.Id).ToArray();
             data.CurrentRandomEvents = inGameRandoms.Select(x => x.Id).ToArray();
-            data.Cooldowns = eventsOnCooldown.Select(x => (x.Event.Id, x.Days)).ToArray();
+            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.Id).ToArray();
+            data.CooldownDays = eventsOnCooldown.Select(x => x.Days).ToArray();
         }
     }
 }

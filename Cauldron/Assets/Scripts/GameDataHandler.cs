@@ -29,15 +29,6 @@ namespace CauldronCodebase
             set => Set(Statustype.Money, value);
         }
 
-        public int daysToRememberCards
-        {
-            get => gameplaySettings.daysToSaveCard;
-        }
-        public int roundsToRememberCards
-        {
-            get => gameplaySettings.roundsToSaveCards;
-        }
-
         private Status status;
         
         public int currentDay = 0;

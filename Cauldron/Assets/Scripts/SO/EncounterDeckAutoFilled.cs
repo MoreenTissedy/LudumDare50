@@ -24,6 +24,8 @@ namespace CauldronCodebase
 
         public List<Encounter> rememberedCards;
 
+        private MainSettings mainSettings;
+
         [Serializable]
         public struct CardPoolPerDay
         {
@@ -45,15 +47,15 @@ namespace CauldronCodebase
             {
                 if (pool.day == day)
                 {
-                    return pool.cards;
-                }
-            }
+                    if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
+                        && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards)
+                    {
+                        return pool.cards.Except(rememberedCards).ToArray();
+                        
+                    }
 
-            foreach (var pool in cardPoolsByDay)
-            {
-                if (pool.day == day)
-                {
-                    return pool.cards.Except(rememberedCards) as Encounter[];
+                    return pool.cards;
+
                 }
             }
 
@@ -65,10 +67,11 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings mainSettings)
+            SODictionary dictionary, MainSettings settings)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
+            mainSettings = settings;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -92,6 +95,7 @@ namespace CauldronCodebase
         /// <param name="day">Day — card set number</param>
         public override void NewDayPool(int day)
         {
+            Debug.Log(GetPoolForDay(day));
             foreach (var card in Shuffle(GetPoolForDay(day)))
             {
                 cardPool.Add(card);
@@ -193,8 +197,8 @@ namespace CauldronCodebase
                 currentCard.Init();
             }
 
-            if (gameDataHandler.currentDay <= gameDataHandler.daysToRememberCards - 1
-                && gameDataHandler.currentRound <= gameDataHandler.roundsToRememberCards - 1)
+            if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards - 1
+                && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards - 1)
             {
                 if (currentCard.name != "Cat")
                 {
@@ -208,9 +212,9 @@ namespace CauldronCodebase
 
         void SaveRememberedCardsToJson()
         {
-            if (PlayerPrefs.HasKey("RememberedCards"))
+            if (PlayerPrefs.HasKey(PrefKeys.RememberedCards))
             {
-                string rememberedCardsJson = PlayerPrefs.GetString("RememberedCards");
+                string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.RememberedCards);
                 if (!string.IsNullOrEmpty(rememberedCardsJson))
                 {
                     EncounterListWrapper wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
@@ -222,15 +226,10 @@ namespace CauldronCodebase
 
             EncounterListWrapper newWrapper = new EncounterListWrapper { encounters = rememberedCards };
             string json = JsonUtility.ToJson(newWrapper);
-            PlayerPrefs.SetString("RememberedCards", json);
+            PlayerPrefs.SetString(PrefKeys.RememberedCards, json);
             Debug.Log(json);
         }
-
-        public override void ForgetCards()
-        {
-            PlayerPrefs.DeleteKey("RememberedCards");
-            rememberedCards.Clear();
-        }
+        
 
         public override void LoadData(GameData data, bool newGame)
         {

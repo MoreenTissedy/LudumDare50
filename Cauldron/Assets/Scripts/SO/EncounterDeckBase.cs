@@ -20,9 +20,6 @@ namespace CauldronCodebase
 
         public abstract void AddStoryCards();
 
-        public abstract void ForgetCards();
-
-
         public abstract void AddCardToPool(Encounter card);
 
         public abstract void AddToDeck(Encounter card, bool asFirst = false);

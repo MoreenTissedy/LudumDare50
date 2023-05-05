@@ -54,7 +54,6 @@ namespace CauldronCodebase.GameStates
             if (!PlayerPrefs.HasKey("CurrentRound"))
             {
                 PlayerPrefs.SetInt("CurrentRound", 0);
-                gameData.currentDeck.ForgetCards();
             }
             else
             {

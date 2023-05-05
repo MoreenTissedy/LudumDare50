@@ -20,7 +20,7 @@ namespace CauldronCodebase
             {
                 if (AllScriptableObjects.ContainsKey(AllSOKeys[i]))
                 {
-                    Debug.LogError(i + " "+ AllSOValues[i]);
+                    Debug.LogWarning(i + " "+ AllSOValues[i]);
                     continue;
                 }
                 AllScriptableObjects.Add(AllSOKeys[i], AllSOValues[i]);

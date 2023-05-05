@@ -69,7 +69,7 @@ namespace CauldronCodebase
         {
             this.settings = settings;
             this.gameStateMachine = stateMachine;
-            
+
             resolver = new EventResolver(settings, gameDataHandler);
         }
 

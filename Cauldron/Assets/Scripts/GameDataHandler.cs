@@ -145,21 +145,21 @@ namespace CauldronCodebase
 
         public bool ChangeThreshold(Statustype type, bool high)
         {
+            if (ReachedMaxThreshold(type, high))
+            {
+                return false;
+            }
             switch (type)
             {
                 case Statustype.Fear:
                     if (high)
                     {
-                        if (status.FearThresholdHigh == statusSettings.GetMaxThreshold)
-                            return false;
                         status.FearThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FearThresholdHigh = Mathf.Clamp(status.FearThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fear at " + status.FearThresholdHigh);
                     }
                     else
                     {
-                        if (status.FearThresholdLow == statusSettings.GetMinThreshold)
-                            return false;
                         status.FearThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FearThresholdLow = Mathf.Clamp(status.FearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fear at " + status.FearThresholdLow);
@@ -168,21 +168,43 @@ namespace CauldronCodebase
                 case Statustype.Fame:
                     if (high)
                     {
-                        if (status.FameThresholdHigh == statusSettings.GetMaxThreshold)
-                            return false;
                         status.FameThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FameThresholdHigh = Mathf.Clamp(status.FameThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fame at " + status.FameThresholdHigh);
                     }
                     else
                     {
-                        if (status.FameThresholdLow == statusSettings.GetMinThreshold)
-                            return false;
                         status.FameThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FameThresholdLow = Mathf.Clamp(status.FameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fame at " + status.FameThresholdLow);
                     }
                     return true;
+            }
+            return false;
+        }
+        
+        public bool ReachedMaxThreshold(Statustype type, bool high)
+        {
+            switch (type)
+            {
+                case Statustype.Fear:
+                    if (high)
+                    {
+                        return status.FearThresholdHigh == statusSettings.GetMaxThreshold;
+                    }
+                    else
+                    {
+                        return status.FearThresholdLow == statusSettings.GetMinThreshold;
+                    }
+                case Statustype.Fame:
+                    if (high)
+                    {
+                        return status.FameThresholdHigh == statusSettings.GetMaxThreshold;
+                    }
+                    else
+                    {
+                        return status.FameThresholdLow == statusSettings.GetMinThreshold;
+                    }
             }
             return false;
         }

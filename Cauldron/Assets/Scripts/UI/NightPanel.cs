@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using CauldronCodebase.GameStates;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
@@ -12,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class NightPanel : Book
+    public class NightPanel : Book, IPointerClickHandler
     {
         private MainSettings settings;
         private GameStateMachine gameStateMachine;
@@ -47,6 +48,7 @@ namespace CauldronCodebase
         private bool firstCardDealt;
 
         private EventResolver resolver;
+        private bool clickable;
 
         protected override void Awake()
         {
@@ -109,6 +111,7 @@ namespace CauldronCodebase
 
         IEnumerator DealCards()
         {
+            clickable = false;
             if (activeCards.Count > 0)
             {
                 cardPool.AddRange(activeCards);
@@ -134,6 +137,8 @@ namespace CauldronCodebase
                 angleDifference *= angleReductionCoef;
                 card.InPlace += AddActiveCard;
             }
+            yield return new WaitForSeconds(enterTimeInterval);
+            clickable = true;
         }
 
         void AddActiveCard(NightPanelCard card)
@@ -222,7 +227,7 @@ namespace CauldronCodebase
             fame.text = String.Empty;
         }
 
-        public void OnNextCard()
+        public async void OnNextCard()
         {
             if (content.Length == 0)
             {
@@ -231,11 +236,14 @@ namespace CauldronCodebase
             resolver.ApplyModifiers(content[currentPage]);
             if (currentPage + 1 < totalPages)
             {
+                clickable = false;
                 activeCards[0].Exit();
                 cardPool.Add(activeCards[0]);
                 activeCards.RemoveAt(0);
                 FanCards();
                 NextPage();
+                await UniTask.Delay(TimeSpan.FromSeconds(1));
+                clickable = true;
             }
             else
             {
@@ -245,6 +253,14 @@ namespace CauldronCodebase
                 }
 
                 CloseBook();
+            }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (clickable)
+            {
+                OnNextCard();
             }
         }
     }

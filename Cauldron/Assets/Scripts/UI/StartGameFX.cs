@@ -6,6 +6,7 @@ using UnityEngine;
 public class StartGameFX : MonoBehaviour
 {
     public SoundManager soundManager;
+    public event Action OnEnd;
 
     public async void PlaySound()
     {
@@ -17,6 +18,8 @@ public class StartGameFX : MonoBehaviour
 
     public void Destroy()
     {
+        OnEnd?.Invoke();
+        OnEnd = null;
         Destroy(transform.root.gameObject);
     }
 }

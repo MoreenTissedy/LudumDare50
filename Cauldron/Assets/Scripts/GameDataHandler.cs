@@ -239,6 +239,8 @@ namespace CauldronCodebase
                 status.FearThresholdHigh = highThreshold;
                 status.FameThresholdLow = lowThreshold;
                 status.FearThresholdLow = lowThreshold;
+
+                gamePhase = GameStateMachine.GamePhase.Visitor;
             }
 
             fame = data.Fame;

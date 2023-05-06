@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
 using Zenject;
@@ -49,13 +50,18 @@ namespace CauldronCodebase.GameStates
             RunStateMachine();
         }
 
-        public void RunStateMachine()
+        public async void RunStateMachine()
         {
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGameState = gameStates[gameData.gamePhase];
-            PlayerPrefs.SetInt("FirstTime", 1);
+            if (dataPersistenceManager.IsNewGame)
+            {
+                //TODO: proper sync
+                gameFXManager.ShowStartGameFX();
+                await UniTask.Delay(TimeSpan.FromSeconds(3f));
+                PlayerPrefs.SetInt("FirstTime", 1);
+            }
             currentGameState.Enter();
-            gameFXManager.ShowStartGameFX();
         }
  
         public void SwitchState(GamePhase phase)

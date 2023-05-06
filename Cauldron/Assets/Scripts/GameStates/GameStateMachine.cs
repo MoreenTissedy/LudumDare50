@@ -51,11 +51,11 @@ namespace CauldronCodebase.GameStates
 
         public void RunStateMachine()
         {
+            gameFXManager.ShowStartGameFX();
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGameState = gameStates[gameData.gamePhase];
             PlayerPrefs.SetInt("FirstTime", 1);
             currentGameState.Enter();
-            gameFXManager.ShowStartGameFX();
         }
  
         public void SwitchState(GamePhase phase)

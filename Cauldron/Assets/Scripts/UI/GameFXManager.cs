@@ -1,4 +1,7 @@
-﻿using CauldronCodebase;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
+using CauldronCodebase;
 using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,8 +9,7 @@ using Zenject;
 
 public class GameFXManager : MonoBehaviour
 {
-    [SerializeField] private GameObject startGameFX;
-    [SerializeField] private Camera uiCamera;
+    [SerializeField] private GameObject startGameFX, sunFX, moonFX;
 
     private DataPersistenceManager dataPersistenceManager;
     private SoundManager soundManager;
@@ -28,4 +30,16 @@ public class GameFXManager : MonoBehaviour
         start.GetComponentInChildren<StartGameFX>().soundManager = soundManager;
 
     }
+
+    public void ShowDayChange(bool isSunrise)
+    {
+        Instantiate(isSunrise ? sunFX : moonFX);
+    }
+
+    public async void ShowWithDelay(bool isSunrise)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(0.7f));
+        ShowDayChange(isSunrise);
+    }
+
 }

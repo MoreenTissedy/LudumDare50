@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
@@ -14,6 +16,8 @@ namespace CauldronCodebase.GameStates
         private readonly StatusChecker statusChecker;
         private readonly EventResolver eventResolver;
         private readonly RecipeBook recipeBook;
+        
+        private readonly GameFXManager gameFXManager;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -21,7 +25,8 @@ namespace CauldronCodebase.GameStates
                           EncounterDeckBase cardDeck,
                           NightPanel nightPanel,
                           GameStateMachine stateMachine,
-                          RecipeBook book)
+                          RecipeBook book,
+                          GameFXManager gameFXManager)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -29,6 +34,7 @@ namespace CauldronCodebase.GameStates
             this.cardDeck = cardDeck;
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
+            this.gameFXManager = gameFXManager;
             recipeBook = book;
 
             statusChecker = new StatusChecker(settings, gameDataHandler);
@@ -41,6 +47,13 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
+            EnterWithDelay();
+        }
+
+        private async void EnterWithDelay()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
+            
             if (IsGameEnd()) return;
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler);
@@ -57,7 +70,8 @@ namespace CauldronCodebase.GameStates
             statusChecker.CheckStatusesThreshold();
             cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
-            stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
+            gameFXManager.ShowWithDelay(true);
+            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
         private bool IsGameEnd()

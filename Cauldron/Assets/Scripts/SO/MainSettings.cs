@@ -18,6 +18,7 @@ namespace CauldronCodebase
              public int cardsPerDay = 3;
              public int cardsDealtAtNight = 3;
              public float villagerDelay = 2f;
+             public float nightStartDelay = 3.5f;
         }
 
         [Serializable]

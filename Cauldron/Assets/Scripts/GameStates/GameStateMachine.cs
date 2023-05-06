@@ -57,6 +57,10 @@ namespace CauldronCodebase.GameStates
             if (dataPersistenceManager.IsNewGame)
             {
                 //TODO: proper sync
+                if (GameLoader.IsMenuOpen())
+                {
+                    return;
+                }
                 gameFXManager.ShowStartGameFX();
                 await UniTask.Delay(TimeSpan.FromSeconds(3f));
                 PlayerPrefs.SetInt("FirstTime", 1);

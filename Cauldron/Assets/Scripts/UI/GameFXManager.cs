@@ -23,10 +23,6 @@ public class GameFXManager : MonoBehaviour
     
     public async UniTask ShowStartGameFX()
     {
-        if (GameLoader.IsMenuOpen())
-        {
-            return;
-        }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
 
         var start = Instantiate(startGameFX);

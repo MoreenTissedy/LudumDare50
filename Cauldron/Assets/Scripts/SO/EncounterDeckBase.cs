@@ -8,8 +8,11 @@ namespace CauldronCodebase
     //This class is only to display interface in Unity inspector
     [Serializable]
     public abstract class EncounterDeckBase : ScriptableObject, IEncounterDeck, IDataPersistence
-    { 
-        public abstract void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary);
+    {
+        private IEncounterDeck encounterDeckImplementation;
+
+        public abstract void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
+            SODictionary dictionary, MainSettings mainSettings);
 
         public abstract void NewDayPool(int day);
 
@@ -25,6 +28,5 @@ namespace CauldronCodebase
 
         public abstract void LoadData(GameData data, bool newGame);
         public abstract void SaveData(ref GameData data);
-
     }
 }

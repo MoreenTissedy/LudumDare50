@@ -59,7 +59,14 @@ namespace CauldronCodebase.GameStates
                 //TODO: proper sync
                 gameFXManager.ShowStartGameFX();
                 await UniTask.Delay(TimeSpan.FromSeconds(3f));
-                PlayerPrefs.SetInt("FirstTime", 1);
+            }
+            if (!PlayerPrefs.HasKey("CurrentRound"))
+            {
+                PlayerPrefs.SetInt("CurrentRound", 0);
+            }
+            else
+            {
+                gameData.currentRound = PlayerPrefs.GetInt("CurrentRound");
             }
             currentGameState.Enter();
         }

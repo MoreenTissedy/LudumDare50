@@ -13,15 +13,18 @@ namespace CauldronCodebase
         public Encounter[] introCards;
         public CardPoolPerDay[] cardPoolsByDay;
         public LinkedList<Encounter> deck;
-        
-        [Header("DEBUG")] 
-        public Encounter currentCard;
+
+        [Header("DEBUG")] public Encounter currentCard;
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
         private GameDataHandler gameDataHandler;
         private SODictionary soDictionary;
         private Encounter loadedCard;
+
+        public List<Encounter> rememberedCards;
+
+        private MainSettings mainSettings;
 
         [Serializable]
         public struct CardPoolPerDay
@@ -44,19 +47,31 @@ namespace CauldronCodebase
             {
                 if (pool.day == day)
                 {
+                    if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
+                        && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards)
+                    {
+                        return pool.cards.Except(rememberedCards).ToArray();
+                        
+                    }
+
                     return pool.cards;
+
                 }
             }
+
             return Array.Empty<Encounter>();
         }
-        
+
+
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
+        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
+            SODictionary dictionary, MainSettings settings)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
+            mainSettings = settings;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -70,6 +85,7 @@ namespace CauldronCodebase
                 newDeckList.Add(deckList[random]);
                 deckList.RemoveAt(random);
             }
+
             return newDeckList.ToArray();
         }
 
@@ -79,6 +95,7 @@ namespace CauldronCodebase
         /// <param name="day">Day — card set number</param>
         public override void NewDayPool(int day)
         {
+            Debug.Log(GetPoolForDay(day));
             foreach (var card in Shuffle(GetPoolForDay(day)))
             {
                 cardPool.Add(card);
@@ -103,9 +120,9 @@ namespace CauldronCodebase
                 do
                 {
                     randomIndex = Random.Range(0, cardPool.Count);
-                } 
-                while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
-                if(deck == null) Debug.LogWarning("deck == null");
+                } while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
+
+                if (deck == null) Debug.LogWarning("deck == null");
                 deck.AddLast(cardPool[randomIndex]);
                 cardPool.RemoveAt(randomIndex);
             }
@@ -161,9 +178,10 @@ namespace CauldronCodebase
             {
                 deck.AddLast(card);
             }
+
             deckInfo = deck.ToArray();
         }
-        
+
         public override Encounter GetTopCard()
         {
             if (loadedCard != null)
@@ -179,8 +197,39 @@ namespace CauldronCodebase
                 currentCard.Init();
             }
 
+            if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards - 1
+                && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards - 1)
+            {
+                if (currentCard.name != "Cat")
+                {
+                    SaveRememberedCardsToJson();
+                }
+            }
+
+
             return currentCard;
         }
+
+        void SaveRememberedCardsToJson()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.RememberedCards))
+            {
+                string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.RememberedCards);
+                if (!string.IsNullOrEmpty(rememberedCardsJson))
+                {
+                    EncounterListWrapper wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
+                    rememberedCards.Clear();
+                    rememberedCards.AddRange(wrapper.encounters);
+                    rememberedCards.Add(currentCard);
+                }
+            }
+
+            EncounterListWrapper newWrapper = new EncounterListWrapper { encounters = rememberedCards };
+            string json = JsonUtility.ToJson(newWrapper);
+            PlayerPrefs.SetString(PrefKeys.RememberedCards, json);
+            Debug.Log(json);
+        }
+        
 
         public override void LoadData(GameData data, bool newGame)
         {
@@ -189,17 +238,16 @@ namespace CauldronCodebase
             {
                 loadedCard.actualVillager = gameDataHandler.currentVillager;
             }
-            
+
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
-            
+
             switch (newGame)
             {
                 case true:
                     NewDayPool(0);
-                
                     //if not first time
-                    if (PlayerPrefs.HasKey("FirstTime"))
+                    if (PlayerPrefs.GetInt("CurrentRound") != 0)
                     {
                         DealCards(2);
                         deck.AddFirst(introCards[2]);
@@ -210,6 +258,8 @@ namespace CauldronCodebase
                         deck.AddFirst(introCards[0]);
                         deck.AddLast(introCards[1]);
                     }
+
+
                     break;
                 case false:
                     cardPool = new List<Encounter>();
@@ -220,6 +270,7 @@ namespace CauldronCodebase
                             cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
                         }
                     }
+
                     if (data.CurrentDeck != null)
                     {
                         List<Encounter> currentDeck = new List<Encounter>();
@@ -231,18 +282,20 @@ namespace CauldronCodebase
                         deck = new LinkedList<Encounter>(currentDeck);
                         Debug.Log("New deck");
                     }
+
                     break;
             }
         }
 
         public override void SaveData(ref GameData data)
         {
-            if(data == null) return;
+            if (data == null) return;
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {
                 data.CardPool.Add(card.Id);
             }
+
             data.CurrentDeck.Clear();
             foreach (var card in deck)
             {
@@ -265,6 +318,7 @@ namespace CauldronCodebase
                     valid = valid && game.storyTags.Contains(tag.Trim());
                 }
             }
+
             return valid;
         }
     }

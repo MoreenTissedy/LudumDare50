@@ -33,6 +33,7 @@ namespace CauldronCodebase
         
         public int currentDay = 0;
         public int cardsDrawnToday;
+        public int currentRound;
         public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
         public Villager currentVillager;
@@ -45,6 +46,7 @@ namespace CauldronCodebase
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
+        private MainSettings.Gameplay gameplaySettings;
 
         private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
@@ -67,9 +69,9 @@ namespace CauldronCodebase
             dataManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
-
+            gameplaySettings = settings.gameplay;
             currentDeck = deck;
-            currentDeck.Init(this, dataPersistenceManager, dictionary);
+            currentDeck.Init(this, dataPersistenceManager, dictionary, settings);
             currentEvents = events;
             currentEvents.Init(dataPersistenceManager, dictionary);
         }
@@ -209,6 +211,12 @@ namespace CauldronCodebase
                 potionsBrewedInADays.RemoveAt(0);
             }
         }
+
+        public void RememberRound()
+        {
+            currentRound += 1;
+            PlayerPrefs.SetInt("CurrentRound", currentRound);
+        }
         
         public void CalculatePotionsOnLastDays()
         {
@@ -234,7 +242,6 @@ namespace CauldronCodebase
             {
                 int highThreshold = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
                 int lowThreshold = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
-
                 status.FameThresholdHigh = highThreshold;
                 status.FearThresholdHigh = highThreshold;
                 status.FameThresholdLow = lowThreshold;

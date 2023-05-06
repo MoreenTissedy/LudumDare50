@@ -45,9 +45,12 @@ namespace CauldronCodebase.GameStates
             gameFXManager = fxManager;
         }
 
-        private void Start()
+        private async void Start()
         {
-            RunStateMachine();
+            await UniTask.WaitWhile(GameLoader.IsMenuOpen);
+            {
+                RunStateMachine();
+            }
         }
 
         public async void RunStateMachine()

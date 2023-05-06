@@ -6,13 +6,15 @@ namespace CauldronCodebase
     public class Tutorial : MonoBehaviour
     {
         public RectTransform[] pages;
+        public Canvas canvas;
         private void Start()
         {
             CloseAllPages();
         }
 
-        private void CloseAllPages()
+        public void CloseAllPages()
         {
+            canvas.enabled = false;
             foreach (var page in pages)
             {
                 page.gameObject.SetActive(false);
@@ -21,6 +23,7 @@ namespace CauldronCodebase
 
         private void Show(int page)
         {
+            canvas.enabled = true;
             if (page>=pages.Length)
                 return;
             pages[page].gameObject.SetActive(true);
@@ -40,17 +43,17 @@ namespace CauldronCodebase
         IEnumerator GameplayTutorialCoroutine()
         {
             Show(0);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             yield return new WaitUntil(() => Input.anyKeyDown);
             Show(2);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             yield return new WaitUntil(() => Input.anyKeyDown);
             CloseAllPages();
         }
         
         IEnumerator WaitForInput()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
             yield return new WaitUntil(() => Input.anyKeyDown);
             CloseAllPages();
         }

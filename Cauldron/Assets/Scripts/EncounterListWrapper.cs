@@ -5,5 +5,5 @@ using CauldronCodebase;
 [Serializable]
 public class EncounterListWrapper
 {
-    public List<Encounter> encounters;
+    public List<string> encounters;
 }

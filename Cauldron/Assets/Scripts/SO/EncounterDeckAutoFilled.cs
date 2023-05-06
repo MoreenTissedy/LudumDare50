@@ -22,7 +22,7 @@ namespace CauldronCodebase
         private SODictionary soDictionary;
         private Encounter loadedCard;
 
-        public List<Encounter> rememberedCards;
+        public List<string> rememberedCards;
 
         private MainSettings mainSettings;
 
@@ -47,11 +47,11 @@ namespace CauldronCodebase
             {
                 if (pool.day == day)
                 {
-                    if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
-                        && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards)
+                    if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards
+                        && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards)
                     {
-                        return pool.cards.Except(rememberedCards).ToArray();
-                        
+                        Debug.LogError(rememberedCards.Count);
+                        return pool.cards.Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray();
                     }
 
                     return pool.cards;
@@ -212,6 +212,7 @@ namespace CauldronCodebase
 
         void SaveRememberedCardsToJson()
         {
+            Debug.LogError("save cards");
             if (PlayerPrefs.HasKey(PrefKeys.RememberedCards))
             {
                 string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.RememberedCards);
@@ -220,7 +221,7 @@ namespace CauldronCodebase
                     EncounterListWrapper wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
                     rememberedCards.Clear();
                     rememberedCards.AddRange(wrapper.encounters);
-                    rememberedCards.Add(currentCard);
+                    rememberedCards.Add(currentCard.Id);
                 }
             }
 

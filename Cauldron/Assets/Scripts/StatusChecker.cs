@@ -54,6 +54,10 @@
         private bool CheckThreshold(Statustype type, bool checkHigh)
         {
             int currentStatus = gameDataHandler.Get(type);
+            if (gameDataHandler.ReachedMaxThreshold(type, checkHigh))
+            {
+                return false;
+            }
             bool thresholdReached = false;
             bool nextThreshold = false;
             do

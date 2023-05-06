@@ -11,7 +11,7 @@ namespace Editor
     public class ContentImportExport
     {
         private static string assetFolder = "[Syomalod] Cards";
-        private static string CSVpath = "/Editor/NewCards.csv";
+        private static string CSVpath = "/Editor/SingleCards.csv";
 
         private static string eventFolder = "[Syomalod] Events";
         private static string CSVpath4events = "/Editor/NewEvents.csv";
@@ -46,6 +46,7 @@ namespace Editor
                     {
                         card = ScriptableObject.CreateInstance<NightEvent>();
                         card.name = data[0];
+                        Debug.Log($"reading {data[0]}...");
                         newSO = true;
                     }
                 }
@@ -61,6 +62,7 @@ namespace Editor
                     {
                         card = ScriptableObject.CreateInstance<RandomNightEvent>();
                         card.name = data[0];
+                        Debug.Log($"reading {data[0]}...");
                         newSO = true;
                     }
                     RandomNightEvent randomCard = (RandomNightEvent) card;
@@ -95,10 +97,18 @@ namespace Editor
             string[] headers = alllines[0].Split(';');
             List<Potions> includedPotionResults = new List<Potions>(10);
             int i = 10;
-            while (i < headers.Length && Enum.TryParse(headers[i], true, out Potions potion))
+            while (i < headers.Length)
             {
-                includedPotionResults.Add(potion);
-                i++;
+                if (Enum.TryParse(headers[i], true, out Potions potionParsed))
+                {
+                    includedPotionResults.Add(potionParsed);
+                    i++;
+                }
+                else
+                {
+                    Debug.LogWarning("Parsing potions stopped at "+headers[i]);
+                    break;
+                }
             }
             
             for (var index = 1; index < alllines.Length; index++)
@@ -138,6 +148,10 @@ namespace Editor
                     }
                 }
 
+                if (foundVillagers.Count == 0 && !string.IsNullOrWhiteSpace(data[2]))
+                {
+                    Debug.LogWarning("Failed to parse "+data[2]);
+                }
                 card.villager = foundVillagers.ToArray();
 
                 card.text = data[3];

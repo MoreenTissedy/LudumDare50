@@ -67,6 +67,10 @@ namespace CauldronCodebase
             {
                 currentEffect.SetActive(false);
             }
+            if (PotionFilter.Get(Potions.NONMAGIC).Contains(potion))
+            {
+                potion = Potions.NONMAGIC;
+            }
             currentEffect = effects.FirstOrDefault(x => x.potion == potion)?.effect;
             if (currentEffect is null)
             {

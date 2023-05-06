@@ -25,7 +25,8 @@ public class GameFXManager : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
 
         var start = Instantiate(startGameFX);
-        start.GetComponentInChildren<StartGameFX>().soundManager = soundManager;
-
+        StartGameFX gameFX = start.GetComponentInChildren<StartGameFX>();
+        gameFX.soundManager = soundManager;
+        gameFX.PlaySound();
     }
 }

@@ -15,7 +15,7 @@ namespace CauldronCodebase
             Close();
             //0.4 as temp measure
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x, 0.4f));
-            sounds.onValueChanged.AddListener(x => ChangeVolume("Sounds", x));
+            sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
         }
 
         public void Open()

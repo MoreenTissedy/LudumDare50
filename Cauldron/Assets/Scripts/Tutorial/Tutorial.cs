@@ -15,6 +15,7 @@ namespace CauldronCodebase
         public void CloseAllPages()
         {
             canvas.enabled = false;
+            StopAllCoroutines();
             foreach (var page in pages)
             {
                 page.gameObject.SetActive(false);

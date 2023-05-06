@@ -36,16 +36,12 @@ namespace CauldronCodebase
             this.nightPanel = nightPanel;
         }
 
-        private void Awake()
+        private void Start()
         {
             rectWidth = fullCycleSample.rect.width;
             currentDay = gameDataHandler.currentDay + 1;
-            
             NewDayReset(currentDay);
-        }
-
-        private void Start()
-        {
+            
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
             
             int startSteps = 2 + gameDataHandler.cardsDrawnToday;
@@ -84,8 +80,8 @@ namespace CauldronCodebase
 
         void NewDayReset(int day)
         {
-            
-            dayNumber.text = $"{dayText} {day}";
+            string dayNumberText = $"{dayText} {day}";
+            dayNumber.text = dayNumberText;
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
         }
 

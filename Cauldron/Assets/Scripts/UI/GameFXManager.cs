@@ -17,16 +17,19 @@ public class GameFXManager : MonoBehaviour
     private SoundManager soundManager;
     private EndingScreen endingScreen;
     private GameStateMachine gameStateMachine;
+    private EndingsProvider endingsProvider;
 
     [Inject] private void Construct(DataPersistenceManager dataPersistenceManager,
                                     SoundManager soundManager,
                                     EndingScreen endingScreen,
-                                    GameStateMachine gameStateMachine)
+                                    GameStateMachine gameStateMachine,
+                                    EndingsProvider endingsProvider)
     {
         this.dataPersistenceManager = dataPersistenceManager;
         this.soundManager = soundManager;
         this.endingScreen = endingScreen;
         this.gameStateMachine = gameStateMachine;
+        this.endingsProvider = endingsProvider;
     }
     
     public void ShowStartGameFX()
@@ -46,6 +49,7 @@ public class GameFXManager : MonoBehaviour
         end.SoundManager = soundManager;
         end.EndingScreen = endingScreen;
         end.GameStateMachine = gameStateMachine;
+        end.EndingsProvider = endingsProvider;
     }
 
     public void ShowDayChange(bool isSunrise)

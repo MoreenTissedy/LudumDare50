@@ -77,7 +77,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager);
+            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager, gameFXManager);
         }
 
     }

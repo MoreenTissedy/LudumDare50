@@ -12,17 +12,22 @@ namespace CauldronCodebase.GameStates
 
         private DataPersistenceManager dataPersistenceManager;
 
+        private GameFXManager gameFXManager;
+
         public EndGameState(EndingScreen endingScreen,
                             GameStateMachine stateMachine,
-                            DataPersistenceManager persistenceManager)
+                            DataPersistenceManager persistenceManager,
+                            GameFXManager fxManager)
         {
             _endingScreen = endingScreen;
             gameStateMachine = stateMachine;
             dataPersistenceManager = persistenceManager;
+            gameFXManager = fxManager;
         }
         public override void Enter()
         {
-            _endingScreen.OpenBookWithEnding(gameStateMachine.currentEnding);
+            gameFXManager.ShowEndGameFX();
+            //_endingScreen.OpenBookWithEnding(gameStateMachine.currentEnding);
             _endingScreen.OnClose += ReloadGame;
         }
 

@@ -11,6 +11,7 @@ namespace CauldronCodebase
         [TextArea(3, 10)]
         public string text;
         public Sprite image;
+        public Sprite endIconImage;
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

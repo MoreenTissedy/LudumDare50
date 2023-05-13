@@ -63,7 +63,14 @@ namespace CauldronCodebase.GameStates
                 }
                 gameFXManager.ShowStartGameFX();
                 await UniTask.Delay(TimeSpan.FromSeconds(3f));
-                PlayerPrefs.SetInt("FirstTime", 1);
+            }
+            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
+            {
+                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
+            }
+            else
+            {
+                gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
             currentGameState.Enter();
         }

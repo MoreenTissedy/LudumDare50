@@ -50,7 +50,6 @@ namespace CauldronCodebase
                     if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards
                         && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards)
                     {
-                        Debug.LogError(rememberedCards.Count);
                         return pool.cards.Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray();
                     }
 
@@ -73,6 +72,23 @@ namespace CauldronCodebase
             soDictionary = dictionary;
             mainSettings = settings;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
+
+            InitRememberedCards();
+        }
+
+        private void InitRememberedCards()
+        {
+            string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.UniqueCards);
+            if (!string.IsNullOrEmpty(rememberedCardsJson))
+            {
+                var wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
+                rememberedCards.Clear();
+                rememberedCards.AddRange(wrapper.encounters);
+            }
+            else
+            {
+                rememberedCards = new List<string>();
+            }
         }
 
         private static Encounter[] Shuffle(Encounter[] deck)
@@ -95,7 +111,6 @@ namespace CauldronCodebase
         /// <param name="day">Day — card set number</param>
         public override void NewDayPool(int day)
         {
-            Debug.Log(GetPoolForDay(day));
             foreach (var card in Shuffle(GetPoolForDay(day)))
             {
                 cardPool.Add(card);
@@ -197,38 +212,23 @@ namespace CauldronCodebase
                 currentCard.Init();
             }
 
-            if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards - 1
-                && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards - 1)
+            if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
+                && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards
+                && !VisitorManager.SPECIALS.Contains(currentCard.actualVillager.name))
             {
-                if (currentCard.name != "Cat")
-                {
-                    SaveRememberedCardsToJson();
-                }
+                SaveCurrentCardAsUnique();
             }
-
 
             return currentCard;
         }
 
-        void SaveRememberedCardsToJson()
+        void SaveCurrentCardAsUnique()
         {
-            Debug.LogError("save cards");
-            if (PlayerPrefs.HasKey(PrefKeys.RememberedCards))
-            {
-                string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.RememberedCards);
-                if (!string.IsNullOrEmpty(rememberedCardsJson))
-                {
-                    EncounterListWrapper wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
-                    rememberedCards.Clear();
-                    rememberedCards.AddRange(wrapper.encounters);
-                    rememberedCards.Add(currentCard.Id);
-                }
-            }
-
-            EncounterListWrapper newWrapper = new EncounterListWrapper { encounters = rememberedCards };
-            string json = JsonUtility.ToJson(newWrapper);
-            PlayerPrefs.SetString(PrefKeys.RememberedCards, json);
-            Debug.Log(json);
+            rememberedCards.Add(currentCard.Id);
+            EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
+            string json = JsonUtility.ToJson(wrapper);
+            PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
+            Debug.Log("unique cards: "+json);
         }
         
 
@@ -248,7 +248,7 @@ namespace CauldronCodebase
                 case true:
                     NewDayPool(0);
                     //if not first time
-                    if (PlayerPrefs.GetInt("CurrentRound") != 0)
+                    if (PlayerPrefs.GetInt(PrefKeys.CurrentRound) != 0)
                     {
                         DealCards(2);
                         deck.AddFirst(introCards[2]);

@@ -237,7 +237,7 @@ namespace CauldronCodebase
         public void RememberRound()
         {
             currentRound += 1;
-            PlayerPrefs.SetInt("CurrentRound", currentRound);
+            PlayerPrefs.SetInt(PrefKeys.CurrentRound, currentRound);
         }
         
         public void CalculatePotionsOnLastDays()

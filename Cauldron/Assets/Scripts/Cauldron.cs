@@ -11,27 +11,15 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
+   
     public class Cauldron : MonoBehaviour
     {
         [Inject] public TooltipManager tooltipManager;
 
         public PotionPopup potionPopup;
-
-        public SpriteRenderer baseMix, effectMix;
-        public ParticleSystem bubbleColor, splash;
-        public float splashDelay = 2f;
-        private Mix mixScript;
-        private Fire fireScript;
-        private bool mixFound, fireFound;
-        private float mixBonusTotal;
-        public float mixBonusMin = 2;
-
+        public ParticleSystem splash;
         public List<Ingredients> Mix;
-
-        public bool IsBoiling => fireScript?.boiling ?? false;
-        public bool IsMixRight => mixScript?.IsWithinKeyWindow() ?? false;
-
-
+        
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
@@ -58,10 +46,6 @@ namespace CauldronCodebase
         private void Awake()
         {
             gameStateMachine.OnChangeState += Clear;
-            fireScript = GetComponentInChildren<Fire>();
-            fireFound = fireScript != null;
-            mixScript = GetComponent<Mix>();
-            mixFound = mixScript != null;
             splash.Stop();
             potionPopup.OnDecline += () => PotionDeclined?.Invoke();
         }
@@ -79,33 +63,14 @@ namespace CauldronCodebase
 
         public void AddToMix(Ingredients ingredient)
         {
-            //Witch.instance.Activate();
             splash.Play();
             soundManager.Play(Sounds.Splash);
-
-            float bonus = 0;
-            if (mixFound)
-            {
-                float bonusValue = mixScript.keyMixWindow / 2 / Mathf.Abs(mixScript.keyMixValue - mixScript.mixProcess);
-                bonus += Mathf.Clamp(bonusValue, 0, 5);
-            }
-
-            if (fireFound && !fireScript.Boiling)
-            {
-                bonus = 0;
-            }
-
-            mixBonusTotal += bonus;
             Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
             if (Mix.Count == 3)
             {
                 Brew();
-            }
-            else
-            {
-                mixScript.RandomJolt();
             }
         }
 
@@ -114,19 +79,13 @@ namespace CauldronCodebase
             if (phase != GameStateMachine.GamePhase.Visitor) return;
 
             Mix.Clear();
-            mixBonusTotal = 0;
-            mixScript.RandomKey();
-            mixScript.SetToKey();
         }
 
         private Potions Brew()
         {
-            //Witch.instance.Activate();
             soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
-
             potionPopup.ClearAcceptSubscriptions();
-            //if (mixBonusTotal > mixBonusMin)
             {
                 foreach (var recipe in recipeProvider.allRecipes)
                 {
@@ -157,19 +116,13 @@ namespace CauldronCodebase
             Mix.Clear();
             return Potions.Placebo;
         }
-
-
+        
         private void OnPotionAccepted(Potions potion)
         {
             potionPopup.ClearAcceptSubscriptions();
             PotionAccepted?.Invoke(potion);
         }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            //splash.Play();
-        }
-
+        
         public void PointerEntered()
         {
             MouseEnterCauldronZone?.Invoke();

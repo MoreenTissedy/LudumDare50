@@ -134,10 +134,6 @@ namespace CauldronCodebase
             if (!tutorialMode)
                 return;
             
-            //fire, mixProcess
-            scheme.SetBool(TempRight, pot.IsBoiling);
-            scheme.SetBool(MixRight, pot.IsMixRight);
-
             if (!anyKeyPressed && Input.anyKey)
             {
                 Debug.Log("set to true");

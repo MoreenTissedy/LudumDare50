@@ -8,7 +8,8 @@ namespace CauldronCodebase
     /// <summary>
     /// Класс используется для покраски объектов в зависимости от зелья в котле
     /// </summary>
-    ///
+    /// 
+    [RequireComponent(typeof(SpriteRenderer))]
     public class ColoredByBrewedPotion : MonoBehaviour
     {
         [Range(-1f, 1f)] [SerializeField] private float vibranceModifier = 0f; //Модификатор цвета
@@ -18,10 +19,9 @@ namespace CauldronCodebase
 
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
-
+        
         private SpriteRenderer spriteRenderer;
         private ParticleSystem particleSystem;
-        [SerializeField] private float currentAlpha;
 
 
         [Inject]
@@ -29,26 +29,20 @@ namespace CauldronCodebase
         {
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
+            
         }
 
         private void OnValidate()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             particleSystem = GetComponent<ParticleSystem>();
-            if (spriteRenderer)
-            {
-                currentAlpha = spriteRenderer.color.a;
-            }
-            if (particleSystem)
-            {
-                currentAlpha = particleSystem.main.startColor.color.a;
-            }
         }
 
         private void Start()
         {
             cauldron.PotionBrewed += DefineColor;
             cauldron.PotionAccepted += ResetColor;
+            
         }
 
         private void OnDisable()
@@ -76,6 +70,7 @@ namespace CauldronCodebase
                 color.a = particles.startColor.color.a;
                 particles.startColor = color;
             }
+            
         }
 
         /// <summary>
@@ -104,50 +99,52 @@ namespace CauldronCodebase
             {
                 ChangeColor(color, particleSystem);
             }
+            
         }
 
         /// <summary>
         /// Меняем цвет плавно или резко
         /// </summary>
         /// <param name="color"></param>
-        /// <param name="component"></param>
-        private void ChangeColor(Color color, Component component)
+        private void ChangeColor(Color color, SpriteRenderer colorObject)
         {
-            if (component is SpriteRenderer)
+            color = ModifyColor(color);
+            if (tween)
             {
-                color = ModifyColor(color, spriteRenderer);
-                if (tween)
-                {
-                    StartCoroutine(DoColor(color, component));
-                }
-                else
-                {
-                    spriteRenderer.color = color;
-                }
+                StartCoroutine(DoColor(color));
             }
-            else if (component is ParticleSystem)
+            else
             {
-                var mainModule = particleSystem.main;
-                color = ModifyColor(color, particleSystem);
-                if (tween)
-                {
-                    StartCoroutine(DoColor(color, component));
-                }
-                else
-                {
-                    mainModule.startColor = color;
-                }
+                colorObject.color = color;
             }
         }
-
+        
+        
+        /// <summary>
+        /// Меняем цвет плавно или резко
+        /// </summary>
+        /// <param name="color"></param>
+        private void ChangeColor(Color color, ParticleSystem colorObject)
+        {
+            color = ModifyColor(color);
+            if (tween)
+            {
+                StartCoroutine(DoColor(color));
+            }
+            else
+            {
+                var particles = colorObject.main;
+                particles.startColor = color;
+            }
+        }
 
         /// <summary>
         /// Смешиваем цвет
         /// </summary>
         /// <param name="color"></param>
-        /// <param name="component"></param>
-        private Color ModifyColor(Color color, Component component)
+        private Color ModifyColor(Color color)
         {
+            float currentAlpha = spriteRenderer.color.a;
             Color.RGBToHSV(color, out float h, out float s, out float v);
             s += vibranceModifier;
             s = Mathf.Clamp(s, 0f, 1f);
@@ -157,16 +154,6 @@ namespace CauldronCodebase
                 newColor.a = currentAlpha;
             }
 
-            if (component is SpriteRenderer)
-            {
-                spriteRenderer.color = newColor;
-            }
-            else if (component is ParticleSystem)
-            {
-                var mainModule = particleSystem.main;
-                mainModule.startColor = newColor;
-            }
-
             return newColor;
         }
 
@@ -174,54 +161,18 @@ namespace CauldronCodebase
         /// Применяем цвет к объекту
         /// </summary>
         /// <param name="color"></param>
-        /// <param name="component"></param>
-        private IEnumerator DoColor(Color color, Component component)
+        private IEnumerator DoColor(Color color)
         {
             float timer = 0f;
-            Color startColor = GetStartColor(component);
+            Color startColor = spriteRenderer.color;
             yield return new WaitForSeconds(delay);
             while (timer < tweenTime)
             {
                 timer += Time.deltaTime;
                 float blend = Mathf.Clamp01(timer / tweenTime);
                 Color blendedColor = Color.Lerp(startColor, color, blend);
-                SetColor(component, blendedColor);
+                spriteRenderer.color = blendedColor;
                 yield return null;
-            }
-        }
-
-        private Color GetStartColor(Component component)
-        {
-            if (component is SpriteRenderer)
-            {
-                return spriteRenderer.color;
-            }
-
-            if (component is ParticleSystem)
-            {
-                var mainModule = particleSystem.main;
-                return mainModule.startColor.color;
-            }
-            else
-            {
-                throw new ArgumentException("Component must be a SpriteRenderer or ParticleSystem");
-            }
-        }
-
-        private void SetColor(Component component, Color color)
-        {
-            if (component is SpriteRenderer)
-            {
-                spriteRenderer.color = color;
-            }
-            else if (component is ParticleSystem)
-            {
-                var mainModule = particleSystem.main;
-                mainModule.startColor = color;
-            }
-            else
-            {
-                throw new ArgumentException("Component must be a SpriteRenderer or ParticleSystem");
             }
         }
     }

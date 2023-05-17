@@ -9,7 +9,6 @@ namespace CauldronCodebase
     /// Класс используется для покраски объектов в зависимости от зелья в котле
     /// </summary>
     /// 
-    [RequireComponent(typeof(SpriteRenderer))]
     public class ColoredByBrewedPotion : MonoBehaviour
     {
         [Range(-1f, 1f)] [SerializeField] private float vibranceModifier = 0f; //Модификатор цвета
@@ -19,9 +18,9 @@ namespace CauldronCodebase
 
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
-        
-        private SpriteRenderer spriteRenderer;
-        private ParticleSystem particleSystem;
+
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private ParticleSystem particleSystem;
 
 
         [Inject]
@@ -29,7 +28,6 @@ namespace CauldronCodebase
         {
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
-            
         }
 
         private void OnValidate()
@@ -42,13 +40,18 @@ namespace CauldronCodebase
         {
             cauldron.PotionBrewed += DefineColor;
             cauldron.PotionAccepted += ResetColor;
-            
+            cauldron.PotionDeclined += PotionDeclined;
         }
 
         private void OnDisable()
         {
             cauldron.PotionBrewed -= DefineColor;
             cauldron.PotionAccepted -= ResetColor;
+        }
+
+        private void PotionDeclined()
+        {
+            ResetColor(Potions.Placebo);
         }
 
         /// <summary>
@@ -61,16 +64,15 @@ namespace CauldronCodebase
             if (spriteRenderer)
             {
                 color.a = spriteRenderer.color.a;
-                spriteRenderer.color = color;
+                StartCoroutine(DoColor(color, spriteRenderer));
             }
 
             if (particleSystem)
             {
                 var particles = particleSystem.main;
                 color.a = particles.startColor.color.a;
-                particles.startColor = color;
+                StartCoroutine(DoColor(color, particleSystem));
             }
-            
         }
 
         /// <summary>
@@ -99,42 +101,23 @@ namespace CauldronCodebase
             {
                 ChangeColor(color, particleSystem);
             }
-            
         }
 
         /// <summary>
         /// Меняем цвет плавно или резко
         /// </summary>
         /// <param name="color"></param>
-        private void ChangeColor(Color color, SpriteRenderer colorObject)
+        /// <param name="component"></param>
+        private void ChangeColor(Color color, Component component)
         {
             color = ModifyColor(color);
             if (tween)
             {
-                StartCoroutine(DoColor(color));
+                StartCoroutine(DoColor(color, component));
             }
             else
             {
-                colorObject.color = color;
-            }
-        }
-        
-        
-        /// <summary>
-        /// Меняем цвет плавно или резко
-        /// </summary>
-        /// <param name="color"></param>
-        private void ChangeColor(Color color, ParticleSystem colorObject)
-        {
-            color = ModifyColor(color);
-            if (tween)
-            {
-                StartCoroutine(DoColor(color));
-            }
-            else
-            {
-                var particles = colorObject.main;
-                particles.startColor = color;
+                StartCoroutine(SetColor(color, component));
             }
         }
 
@@ -144,7 +127,17 @@ namespace CauldronCodebase
         /// <param name="color"></param>
         private Color ModifyColor(Color color)
         {
-            float currentAlpha = spriteRenderer.color.a;
+            float currentAlpha = 0.5f;
+            if (spriteRenderer)
+            {
+                currentAlpha = spriteRenderer.color.a;
+            }
+
+            if (particleSystem)
+            {
+                currentAlpha = particleSystem.main.startColor.color.a;
+            }
+            
             Color.RGBToHSV(color, out float h, out float s, out float v);
             s += vibranceModifier;
             s = Mathf.Clamp(s, 0f, 1f);
@@ -161,18 +154,53 @@ namespace CauldronCodebase
         /// Применяем цвет к объекту
         /// </summary>
         /// <param name="color"></param>
-        private IEnumerator DoColor(Color color)
+        /// <param name="component"></param>
+        private IEnumerator DoColor(Color color, Component component)
         {
             float timer = 0f;
-            Color startColor = spriteRenderer.color;
             yield return new WaitForSeconds(delay);
-            while (timer < tweenTime)
+
+            if (component == spriteRenderer)
             {
-                timer += Time.deltaTime;
-                float blend = Mathf.Clamp01(timer / tweenTime);
-                Color blendedColor = Color.Lerp(startColor, color, blend);
-                spriteRenderer.color = blendedColor;
-                yield return null;
+                Color startColor = spriteRenderer.color;
+                while (timer < tweenTime)
+                {
+                    timer += Time.deltaTime;
+                    float blend = Mathf.Clamp01(timer / tweenTime);
+                    Color blendedColor = Color.Lerp(startColor, color, blend);
+                    spriteRenderer.color = blendedColor;
+                    yield return null;
+                }
+            }
+
+            if (component == particleSystem)
+            {
+                Color startColor = particleSystem.main.startColor.color;
+                while (timer < tweenTime)
+                {
+                    timer += Time.deltaTime;
+                    float blend = Mathf.Clamp01(timer / tweenTime);
+                    Color blendedColor = Color.Lerp(startColor, color, blend);
+                    var main = particleSystem.main;
+                    main.startColor = blendedColor;
+                    yield return null;
+                }
+            }
+        }
+
+        private IEnumerator SetColor(Color color, Component component)
+        {
+            if (particleSystem)
+            {
+                var main = particleSystem.main;
+                yield return new WaitForSeconds(delay);
+                main.startColor = color;
+            }
+
+            if (spriteRenderer)
+            {
+                yield return new WaitForSeconds(delay);
+                spriteRenderer.color = color;
             }
         }
     }

@@ -8,13 +8,18 @@ namespace CauldronCodebase
     {
         [Tooltip("Color after accepted or declined potion")]
         [SerializeField] private Color neutralColor = Color.gray;
+        
         [Tooltip("Color for Placebo potion brewed")]
         [SerializeField] private Color placeboColor = Color.HSVToRGB(0.97f, 0.68f, 0.27f);
+        
         [Range(-1f, 1f)] [SerializeField] private float saturation = 0f;
         [Range(-1f, 1f)] [SerializeField] private float brightness = 1f;
+        
         [Tooltip("Delay in seconds")]
         [SerializeField] private float delay = 0f; 
+        
         [SerializeField] private bool tween = false;  
+        
         [Tooltip("Tween time in seconds")]
         [SerializeField] private float tweenTime = 1f; 
 

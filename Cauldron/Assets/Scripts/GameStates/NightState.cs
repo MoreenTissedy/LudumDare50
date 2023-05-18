@@ -81,6 +81,7 @@ namespace CauldronCodebase.GameStates
             {
                 stateMachine.currentEnding = check;
                 stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
+                gameDataHandler.RememberRound();
                 return true;
             }
 

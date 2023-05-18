@@ -1,7 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using Spine;
 using UnityEngine;
 using Spine.Unity;
@@ -19,13 +16,14 @@ namespace CauldronCodebase
 
         protected virtual void Awake()
         {
-            anim = GetComponent<SkeletonAnimation>();
             rend = GetComponent<MeshRenderer>();
             rend.enabled = false;
         }
 
         public void Enter()
         {
+            if (!anim) anim = GetComponent<SkeletonAnimation>();
+            if (!rend) rend = GetComponent<MeshRenderer>();
             rend.enabled = true;
             if (!string.IsNullOrEmpty(enter))
             {

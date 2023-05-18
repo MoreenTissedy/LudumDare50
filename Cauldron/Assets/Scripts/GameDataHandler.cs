@@ -33,6 +33,7 @@ namespace CauldronCodebase
         
         public int currentDay = 0;
         public int cardsDrawnToday;
+        public int currentRound;
         public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
         public Villager currentVillager;
@@ -45,6 +46,7 @@ namespace CauldronCodebase
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
+        private MainSettings.Gameplay gameplaySettings;
 
         private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
@@ -67,9 +69,9 @@ namespace CauldronCodebase
             dataManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
-
+            gameplaySettings = settings.gameplay;
             currentDeck = deck;
-            currentDeck.Init(this, dataPersistenceManager, dictionary);
+            currentDeck.Init(this, dataPersistenceManager, dictionary, settings);
             currentEvents = events;
             currentEvents.Init(dataPersistenceManager, dictionary);
         }
@@ -145,21 +147,21 @@ namespace CauldronCodebase
 
         public bool ChangeThreshold(Statustype type, bool high)
         {
+            if (ReachedMaxThreshold(type, high))
+            {
+                return false;
+            }
             switch (type)
             {
                 case Statustype.Fear:
                     if (high)
                     {
-                        if (status.FearThresholdHigh == statusSettings.GetMaxThreshold)
-                            return false;
                         status.FearThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FearThresholdHigh = Mathf.Clamp(status.FearThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fear at " + status.FearThresholdHigh);
                     }
                     else
                     {
-                        if (status.FearThresholdLow == statusSettings.GetMinThreshold)
-                            return false;
                         status.FearThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FearThresholdLow = Mathf.Clamp(status.FearThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fear at " + status.FearThresholdLow);
@@ -168,21 +170,43 @@ namespace CauldronCodebase
                 case Statustype.Fame:
                     if (high)
                     {
-                        if (status.FameThresholdHigh == statusSettings.GetMaxThreshold)
-                            return false;
                         status.FameThresholdHigh += statusSettings.ThresholdDecrement;
                         status.FameThresholdHigh = Mathf.Clamp(status.FameThresholdHigh, 0, statusSettings.GetMaxThreshold);
                         Debug.Log("next high fame at " + status.FameThresholdHigh);
                     }
                     else
                     {
-                        if (status.FameThresholdLow == statusSettings.GetMinThreshold)
-                            return false;
                         status.FameThresholdLow -= statusSettings.ThresholdDecrement;
                         status.FameThresholdLow = Mathf.Clamp(status.FameThresholdLow, statusSettings.GetMinThreshold, statusSettings.Total);
                         Debug.Log("next low fame at " + status.FameThresholdLow);
                     }
                     return true;
+            }
+            return false;
+        }
+        
+        public bool ReachedMaxThreshold(Statustype type, bool high)
+        {
+            switch (type)
+            {
+                case Statustype.Fear:
+                    if (high)
+                    {
+                        return status.FearThresholdHigh == statusSettings.GetMaxThreshold;
+                    }
+                    else
+                    {
+                        return status.FearThresholdLow == statusSettings.GetMinThreshold;
+                    }
+                case Statustype.Fame:
+                    if (high)
+                    {
+                        return status.FameThresholdHigh == statusSettings.GetMaxThreshold;
+                    }
+                    else
+                    {
+                        return status.FameThresholdLow == statusSettings.GetMinThreshold;
+                    }
             }
             return false;
         }
@@ -209,6 +233,12 @@ namespace CauldronCodebase
                 potionsBrewedInADays.RemoveAt(0);
             }
         }
+
+        public void RememberRound()
+        {
+            currentRound += 1;
+            PlayerPrefs.SetInt(PrefKeys.CurrentRound, currentRound);
+        }
         
         public void CalculatePotionsOnLastDays()
         {
@@ -234,11 +264,12 @@ namespace CauldronCodebase
             {
                 int highThreshold = (int)((100f - statusSettings.InitialThreshold) / 100 * statusSettings.Total);
                 int lowThreshold = (int)(statusSettings.InitialThreshold / 100 * statusSettings.Total);
-
                 status.FameThresholdHigh = highThreshold;
                 status.FearThresholdHigh = highThreshold;
                 status.FameThresholdLow = lowThreshold;
                 status.FearThresholdLow = lowThreshold;
+
+                gamePhase = GameStateMachine.GamePhase.Visitor;
             }
 
             fame = data.Fame;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Save;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,7 +11,8 @@ namespace CauldronCodebase
     [Serializable]
     public class NightEventProvider : ScriptableObject, IDataPersistence
     {
-        private const int _EVENT_COOLDOWN_ = 2;
+        private const int _EVENT_COOLDOWN_ = 3;
+        private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 1;
 
         [Serializable]
         public class CooldownEvent
@@ -21,6 +23,11 @@ namespace CauldronCodebase
             public CooldownEvent(ConditionalEvent conditionalEvent)
             {
                 Days = _EVENT_COOLDOWN_;
+                Event = conditionalEvent;
+            } 
+            public CooldownEvent(ConditionalEvent conditionalEvent, int days)
+            {
+                Days = days;
                 Event = conditionalEvent;
             } 
         }
@@ -67,7 +74,6 @@ namespace CauldronCodebase
 
         private NightEvent GetConditionalEvent(GameDataHandler game)
         {
-            //conditionalEvents - take 1
             ConditionalEvent validEvent = null;
             bool foundValid = false;
             foreach (ConditionalEvent check in inGameConditionals)
@@ -107,7 +113,7 @@ namespace CauldronCodebase
             {
                 returnEvents.Add(conditionalEvent);
             }
-            if (returnEvents.Count <= 2)
+            if (returnEvents.Count <= _EVENT_COUNT_FOR_RANDOM_EVENT_)
             {
                 returnEvents.Add(GetRandomEvent(game.currentDay));
             }
@@ -131,29 +137,53 @@ namespace CauldronCodebase
             foreach (var cooldownEvent in endedEvents)
             {
                 eventsOnCooldown.Remove(cooldownEvent);
-                inGameConditionals.Add(cooldownEvent.Event);
+                var castedEvent = cooldownEvent.Event as RandomNightEvent;
+                if (castedEvent != null)
+                {
+                    inGameRandoms.Add(castedEvent);
+                }
+                else
+                {
+                    inGameConditionals.Add(cooldownEvent.Event);
+                }
             }
         }
 
         public void LoadData(GameData data, bool newGame)
         {
-            if(data is null) return;
-            //storyEvents = data.CurrentEvents;
-            storyEvents = new List<NightEvent>();
-            foreach (var eventKey in data.CurrentEvents)
+            if (newGame || data is null)
             {
-                storyEvents.Add((NightEvent)soDictionary.AllScriptableObjects[eventKey]);
+                return;
+            }
+            storyEvents = data.CurrentStoryEvents.
+                Select(x => (NightEvent) soDictionary.AllScriptableObjects[x]).
+                ToList();
+            inGameConditionals = data.CurrentConditionals.
+                Select(x => (ConditionalEvent) soDictionary.AllScriptableObjects[x]).
+                ToList();
+            inGameRandoms = data.CurrentRandomEvents.
+                Select(x => (RandomNightEvent) soDictionary.AllScriptableObjects[x]).
+                ToList();
+            eventsOnCooldown.Clear();
+            for (var index = 0; index < data.CooldownEvents.Length; index++)
+            {
+                var key = data.CooldownEvents[index];
+                eventsOnCooldown.Add(new CooldownEvent((ConditionalEvent) soDictionary.AllScriptableObjects[key],
+                    data.CooldownDays[index]));
             }
         }
 
         public void SaveData(ref GameData data)
         {
-            if(data == null) return;
-            data.CurrentEvents.Clear();
-            foreach (var storyEvent in storyEvents)
+            if (data == null)
             {
-                data.CurrentEvents.Add(storyEvent.Id);
+                return;
             }
+            data.CurrentStoryEvents = storyEvents.Select(x => x.Id).ToArray();
+            data.CurrentConditionals = inGameConditionals.Select(x => x.Id).ToArray();
+            data.CurrentRandomEvents = inGameRandoms.Select(x => x.Id).ToArray();
+            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.Id).ToArray();
+            data.CooldownDays = eventsOnCooldown.Select(x => x.Days).ToArray();
         }
     }
 }

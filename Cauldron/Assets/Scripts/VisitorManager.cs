@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -8,6 +9,13 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour, IDataPersistence
     {
+        public static readonly HashSet<string> SPECIALS = new HashSet<string>()
+        {
+            "Cat",
+            "Inquisition", 
+            "Dark Stranger"
+        };
+
         public GameObject witchCat;
         public Villager[] villagers;
         public Visitor[] visitors;

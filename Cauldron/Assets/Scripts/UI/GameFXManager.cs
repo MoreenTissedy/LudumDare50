@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
-using CauldronCodebase;
-using CauldronCodebase.GameStates;
+﻿using CauldronCodebase;
+using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,58 +7,35 @@ using Zenject;
 
 public class GameFXManager : MonoBehaviour
 {
-    [SerializeField] private GameObject startGameFX, endGameFX;
-    [SerializeField] private DayStageFX sunFX, moonFX;
+    [SerializeField] private GameObject startGameFX;
+    [SerializeField] private Camera uiCamera;
 
     private DataPersistenceManager dataPersistenceManager;
     private SoundManager soundManager;
-    private EndingScreen endingScreen;
-    private GameStateMachine gameStateMachine;
-    private EndingsProvider endingsProvider;
 
-    [Inject] private void Construct(DataPersistenceManager dataPersistenceManager,
-                                    SoundManager soundManager,
-                                    EndingScreen endingScreen,
-                                    GameStateMachine gameStateMachine,
-                                    EndingsProvider endingsProvider)
+    private bool effectPlaying;
+
+    [Inject] private void Construct(DataPersistenceManager dataPersistenceManager, SoundManager soundManager)
     {
         this.dataPersistenceManager = dataPersistenceManager;
         this.soundManager = soundManager;
-        this.endingScreen = endingScreen;
-        this.gameStateMachine = gameStateMachine;
-        this.endingsProvider = endingsProvider;
     }
     
-    public void ShowStartGameFX()
+    public async UniTask ShowStartGameFX()
     {
-        if(!dataPersistenceManager.IsNewGame) return;
-
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
 
-        var start = Instantiate(startGameFX).GetComponentInChildren<StartGameFX>();
-        start.SoundManager = soundManager;
-
+        var start = Instantiate(startGameFX);
+        StartGameFX gameFX = start.GetComponentInChildren<StartGameFX>();
+        gameFX.soundManager = soundManager;
+        gameFX.PlaySound();
+        gameFX.OnEnd += GameFXOnOnEnd;
+        effectPlaying = true;
+        await UniTask.WaitUntil(() => !effectPlaying);
     }
 
-    public void ShowEndGameFX()
+    private void GameFXOnOnEnd()
     {
-        var end = Instantiate(endGameFX).GetComponentInChildren<EndGameFX>();
-        end.SoundManager = soundManager;
-        end.EndingScreen = endingScreen;
-        end.GameStateMachine = gameStateMachine;
-        end.EndingsProvider = endingsProvider;
+        effectPlaying = false;
     }
-
-    public void ShowDayChange(bool isSunrise)
-    {
-        var stage = Instantiate(isSunrise ? sunFX : moonFX);
-        stage.SoundManager = soundManager;
-    }
-
-    public async void ShowWithDelay(bool isSunrise)
-    {
-        await Task.Delay(TimeSpan.FromSeconds(0.7f));
-        ShowDayChange(isSunrise);
-    }
-
 }

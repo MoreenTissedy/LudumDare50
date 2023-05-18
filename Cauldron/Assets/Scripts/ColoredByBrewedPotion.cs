@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    /// <summary>
-    /// Класс используется для покраски объектов в зависимости от зелья в котле
-    /// </summary>
-    /// 
     public class ColoredByBrewedPotion : MonoBehaviour
     {
-        [Range(-1f, 1f)] [SerializeField] private float vibranceModifier = 0f; //Модификатор цвета
-        [SerializeField] private float delay = 0f; //Задержка смены цвета в секундах
-        [SerializeField] private bool tween = false; //true - менять цвет постепенно, false - мгновенно, 
-        [SerializeField] private float tweenTime = 1f; //Длительность(плавность) смены цвета в секундах
+        [Tooltip("Color after accepted or declined potion")]
+        [SerializeField] private Color neutralColor = Color.gray;
+        [Tooltip("Color for Placebo potion brewed")]
+        [SerializeField] private Color placeboColor = Color.HSVToRGB(0.97f, 0.68f, 0.27f);
+        [Range(-1f, 1f)] [SerializeField] private float saturation = 0f;
+        [Range(-1f, 1f)] [SerializeField] private float brightness = 1f;
+        [Tooltip("Delay in seconds")]
+        [SerializeField] private float delay = 0f; 
+        [SerializeField] private bool tween = false;  
+        [Tooltip("Tween time in seconds")]
+        [SerializeField] private float tweenTime = 1f; 
 
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
@@ -34,6 +36,10 @@ namespace CauldronCodebase
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
             particleSystem = GetComponent<ParticleSystem>();
+            if (!tween)
+            {
+                tweenTime = 0;
+            }
         }
 
         private void Start()
@@ -43,42 +49,33 @@ namespace CauldronCodebase
             cauldron.PotionDeclined += PotionDeclined;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             cauldron.PotionBrewed -= DefineColor;
             cauldron.PotionAccepted -= ResetColor;
+            cauldron.PotionDeclined -= PotionDeclined;
+            StopAllCoroutines();
         }
 
         private void PotionDeclined()
         {
             ResetColor(Potions.Placebo);
         }
-
-        /// <summary>
-        /// Сброс цвета до нейтрального
-        /// </summary>
-        /// <param name="potion"></param>
+        
         private void ResetColor(Potions potion)
         {
-            Color color = Color.grey;
+            //Color color = neutralColor;
             if (spriteRenderer)
             {
-                color.a = spriteRenderer.color.a;
-                StartCoroutine(DoColor(color, spriteRenderer));
+                StartCoroutine(DoTweenColor(neutralColor, spriteRenderer, tweenTime));
             }
 
             if (particleSystem)
             {
-                var particles = particleSystem.main;
-                color.a = particles.startColor.color.a;
-                StartCoroutine(DoColor(color, particleSystem));
+                StartCoroutine(DoTweenColor(neutralColor, particleSystem, tweenTime));
             }
         }
-
-        /// <summary>
-        /// Определяем цвет в зависимости от наличия рецепта зелья
-        /// </summary>
-        /// <param name="potion"></param>
+        
         private void DefineColor(Potions potion)
         {
             Recipe recipe = recipeProvider.GetRecipeForPotion(potion);
@@ -89,7 +86,7 @@ namespace CauldronCodebase
             }
             else
             {
-                color = Color.HSVToRGB(0.97f, 0.68f, 0.27f);
+                color = placeboColor;
             }
 
             if (spriteRenderer)
@@ -102,29 +99,20 @@ namespace CauldronCodebase
                 ChangeColor(color, particleSystem);
             }
         }
-
-        /// <summary>
-        /// Меняем цвет плавно или резко
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="component"></param>
+        
         private void ChangeColor(Color color, Component component)
         {
             color = ModifyColor(color);
             if (tween)
             {
-                StartCoroutine(DoColor(color, component));
+                StartCoroutine(DoTweenColor(color, component, tweenTime));
             }
             else
             {
                 StartCoroutine(SetColor(color, component));
             }
         }
-
-        /// <summary>
-        /// Смешиваем цвет
-        /// </summary>
-        /// <param name="color"></param>
+        
         private Color ModifyColor(Color color)
         {
             float currentAlpha = 0.5f;
@@ -139,8 +127,10 @@ namespace CauldronCodebase
             }
             
             Color.RGBToHSV(color, out float h, out float s, out float v);
-            s += vibranceModifier;
+            s += saturation;
             s = Mathf.Clamp(s, 0f, 1f);
+            v += brightness;
+            v = Mathf.Clamp(v, 0f, 1f);
             Color newColor = Color.HSVToRGB(h, s, v);
             if (currentAlpha < color.a)
             {
@@ -149,13 +139,8 @@ namespace CauldronCodebase
 
             return newColor;
         }
-
-        /// <summary>
-        /// Применяем цвет к объекту
-        /// </summary>
-        /// <param name="color"></param>
-        /// <param name="component"></param>
-        private IEnumerator DoColor(Color color, Component component)
+        
+        private IEnumerator DoTweenColor(Color color, Component component, float time)
         {
             float timer = 0f;
             yield return new WaitForSeconds(delay);
@@ -163,10 +148,10 @@ namespace CauldronCodebase
             if (component == spriteRenderer)
             {
                 Color startColor = spriteRenderer.color;
-                while (timer < tweenTime)
+                while (timer < time)
                 {
                     timer += Time.deltaTime;
-                    float blend = Mathf.Clamp01(timer / tweenTime);
+                    float blend = Mathf.Clamp01(timer / time);
                     Color blendedColor = Color.Lerp(startColor, color, blend);
                     spriteRenderer.color = blendedColor;
                     yield return null;
@@ -176,10 +161,10 @@ namespace CauldronCodebase
             if (component == particleSystem)
             {
                 Color startColor = particleSystem.main.startColor.color;
-                while (timer < tweenTime)
+                while (timer < time)
                 {
                     timer += Time.deltaTime;
-                    float blend = Mathf.Clamp01(timer / tweenTime);
+                    float blend = Mathf.Clamp01(timer / time);
                     Color blendedColor = Color.Lerp(startColor, color, blend);
                     var main = particleSystem.main;
                     main.startColor = blendedColor;

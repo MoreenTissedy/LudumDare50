@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
-using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using Zenject;
-using Random = UnityEngine.Random;
 
 
 namespace CauldronCodebase
@@ -14,12 +12,11 @@ namespace CauldronCodebase
    
     public class Cauldron : MonoBehaviour
     {
-        [Inject] public TooltipManager tooltipManager;
-
+        
         public PotionPopup potionPopup;
         public ParticleSystem splash;
+        public TooltipManager tooltipManager;
         public List<Ingredients> Mix;
-        
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
@@ -34,13 +31,14 @@ namespace CauldronCodebase
         private SoundManager soundManager;
 
         [Inject]
-        public void Construct(GameStateMachine stateMachine, RecipeProvider recipeProvider, RecipeBook book,
-            SoundManager sounds)
+        public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
+            SoundManager soundManager, TooltipManager tooltipManager)
         {
             this.recipeProvider = recipeProvider;
-            recipeBook = book;
-            gameStateMachine = stateMachine;
-            soundManager = sounds;
+            this.recipeBook = recipeBook;
+            this.gameStateMachine = gameStateMachine;
+            this.soundManager = soundManager;
+            this.tooltipManager = tooltipManager;
         }
 
         private void Awake()

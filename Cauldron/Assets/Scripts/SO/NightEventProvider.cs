@@ -137,7 +137,15 @@ namespace CauldronCodebase
             foreach (var cooldownEvent in endedEvents)
             {
                 eventsOnCooldown.Remove(cooldownEvent);
-                inGameConditionals.Add(cooldownEvent.Event);
+                var castedEvent = cooldownEvent.Event as RandomNightEvent;
+                if (castedEvent != null)
+                {
+                    inGameRandoms.Add(castedEvent);
+                }
+                else
+                {
+                    inGameConditionals.Add(cooldownEvent.Event);
+                }
             }
         }
 

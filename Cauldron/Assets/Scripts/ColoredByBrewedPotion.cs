@@ -64,16 +64,14 @@ namespace CauldronCodebase
         
         private void ResetColor(Potions potion)
         {
-            //Color color = neutralColor;
-            if (spriteRenderer)
-            {
-                StartCoroutine(DoTweenColor(neutralColor, spriteRenderer, tweenTime));
-            }
-
-            if (particleSystem)
-            {
-                StartCoroutine(DoTweenColor(neutralColor, particleSystem, tweenTime));
-            }
+            if (spriteRenderer) 
+            { 
+                StartCoroutine(tween ? DoTweenColor(neutralColor, tweenTime) : SetColor(neutralColor)); 
+            } 
+            if (particleSystem) 
+            { 
+                StartCoroutine(tween ? DoTweenColor(neutralColor, tweenTime) : SetColor(neutralColor)); 
+            } 
         }
         
         private void DefineColor(Potions potion)
@@ -105,11 +103,11 @@ namespace CauldronCodebase
             color = ModifyColor(color);
             if (tween)
             {
-                StartCoroutine(DoTweenColor(color, component, tweenTime));
+                StartCoroutine(DoTweenColor(color, tweenTime));
             }
             else
             {
-                StartCoroutine(SetColor(color, component));
+                StartCoroutine(SetColor(color));
             }
         }
         
@@ -140,12 +138,12 @@ namespace CauldronCodebase
             return newColor;
         }
         
-        private IEnumerator DoTweenColor(Color color, Component component, float time)
+        private IEnumerator DoTweenColor(Color color, float time)
         {
             float timer = 0f;
             yield return new WaitForSeconds(delay);
 
-            if (component == spriteRenderer)
+            if (spriteRenderer)
             {
                 Color startColor = spriteRenderer.color;
                 while (timer < time)
@@ -158,7 +156,7 @@ namespace CauldronCodebase
                 }
             }
 
-            if (component == particleSystem)
+            if (particleSystem)
             {
                 Color startColor = particleSystem.main.startColor.color;
                 while (timer < time)
@@ -173,7 +171,7 @@ namespace CauldronCodebase
             }
         }
 
-        private IEnumerator SetColor(Color color, Component component)
+        private IEnumerator SetColor(Color color)
         {
             if (particleSystem)
             {

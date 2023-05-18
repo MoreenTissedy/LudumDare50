@@ -70,7 +70,7 @@ namespace CauldronCodebase.GameStates
             statusChecker.CheckStatusesThreshold();
             cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
-            gameFXManager.ShowWithDelay(true);
+            gameFXManager.ShowWithDelay(true).Forget();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 

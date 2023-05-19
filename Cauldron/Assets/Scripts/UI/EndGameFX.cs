@@ -1,6 +1,7 @@
 ﻿using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,26 +12,53 @@ public class EndGameFX : MonoBehaviour
     [HideInInspector] public EndingsProvider EndingsProvider;
     [HideInInspector] public GameStateMachine GameStateMachine;
     [SerializeField] private Image endingIcon;
-    [SerializeField] private float iconScaleDuration, iconFadeTime, iconFadeDelay;
+    [SerializeField] private float iconScaleDuration, iconAnimationDelay,
+                                    iconFadeTime, iconFadeDelay, showEndingScreenDelay, 
+                                    showTextDelay, showTextDuration;
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator iconAnimator;
+
+    [SerializeField] private CanvasGroup textCanvasGroup;
+    [SerializeField] private TMP_Text text;
 
 
     private void Start()
     {
-        //endingIcon.sprite = EndingsProvider.Get(EndingsProvider.GetIndexOf(GameStateMachine.currentEnding)).endIconImage;
+        //TODO: Add short text on all endings
+        
+        var ending = EndingsProvider.Get(EndingsProvider.GetIndexOf(GameStateMachine.currentEnding));
+        var animationGameObject = endingIcon.rectTransform.parent;
+        
+        endingIcon.sprite = ending.endIconImage;
+        //text.text = ending.shortTextForEndingAnimation;
         
         Sequence mySequence = DOTween.Sequence();
-        mySequence.Append(endingIcon.rectTransform.DOScale(1.1f, iconScaleDuration).SetEase(Ease.OutSine).SetSpeedBased())
-                  .Append(endingIcon.rectTransform.DOScale(0.95f, iconScaleDuration/2).SetEase(Ease.InSine).SetSpeedBased())
+        mySequence.Append(animationGameObject.DOScale(1.1f, iconScaleDuration).SetEase(Ease.OutSine).SetSpeedBased())
+                  .Append(animationGameObject.DOScale(0.95f, iconScaleDuration/2).SetEase(Ease.InSine).SetSpeedBased())
                   .AppendCallback(PlayAnimation)
+                  .AppendInterval(iconAnimationDelay)
+                  .AppendCallback(PlayIconAnimation)
                   .AppendInterval(iconFadeDelay)
-                  .Append(endingIcon.DOFade(0, iconFadeTime))
+                  .AppendCallback(DoIconFillAmount)
+                  //.AppendInterval(showTextDelay)
+                  //.Append(textCanvasGroup.DOFade(1, showTextDuration))
+                  .AppendInterval(showEndingScreenDelay * 2)
                   .AppendCallback(ShowEndingScreen);
     }
 
     private void PlayAnimation()
     {
         animator.enabled = true;
+    }
+
+    private void PlayIconAnimation()
+    {
+        iconAnimator.enabled = true;
+    }
+
+    private void DoIconFillAmount()
+    {
+        endingIcon.DOFillAmount(0, iconFadeTime).SetEase(Ease.InOutQuad);
     }
 
     public void PlaySound()
@@ -40,6 +68,7 @@ public class EndGameFX : MonoBehaviour
 
     private void ShowEndingScreen()
     {
+        Debug.Log("show");
         EndingScreen.OpenBookWithEnding(GameStateMachine.currentEnding);
     }
 }

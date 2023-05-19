@@ -52,7 +52,7 @@ namespace CauldronCodebase.GameStates
 
         public async void RunStateMachine()
         {
-            gameFXManager.ShowStartGameFX();
+            //gameFXManager.ShowStartGameFX();
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
@@ -62,7 +62,7 @@ namespace CauldronCodebase.GameStates
                 {
                     return;
                 }
-                gameFXManager.ShowStartGameFX();
+                gameFXManager.ShowStartGameFXUniTask();
                 await UniTask.Delay(TimeSpan.FromSeconds(3f));
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))

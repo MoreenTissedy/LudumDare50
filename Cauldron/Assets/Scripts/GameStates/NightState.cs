@@ -52,9 +52,11 @@ namespace CauldronCodebase.GameStates
 
         private async void EnterWithDelay()
         {
-            await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
-            
             if (IsGameEnd()) return;
+            gameFXManager.ShowDayChange(false);
+
+            await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
+
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler);
             nightPanel.OpenBookWithEvents(events);

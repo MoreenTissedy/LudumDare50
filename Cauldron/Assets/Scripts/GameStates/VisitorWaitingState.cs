@@ -36,7 +36,7 @@ namespace CauldronCodebase.GameStates
             if (gameDataHandler.cardsDrawnToday >= _settings.gameplay.cardsPerDay)
             {
                 Debug.Log("switch to night");
-                _gameFXManager.ShowDayChange(false);
+                
                 _stateMachine.SwitchState(GameStateMachine.GamePhase.Night);
             }
             else

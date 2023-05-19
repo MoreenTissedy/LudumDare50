@@ -32,7 +32,7 @@ public class GameFXManager : MonoBehaviour
         this.endingsProvider = endingsProvider;
     }
 
-    public async UniTask ShowStartGameFX()
+    public async UniTask ShowStartGameFXUniTask()
     {
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
 
@@ -44,14 +44,15 @@ public class GameFXManager : MonoBehaviour
         effectPlaying = true;
         await UniTask.WaitUntil(() => !effectPlaying);
     }
-    
+
     public void ShowEndGameFX()
     {
-        var end = Instantiate(endGameFX).GetComponentInChildren<EndGameFX>();
-        end.SoundManager = soundManager;
-        end.EndingScreen = endingScreen;
-        end.GameStateMachine = gameStateMachine;
-        end.EndingsProvider = endingsProvider;
+        var end = Instantiate(endGameFX);
+        EndGameFX endFx = end.GetComponentInChildren<EndGameFX>();
+        endFx.SoundManager = soundManager;
+        endFx.EndingScreen = endingScreen;
+        endFx.GameStateMachine = gameStateMachine;
+        endFx.EndingsProvider = endingsProvider;
     }
 
     private void GameFXOnOnEnd()

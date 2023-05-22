@@ -28,8 +28,8 @@ namespace CauldronCodebase
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private ParticleSystem particleSystem;
-
-
+        
+        
         [Inject]
         private void Construct(Cauldron cauldron, RecipeProvider recipeProvider)
         {
@@ -59,7 +59,6 @@ namespace CauldronCodebase
             cauldron.PotionBrewed -= DefineColor;
             cauldron.PotionAccepted -= ResetColor;
             cauldron.PotionDeclined -= PotionDeclined;
-            StopAllCoroutines();
         }
 
         private void PotionDeclined()
@@ -131,9 +130,9 @@ namespace CauldronCodebase
             
             Color.RGBToHSV(color, out float h, out float s, out float v);
             s += saturation;
-            s = Mathf.Clamp(s, 0f, 1f);
+            s = Mathf.Clamp01(s);
             v += brightness;
-            v = Mathf.Clamp(v, 0f, 1f);
+            v = Mathf.Clamp01(v);
             Color newColor = Color.HSVToRGB(h, s, v);
             if (currentAlpha < color.a)
             {

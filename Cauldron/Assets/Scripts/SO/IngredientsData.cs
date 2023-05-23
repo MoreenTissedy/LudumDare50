@@ -29,7 +29,7 @@ namespace CauldronCodebase
         }
         
         [ContextMenu("Export ingredients data to csv")]
-        public void ExportAllNightEvents()
+        public void ExportIngredientsData()
         {
             var file = File.CreateText(Application.dataPath+"/Localize/Ingredients.csv");
             file.WriteLine("type;title_RU;title_EN;description_RU;description_EN");

@@ -52,7 +52,7 @@ public class Mix : MonoBehaviour
         pot = GetComponentInParent<Cauldron>();
         if (pot is null)
             Debug.LogError("Mix script should be under Cauldron script");
-        pot?.MixColor(blankColor);
+        //pot?.MixColor(blankColor);
         initialEffectScale = effectAnim.transform.localScale;
     }
 
@@ -123,13 +123,13 @@ public class Mix : MonoBehaviour
         if (IsWithinKeyWindow())
         {
             var percentKey = Mathf.Abs(keyMixValue - mixProcess) / (keyMixWindow / 2);
-            pot?.MixColor(Color.Lerp(keyColor, GetColorByMixValue(), percentKey));
+            //pot?.MixColor(Color.Lerp(keyColor, GetColorByMixValue(), percentKey));
         }
         //set color blank or set rainbow color
         else
         {
             //pot?.MixColor(blankColor);
-            pot?.MixColor(GetColorByMixValue());
+            //pot?.MixColor(GetColorByMixValue());
         }
     }
 

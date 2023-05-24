@@ -62,8 +62,8 @@ namespace CauldronCodebase.GameStates
                 {
                     return;
                 }
-                gameFXManager.ShowStartGameFXUniTask();
-                await UniTask.Delay(TimeSpan.FromSeconds(3f));
+                await gameFXManager.ShowStartGameFXUniTask();
+                //await UniTask.Delay(TimeSpan.FromSeconds(3f));
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {

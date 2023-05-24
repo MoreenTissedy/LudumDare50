@@ -89,6 +89,11 @@ namespace CauldronCodebase
             int index = 1 << i;
             return Endings[(Unlocks)index];
         }
+        
+        public Ending Get(Unlocks i)
+        {
+            return Endings[i];
+        }
 
         public void Unlock(int i)
         {

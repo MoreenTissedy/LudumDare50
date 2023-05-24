@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -18,6 +20,7 @@ namespace CauldronCodebase.GameStates
         private readonly RecipeBook recipeBook;
         
         private readonly GameFXManager gameFXManager;
+        private CancellationTokenSource _tokenSource;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -53,9 +56,9 @@ namespace CauldronCodebase.GameStates
         private async void EnterWithDelay()
         {
             if (IsGameEnd()) return;
-            gameFXManager.ShowDayChange(false);
-
-            await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
+            _tokenSource = new CancellationTokenSource();
+            await gameFXManager.ShowSunset().AttachExternalCancellation(_tokenSource.Token);
+            //await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
 
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler);
@@ -66,13 +69,13 @@ namespace CauldronCodebase.GameStates
             cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
         }
 
-        private void NightPanelOnOnClose()
+        private async void NightPanelOnOnClose()
         {
             if (IsGameEnd()) return;
             statusChecker.CheckStatusesThreshold();
             cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
-            gameFXManager.ShowWithDelay(true).Forget();
+            await gameFXManager.ShowSunrise().AttachExternalCancellation(_tokenSource.Token);
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
@@ -92,6 +95,7 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {            
+            _tokenSource.Cancel();
             nightPanel.OnClose -= NightPanelOnOnClose;
             if (nightPanel.isActiveAndEnabled)
             {

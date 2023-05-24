@@ -1,4 +1,6 @@
-﻿using Save;
+﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,8 +28,13 @@ namespace CauldronCodebase.GameStates
         }
         public override void Enter()
         {
-            gameFXManager.ShowEndGameFX();
-            //_endingScreen.OpenBookWithEnding(gameStateMachine.currentEnding);
+            ShowEffectAndEnding().Forget();
+        }
+
+        private async UniTaskVoid ShowEffectAndEnding()
+        {
+            await gameFXManager.ShowEndGameFX(gameStateMachine.currentEnding);
+            _endingScreen.OpenBookWithEnding(gameStateMachine.currentEnding);
             _endingScreen.OnClose += ReloadGame;
         }
 

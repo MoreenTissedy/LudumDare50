@@ -37,7 +37,7 @@ namespace Client.Common.AnimatorTools
 
         private void SendCallback(Animator animator, int tagHash, int nameHash)
         {
-            AnimatorCallbackInfo info = new()
+            AnimatorCallbackInfo info = new AnimatorCallbackInfo ()
             {
                 TagHash = tagHash,
                 NameHash = nameHash,

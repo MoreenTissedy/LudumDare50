@@ -6,7 +6,7 @@ namespace Client.Common.AnimatorTools
 {
     public class AnimatorCallbackReceiverMediator: MonoBehaviour
     {
-        [SerializeField] private List<AnimatorCallbackDispatcherMediator> _dispatchers = new(1);
+        [SerializeField] private List<AnimatorCallbackDispatcherMediator> _dispatchers = new List<AnimatorCallbackDispatcherMediator>(1);
         
         private IAnimatorCallbackReceiver _target;
         

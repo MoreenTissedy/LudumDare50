@@ -4,6 +4,6 @@ namespace Client.Common.AnimatorTools
 {
     public interface IAnimatorCallbackReceiver
     {
-        public void OnAnimationCallback(AnimatorCallbackInfo info);
+        void OnAnimationCallback(AnimatorCallbackInfo info);
     }
 }

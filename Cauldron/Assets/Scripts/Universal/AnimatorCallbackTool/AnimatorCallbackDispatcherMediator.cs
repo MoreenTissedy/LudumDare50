@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Client.Client.Scripts.Common.Utils;
 using Client.Common.AnimatorCallbackTool;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ namespace Client.Common.AnimatorTools
 {
     public class AnimatorCallbackDispatcherMediator: MonoBehaviour
     {
-        [SerializeField] private List<AnimatorCallbackReceiverMediator> _receivers = new(1);
+        [SerializeField] private List<AnimatorCallbackReceiverMediator> _receivers = new List<AnimatorCallbackReceiverMediator> (1);
         
         public void Register(AnimatorCallbackReceiverMediator receiverMediator)
         {
@@ -25,7 +24,7 @@ namespace Client.Common.AnimatorTools
             {
                 if (receiver is null)
                 {
-                    GameLogger.LogWarning("Empty elements in animation callback mediator list on object "+gameObject.name);
+                    Debug.LogWarning("Empty elements in animation callback mediator list on object "+gameObject.name);
                     continue;
                 }
                 receiver.OnAnimationCallback(info);

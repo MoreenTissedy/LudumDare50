@@ -9,7 +9,7 @@ namespace Client.Common.AnimatorTools.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             MonoBehaviour component = property.serializedObject.targetObject as MonoBehaviour;
-            if (component is not IAnimatorCallbackReceiver)
+            if (!(component is IAnimatorCallbackReceiver))
             {
                 EditorGUILayout.HelpBox(new GUIContent("Please implement IAnimatorCallbackReceiver"));
                 return;

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5464150614209519287}
   - component: {fileID: 5464150614209519284}
   - component: {fileID: 5464150614209519285}
+  - component: {fileID: 8880397277481656856}
   m_Layer: 5
   m_Name: Start_game_effect
   m_TagString: Untagged
@@ -81,6 +82,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &8880397277481656856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5464150614209519282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c7b8fdbc0b54db4bb77b2dd84804255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5464150616034751156
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,7 +106,6 @@ GameObject:
   - component: {fileID: 5464150616034751161}
   - component: {fileID: 5464150616034751158}
   - component: {fileID: 5464150616034751160}
-  - component: {fileID: 2713342866904392441}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -177,15 +189,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2713342866904392441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5464150616034751156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c7b8fdbc0b54db4bb77b2dd84804255, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

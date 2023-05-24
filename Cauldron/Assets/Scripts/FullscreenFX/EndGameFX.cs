@@ -29,9 +29,10 @@ namespace CauldronCodebase
 
         private Ending currentEnding;
 
-        public void SelectEnding(Ending ending)
+        public EndGameFX SelectEnding(Ending ending)
         {
             currentEnding = ending;
+            return this;
         }
         public override UniTask Play()
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CauldronCodebase.GameStates
 {
@@ -20,7 +16,6 @@ namespace CauldronCodebase.GameStates
         private readonly RecipeBook recipeBook;
         
         private readonly GameFXManager gameFXManager;
-        private CancellationTokenSource _tokenSource;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -50,15 +45,16 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
-            EnterWithDelay();
+            if (IsGameEnd())
+            {
+                return;
+            }
+            EnterWithFX();
         }
 
-        private async void EnterWithDelay()
+        private async void EnterWithFX()
         {
-            if (IsGameEnd()) return;
-            _tokenSource = new CancellationTokenSource();
-            await gameFXManager.ShowSunset().AttachExternalCancellation(_tokenSource.Token);
-            //await Task.Delay(TimeSpan.FromSeconds(settings.gameplay.nightStartDelay));
+            await gameFXManager.ShowSunset();
 
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler);
@@ -75,8 +71,8 @@ namespace CauldronCodebase.GameStates
             statusChecker.CheckStatusesThreshold();
             cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
-            await gameFXManager.ShowSunrise().AttachExternalCancellation(_tokenSource.Token);
-            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+            await gameFXManager.ShowSunrise();
+            stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }
 
         private bool IsGameEnd()
@@ -95,7 +91,7 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {            
-            _tokenSource.Cancel();
+            gameFXManager.Clear();
             nightPanel.OnClose -= NightPanelOnOnClose;
             if (nightPanel.isActiveAndEnabled)
             {

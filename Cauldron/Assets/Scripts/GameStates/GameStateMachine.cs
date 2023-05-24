@@ -52,18 +52,15 @@ namespace CauldronCodebase.GameStates
 
         public async void RunStateMachine()
         {
-            //gameFXManager.ShowStartGameFX();
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {
-                //TODO: proper sync
                 if (GameLoader.IsMenuOpen())
                 {
                     return;
                 }
-                await gameFXManager.ShowStartGameFXUniTask();
-                //await UniTask.Delay(TimeSpan.FromSeconds(3f));
+                await gameFXManager.ShowStartGame();
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {

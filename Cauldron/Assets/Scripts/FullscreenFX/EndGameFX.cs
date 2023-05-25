@@ -1,5 +1,4 @@
-﻿using CauldronCodebase.GameStates;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -9,8 +8,6 @@ namespace CauldronCodebase
 {
     public class EndGameFX : BaseFX
     {
-        [HideInInspector] public EndingsProvider EndingsProvider;
-        [HideInInspector] public GameStateMachine GameStateMachine;
         [SerializeField] private Image endingIcon;
 
         [SerializeField] private float iconScaleDuration,
@@ -54,7 +51,6 @@ namespace CauldronCodebase
                 //.AppendInterval(showTextDelay)
                 //.Append(textCanvasGroup.DOFade(1, showTextDuration))
                 .AppendInterval(showEndingScreenDelay * 2);
-            //.AppendCallback(ShowEndingScreen);
             return mySequence.ToUniTask();
         }
 

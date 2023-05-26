@@ -36,13 +36,9 @@ namespace CauldronCodebase
             this.endingsProvider = endingsProvider;
         }
 
-        private void Start()
-        {
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
-        }
-
         public async UniTask ShowStartGame()
         {
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
             await PlayFX(CreateFx(startGameFX));
         }
 

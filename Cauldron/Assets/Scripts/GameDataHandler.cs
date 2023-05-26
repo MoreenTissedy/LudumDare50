@@ -257,6 +257,7 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
+            //refaaactor me
             if(data is null) return;
 
             status = data.Status;
@@ -268,8 +269,6 @@ namespace CauldronCodebase
                 status.FearThresholdHigh = highThreshold;
                 status.FameThresholdLow = lowThreshold;
                 status.FearThresholdLow = lowThreshold;
-
-                gamePhase = GameStateMachine.GamePhase.Visitor;
             }
 
             fame = data.Fame;

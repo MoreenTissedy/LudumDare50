@@ -70,6 +70,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+            Debug.LogError("start "+currentGamePhase);
             currentGameState.Enter();
         }
  

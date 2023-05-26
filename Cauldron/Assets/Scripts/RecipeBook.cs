@@ -36,6 +36,8 @@ namespace CauldronCodebase
         [SerializeField] protected IngredientsData ingredientsData;
         public List<Recipe> magicalRecipes;
         public List<Recipe> herbalRecipes;
+        public List<Recipe> allMagicalRecipes;
+        public List<Recipe> allHerbalRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -87,6 +89,16 @@ namespace CauldronCodebase
                 {
                     herbalRecipes.Add(recipe);
                 }
+            }
+
+            foreach (Recipe recipe in recipeProvider.allRecipes)
+            {
+                if (recipe.magical)
+                {
+                    allMagicalRecipes.Add(recipe);
+                }
+                else allHerbalRecipes.Add(recipe);
+                
             }
         }
 
@@ -229,11 +241,11 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+                    totalPages = Mathf.CeilToInt((float)allMagicalRecipes.Count / recipeEntries.Length);
                     break;
                 case Mode.Herbal:
                     if (herbalRecipes != null)
-                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / foodEntries.Length);
+                        totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     else totalPages = 1;
                     break;
                 case Mode.Attempts:
@@ -277,6 +289,12 @@ namespace CauldronCodebase
                     if (num < set.Count)
                     {
                         entries[i].Display(set[num]);
+                        Debug.Log("DISPLAY");
+                        if(!recipeProvider.LoadRecipes().Contains(entries[i].CurrentRecipe))
+                        {
+                            Debug.Log("LOCK");
+                            entries[i].Lock(set[num]);
+                        }
                     }
                     else
                     {
@@ -288,10 +306,10 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    DisplaySet(magicalRecipes);
+                    DisplaySet(allMagicalRecipes);
                     break;
                 case Mode.Herbal:
-                    DisplaySet(herbalRecipes);
+                    DisplaySet(allHerbalRecipes);
                     break;
                 case Mode.Attempts:
                     DisplayAttempts();

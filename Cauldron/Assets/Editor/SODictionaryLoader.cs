@@ -7,7 +7,6 @@ namespace Editor
     [InitializeOnLoad]
     public class SODictionaryLoader
     {
-#if UNITY_EDITOR
         static SODictionaryLoader()
         {
             EditorApplication.projectChanged += LoadDictionary;
@@ -38,7 +37,6 @@ namespace Editor
 
             EditorUtility.SetDirty(dictionary);
         }
-#endif
     }
     
 }

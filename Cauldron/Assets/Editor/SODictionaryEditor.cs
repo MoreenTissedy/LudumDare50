@@ -26,15 +26,20 @@ namespace Editor
             dictionary.AllSOValues.Clear();
             foreach (var obj in sObjects)
             {
+                
                 if (string.IsNullOrEmpty(obj.Id))
                 {
-                    obj.Id = GUID.Generate().ToString();
+                    obj.Id = GUID.Generate().ToString();;
                     EditorUtility.SetDirty(obj);
                 }
-
+                
+                // if (dictionary.AllSOKeys.Contains(obj.name))
+                // {
+                //     Debug.LogWarning($"Detect double: {obj.name}");
+                // }
+                
                 dictionary.AllSOKeys.Add(obj.Id);
                 dictionary.AllSOValues.Add(obj);
-                //Debug.Log(dictionary.AllEncounters.Count);
             }
 
             EditorUtility.SetDirty(dictionary);

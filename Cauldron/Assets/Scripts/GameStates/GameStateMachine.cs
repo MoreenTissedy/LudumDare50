@@ -56,13 +56,11 @@ namespace CauldronCodebase.GameStates
             currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {
-                //TODO: proper sync
                 if (GameLoader.IsMenuOpen())
                 {
                     return;
                 }
-                gameFXManager.ShowStartGameFX();
-                await UniTask.Delay(TimeSpan.FromSeconds(3f));
+                await gameFXManager.ShowStartGame();
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {
@@ -72,6 +70,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+            Debug.LogError("start "+currentGamePhase);
             currentGameState.Enter();
         }
  

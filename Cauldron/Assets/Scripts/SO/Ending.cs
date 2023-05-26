@@ -10,7 +10,9 @@ namespace CauldronCodebase
         public string title;
         [TextArea(3, 10)]
         public string text;
+        public string shortTextForEndingAnimation;
         public Sprite image;
+        public Sprite endIconImage;
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

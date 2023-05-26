@@ -52,7 +52,7 @@ namespace Save
             Money = 0;
 
             CardDrawnToday = 0;
-            Phase = GameStateMachine.GamePhase.VisitorWaiting;
+            Phase = GameStateMachine.GamePhase.Visitor;
 
             CurrentEncounter = null;
             CurrentVillager = null;

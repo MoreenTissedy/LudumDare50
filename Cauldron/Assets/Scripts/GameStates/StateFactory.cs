@@ -18,6 +18,7 @@ namespace CauldronCodebase.GameStates
         RecipeBook recipeBook;
 
         DataPersistenceManager dataPersistenceManager;
+        private GameFXManager gameFXManager;
 
         private readonly SoundManager soundManager;
 
@@ -35,7 +36,8 @@ namespace CauldronCodebase.GameStates
                             DataPersistenceManager dataPersistenceManager,
                             
                             GameStateMachine gameStateMachine,
-                            SoundManager soundManager)
+                            SoundManager soundManager,
+                            GameFXManager fxManager)
 
         {
             this.deck = deck;
@@ -52,6 +54,7 @@ namespace CauldronCodebase.GameStates
             this.dataPersistenceManager = dataPersistenceManager;
 
             this.soundManager = soundManager;
+            gameFXManager = fxManager;
 
         }
 
@@ -64,17 +67,17 @@ namespace CauldronCodebase.GameStates
 
         public VisitorWaitingState CreateVisitorWaitingState()
         {
-            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine);
+            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine, gameFXManager);
         }
 
         public NightState CreateNightState()
         {
-            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, gameStateMachine, recipeBook);
+            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, gameStateMachine, recipeBook, gameFXManager);
         }
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager);
+            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager, gameFXManager);
         }
 
     }

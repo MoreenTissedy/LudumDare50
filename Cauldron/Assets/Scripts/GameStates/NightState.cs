@@ -14,6 +14,8 @@ namespace CauldronCodebase.GameStates
         private readonly StatusChecker statusChecker;
         private readonly EventResolver eventResolver;
         private readonly RecipeBook recipeBook;
+        
+        private readonly GameFXManager gameFXManager;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -21,7 +23,8 @@ namespace CauldronCodebase.GameStates
                           EncounterDeckBase cardDeck,
                           NightPanel nightPanel,
                           GameStateMachine stateMachine,
-                          RecipeBook book)
+                          RecipeBook book,
+                          GameFXManager gameFXManager)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -29,6 +32,7 @@ namespace CauldronCodebase.GameStates
             this.cardDeck = cardDeck;
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
+            this.gameFXManager = gameFXManager;
             recipeBook = book;
 
             statusChecker = new StatusChecker(settings, gameDataHandler);
@@ -41,7 +45,17 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
-            if (IsGameEnd()) return;
+            if (IsGameEnd())
+            {
+                return;
+            }
+            EnterWithFX();
+        }
+
+        private async void EnterWithFX()
+        {
+            await gameFXManager.ShowSunset();
+
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler);
             nightPanel.OpenBookWithEvents(events);
@@ -51,12 +65,13 @@ namespace CauldronCodebase.GameStates
             cardDeck.DealCards(settings.gameplay.cardsDealtAtNight);
         }
 
-        private void NightPanelOnOnClose()
+        private async void NightPanelOnOnClose()
         {
             if (IsGameEnd()) return;
             statusChecker.CheckStatusesThreshold();
             cardDeck.AddStoryCards();
             Debug.Log("new day " + gameDataHandler.currentDay);
+            await gameFXManager.ShowSunrise();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }
 
@@ -76,6 +91,7 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {            
+            gameFXManager.Clear();
             nightPanel.OnClose -= NightPanelOnOnClose;
             if (nightPanel.isActiveAndEnabled)
             {

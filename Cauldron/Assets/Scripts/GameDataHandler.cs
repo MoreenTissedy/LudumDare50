@@ -214,7 +214,7 @@ namespace CauldronCodebase
         public void AddPotion(Potions potion, bool wrong)
         {
             potionsTotal.Add(potion); // for global statistic
-            currentDayPotions.PotionsList.Add(potion);
+            currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
                 wrongPotionsCount++; // for global statistic
@@ -226,12 +226,13 @@ namespace CauldronCodebase
         {
             currentDay++;
             cardsDrawnToday = 0;
-            currentDayPotions = new PotionsBrewedInADay();
             potionsBrewedInADays.Add(currentDayPotions);
             if (potionsBrewedInADays.Count > DayCountThreshold)
             {
                 potionsBrewedInADays.RemoveAt(0);
             }
+
+            currentDayPotions = new PotionsBrewedInADay();
         }
 
         public void RememberRound()
@@ -250,7 +251,7 @@ namespace CauldronCodebase
                 WrongPotionsOnLastDays += day.WrongPotions;
                 foreach (var potion in day.PotionsList)
                 {
-                    PotionsOnLastDays.Add(potion);
+                    PotionsOnLastDays.Add((Potions)Enum.Parse(typeof(Potions), potion));
                 }
             }
         }
@@ -296,8 +297,13 @@ namespace CauldronCodebase
             {
                 currentVillager = (Villager)soDictionary.AllScriptableObjects[data.CurrentVillager];
             }
+
+            potionsTotal = new List<Potions>();
+            foreach (var potion in data.PotionsTotalOnRun)
+            {
+                potionsTotal.Add((Potions)Enum.Parse(typeof(Potions), potion));
+            }
             
-            potionsTotal = data.PotionsTotalOnRun;
             wrongPotionsCount = data.WrongPotionsCountOnRun;
 
             currentDayPotions = data.CurrentDayPotions;
@@ -327,7 +333,12 @@ namespace CauldronCodebase
                 data.CurrentEncounter = currentCard.Id;
             }
             
-            data.PotionsTotalOnRun = potionsTotal;
+            data.PotionsTotalOnRun.Clear();
+            foreach (var potion in potionsTotal)
+            {
+                data.PotionsTotalOnRun.Add(potion.ToString());
+            }
+            
             data.WrongPotionsCountOnRun = wrongPotionsCount;
 
             data.CurrentDayPotions = currentDayPotions;

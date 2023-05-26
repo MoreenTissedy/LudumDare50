@@ -31,7 +31,7 @@ namespace Save
 
         public List<string> StoryTags;  // GameDataHandler
         
-        public List<Potions> PotionsTotalOnRun;  //GameDataHandler
+        public List<string> PotionsTotalOnRun;  //GameDataHandler
         public int WrongPotionsCountOnRun;  //GameDataHandler
 
         public PotionsBrewedInADay CurrentDayPotions;  //GameDataHandler
@@ -59,7 +59,7 @@ namespace Save
 
             StoryTags = new List<string>(5);
             
-            PotionsTotalOnRun = new List<Potions>();
+            PotionsTotalOnRun = new List<string>();
             WrongPotionsCountOnRun = 0;
 
             CurrentDayPotions = new PotionsBrewedInADay();

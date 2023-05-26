@@ -90,6 +90,7 @@ namespace CauldronCodebase
                     herbalRecipes.Add(recipe);
                 }
             }
+            
 
             foreach (Recipe recipe in recipeProvider.allRecipes)
             {
@@ -100,6 +101,10 @@ namespace CauldronCodebase
                 else allHerbalRecipes.Add(recipe);
                 
             }
+            
+            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => magicalRecipes.Contains(potion)).ToList();
+            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => herbalRecipes.Contains(potion)).ToList();
+            
         }
 
         public void RecordAttempt(Ingredients[] mix)
@@ -289,10 +294,8 @@ namespace CauldronCodebase
                     if (num < set.Count)
                     {
                         entries[i].Display(set[num]);
-                        Debug.Log("DISPLAY");
                         if(!recipeProvider.LoadRecipes().Contains(entries[i].CurrentRecipe))
                         {
-                            Debug.Log("LOCK");
                             entries[i].Lock(set[num]);
                         }
                     }

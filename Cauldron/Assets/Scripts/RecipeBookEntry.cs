@@ -48,7 +48,7 @@ namespace CauldronCodebase
             ingredient1.enabled = false;
             ingredient2.enabled = false;
             ingredient3.enabled = false;
-            fullName.text = "???";
+            fullName.text = "";
             description.text = "";
             image.sprite = recipe.image;
             image.material = lockedMaterial;

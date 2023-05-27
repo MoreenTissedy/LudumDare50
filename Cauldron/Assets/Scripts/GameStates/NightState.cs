@@ -93,7 +93,7 @@ namespace CauldronCodebase.GameStates
         {            
             gameFXManager.Clear();
             nightPanel.OnClose -= NightPanelOnOnClose;
-            if (nightPanel.isActiveAndEnabled)
+            if (nightPanel.IsOpen)
             {
                 nightPanel.CloseBook();
             }

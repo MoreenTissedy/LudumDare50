@@ -24,6 +24,8 @@ namespace CauldronCodebase
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
 
+        public bool IsOpen { get; private set; }
+
         [Inject] protected SoundManager SoundManager;
         
         public event Action OnClose;
@@ -75,6 +77,7 @@ namespace CauldronCodebase
         {
             SoundManager.PlayBook(sounds, BookSound.Open);
             bookObject.enabled = true;
+            IsOpen = true;
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
@@ -91,6 +94,7 @@ namespace CauldronCodebase
         {
             SoundManager.PlayBook(sounds, BookSound.Close);
             OnClose?.Invoke();
+            IsOpen = false;
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>
                 {

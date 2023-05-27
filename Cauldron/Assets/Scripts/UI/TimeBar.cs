@@ -21,19 +21,16 @@ namespace CauldronCodebase
         private MainSettings settings;
         private GameStateMachine gameStateMachine;
         private GameDataHandler gameDataHandler;
-        private NightPanel nightPanel;
 
         private int currentDay;
         [Inject]
         private void Construct(MainSettings settings,
                                GameStateMachine gameStateMachine,
-                               GameDataHandler gameDataHandler,
-                               NightPanel nightPanel)
+                               GameDataHandler gameDataHandler)
         {
             this.settings = settings;
             this.gameStateMachine = gameStateMachine;
             this.gameDataHandler = gameDataHandler;
-            this.nightPanel = nightPanel;
         }
 
         private void Start()
@@ -49,22 +46,24 @@ namespace CauldronCodebase
 
             gameStateMachine.OnChangeState += OnNewDay;
             gameStateMachine.OnChangeState += OnNewVisitor;
-            nightPanel.OnClose += NewDayShift;
         }
 
         private void OnDestroy()
         {
             gameStateMachine.OnChangeState -= OnNewDay;
             gameStateMachine.OnChangeState -= OnNewVisitor;
-            nightPanel.OnClose -= NewDayShift;
         }
 
         private void OnNewVisitor(GameStateMachine.GamePhase phase)
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
 
-            if(gameDataHandler.cardsDrawnToday == 0) return;
-            timeBar.DOLocalMoveX(timeBar.anchoredPosition.x-step, speed);
+            float shift = step;
+            if (gameDataHandler.cardsDrawnToday == 0)
+            {
+                shift *= 2; //longer shift for first visitor
+            }
+            timeBar.DOLocalMoveX(timeBar.anchoredPosition.x - shift, speed).SetEase(Ease.InOutSine);
         }
 
         private void OnNewDay(GameStateMachine.GamePhase phase)
@@ -83,11 +82,6 @@ namespace CauldronCodebase
             string dayNumberText = $"{dayText} {day}";
             dayNumber.text = dayNumberText;
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
-        }
-
-        private void NewDayShift()
-        {
-            timeBar.DOLocalMoveX(timeBar.anchoredPosition.x - step * 2, speed).SetEase(Ease.InOutSine);
         }
 
         private void ShiftBarOnLoad(int steps)

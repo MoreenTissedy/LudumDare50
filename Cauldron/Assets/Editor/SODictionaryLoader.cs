@@ -22,7 +22,6 @@ namespace Editor
             dictionary.AllSOValues.Clear();
             foreach (var obj in sObjects)
             {
-                
                 obj.Id = obj.name;
                 EditorUtility.SetDirty(obj);
                 

@@ -53,7 +53,6 @@ namespace CauldronCodebase.GameStates
                      
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
-            gameDataHandler.currentVillager = currentCard.actualVillager;
         }
         
         public override void Exit()

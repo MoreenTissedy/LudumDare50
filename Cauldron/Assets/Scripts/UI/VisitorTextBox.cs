@@ -58,7 +58,7 @@ namespace CauldronCodebase
             iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
             if (card.quest)
             {
-                iconObjects[2]?.DisplayItem(card.actualVillager);
+                iconObjects[2]?.DisplayItem(card.villager);
                 text.fontStyle = FontStyles.Italic;
             }
             else

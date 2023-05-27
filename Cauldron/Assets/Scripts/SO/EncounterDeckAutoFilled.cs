@@ -209,12 +209,11 @@ namespace CauldronCodebase
                 var topCard = deck.First();
                 deck.RemoveFirst();
                 currentCard = topCard;
-                currentCard.Init();
             }
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
                 && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards
-                && !VisitorManager.SPECIALS.Contains(currentCard.actualVillager.name))
+                && !VisitorManager.SPECIALS.Contains(currentCard.villager.name))
             {
                 SaveCurrentCardAsUnique();
             }
@@ -235,10 +234,6 @@ namespace CauldronCodebase
         public override void LoadData(GameData data, bool newGame)
         {
             loadedCard = gameDataHandler.currentCard;
-            if (loadedCard != null)
-            {
-                loadedCard.actualVillager = gameDataHandler.currentVillager;
-            }
 
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);

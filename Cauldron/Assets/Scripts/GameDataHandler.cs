@@ -36,7 +36,6 @@ namespace CauldronCodebase
         public int currentRound;
         public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
-        public Villager currentVillager;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
 
@@ -288,15 +287,6 @@ namespace CauldronCodebase
             {
                 currentCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
             }
-            
-            if (string.IsNullOrEmpty(data.CurrentVillager))
-            {
-                currentVillager = null;
-            }
-            else
-            {
-                currentVillager = (Villager)soDictionary.AllScriptableObjects[data.CurrentVillager];
-            }
 
             potionsTotal = new List<Potions>();
             foreach (var potion in data.PotionsTotalOnRun)
@@ -322,11 +312,6 @@ namespace CauldronCodebase
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
             data.Phase = gamePhase;
-
-            if (currentVillager != null)
-            {
-                data.CurrentVillager = currentVillager.Id;
-            }
 
             if (currentCard != null)
             {

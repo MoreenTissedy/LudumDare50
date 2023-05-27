@@ -79,7 +79,7 @@ namespace CauldronCodebase
         
         public async void Enter(Encounter card)
         {
-            Villager villager = card.actualVillager;
+            Villager villager = card.villager;
 
             //TODO: refactor
             switch (ignoreSavedAttempts)

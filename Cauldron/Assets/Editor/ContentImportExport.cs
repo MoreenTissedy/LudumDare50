@@ -134,25 +134,21 @@ namespace Editor
                 //AddOnDay
                 card.addToDeckOnDay = ConvertIntFromString(data[1]);
 
-                //Villagers
-                string[] villagersFromFile = data[2].Split(',');
-                List<Villager> foundVillagers = new List<Villager>(2);
+                //Villager
+                bool foundVillager = false;
                 foreach (var villager in allVillagers)
                 {
-                    foreach (var villagerData in villagersFromFile)
+                    if (villager.name == data[2].Trim())
                     {
-                        if (villager.name == villagerData.Trim())
-                        {
-                            foundVillagers.Add(villager);
-                        }
+                        card.villager = villager;
+                        foundVillager = true;
+                        break;
                     }
                 }
-
-                if (foundVillagers.Count == 0 && !string.IsNullOrWhiteSpace(data[2]))
+                if (!foundVillager && !string.IsNullOrWhiteSpace(data[2]))
                 {
                     Debug.LogWarning("Failed to parse "+data[2]);
                 }
-                card.villager = foundVillagers.ToArray();
 
                 card.text = data[3];
 

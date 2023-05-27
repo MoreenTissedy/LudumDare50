@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyLoc;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -25,7 +26,7 @@ namespace CauldronCodebase
             public Encounter bonusCard;
         }
 
-        public Villager[] villager;
+        [FormerlySerializedAs("villager1")] public Villager villager;
 
         [TextArea(5, 10)]
         public string text;
@@ -34,17 +35,6 @@ namespace CauldronCodebase
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
         public PotionResult[] resultsByPotion = Array.Empty<PotionResult>();
-
-        [HideInInspector] public Villager actualVillager;
-        
-        public void Init()
-        {
-            if (villager.Length > 0)
-            {
-                int random = Random.Range(0, villager.Length);
-                actualVillager = villager[random];
-            }
-        }
 
         public static Encounter GetRandom(Encounter[] set)
         {

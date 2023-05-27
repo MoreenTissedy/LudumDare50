@@ -57,6 +57,7 @@ namespace CauldronCodebase
         private void PlayAnimation()
         {
             animator.enabled = true;
+            Sound.Play(Sounds.GameEnd);
         }
 
         private void PlayIconAnimation()
@@ -67,11 +68,6 @@ namespace CauldronCodebase
         private void DoIconFillAmount()
         {
             endingIcon.DOFillAmount(0, iconFadeTime).SetEase(Ease.InOutQuad);
-        }
-
-        public void PlaySound()
-        {
-            Sound.Play(Sounds.GameEnd);
         }
     }
 }

@@ -15,8 +15,7 @@ namespace CauldronCodebase
 
         public override UniTask Play()
         {
-            //TODO: Add sound
-            //Sound.Play(sound);
+            Sound.Play(sound);
             tmpTextComponent.text = text;
             return canvasGroup.DOFade(1, duration).SetLoops(2, LoopType.Yoyo).SetEase(Ease.Linear).ToUniTask();
         }

@@ -11,7 +11,6 @@ namespace CauldronCodebase
 
         public override UniTask Play()
         {
-            Sound.Play(Sounds.GameStart);
             return UniTask.WaitUntil(() => animationEnded);
         }
 

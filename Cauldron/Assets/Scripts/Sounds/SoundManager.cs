@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    //Please add sounds to the end
+    //Please add new sounds to the end of the list
     public enum Sounds
     {
         Music,
@@ -21,10 +21,13 @@ namespace CauldronCodebase
         MenuFocus,
         MenuClick,
         TimerBreak,
-        GameStart,
+        StartFlash,
         GameEnd,
         NightCardEnter,
-        NightCardExit
+        NightCardExit,
+        StartSpark,
+        StartDay,
+        EndDay,
     }
 
     public enum VisitorSound

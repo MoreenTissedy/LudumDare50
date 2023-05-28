@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +39,7 @@ namespace CauldronCodebase
         public List<Recipe> herbalRecipes;
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
+        [SerializeField] private List<Recipe> unlockedRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -104,7 +106,9 @@ namespace CauldronCodebase
             
             allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => magicalRecipes.Contains(potion)).ToList();
             allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => herbalRecipes.Contains(potion)).ToList();
-            
+            unlockedRecipes.AddRange(magicalRecipes);
+            unlockedRecipes.AddRange(herbalRecipes);
+
         }
 
         public void RecordAttempt(Ingredients[] mix)
@@ -293,10 +297,13 @@ namespace CauldronCodebase
                     int num = currentPage * entries.Length + i;
                     if (num < set.Count)
                     {
-                        entries[i].Display(set[num]);
-                        if(!recipeProvider.LoadRecipes().Contains(entries[i].CurrentRecipe))
+                        if(unlockedRecipes.Contains(set[num]))
                         {
-                            entries[i].Lock(set[num]);
+                            entries[i].Display(set[num]);
+                        }
+                        else
+                        {
+                            entries[i].DisplayLocked(set[num]);
                         }
                     }
                     else

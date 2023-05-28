@@ -41,7 +41,7 @@ namespace CauldronCodebase
             image.material = null;
         }
 
-        public void Lock(Recipe recipe)
+        public void DisplayLocked(Recipe recipe)
         {
             currentRecipe = null;
             image.enabled = true;

@@ -1220,7 +1220,6 @@ MonoBehaviour:
   currentRound: 0
   gamePhase: 0
   currentCard: {fileID: 0}
-  currentVillager: {fileID: 0}
   potionsTotal: 
   wrongPotionsCount: 0
   storyTags: []
@@ -2709,6 +2708,7 @@ MonoBehaviour:
   visitorManager: {fileID: 264877340}
   stateMachine: {fileID: 763255249}
   gameDataHandler: {fileID: 484183964}
+  catTipsManager: {fileID: 1404366176}
   endingScreen: {fileID: 2079205777}
   fxManager: {fileID: 1999137261}
   nightPanel: {fileID: 7354000312683070564}
@@ -2803,6 +2803,49 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3db0b7271b634e49b332ecf5d9e9e0c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1404366174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1404366175}
+  - component: {fileID: 1404366176}
+  m_Layer: 0
+  m_Name: CatTipsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1404366175
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404366174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1745953328}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1404366176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404366174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27b604a9695b004ca10a69ed2f98a8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1426277125
@@ -3531,6 +3574,7 @@ GameObject:
   - component: {fileID: 1617289282}
   - component: {fileID: 1617289281}
   - component: {fileID: 1617289280}
+  - component: {fileID: 1617289284}
   m_Layer: 0
   m_Name: Cat
   m_TagString: Untagged
@@ -3638,6 +3682,53 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1617289284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617289279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04e2872f76968d743bb0f6a9eec22e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slowPlayerTips: []
+  BlackStrangerTips:
+  - "\u0414\u044C\u044F\u0432\u043E\u043B  1"
+  - "\u0414\u044C\u044F\u0432\u043E\u043B 2"
+  - "\u0414\u044C\u044F\u0432\u043E\u043B 3"
+  WitchMemoryTips:
+  - "\u0412\u0435\u0434\u044C\u043C\u0430 1"
+  - "\u0412\u0435\u0434\u044C\u043C\u0430 2"
+  - "\u0412\u0435\u0434\u044C\u043C\u0430 3"
+  InquisitionTips:
+  - "\u0418\u043D\u043A\u0432\u0438\u0437\u0438\u0442\u043E\u0440 1"
+  - "\u0418\u043D\u043A\u0432\u0438\u0437\u0438\u0442\u043E\u0440 2"
+  - "\u0418\u043D\u043A\u0432\u0438\u0437\u0438\u0442\u043E\u0440 3"
+  highFameTips:
+  - "\u041C\u043D\u043E\u0433\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    1"
+  - "\u041C\u043D\u043E\u0433\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    2"
+  - "\u041C\u043D\u043E\u0433\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    3"
+  lowFameTips:
+  - "\u041C\u0430\u043B\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    1"
+  - "\u041C\u0430\u043B\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    2"
+  - "\u041C\u0430\u043B\u043E \u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u0438
+    3"
+  highFearTips:
+  - "\u0421\u0438\u043B\u044C\u043D\u043E \u0431\u043E\u044F\u0442\u0441\u044F 1"
+  - "\u0421\u0438\u043B\u044C\u043D\u043E \u0431\u043E\u044F\u0442\u0441\u044F 2"
+  - "\u0421\u0438\u043B\u044C\u043D\u043E \u0431\u043E\u044F\u0442\u0441\u044F 3"
+  lowFearTips:
+  - "\u0421\u043B\u0430\u0431\u043E \u0431\u043E\u044F\u0442\u0441\u044F 1"
+  - "\u0421\u043B\u0430\u0431\u043E \u0431\u043E\u044F\u0442\u0441\u044F 2"
+  - "\u0421\u043B\u0430\u0431\u043E \u0431\u043E\u044F\u0442\u0441\u044F 3"
 --- !u!1001 &1620881529
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3866,6 +3957,7 @@ Transform:
   - {fileID: 763255248}
   - {fileID: 484183963}
   - {fileID: 1999137260}
+  - {fileID: 1404366175}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

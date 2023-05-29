@@ -23,6 +23,7 @@ namespace CauldronCodebase
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
+        [SerializeField] private CatTipsManager catTipsManager;
 
         [Header("UI")]
         [SerializeField] private EndingScreen endingScreen;
@@ -66,6 +67,7 @@ namespace CauldronCodebase
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
+            Container.Bind<CatTipsManager>().FromInstance(catTipsManager).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }

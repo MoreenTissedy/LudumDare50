@@ -31,6 +31,7 @@ namespace CauldronCodebase
         [SerializeField] private GameFXManager fxManager;
 
         [SerializeField] private NightPanel nightPanel;
+        [SerializeField] private CatTipsView catTipsView;
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
@@ -58,6 +59,7 @@ namespace CauldronCodebase
             Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
+            Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
         }
 
         private void BindGameplay()

@@ -1,41 +1,45 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
-using Random = UnityEngine.Random;
 
 
 public class CatTipsProvider : MonoBehaviour
 {
-    [SerializeField] private List<string> slowPlayerTips;
+    [SerializeField] private CatTipsTextSO slowPlayerTips;
 
     [Header("Special character tips")]
-    [SerializeField] private List<string> BlackStrangerTips;
-    [SerializeField] private List<string> WitchMemoryTips;
-    [SerializeField] private List<string> InquisitionTips;
+    [SerializeField] private CatTipsTextSO DarkStrangerTips;
+    [SerializeField] private CatTipsTextSO WitchMemoryTips;
+    [SerializeField] private CatTipsTextSO InquisitionTips;
 
 
     [Header("Scale tips")]
-    [SerializeField] private List<string> highFameTips;
-    [SerializeField] private List<string> lowFameTips;
-    [SerializeField] private List<string> highFearTips;
-    [SerializeField] private List<string> lowFearTips;
+    [SerializeField] private CatTipsTextSO highFameTips;
+    [SerializeField] private CatTipsTextSO lowFameTips;
+    [SerializeField] private CatTipsTextSO highFearTips;
+    [SerializeField] private CatTipsTextSO lowFearTips;
+    [Space(10)]
+    [SerializeField] private CatTipsTextSO ScaleUPTips;
+    [SerializeField] private CatTipsTextSO ScaleDOWNTips;
 
     private CatTipsManager catTipsManager;
     private GameStateMachine gameStateMachine;
     private GameDataHandler gameDataHandler;
     private MainSettings settings;
+    private CancellationTokenSource cancellationTokenSource;
+
+    private bool DarkStrangerCame, WitchCame, InquisitorCame;
 
     [Inject]
     private void Construct(CatTipsManager tipsManager,
                             GameStateMachine stateMachine,
                             GameDataHandler dataHandler,
-                            MainSettings mainSettings)
+                            MainSettings mainSettings,
+                            CatTipsView tipsView)
     {
         catTipsManager = tipsManager;
         gameStateMachine = stateMachine;
@@ -45,6 +49,7 @@ public class CatTipsProvider : MonoBehaviour
 
     private void Start()
     {
+        cancellationTokenSource = new CancellationTokenSource();
         gameStateMachine.OnChangeState += SubscribeOnChangeState;
     }
 
@@ -55,17 +60,33 @@ public class CatTipsProvider : MonoBehaviour
 
     private void SubscribeOnChangeState(GameStateMachine.GamePhase phase)
     {
-        CheckTipsCondition(phase).Forget();
+        if (phase != GameStateMachine.GamePhase.Visitor)
+        {
+            cancellationTokenSource?.Cancel();
+            return;
+        }
+        
+        cancellationTokenSource = new CancellationTokenSource();
+        CheckTipsCondition(phase).AttachExternalCancellation(cancellationTokenSource.Token);
     }
 
-    private async UniTaskVoid CheckTipsCondition(GameStateMachine.GamePhase phase)
+    private async UniTask CheckTipsCondition(GameStateMachine.GamePhase phase)
     {
         if(phase != GameStateMachine.GamePhase.Visitor) return;
+        
+        WaitSlowTips().AttachExternalCancellation(cancellationTokenSource.Token);
 
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.VisitorCheckDelay));
         if (CheckSpecialVisitors()) return;
+
         await UniTask.Delay(TimeSpan.FromSeconds(0.5));
         if(CheckScale()) return;
+    }
+
+    private async UniTask WaitSlowTips()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.SlowTipsDelay));
+        catTipsManager.ShowTips(CatTips.CreateTips(slowPlayerTips));
     }
 
     private bool CheckSpecialVisitors()
@@ -75,11 +96,25 @@ public class CatTipsProvider : MonoBehaviour
             switch (gameDataHandler.currentCard.villager.name)
             {
                 case "Inquisition":
-                    CreateSimpleTips(InquisitionTips);
-                    return true;
+                    if (!InquisitorCame)
+                    {
+                        catTipsManager.ShowTips(CatTips.CreateTips(InquisitionTips));
+                        InquisitorCame = true;
+                        return true;
+                    }
+                    else
+                        return false;
+                    
                 case "Dark Stranger":
-                    CreateSimpleTips(BlackStrangerTips);
-                    return true;
+                    if (!DarkStrangerCame)
+                    {
+                        catTipsManager.ShowTips(CatTips.CreateTips(DarkStrangerTips));
+                        DarkStrangerCame = true;
+                        return true;
+                    }
+                    else
+                        return false;
+                    
             }
         }
 
@@ -91,38 +126,56 @@ public class CatTipsProvider : MonoBehaviour
         var fame = gameDataHandler.Get(Statustype.Fame);
         var fear = gameDataHandler.Get(Statustype.Fear);
 
-        if (fame >= gameDataHandler.GetThreshold(Statustype.Fame, true))
+        if (fame > gameDataHandler.GetThreshold(Statustype.Fame, true))
         {
-            CreateSimpleTips(highFameTips);
+            CheckVisitor(Statustype.Fame, highFameTips, true);
             return true;
         }
 
-        if (fame <= gameDataHandler.GetThreshold(Statustype.Fame, false))
+        if (fame < gameDataHandler.GetThreshold(Statustype.Fame, false))
         {
-            CreateSimpleTips(lowFameTips);
+            CheckVisitor(Statustype.Fame, lowFameTips, false);
             return true;
         }
 
-        if (fear >= gameDataHandler.GetThreshold(Statustype.Fear, true))
+        if (fear > gameDataHandler.GetThreshold(Statustype.Fear, true))
         {
-            CreateSimpleTips(highFearTips);
+            CheckVisitor(Statustype.Fear, highFearTips, true);
             return true;
         }
 
-        if (fear <= gameDataHandler.GetThreshold(Statustype.Fear, false))
+        if (fear < gameDataHandler.GetThreshold(Statustype.Fear, false))
         {
-            CreateSimpleTips(lowFearTips);
+            CheckVisitor(Statustype.Fear, lowFearTips, false);
             return true;
         }
-
+        
         return false;
-    }
 
-    private void CreateSimpleTips(List<string> tipsVariantList)
-    {
-        int random = Random.Range(0, tipsVariantList.Count);
-
-        CatTips tips = new CatTips(tipsVariantList[random]);
-        catTipsManager.ShowTips(tips);
+        void CheckVisitor(Statustype status, CatTipsTextSO scaleText, bool high)
+        {
+            if (gameDataHandler.currentCard.primaryInfluence == status)
+            {
+                if (gameDataHandler.currentCard.primaryCoef > 0)
+                {
+                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips));
+                }
+                else
+                {
+                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
+                }
+            }
+            else if(gameDataHandler.currentCard.secondaryInfluence == status)
+            {
+                if (gameDataHandler.currentCard.secondaryCoef > 0)
+                {
+                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips));
+                }
+                else
+                {
+                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
+                }
+            }
+        }
     }
 }

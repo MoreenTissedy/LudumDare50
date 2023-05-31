@@ -8,6 +8,7 @@ namespace CauldronCodebase
     {
         public Gameplay gameplay;
         public StatusBars statusBars;
+        public CatTips catTips;
         
         [Serializable]
         public class Gameplay
@@ -22,6 +23,13 @@ namespace CauldronCodebase
              public int roundsWithUniqueStartingCards = 2; //Первые N-1 кругов необходимо сохранять все карты
              public int daysWithUniqueStartingCards = 3; // выпавшие в первые три X дня игры
 
+        }
+        
+        [Serializable]
+        public class CatTips
+        {
+            public float SlowTipsDelay = 60;
+            public float VisitorCheckDelay = 1;
         }
 
         [Serializable]

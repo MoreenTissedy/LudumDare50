@@ -36,6 +36,9 @@ namespace CauldronCodebase
         [SerializeField] protected IngredientsData ingredientsData;
         public List<Recipe> magicalRecipes;
         public List<Recipe> herbalRecipes;
+        public List<Recipe> allMagicalRecipes;
+        public List<Recipe> allHerbalRecipes;
+        [SerializeField] private List<Recipe> unlockedRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -88,6 +91,23 @@ namespace CauldronCodebase
                     herbalRecipes.Add(recipe);
                 }
             }
+            
+
+            foreach (Recipe recipe in recipeProvider.allRecipes)
+            {
+                if (recipe.magical)
+                {
+                    allMagicalRecipes.Add(recipe);
+                }
+                else allHerbalRecipes.Add(recipe);
+                
+            }
+            
+            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => magicalRecipes.Contains(potion)).ToList();
+            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => herbalRecipes.Contains(potion)).ToList();
+            unlockedRecipes.AddRange(magicalRecipes);
+            unlockedRecipes.AddRange(herbalRecipes);
+
         }
 
         public void RecordAttempt(Ingredients[] mix)
@@ -229,11 +249,11 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+                    totalPages = Mathf.CeilToInt((float)allMagicalRecipes.Count / recipeEntries.Length);
                     break;
                 case Mode.Herbal:
                     if (herbalRecipes != null)
-                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / foodEntries.Length);
+                        totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     else totalPages = 1;
                     break;
                 case Mode.Attempts:
@@ -276,7 +296,14 @@ namespace CauldronCodebase
                     int num = currentPage * entries.Length + i;
                     if (num < set.Count)
                     {
-                        entries[i].Display(set[num]);
+                        if(unlockedRecipes.Contains(set[num]))
+                        {
+                            entries[i].Display(set[num]);
+                        }
+                        else
+                        {
+                            entries[i].DisplayLocked(set[num]);
+                        }
                     }
                     else
                     {
@@ -288,10 +315,10 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    DisplaySet(magicalRecipes);
+                    DisplaySet(allMagicalRecipes);
                     break;
                 case Mode.Herbal:
-                    DisplaySet(herbalRecipes);
+                    DisplaySet(allHerbalRecipes);
                     break;
                 case Mode.Attempts:
                     DisplayAttempts();

@@ -14,6 +14,9 @@ namespace CauldronCodebase
         public Recipe CurrentRecipe => currentRecipe;
 
         private IngredientsData ingredientsData;
+
+        [SerializeField]
+        private Material lockedMaterial;
            
         [Inject]
         public void Construct(IngredientsData data)
@@ -35,6 +38,20 @@ namespace CauldronCodebase
             ingredient1.sprite = ingredientsData.Get(recipe.RecipeIngredients[0]).image;
             ingredient2.sprite = ingredientsData.Get(recipe.RecipeIngredients[1]).image;
             ingredient3.sprite = ingredientsData.Get(recipe.RecipeIngredients[2]).image;
+            image.material = null;
+        }
+
+        public void DisplayLocked(Recipe recipe)
+        {
+            currentRecipe = null;
+            image.enabled = true;
+            ingredient1.enabled = false;
+            ingredient2.enabled = false;
+            ingredient3.enabled = false;
+            fullName.text = "";
+            description.text = "";
+            image.sprite = recipe.image;
+            image.material = lockedMaterial;
         }
 
         public void Clear()

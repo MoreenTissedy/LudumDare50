@@ -30,6 +30,7 @@ public class CatTipsProvider : MonoBehaviour
     private GameStateMachine gameStateMachine;
     private GameDataHandler gameDataHandler;
     private MainSettings settings;
+    private TooltipManager tooltipManager;
     private CancellationTokenSource cancellationTokenSource;
 
     private bool DarkStrangerCame, WitchCame, InquisitorCame;
@@ -39,12 +40,14 @@ public class CatTipsProvider : MonoBehaviour
                             GameStateMachine stateMachine,
                             GameDataHandler dataHandler,
                             MainSettings mainSettings,
-                            CatTipsView tipsView)
+                            CatTipsView tipsView,
+                            TooltipManager tooltip)
     {
         catTipsManager = tipsManager;
         gameStateMachine = stateMachine;
         gameDataHandler = dataHandler;
         settings = mainSettings;
+        tooltipManager = tooltip;
     }
 
     private void Start()
@@ -86,6 +89,7 @@ public class CatTipsProvider : MonoBehaviour
     private async UniTask WaitSlowTips()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.SlowTipsDelay));
+        if(tooltipManager.Highlighted) return;
         catTipsManager.ShowTips(CatTips.CreateTips(slowPlayerTips));
     }
 

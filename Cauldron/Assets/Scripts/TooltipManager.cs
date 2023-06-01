@@ -5,6 +5,7 @@ namespace CauldronCodebase
 {
 public class TooltipManager
 {
+    public bool Highlighted { get; private set; }
     private List<Ingredients> potionIngredients = new List<Ingredients>();
     private Recipe currentRecipe;
     private Dictionary<Ingredients, IngredientDroppable> dict;
@@ -38,6 +39,7 @@ public class TooltipManager
         }
         ChangeFewHighlights(recipe, true);
         currentRecipe = recipe;
+        Highlighted = true;
     }
     
     public void ChangeOneIngredientHighlight(Ingredients ingredientToHighlight, bool state)
@@ -70,6 +72,7 @@ public class TooltipManager
             if (dict.TryGetValue(i, out var ingredient))
             {
                 ingredient.ChangeHighlight(false);
+                Highlighted = false;
             }
         }
     }

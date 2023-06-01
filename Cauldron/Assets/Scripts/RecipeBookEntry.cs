@@ -10,6 +10,7 @@ namespace CauldronCodebase
         public Text description;
         public Image image;
         public Image ingredient1, ingredient2, ingredient3;
+        public PotionSelect potionButton;
         private Recipe currentRecipe;
         public Recipe CurrentRecipe => currentRecipe;
 
@@ -39,6 +40,7 @@ namespace CauldronCodebase
             ingredient2.sprite = ingredientsData.Get(recipe.RecipeIngredients[1]).image;
             ingredient3.sprite = ingredientsData.Get(recipe.RecipeIngredients[2]).image;
             image.material = null;
+            potionButton.clickable = true;
         }
 
         public void DisplayLocked(Recipe recipe)
@@ -48,10 +50,11 @@ namespace CauldronCodebase
             ingredient1.enabled = false;
             ingredient2.enabled = false;
             ingredient3.enabled = false;
-            fullName.text = "";
+            fullName.text = "???";
             description.text = "";
             image.sprite = recipe.image;
             image.material = lockedMaterial;
+            potionButton.clickable = false;
         }
 
         public void Clear()

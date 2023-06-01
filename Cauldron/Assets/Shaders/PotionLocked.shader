@@ -10,6 +10,7 @@ Shader "Custom/PotionLocked"
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         _EffectAmount ("Effect Amount", Range (0, 1)) = 1.0
         _Alpha ("Alpha", Range (0, 1)) = 1.0
+        _AlphaClip ("AlphaClip", Range (0, 0.5)) = 0.1
     }
  
     SubShader
@@ -54,6 +55,7 @@ Shader "Custom/PotionLocked"
             fixed4 _Color;
             fixed4 _FillColor;
             float _Alpha;
+            float _AlphaClip;
 
             v2f vert(appdata_t IN)
             {
@@ -75,7 +77,7 @@ Shader "Custom/PotionLocked"
             fixed4 frag(v2f IN) : COLOR
             {
                 half4 texcol = tex2D (_MainTex, IN.texcoord);              
-                texcol.rgb = lerp(texcol.rgb, _FillColor, _Color.a > 0.1);
+                texcol.rgb = lerp(texcol.rgb, _FillColor, _Color.a > _AlphaClip);
                 texcol = texcol * IN.color;
                 texcol *= IN.color.a;
                 return texcol;

@@ -34,16 +34,16 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider);
+            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider, stateMachine);
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
         
         public override void Enter()
         {
-            var priorityCards = statusChecker.CheckStatusesThreshold();
-            foreach (var card in priorityCards)
+            var priorityCard = statusChecker.CheckStatusesThreshold();
+            if (priorityCard)
             {
-                cardDeck.AddToDeck(card, true);
+                cardDeck.AddToDeck(priorityCard, true);
             }
             Encounter currentCard = cardDeck.GetTopCard();
             gameDataHandler.currentCard = currentCard;

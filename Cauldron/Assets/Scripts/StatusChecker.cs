@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using CauldronCodebase.GameStates;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -6,16 +8,29 @@ namespace CauldronCodebase
     {
         private readonly GameDataHandler gameDataHandler;
         private readonly PriorityLaneProvider cardProvider;
+        private readonly GameStateMachine gameStateMachine;
         private readonly MainSettings settings;
 
+        private bool priorityCardSelected;
+
         public StatusChecker(MainSettings settings,
-                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider)
+                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider, GameStateMachine gameStateMachine)
         {
             this.settings = settings;
             this.gameDataHandler = gameDataHandler;
             this.cardProvider = cardProvider;
+            this.gameStateMachine = gameStateMachine;
+            gameStateMachine.OnChangeState += GameStateMachineOnOnChangeState;
         }
-        
+
+        private void GameStateMachineOnOnChangeState(GameStateMachine.GamePhase phase)
+        {
+            if (phase == GameStateMachine.GamePhase.Night)
+            {
+                priorityCardSelected = false;
+            }
+        }
+
         public EndingsProvider.Unlocks Run()
         {
             if (gameDataHandler.Fame >= settings.statusBars.Total)
@@ -47,21 +62,40 @@ namespace CauldronCodebase
             return EndingsProvider.Unlocks.None;
         }
 
-        public IEnumerable<Encounter> CheckStatusesThreshold()
+        public Encounter CheckStatusesThreshold()
         {
-            yield return GetPriorityCard(PriorityLaneProvider.HIGH_FEAR, Statustype.Fear);
-            yield return GetPriorityCard(PriorityLaneProvider.LOW_FEAR, Statustype.Fear, false);
-            yield return GetPriorityCard(PriorityLaneProvider.HIGH_FAME, Statustype.Fame);
-            yield return GetPriorityCard(PriorityLaneProvider.LOW_FAME, Statustype.Fame, false);
-        }
-
-        private Encounter GetPriorityCard(string tag, Statustype type, bool checkHigh = true)
-        {
-            if (CheckThreshold(type, checkHigh))
+            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FEAR, Statustype.Fear, out var card1))
             {
-                return cardProvider.GetRandomCard(tag);
+                return card1;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FAME, Statustype.Fame, out var card3))
+            {
+                return card3;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FEAR, Statustype.Fear, out var card2, false))
+            {
+                return card2;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FAME, Statustype.Fame, out var card4, false))
+            {
+                return card4;
             }
             return null;
+        }
+
+        private bool TryGetPriorityCard(string tag, Statustype type, out Encounter card, bool checkHigh = true)
+        {
+            if (CheckThreshold(type, checkHigh) && !priorityCardSelected)
+            {
+                card = cardProvider.GetRandomCard(tag);
+                if (card != null)
+                {
+                    priorityCardSelected = true;
+                    return true;
+                }
+            }
+            card = null;
+            return false;
         }
 
         private bool CheckThreshold(Statustype type, bool checkHigh)

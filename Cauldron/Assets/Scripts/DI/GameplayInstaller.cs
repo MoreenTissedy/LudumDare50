@@ -31,6 +31,7 @@ namespace CauldronCodebase
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
+        [Inject] private SODictionary soDictionary;
 
         public override void InstallBindings()
         {
@@ -43,7 +44,6 @@ namespace CauldronCodebase
         private void BindDataProviders()
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
-            
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
@@ -71,6 +71,10 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
+            gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings);
+            nightEvents.Init(dataPersistenceManager, soDictionary);
+            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager);
             endings.Init();
         }
     }

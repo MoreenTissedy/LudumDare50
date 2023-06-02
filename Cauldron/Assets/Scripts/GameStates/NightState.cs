@@ -38,7 +38,7 @@ namespace CauldronCodebase.GameStates
             this.gameFXManager = gameFXManager;
             recipeBook = book;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider);
+            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider, stateMachine);
             eventResolver = new EventResolver(settings, gameDataHandler);
             storyCards = new List<Encounter>(2);
         }
@@ -87,14 +87,10 @@ namespace CauldronCodebase.GameStates
             
             if (IsGameEnd()) return;
             
-            var priorityCards = statusChecker.CheckStatusesThreshold();
-            foreach (var card in priorityCards)
+            var priorityCard = statusChecker.CheckStatusesThreshold();
+            if (priorityCard)
             {
-                if (card is null)
-                {
-                    continue;
-                }
-                storyCards.Add(card);
+                storyCards.Add(priorityCard);
             }
             
             cardDeck.DealCardsTo(settings.gameplay.targetDeckCount - storyCards.Count);

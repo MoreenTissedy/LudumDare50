@@ -295,7 +295,7 @@ namespace CauldronCodebase
             }
         }
 
-        private bool CheckStoryTags(Encounter card)
+        public bool CheckStoryTags(Encounter card)
         {
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;

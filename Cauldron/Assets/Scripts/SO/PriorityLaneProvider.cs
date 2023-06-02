@@ -24,14 +24,14 @@ namespace CauldronCodebase
         public List<Encounter> lowFame;
         public List<Encounter> lowFear;
 
-        [Inject]
-        public void Construct(EncounterDeck deck, SODictionary dictionary)
+        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager)
         {
             this.deck = deck;
-            Init(priorityCards);
+            this.dictionary = dictionary;
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
-        private void Init(Encounter[] cards)
+        private void InitInternal(Encounter[] cards)
         {
             highFame = new List<Encounter>(3);
             highFear = new List<Encounter>(3);
@@ -62,10 +62,19 @@ namespace CauldronCodebase
         public Encounter GetRandomCard(string tag)
         {
             var set = GetCardSet(tag);
-            int random = Random.Range(0, set.Count);
-            Encounter card = set[random];
-            set.RemoveAt(random);
-            return card;
+            Encounter card;
+            int random;
+            for (int i = 0; i < 10; i++) 
+            {
+                random = Random.Range(0, set.Count);
+                card = set[random];
+                if (deck.CheckStoryTags(card))
+                {
+                    set.RemoveAt(random);
+                    return card;
+                }
+            }
+            return null;
         }
         
         public List<Encounter> GetCardSet(string tag)
@@ -93,10 +102,10 @@ namespace CauldronCodebase
         {
             if (!newGame)
             {
-                Init(priorityCards);
+                InitInternal(priorityCards);
                 return;
             }
-            Init(data.PriorityCards.Select((x => (Encounter)dictionary.AllScriptableObjects[x])).ToArray());
+            InitInternal(data.PriorityCards.Select((x => (Encounter)dictionary.AllScriptableObjects[x])).ToArray());
         }
 
         public void SaveData(ref GameData data)

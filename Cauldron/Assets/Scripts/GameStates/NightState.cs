@@ -26,7 +26,8 @@ namespace CauldronCodebase.GameStates
                           NightPanel nightPanel,
                           GameStateMachine stateMachine,
                           RecipeBook book,
-                          GameFXManager gameFXManager)
+                          GameFXManager gameFXManager,
+                          PriorityLaneProvider priorityLaneProvider)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -37,7 +38,7 @@ namespace CauldronCodebase.GameStates
             this.gameFXManager = gameFXManager;
             recipeBook = book;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler);
+            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider);
             eventResolver = new EventResolver(settings, gameDataHandler);
             storyCards = new List<Encounter>(2);
         }
@@ -86,8 +87,15 @@ namespace CauldronCodebase.GameStates
             
             if (IsGameEnd()) return;
             
-            //add priority cards to story card list
-            statusChecker.CheckStatusesThreshold();
+            var priorityCards = statusChecker.CheckStatusesThreshold();
+            foreach (var card in priorityCards)
+            {
+                if (card is null)
+                {
+                    continue;
+                }
+                storyCards.Add(card);
+            }
             
             cardDeck.DealCardsTo(settings.gameplay.targetDeckCount - storyCards.Count);
             cardDeck.ShuffleDeck();

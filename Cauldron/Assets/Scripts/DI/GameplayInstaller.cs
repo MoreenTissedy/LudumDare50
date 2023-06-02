@@ -7,15 +7,13 @@ namespace CauldronCodebase
 {
     public class GameplayInstaller : MonoInstaller
     {
-        //TODO: separate installers
-        //That looks nicer but it's not exactly what I meant)
         [Header("Data Providers")]
-        
         [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
         [SerializeField] private EncounterDeck encounterDeck;
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
+        [SerializeField] private PriorityLaneProvider priorityLane;
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
@@ -50,6 +48,7 @@ namespace CauldronCodebase
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
+            Container.Bind<PriorityLaneProvider>().FromInstance(priorityLane).AsSingle();
         }
 
         private void BindUI()

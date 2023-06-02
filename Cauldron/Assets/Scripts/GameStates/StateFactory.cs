@@ -16,6 +16,7 @@ namespace CauldronCodebase.GameStates
         GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
+        private PriorityLaneProvider priorityLaneProvider;
 
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
@@ -34,6 +35,7 @@ namespace CauldronCodebase.GameStates
 
                             GameDataHandler gameDataHandler,
                             DataPersistenceManager dataPersistenceManager,
+                            PriorityLaneProvider priorityLaneProvider,
                             
                             GameStateMachine gameStateMachine,
                             SoundManager soundManager,
@@ -52,6 +54,7 @@ namespace CauldronCodebase.GameStates
             this.recipeBook = recipeBook;
 
             this.dataPersistenceManager = dataPersistenceManager;
+            this.priorityLaneProvider = priorityLaneProvider;
 
             this.soundManager = soundManager;
             gameFXManager = fxManager;
@@ -61,7 +64,7 @@ namespace CauldronCodebase.GameStates
         public VisitorState CreateVisitorState()
         {
             return new VisitorState(deck, settings, gameDataHandler, visitorManager, cauldron,
-                gameStateMachine, nightEvents, soundManager);
+                gameStateMachine, nightEvents, soundManager, priorityLaneProvider);
         }
 
 
@@ -72,7 +75,8 @@ namespace CauldronCodebase.GameStates
 
         public NightState CreateNightState()
         {
-            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, gameStateMachine, recipeBook, gameFXManager);
+            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
+                gameStateMachine, recipeBook, gameFXManager, priorityLaneProvider);
         }
 
         public EndGameState CreateEndGameState()

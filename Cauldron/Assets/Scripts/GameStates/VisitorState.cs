@@ -23,7 +23,8 @@ namespace CauldronCodebase.GameStates
                             Cauldron cauldron,
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider, 
-                            SoundManager soundManager)
+                            SoundManager soundManager,
+                            PriorityLaneProvider priorityLaneProvider)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
@@ -33,12 +34,17 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler);
+            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider);
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
         
         public override void Enter()
         {
+            var priorityCards = statusChecker.CheckStatusesThreshold();
+            foreach (var card in priorityCards)
+            {
+                cardDeck.AddToDeck(card, true);
+            }
             Encounter currentCard = cardDeck.GetTopCard();
             gameDataHandler.currentCard = currentCard;
 
@@ -66,8 +72,6 @@ namespace CauldronCodebase.GameStates
         {
             PlayRelevantSound(potion);
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
-
-            statusChecker.CheckStatusesThreshold();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 

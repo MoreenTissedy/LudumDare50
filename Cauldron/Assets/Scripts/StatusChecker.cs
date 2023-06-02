@@ -1,30 +1,34 @@
-﻿namespace CauldronCodebase
+﻿using System.Collections.Generic;
+
+namespace CauldronCodebase
 {
     public class StatusChecker
     {
-        private GameDataHandler gameDataHandler;
-        private MainSettings _settings;
+        private readonly GameDataHandler gameDataHandler;
+        private readonly PriorityLaneProvider cardProvider;
+        private readonly MainSettings settings;
 
         public StatusChecker(MainSettings settings,
-                             GameDataHandler dataHandler)
+                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider)
         {
-            _settings = settings;
-            gameDataHandler = dataHandler;
+            this.settings = settings;
+            this.gameDataHandler = gameDataHandler;
+            this.cardProvider = cardProvider;
         }
         
         public EndingsProvider.Unlocks Run()
         {
-            if (gameDataHandler.Fame >= _settings.statusBars.Total)
+            if (gameDataHandler.Fame >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFame;
             }
 
-            if (gameDataHandler.Fear >= _settings.statusBars.Total)
+            if (gameDataHandler.Fear >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFear;
             }
 
-            if (gameDataHandler.Money >= _settings.statusBars.Total)
+            if (gameDataHandler.Money >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighMoney;
 
@@ -43,12 +47,21 @@
             return EndingsProvider.Unlocks.None;
         }
 
-        public void CheckStatusesThreshold()
+        public IEnumerable<Encounter> CheckStatusesThreshold()
         {
-            AddHighLowTag("high fear", Statustype.Fear);
-            AddHighLowTag("low fear", Statustype.Fear, false);
-            AddHighLowTag("high fame", Statustype.Fame);
-            AddHighLowTag("low fame", Statustype.Fame, false);
+            yield return GetPriorityCard(PriorityLaneProvider.HIGH_FEAR, Statustype.Fear);
+            yield return GetPriorityCard(PriorityLaneProvider.LOW_FEAR, Statustype.Fear, false);
+            yield return GetPriorityCard(PriorityLaneProvider.HIGH_FAME, Statustype.Fame);
+            yield return GetPriorityCard(PriorityLaneProvider.LOW_FAME, Statustype.Fame, false);
+        }
+
+        private Encounter GetPriorityCard(string tag, Statustype type, bool checkHigh = true)
+        {
+            if (CheckThreshold(type, checkHigh))
+            {
+                return cardProvider.GetRandomCard(tag);
+            }
+            return null;
         }
 
         private bool CheckThreshold(Statustype type, bool checkHigh)
@@ -72,20 +85,6 @@
             } while (nextThreshold && gameDataHandler.ChangeThreshold(type, checkHigh));
 
             return thresholdReached;
-        }
-
-        private void AddHighLowTag(string tag, Statustype type, bool checkHigh = true)
-        {
-            bool thresholdReached = CheckThreshold(type, checkHigh);
-            if (thresholdReached)
-            {
-                gameDataHandler.AddTag(tag);
-            }
-            else
-            {
-                if(gameDataHandler.storyTags.Contains(tag))
-                    gameDataHandler.storyTags.Remove(tag);
-            }
         }
     }
 }

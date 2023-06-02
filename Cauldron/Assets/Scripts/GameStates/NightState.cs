@@ -83,9 +83,20 @@ namespace CauldronCodebase.GameStates
         {
             gameDataHandler.NextDay();
             cardDeck.NewDayPool(gameDataHandler.currentDay);
+            
             if (IsGameEnd()) return;
+            
+            //add priority cards to story card list
             statusChecker.CheckStatusesThreshold();
+            
             cardDeck.DealCardsTo(settings.gameplay.targetDeckCount - storyCards.Count);
+            cardDeck.ShuffleDeck();
+            for (var i = storyCards.Count-1; i >= 0; i--)
+            {
+                var storyCard = storyCards[i];
+                cardDeck.AddToDeck(storyCard, true);
+            }
+            storyCards.Clear();
             Debug.Log("new day " + gameDataHandler.currentDay);
         }
 

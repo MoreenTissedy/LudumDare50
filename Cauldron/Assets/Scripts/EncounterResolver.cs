@@ -67,9 +67,16 @@ namespace CauldronCodebase
                 ModifyStat(encounter.primaryInfluence, encounter.primaryCoef, potionResult.influenceCoef);
                 ModifyStat(encounter.secondaryInfluence, encounter.secondaryCoef, potionResult.influenceCoef);
                 if (potionResult.bonusCard != null)
-                    deck.AddCardToPool(potionResult.bonusCard);
+                {
+                    if (!deck.AddToDeck(potionResult.bonusCard))
+                    {
+                        game.currentDeck.AddToPool(potionResult.bonusCard);
+                    }
+                }
                 if (potionResult.bonusEvent != null)
+                {
                     nightEvents.storyEvents.Add(potionResult.bonusEvent);
+                }
             }
 
             bool PotionInFilter(Potions filter)

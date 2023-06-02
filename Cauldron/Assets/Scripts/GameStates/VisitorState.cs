@@ -68,7 +68,6 @@ namespace CauldronCodebase.GameStates
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
 
             statusChecker.CheckStatusesThreshold();
-            cardDeck.AddStoryCards();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 

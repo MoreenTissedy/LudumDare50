@@ -104,6 +104,19 @@ namespace CauldronCodebase
 
             return newDeckList.ToArray();
         }
+        
+        public void ShuffleDeck()
+        {
+            List<Encounter> deckList = deck.ToList();
+            var newDeckList = new LinkedList<Encounter>();
+            while (deckList.Count > 0)
+            {
+                int random = Random.Range(0, deckList.Count);
+                newDeckList.AddFirst(deckList[random]);
+                deckList.RemoveAt(random);
+            }
+            deck = newDeckList;
+        }
 
         /// <summary>
         /// Form card pool, adding cards for the given 'day' (card set number).
@@ -117,6 +130,11 @@ namespace CauldronCodebase
             }
         }
 
+        
+        /// <summary>
+        /// Add random cards from pool to deck until deck count reaches target.
+        /// </summary>
+        /// <param name="target">X - target number of cards in deck</param>
         public void DealCardsTo(int target)
         {
             if (target - deck.Count <= 0)
@@ -126,27 +144,18 @@ namespace CauldronCodebase
             DealCards(target - deck.Count);
         }
 
-        /// <summary>
-        /// Add X random cards from pool to deck
-        /// </summary>
-        /// <param name="num">X - number of cards</param>
-        public void DealCards(int num)
+        private void DealCards(int num)
         {
-            //TODO: separate array for story-related cards
-            AddStoryCards();
-
-            //ignore story-related cards
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count == 0)
                     return;
-                int randomIndex = 0;
+                int randomIndex;
                 do
                 {
                     randomIndex = Random.Range(0, cardPool.Count);
-                } while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
-
-                if (deck == null) Debug.LogWarning("deck == null");
+                } while (!CheckStoryTags(cardPool[randomIndex]));
+                         
                 deck.AddLast(cardPool[randomIndex]);
                 cardPool.RemoveAt(randomIndex);
             }
@@ -155,45 +164,23 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
 
-        public void AddStoryCards()
+        public void AddToPool(Encounter card)
         {
-            //find story-related cards and add them as top-priority above count
-            List<Encounter> highPriorityCards = new List<Encounter>(3);
-
-            foreach (Encounter card in cardPool)
-            {
-                //if(card == null) return;
-                if (string.IsNullOrEmpty(card.requiredStoryTag))
-                {
-                    continue;
-                }
-
-                Debug.Log("checking card: " + card.name);
-                if (CheckStoryTags(gameDataHandler, card))
-                {
-                    deck.AddFirst(card);
-                    highPriorityCards.Add(card);
-                }
-            }
-
-            foreach (Encounter highPriorityCard in highPriorityCards)
-            {
-                Debug.Log("card added as priority " + highPriorityCard.name);
-                cardPool.Remove(highPriorityCard);
-            }
-        }
-
-        public void AddCardToPool(Encounter card)
-        {
-            if (card is null)
-                return;
             cardPool.Add(card);
         }
 
-        public void AddToDeck(Encounter card, bool asFirst = false)
+        public bool AddToDeck(Encounter card, bool asFirst = false)
         {
             if (card is null)
-                return;
+            {
+                return true;
+            }
+            
+            if (!CheckStoryTags(card) || deck.Contains(card))
+            {
+                return false;
+            }
+            
             if (asFirst)
             {
                 deck.AddFirst(card);
@@ -202,8 +189,8 @@ namespace CauldronCodebase
             {
                 deck.AddLast(card);
             }
-
             deckInfo = deck.ToArray();
+            return true;
         }
 
         public Encounter GetTopCard()
@@ -308,7 +295,7 @@ namespace CauldronCodebase
             }
         }
 
-        private static bool CheckStoryTags(GameDataHandler game, Encounter card)
+        private bool CheckStoryTags(Encounter card)
         {
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;
@@ -316,11 +303,11 @@ namespace CauldronCodebase
             {
                 if (tag.StartsWith("!"))
                 {
-                    valid = valid && !game.storyTags.Contains(tag.Trim().TrimStart('!'));
+                    valid = valid && !gameDataHandler.storyTags.Contains(tag.Trim().TrimStart('!'));
                 }
                 else
                 {
-                    valid = valid && game.storyTags.Contains(tag.Trim());
+                    valid = valid && gameDataHandler.storyTags.Contains(tag.Trim());
                 }
             }
 

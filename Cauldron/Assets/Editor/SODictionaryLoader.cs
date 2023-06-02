@@ -49,10 +49,12 @@ namespace Editor
 
         static void AutoLoadDictionary()
         {
-            if(targetDictionary == null) 
+            if (targetDictionary == null)
+            {
                 targetDictionary = ScriptableObjectHelper.LoadSingleAsset<SODictionary>();
+            }
 
-            if(targetDictionary.AutoUpdateDictionary == false) return;
+            if (!targetDictionary.AutoUpdateDictionary) return;
             
             LoadInternal(targetDictionary);
         }

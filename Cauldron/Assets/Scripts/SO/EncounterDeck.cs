@@ -318,13 +318,19 @@ namespace CauldronCodebase
             bool valid = true;
             foreach (var tag in tags)
             {
+                string trim = tag.Trim();
+                if (trim == PriorityLaneProvider.LOW_FAME || trim == PriorityLaneProvider.LOW_FEAR ||
+                    trim == PriorityLaneProvider.HIGH_FAME || trim == PriorityLaneProvider.HIGH_FEAR)
+                {
+                    continue;
+                }
                 if (tag.StartsWith("!"))
                 {
-                    valid = valid && !gameDataHandler.storyTags.Contains(tag.Trim().TrimStart('!'));
+                    valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
                 }
                 else
                 {
-                    valid = valid && gameDataHandler.storyTags.Contains(tag.Trim());
+                    valid = valid && gameDataHandler.storyTags.Contains(trim);
                 }
             }
 

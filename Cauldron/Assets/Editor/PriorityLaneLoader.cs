@@ -31,6 +31,7 @@ namespace Editor
                                                                 x.Trim() == PriorityLaneProvider.HIGH_FEAR))
                 {
                     card.addToDeckOnDay = -1;
+                    EditorUtility.SetDirty(card);
                     list.Add(card);
                 }
             }

@@ -75,6 +75,7 @@ namespace CauldronCodebase.GameStates
 
         private async void NightPanelOnOnClose()
         {
+            if (IsGameEnd()) return;
             UpdateDeck();
             await gameFXManager.ShowSunrise();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
@@ -84,8 +85,6 @@ namespace CauldronCodebase.GameStates
         {
             gameDataHandler.NextDay();
             cardDeck.NewDayPool(gameDataHandler.currentDay);
-            
-            if (IsGameEnd()) return;
             
             var priorityCard = statusChecker.CheckStatusesThreshold();
             if (priorityCard)
@@ -123,6 +122,7 @@ namespace CauldronCodebase.GameStates
             storyCards.Clear();
             gameFXManager.Clear();
             nightPanel.OnClose -= NightPanelOnOnClose;
+            nightPanel.EventClicked -= NightPanelOnEventClicked;
             if (nightPanel.IsOpen)
             {
                 nightPanel.CloseBook();

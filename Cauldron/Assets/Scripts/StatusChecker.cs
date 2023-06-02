@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CauldronCodebase.GameStates;
+using UnityEngine;
 using Zenject;
 
 namespace CauldronCodebase
@@ -8,7 +9,6 @@ namespace CauldronCodebase
     {
         private readonly GameDataHandler gameDataHandler;
         private readonly PriorityLaneProvider cardProvider;
-        private readonly GameStateMachine gameStateMachine;
         private readonly MainSettings settings;
 
         private bool priorityCardSelected;
@@ -19,11 +19,10 @@ namespace CauldronCodebase
             this.settings = settings;
             this.gameDataHandler = gameDataHandler;
             this.cardProvider = cardProvider;
-            this.gameStateMachine = gameStateMachine;
-            gameStateMachine.OnChangeState += GameStateMachineOnOnChangeState;
+            gameStateMachine.OnChangeState += GameStateMachineOnChangeState;
         }
 
-        private void GameStateMachineOnOnChangeState(GameStateMachine.GamePhase phase)
+        private void GameStateMachineOnChangeState(GameStateMachine.GamePhase phase)
         {
             if (phase == GameStateMachine.GamePhase.Night)
             {

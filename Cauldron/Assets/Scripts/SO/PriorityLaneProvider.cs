@@ -39,7 +39,7 @@ namespace CauldronCodebase
             lowFear = new List<Encounter>(1);
             foreach (Encounter card in cards)
             {
-                var tags = card.requiredStoryTag.Split(',');
+                var tags = card.requiredStoryTag.Split(',').Select(x => x.Trim()).ToArray();
                 if (tags.Contains(HIGH_FAME))
                 {
                     highFame.Add(card);

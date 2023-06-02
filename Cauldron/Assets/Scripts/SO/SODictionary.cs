@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -8,11 +7,14 @@ namespace CauldronCodebase
     [CreateAssetMenu]
     public class SODictionary : ScriptableObject
     {
-        public Dictionary<string, ScriptableObjectWithId> AllScriptableObjects = new Dictionary<string, ScriptableObjectWithId>();
-
-        public List<string> AllSOKeys = new List<string>();
-        public List<ScriptableObjectWithId> AllSOValues = new List<ScriptableObjectWithId>();
+        public bool AutoUpdateDictionary;
         
+        [Space(15)]
+        public List<string> AllSOKeys = new List<string>();
+        public List<ScriptableObjectInDictionary> AllSOValues = new List<ScriptableObjectInDictionary>();
+        
+        public readonly Dictionary<string, ScriptableObjectInDictionary> AllScriptableObjects = new Dictionary<string, ScriptableObjectInDictionary>();
+
 
         public void LoadDictionary()
         {

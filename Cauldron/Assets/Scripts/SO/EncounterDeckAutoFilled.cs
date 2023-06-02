@@ -223,7 +223,7 @@ namespace CauldronCodebase
 
         void SaveCurrentCardAsUnique()
         {
-            rememberedCards.Add(currentCard.Id);
+            rememberedCards.Add(currentCard.name);
             EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
             PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
@@ -289,13 +289,13 @@ namespace CauldronCodebase
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {
-                data.CardPool.Add(card.Id);
+                data.CardPool.Add(card.name);
             }
 
             data.CurrentDeck.Clear();
             foreach (var card in deck)
             {
-                data.CurrentDeck.Add(card.Id);
+                data.CurrentDeck.Add(card.name);
             }
         }
 

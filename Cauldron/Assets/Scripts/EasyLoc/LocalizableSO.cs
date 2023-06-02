@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyLoc
 {
-    public abstract class LocalizableSO : ScriptableObjectWithId, ILocalize
+    public abstract class LocalizableSO : ScriptableObjectInDictionary, ILocalize
     {
         public TextAsset localizationCSV;
         

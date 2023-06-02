@@ -89,7 +89,7 @@ namespace CauldronCodebase
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
 
-        public void Init()
+        public void Start()
         {
             Play(Sounds.Music);
             Play(Sounds.Bubbling);

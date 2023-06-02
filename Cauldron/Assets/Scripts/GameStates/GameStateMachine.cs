@@ -25,6 +25,7 @@ namespace CauldronCodebase.GameStates
 
         private DataPersistenceManager dataPersistenceManager;
         private GameDataHandler gameData;
+        private SoundManager sounds;
 
         private GameFXManager gameFXManager;
 
@@ -32,7 +33,7 @@ namespace CauldronCodebase.GameStates
 
 
         [Inject]
-        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData, GameFXManager fxManager)
+        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData, GameFXManager fxManager, SoundManager sounds)
         {
             gameStates.Add(GamePhase.VisitorWaiting, factory.CreateVisitorWaitingState());
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
@@ -41,6 +42,7 @@ namespace CauldronCodebase.GameStates
             
             dataPersistenceManager = persistenceManager;
             this.gameData = gameData;
+            this.sounds = sounds;
             gameFXManager = fxManager;
         }
 
@@ -69,6 +71,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+            sounds.Start();
             currentGameState.Enter();
         }
  

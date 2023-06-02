@@ -35,7 +35,6 @@ namespace CauldronCodebase.GameStates
         [Inject]
         public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData, GameFXManager fxManager, SoundManager sounds)
         {
-            Debug.LogError("state machine construct");
             gameStates.Add(GamePhase.VisitorWaiting, factory.CreateVisitorWaitingState());
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
             gameStates.Add(GamePhase.Night, factory.CreateNightState());
@@ -54,9 +53,7 @@ namespace CauldronCodebase.GameStates
 
         public async void RunStateMachine()
         {
-            Debug.LogError("run");
             dataPersistenceManager.LoadDataPersistenceObj();
-            Debug.LogError("loaded");
             currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {

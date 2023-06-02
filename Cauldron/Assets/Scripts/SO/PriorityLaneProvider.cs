@@ -100,7 +100,7 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            if (!newGame)
+            if (newGame)
             {
                 InitInternal(priorityCards);
                 return;

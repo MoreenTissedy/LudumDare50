@@ -149,15 +149,27 @@ namespace CauldronCodebase
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count == 0)
-                    return;
-                int randomIndex;
-                do
                 {
-                    randomIndex = Random.Range(0, cardPool.Count);
-                } while (!CheckStoryTags(cardPool[randomIndex]));
-                         
-                deck.AddLast(cardPool[randomIndex]);
-                cardPool.RemoveAt(randomIndex);
+                    return;
+                }
+
+                bool cardFound = false;
+                for (int j = 0; j< 10; j++)
+                {
+                    int randomIndex = Random.Range(0, cardPool.Count);
+                    if (CheckStoryTags(cardPool[randomIndex]))
+                    {
+                        deck.AddLast(cardPool[randomIndex]);
+                        cardPool.RemoveAt(randomIndex);
+                        cardFound = true;
+                        break;
+                    }
+                }
+
+                if (!cardFound)
+                {
+                    Debug.LogWarning("No suitable card found in pool");
+                }
             }
 
             cardPool.TrimExcess();
@@ -297,6 +309,11 @@ namespace CauldronCodebase
 
         public bool CheckStoryTags(Encounter card)
         {
+            if (string.IsNullOrWhiteSpace(card.requiredStoryTag.Trim()))
+            {
+                return true;
+            }
+
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;
             foreach (var tag in tags)

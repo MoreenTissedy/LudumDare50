@@ -78,7 +78,11 @@ namespace CauldronCodebase
 
         private void LoadRecipes()
         {
-            unlockedRecipes = recipeProvider.LoadRecipes().ToList();
+            List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+            if (loadRecipes.Count > 0)
+            {
+                unlockedRecipes = loadRecipes.ToList();
+            }
 
             foreach (Recipe recipe in recipeProvider.allRecipes)
             {

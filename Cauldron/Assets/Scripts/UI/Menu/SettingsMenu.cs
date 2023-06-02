@@ -18,7 +18,6 @@ namespace CauldronCodebase
             Close();
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
-            
         }
 
         public void Open()

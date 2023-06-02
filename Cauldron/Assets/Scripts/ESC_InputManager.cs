@@ -8,12 +8,14 @@ namespace CauldronCodebase
         //TODO: reactive UI
         private EndingScreen endingPanel;
         private RecipeBook recipeBook;
+        private Tutorial tutorial;
 
         [Inject]
-        private void Construct(EndingScreen endingScreen, RecipeBook recipe)
+        private void Construct(EndingScreen endingPanel, RecipeBook recipeBook, Tutorial tutorial)
         {
-            endingPanel = endingScreen;
-            recipeBook = recipe;
+            this.endingPanel = endingPanel;
+            this.recipeBook = recipeBook;
+            this.tutorial = tutorial;
         }
         
         private void Update()
@@ -29,6 +31,10 @@ namespace CauldronCodebase
                 else if (endingPanel.bookObject.enabled)
                 {
                     endingPanel.CloseBook();
+                }
+                else if (tutorial.canvas.enabled)
+                {
+                    tutorial.CloseAllPages();
                 }
                 else if (GameLoader.IsMenuOpen())
                 {

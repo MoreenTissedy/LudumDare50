@@ -54,7 +54,10 @@ namespace Editor
                 targetDictionary = ScriptableObjectHelper.LoadSingleAsset<SODictionary>();
             }
 
-            if (!targetDictionary.AutoUpdateDictionary) return;
+            if (targetDictionary == null || !targetDictionary.AutoUpdateDictionary)
+            {
+                return;
+            }
             
             LoadInternal(targetDictionary);
         }

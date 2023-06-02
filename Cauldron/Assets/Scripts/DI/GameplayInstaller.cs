@@ -71,11 +71,13 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
+            Debug.LogError("init started");
             gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings);
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager);
             endings.Init();
+            Debug.LogError("init ended");
         }
     }
 }

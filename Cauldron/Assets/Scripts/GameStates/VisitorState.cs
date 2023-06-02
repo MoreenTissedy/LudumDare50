@@ -6,7 +6,7 @@ namespace CauldronCodebase.GameStates
 {
     public class VisitorState : BaseGameState
     {
-        private readonly EncounterDeckBase cardDeck;
+        private readonly EncounterDeck cardDeck;
         private readonly GameDataHandler gameDataHandler;
         private readonly VisitorManager visitorManager;
         private readonly Cauldron cauldron;
@@ -16,7 +16,7 @@ namespace CauldronCodebase.GameStates
         private readonly EncounterResolver resolver;
         private readonly StatusChecker statusChecker;
 
-        public VisitorState(EncounterDeckBase deck,
+        public VisitorState(EncounterDeck deck,
                             MainSettings settings,
                             GameDataHandler gameDataHandler,
                             VisitorManager visitorManager,

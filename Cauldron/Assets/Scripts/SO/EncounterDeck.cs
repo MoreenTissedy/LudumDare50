@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace CauldronCodebase
 {
     [CreateAssetMenu]
-    public class EncounterDeckAutoFilled : EncounterDeckBase
+    public class EncounterDeck : ScriptableObject, IDataPersistence
     {
         public Encounter[] introCards;
         public CardPoolPerDay[] cardPoolsByDay;
@@ -65,7 +65,7 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
+        public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
             SODictionary dictionary, MainSettings settings)
         {
             gameDataHandler = game;
@@ -109,7 +109,7 @@ namespace CauldronCodebase
         /// Form card pool, adding cards for the given 'day' (card set number).
         /// </summary>
         /// <param name="day">Day — card set number</param>
-        public override void NewDayPool(int day)
+        public void NewDayPool(int day)
         {
             foreach (var card in Shuffle(GetPoolForDay(day)))
             {
@@ -117,11 +117,20 @@ namespace CauldronCodebase
             }
         }
 
+        public void DealCardsTo(int target)
+        {
+            if (target - deck.Count <= 0)
+            {
+                return;
+            }
+            DealCards(target - deck.Count);
+        }
+
         /// <summary>
         /// Add X random cards from pool to deck
         /// </summary>
         /// <param name="num">X - number of cards</param>
-        public override void DealCards(int num)
+        public void DealCards(int num)
         {
             //TODO: separate array for story-related cards
             AddStoryCards();
@@ -146,7 +155,7 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
 
-        public override void AddStoryCards()
+        public void AddStoryCards()
         {
             //find story-related cards and add them as top-priority above count
             List<Encounter> highPriorityCards = new List<Encounter>(3);
@@ -174,14 +183,14 @@ namespace CauldronCodebase
             }
         }
 
-        public override void AddCardToPool(Encounter card)
+        public void AddCardToPool(Encounter card)
         {
             if (card is null)
                 return;
             cardPool.Add(card);
         }
 
-        public override void AddToDeck(Encounter card, bool asFirst = false)
+        public void AddToDeck(Encounter card, bool asFirst = false)
         {
             if (card is null)
                 return;
@@ -197,7 +206,7 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
 
-        public override Encounter GetTopCard()
+        public Encounter GetTopCard()
         {
             if (loadedCard != null)
             {
@@ -231,7 +240,7 @@ namespace CauldronCodebase
         }
         
 
-        public override void LoadData(GameData data, bool newGame)
+        public void LoadData(GameData data, bool newGame)
         {
             loadedCard = gameDataHandler.currentCard;
 
@@ -283,7 +292,7 @@ namespace CauldronCodebase
             }
         }
 
-        public override void SaveData(ref GameData data)
+        public void SaveData(ref GameData data)
         {
             if (data == null) return;
             data.CardPool.Clear();

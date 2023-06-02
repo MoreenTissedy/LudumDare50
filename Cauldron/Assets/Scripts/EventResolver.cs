@@ -1,4 +1,5 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -18,7 +19,6 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, nightEvent);
             game.Fear += CalculateModifier(Statustype.Fear, nightEvent);
             game.Money += CalculateModifier(Statustype.Money, nightEvent);
-            game.currentDeck.AddToDeck(nightEvent.bonusCard, true);
             string storyTag = nightEvent.storyTag;
             if (storyTag.StartsWith("-"))
             {
@@ -29,6 +29,30 @@ namespace CauldronCodebase
                 game.AddTag(storyTag);
                 Debug.Log($"Add story tag: {storyTag}");
             }
+        }
+
+        public Encounter AddBonusCards(NightEvent nightEvent)
+        {
+            if (nightEvent.bonusCards is null || nightEvent.bonusCards.Length == 0)
+            {
+                return null;
+            }
+
+            if (nightEvent.bonusCards.Length == 1)
+            {
+                return nightEvent.bonusCards[0];
+            }
+            
+            int random = Random.Range(0, nightEvent.bonusCards.Length);
+            for (var i = 0; i < nightEvent.bonusCards.Length; i++)
+            {
+                if (i == random)
+                {
+                    continue;
+                }
+                game.currentDeck.AddToDeck(nightEvent.bonusCard);
+            }
+            return nightEvent.bonusCards[random];
         }
 
         public int CalculateModifier(Statustype type, NightEvent nightEvent)

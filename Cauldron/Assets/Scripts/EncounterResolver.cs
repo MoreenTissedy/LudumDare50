@@ -6,11 +6,11 @@ namespace CauldronCodebase
     public class EncounterResolver
     {
         private readonly GameDataHandler game;
-        private readonly EncounterDeckBase deck;
+        private readonly EncounterDeck deck;
         private readonly NightEventProvider nightEvents;
         private readonly MainSettings settings;
 
-        public EncounterResolver(MainSettings settings, GameDataHandler game, EncounterDeckBase deck, NightEventProvider nightEvents)
+        public EncounterResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck, NightEventProvider nightEvents)
         {
             this.game = game;
             this.deck = deck;

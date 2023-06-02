@@ -13,7 +13,7 @@ namespace CauldronCodebase
         
         [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
-        [SerializeField] private EncounterDeckBase encounterDeck;
+        [SerializeField] private EncounterDeck encounterDeck;
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
 
@@ -46,7 +46,7 @@ namespace CauldronCodebase
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             
-            Container.Bind<EncounterDeckBase>().FromInstance(encounterDeck).AsSingle().NonLazy();
+            Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();

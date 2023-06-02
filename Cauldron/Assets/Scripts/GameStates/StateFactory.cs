@@ -6,7 +6,7 @@ namespace CauldronCodebase.GameStates
     //it's a classic OOP factory pattern, unfortunately there is no sense in using Zenject factories here
     public class StateFactory
     {
-        EncounterDeckBase deck;
+        EncounterDeck deck;
         MainSettings settings;
         VisitorManager visitorManager;
         Cauldron cauldron;
@@ -23,7 +23,7 @@ namespace CauldronCodebase.GameStates
         private readonly SoundManager soundManager;
 
         [Inject]
-        public StateFactory(EncounterDeckBase deck,
+        public StateFactory(EncounterDeck deck,
                             MainSettings settings,
                             VisitorManager visitorManager,
                             Cauldron cauldron,

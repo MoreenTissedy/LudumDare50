@@ -17,10 +17,13 @@ namespace CauldronCodebase
              public int defaultMoneyChangeEvent = 10;
              public int cardsPerDay = 3;
              public int cardsDealtAtNight = 3;
+             public int targetDeckCount = 10;
              public float villagerDelay = 2f;
 
-             public int roundsWithUniqueStartingCards = 2; //Первые N-1 кругов необходимо сохранять все карты
-             public int daysWithUniqueStartingCards = 3; // выпавшие в первые три X дня игры
+             [Header("FTUE - Unique cards")]
+             [Tooltip("For first N days and for first N rounds only unique cards will be played")]
+             public int roundsWithUniqueStartingCards = 2;
+             public int daysWithUniqueStartingCards = 3;
 
         }
 

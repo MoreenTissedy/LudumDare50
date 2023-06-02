@@ -50,6 +50,8 @@ namespace CauldronCodebase
         private EventResolver resolver;
         private bool clickable;
 
+        public event Action<NightEvent> EventClicked;
+
         protected override void Awake()
         {
             if (eventCard is null)
@@ -204,12 +206,7 @@ namespace CauldronCodebase
 
         protected override void UpdatePage()
         {
-            if (content is null || content.Length == 0 || currentPage >= content.Length)
-            {
-                //TODO default events as events
-                ShowDefault();
-            }
-            else if (firstCardDealt)
+            if (firstCardDealt)
             {
                 Show(content[currentPage]);
             }
@@ -233,7 +230,7 @@ namespace CauldronCodebase
             {
                 CloseBook();
             }
-            resolver.ApplyModifiers(content[currentPage]);
+            EventClicked?.Invoke(content[currentPage]);
             if (currentPage + 1 < totalPages)
             {
                 clickable = false;

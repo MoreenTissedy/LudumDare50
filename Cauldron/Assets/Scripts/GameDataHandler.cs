@@ -41,7 +41,7 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
-        public EncounterDeckBase currentDeck;
+        public EncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
         private MainSettings.StatusBars statusSettings;
@@ -60,7 +60,7 @@ namespace CauldronCodebase
         private SODictionary soDictionary;
         
         [Inject]
-        public void Construct(MainSettings settings, EncounterDeckBase deck, NightEventProvider events, DataPersistenceManager dataManager, SODictionary dictionary)
+        public void Construct(MainSettings settings, EncounterDeck deck, NightEventProvider events, DataPersistenceManager dataManager, SODictionary dictionary)
         {
             soDictionary = dictionary;
 

@@ -315,7 +315,7 @@ namespace CauldronCodebase
 
             if (currentCard != null)
             {
-                data.CurrentEncounter = currentCard.Id;
+                data.CurrentEncounter = currentCard.name;
             }
             
             data.PotionsTotalOnRun.Clear();

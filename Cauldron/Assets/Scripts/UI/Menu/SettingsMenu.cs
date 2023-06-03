@@ -25,9 +25,6 @@ namespace CauldronCodebase
         [SerializeField] private MainMenu mainMenu;
         [SerializeField] private Button resetButton;
 
-        [Header("Other")] 
-        [SerializeField] private Button exitActiveButton;
-
         private bool fullscreenMode;
         
         private void OnValidate()
@@ -37,7 +34,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            LoadSlidersValues();
+            LoadVolumeValues();
             LoadResolution();
             Close();
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
@@ -45,7 +42,6 @@ namespace CauldronCodebase
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
             resetButton.onClick.AddListener(ResetGameData);
-            exitActiveButton.onClick.AddListener(Close);
 
         }
 
@@ -100,9 +96,8 @@ namespace CauldronCodebase
         public void ChangeResolution(int resIndex)
         {
             Resolution newResolution = resolutions[resIndex];
-            Screen.SetResolution(newResolution.width, newResolution.height, true);
+            Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
             PlayerPrefs.SetInt(PrefKeys.ResolutionSettings, resIndex);
-            LoadResolution();
         }
 
         private void ChangeVolume(string vca, float value, float max = 1)
@@ -124,7 +119,8 @@ namespace CauldronCodebase
             {
                 PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, 0);
             }
-            LoadResolution();
+
+            Screen.fullScreen = fullscreenMode;
         }
 
         private void LoadFullscreenMode()
@@ -161,8 +157,8 @@ namespace CauldronCodebase
         private void LoadVolumeValues()
         {
             LoadSlidersValues();
-            RuntimeManager.GetVCA("vca:/Music").setVolume(PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings));
-            RuntimeManager.GetVCA("vca:/SFX").setVolume(PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings));
+            RuntimeManager.GetVCA("vca:/Music").setVolume(music.value);
+            RuntimeManager.GetVCA("vca:/SFX").setVolume(sounds.value);
         }
 
         private void ResetGameData()

@@ -213,7 +213,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5567902260465305122}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2607916146345967502}
+        m_TargetAssemblyTypeName: CauldronCodebase.SettingsMenu, Assembly-CSharp
+        m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5111791604758831412
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,11 +274,10 @@ MonoBehaviour:
   sounds: {fileID: 8491527633660191937}
   musicLabel: {fileID: 2189131977885789576}
   soundsLabel: {fileID: 3262321274946241569}
-  resolutionDropdown: {fileID: 0}
-  toggleFullscreen: {fileID: 0}
+  resolutionDropdown: {fileID: 1439280086756683776}
+  toggleFullscreen: {fileID: 5111791606061614362}
   mainMenu: {fileID: 0}
   resetButton: {fileID: 579129500044718920}
-  exitActiveButton: {fileID: 2671337630873297972}
 --- !u!1 &5111791605177342593
 GameObject:
   m_ObjectHideFlags: 0
@@ -849,6 +860,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2682336341059960131, guid: 13f0947be63bf0c4b86ab76fdfe4c7c7, type: 3}
   m_PrefabInstance: {fileID: 1262190025855900366}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1439280086756683776 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 179416902383332046, guid: 13f0947be63bf0c4b86ab76fdfe4c7c7, type: 3}
+  m_PrefabInstance: {fileID: 1262190025855900366}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1332179184581895269
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1209,17 +1231,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7218186566215066706, guid: 67fe6873a03f7c2478298a88c00cba77, type: 3}
   m_PrefabInstance: {fileID: 7275288167901923310}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2671337630873297972 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4748337063994303450, guid: 67fe6873a03f7c2478298a88c00cba77, type: 3}
-  m_PrefabInstance: {fileID: 7275288167901923310}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8491527634806107918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1474,3 +1485,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4277526805262208354, guid: 34444b983d9cc274698a34539701a66e, type: 3}
   m_PrefabInstance: {fileID: 9055727948081007179}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5111791606061614362 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4277526804892372817, guid: 34444b983d9cc274698a34539701a66e, type: 3}
+  m_PrefabInstance: {fileID: 9055727948081007179}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

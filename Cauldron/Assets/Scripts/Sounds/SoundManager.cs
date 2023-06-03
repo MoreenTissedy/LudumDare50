@@ -93,8 +93,6 @@ namespace CauldronCodebase
         {
             Play(Sounds.Music);
             Play(Sounds.Bubbling);
-            RuntimeManager.GetVCA("vca:/Music").setVolume(PlayerPrefs.GetFloat(PrefKeys.MusicValue));
-            RuntimeManager.GetVCA("vca:/SFX").setVolume(PlayerPrefs.GetFloat(PrefKeys.SoundsValue));
         }
 
         public void Play(Sounds sound)

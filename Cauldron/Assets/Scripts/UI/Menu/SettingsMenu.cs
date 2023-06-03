@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
@@ -8,16 +8,60 @@ namespace CauldronCodebase
 {
     public class SettingsMenu : MonoBehaviour
     {
+        [Header("Music and sounds")] 
         [SerializeField] private Slider music;
         [SerializeField] private Slider sounds;
         [SerializeField] private TextMeshProUGUI musicLabel;
         [SerializeField] private TextMeshProUGUI soundsLabel;
+
+        [Header("Resolution")] 
+        [SerializeField] private TMP_Dropdown resolutionDropdown;
+        private Resolution[] resolutions;
+
+        [Header("Toggle Fullscreen")] 
+        [SerializeField] private Toggle toggleFullscreen;
+
+        [Header("Reset data")] 
+        [SerializeField] private MainMenu mainMenu;
+        [SerializeField] private Button resetButton;
+
+        [Header("Other")] 
+        [SerializeField] private Button exitActiveButton;
+
+        private bool fullscreenMode;
+        
+        private void OnValidate()
+        {
+            if (!mainMenu) mainMenu = FindObjectOfType<MainMenu>();
+        }
+
         private void Start()
         {
-            LoadValues();
+            LoadSlidersValues();
+            LoadResolution();
             Close();
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
+            resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
+            toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
+            resetButton.onClick.AddListener(ResetGameData);
+            exitActiveButton.onClick.AddListener(Close);
+
+        }
+
+        private void LoadResolution()
+        {
+            LoadFullscreenMode();
+            LoadResolutionDropdown();
+            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
+            {
+                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
+                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+            }
+            else
+            {   //Default screen resolution
+                Screen.SetResolution(1920, 1080, true);
+            }
         }
 
         public void Open()
@@ -30,38 +74,100 @@ namespace CauldronCodebase
             gameObject.SetActive(false);
         }
 
+        private void LoadResolutionDropdown()
+        {
+            resolutions = Screen.resolutions;
+            resolutionDropdown.ClearOptions();
+            List<string> options = new List<string>();
+            int currentResolutionIndex = 0;
+            int setResolutionIndex = 0;
+
+            foreach (var res in resolutions)
+            {
+                options.Add(res.width + " x " + res.height);
+                if (res.width == Screen.width && res.height == Screen.height)
+                {
+                    setResolutionIndex = currentResolutionIndex;
+                }
+                currentResolutionIndex++;
+            }
+
+            resolutionDropdown.AddOptions(options);
+            resolutionDropdown.value = setResolutionIndex;
+            resolutionDropdown.RefreshShownValue();
+        }
+
+        public void ChangeResolution(int resIndex)
+        {
+            Resolution newResolution = resolutions[resIndex];
+            Screen.SetResolution(newResolution.width, newResolution.height, true);
+            PlayerPrefs.SetInt(PrefKeys.ResolutionSettings, resIndex);
+            LoadResolution();
+        }
+
         private void ChangeVolume(string vca, float value, float max = 1)
         {
             RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
-            UpdateLabel(vca, value);
-            SaveValues();
+            UpdateSliderLabel(vca, value);
+            PlayerPrefs.SetFloat(PrefKeys.MusicValueSettings, music.value);
+            PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
         }
 
-        private void UpdateLabel(string vca, float value)
+        private void ChangeFullscreenMode(bool set)
+        {
+            fullscreenMode = set;
+            if (fullscreenMode)
+            {
+                PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, 0);
+            }
+            LoadResolution();
+        }
+
+        private void LoadFullscreenMode()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
+            {
+                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
+                toggleFullscreen.isOn = fullscreenMode;
+            }
+        }
+
+        private void UpdateSliderLabel(string vca, float value)
         {
             string labelValue = Mathf.RoundToInt(Mathf.Lerp(0, 1, value) * 100) + "%";
             switch (vca)
             {
-                case "Music": musicLabel.SetText(labelValue);
+                case "Music":
+                    musicLabel.SetText(labelValue);
                     break;
-                case "SFX": soundsLabel.SetText(labelValue);
+                case "SFX":
+                    soundsLabel.SetText(labelValue);
                     break;
             }
         }
 
-        private void SaveValues()
+        private void LoadSlidersValues()
         {
-            PlayerPrefs.SetFloat(PrefKeys.MusicValue, music.value);
-            PlayerPrefs.SetFloat(PrefKeys.SoundsValue, sounds.value);
+            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 1f;
+            UpdateSliderLabel("SFX", sounds.value);
+            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 1f;
+            UpdateSliderLabel("Music", music.value);
         }
-        
-        private void LoadValues()
+
+        private void LoadVolumeValues()
         {
-            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValue) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValue) : 1f;
-            UpdateLabel("SFX", sounds.value);
-            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValue) ? PlayerPrefs.GetFloat(PrefKeys.MusicValue) : 1f;
-            UpdateLabel("Music", music.value);
+            LoadSlidersValues();
+            RuntimeManager.GetVCA("vca:/Music").setVolume(PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings));
+            RuntimeManager.GetVCA("vca:/SFX").setVolume(PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings));
         }
-        
+
+        private void ResetGameData()
+        {
+            mainMenu.ResetGameData();
+        }
     }
 }

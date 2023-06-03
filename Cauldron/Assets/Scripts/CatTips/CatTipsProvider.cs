@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
+using Random = System.Random;
 
 
 public class CatTipsProvider : MonoBehaviour
@@ -31,6 +33,8 @@ public class CatTipsProvider : MonoBehaviour
     private GameDataHandler gameDataHandler;
     private MainSettings settings;
     private TooltipManager tooltipManager;
+    private RecipeBook recipeBook;
+    private IngredientsData ingredientsData;
     private CancellationTokenSource cancellationTokenSource;
 
     private bool DarkStrangerCame, WitchCame, InquisitorCame;
@@ -41,13 +45,17 @@ public class CatTipsProvider : MonoBehaviour
                             GameDataHandler dataHandler,
                             MainSettings mainSettings,
                             CatTipsView tipsView,
-                            TooltipManager tooltip)
+                            TooltipManager tooltip,
+                            RecipeBook book,
+                            IngredientsData ingredients)
     {
         catTipsManager = tipsManager;
         gameStateMachine = stateMachine;
         gameDataHandler = dataHandler;
         settings = mainSettings;
         tooltipManager = tooltip;
+        recipeBook = book;
+        ingredientsData = ingredients;
     }
 
     private void Start()
@@ -90,7 +98,51 @@ public class CatTipsProvider : MonoBehaviour
     {
         await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.SlowTipsDelay));
         if(tooltipManager.Highlighted) return;
-        catTipsManager.ShowTips(CatTips.CreateTips(slowPlayerTips));
+
+        Ingredients[] randomRecipe;
+
+        do
+        {
+            randomRecipe = GenerateRandomRecipe();
+        } while (CheckRecipeIsOpen(randomRecipe));
+
+        var ingredients = randomRecipe.Select(ingredient => ingredientsData.Get(ingredient)).ToList();
+
+        catTipsManager.ShowTips(CatTips.CreateTipsWithIngredients(slowPlayerTips, ingredients));
+    }
+
+    private Ingredients[] GenerateRandomRecipe()
+    {
+        var rnd = new Random(DateTime.Now.Millisecond);
+        
+        var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+
+        return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
+
+    }
+
+    // It should be in the book, but for now i'm writing here so that there are no problems with the merge.
+    private bool CheckRecipeIsOpen(Ingredients[] recipe)
+    {
+        //Check magic
+        if (recipeBook.magicalRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+        {
+            return true;
+        }
+        
+        //Check food
+        if (recipeBook.herbalRecipes.Any(foodRecipe => foodRecipe.RecipeIngredients.All(recipe.Contains)))
+        {
+            return true;
+        }
+        
+        //Check attempts
+        if (recipeBook.attempts.Any(attempt => attempt.All(recipe.Contains)))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private bool CheckSpecialVisitors()
@@ -160,25 +212,15 @@ public class CatTipsProvider : MonoBehaviour
         {
             if (gameDataHandler.currentCard.primaryInfluence == status)
             {
-                if (gameDataHandler.currentCard.primaryCoef > 0)
-                {
-                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips));
-                }
-                else
-                {
-                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
-                }
+                catTipsManager.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
+                    ? CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips)
+                    : CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
             }
             else if(gameDataHandler.currentCard.secondaryInfluence == status)
             {
-                if (gameDataHandler.currentCard.secondaryCoef > 0)
-                {
-                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips));
-                }
-                else
-                {
-                    catTipsManager.ShowTips(CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
-                }
+                catTipsManager.ShowTips(gameDataHandler.currentCard.secondaryCoef > 0
+                    ? CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips)
+                    : CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
             }
         }
     }

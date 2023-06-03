@@ -1,13 +1,12 @@
 ﻿using System;
-using UnityEngine;
+using System.Collections.Generic;
+using CauldronCodebase;
 using Random = UnityEngine.Random;
 
 [Serializable]
 public class CatTips
 {
     public string TipsText;
-    public Sprite Visitor;
-    public Sprite Potion;
 
     public CatTips(string tip)
     {
@@ -25,12 +24,16 @@ public class CatTips
                            secondTips.TextList[Random.Range(0, secondTips.TextList.Count)]);
     }
 
-    public static CatTips CreateTips(CatTipsTextSO tips, Sprite visitor, Sprite potion)
+    public static CatTips CreateTipsWithIngredient(CatTipsTextSO tips, Ingredients ingredient)
     {
-        return new CatTips(tips.TextList[Random.Range(0, tips.TextList.Count)])
-        {
-            Visitor = visitor,
-            Potion = potion
-        };
+        return new CatTips(String.Format(tips.TextList[Random.Range(0, tips.TextList.Count)], ingredient));
+    }
+    
+    public static CatTips CreateTipsWithIngredients(CatTipsTextSO tips, List<IngredientsData.Ingredient> ingredients)
+    {
+        return new CatTips(String.Format(tips.TextList[Random.Range(0, tips.TextList.Count)],
+                                            ingredients[0].friendlyName.ToLower(),
+                                            ingredients[1].friendlyName.ToLower(),
+                                            ingredients[2].friendlyName.ToLower()));
     }
 }

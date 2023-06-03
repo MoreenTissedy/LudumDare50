@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Editor
 {
-    [CustomEditor(typeof(EncounterDeckAutoFilled))]
+    [CustomEditor(typeof(EncounterDeck))]
     public class EncounterDeckAutoEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -20,7 +20,7 @@ namespace Editor
 
         void LoadCards()
         {
-            var deck = target as EncounterDeckAutoFilled;
+            var deck = target as EncounterDeck;
             var dict = new SortedList<int, List<Encounter>>();
             Encounter[] cards = ScriptableObjectHelper.LoadAllAssets<Encounter>();
             foreach (var card in cards)
@@ -39,10 +39,10 @@ namespace Editor
                 }
             }
 
-            var listPool = new List<EncounterDeckAutoFilled.CardPoolPerDay>();
+            var listPool = new List<EncounterDeck.CardPoolPerDay>();
             foreach (var keyValuePair in dict)
             {
-                listPool.Add(new EncounterDeckAutoFilled.CardPoolPerDay(
+                listPool.Add(new EncounterDeck.CardPoolPerDay(
                     keyValuePair.Key, keyValuePair.Value.ToArray()));
             }
             

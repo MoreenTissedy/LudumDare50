@@ -60,6 +60,7 @@ namespace CauldronCodebase
 
         private void BindGameplay()
         {
+            Container.Bind<StatusChecker>().FromNew().AsSingle();
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();

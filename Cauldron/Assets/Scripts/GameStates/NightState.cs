@@ -27,7 +27,7 @@ namespace CauldronCodebase.GameStates
                           GameStateMachine stateMachine,
                           RecipeBook book,
                           GameFXManager gameFXManager,
-                          PriorityLaneProvider priorityLaneProvider)
+                          StatusChecker statusChecker)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -37,8 +37,8 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             this.gameFXManager = gameFXManager;
             recipeBook = book;
+            this.statusChecker = statusChecker;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider, stateMachine);
             eventResolver = new EventResolver(settings, gameDataHandler);
             storyCards = new List<Encounter>(2);
         }

@@ -24,7 +24,7 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider, 
                             SoundManager soundManager,
-                            PriorityLaneProvider priorityLaneProvider)
+                            StatusChecker statusChecker)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
@@ -33,8 +33,8 @@ namespace CauldronCodebase.GameStates
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
+            this.statusChecker = statusChecker;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler, priorityLaneProvider, stateMachine);
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
         

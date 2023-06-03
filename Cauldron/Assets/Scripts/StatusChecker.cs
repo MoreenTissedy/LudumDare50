@@ -13,6 +13,7 @@ namespace CauldronCodebase
 
         private bool priorityCardSelected;
 
+        [Inject]
         public StatusChecker(MainSettings settings,
                              GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider, GameStateMachine gameStateMachine)
         {

@@ -89,8 +89,15 @@ namespace CauldronCodebase
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
 
+        private bool musicStarted;
+
         public void Start()
         {
+            if (musicStarted)
+            {
+                return;
+            }
+            musicStarted = true;
             Play(Sounds.Music);
             Play(Sounds.Bubbling);
             RuntimeManager.GetVCA("vca:/Music").setVolume(0.3f);

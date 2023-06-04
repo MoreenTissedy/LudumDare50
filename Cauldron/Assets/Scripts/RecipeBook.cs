@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using Random = System.Random;
 
 namespace CauldronCodebase
 {
-    public class RecipeBook : Book
+    public class RecipeBook : Book, IDataPersistence
     {
         [Header("Bookmark")] 
         [SerializeField] private Image bookmark;
@@ -393,6 +395,49 @@ namespace CauldronCodebase
         private void TryHighlightIncorrectRecipe()
         {
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
+        }
+        
+        public Ingredients[] GenerateRandomRecipe()
+        {
+            var rnd = new Random(DateTime.Now.Millisecond);
+        
+            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+
+            return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
+
+        }
+    
+        public bool CheckRecipeIsOpen(Ingredients[] recipe)
+        {
+            //Check magic
+            if (magicalRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+            {
+                return true;
+            }
+        
+            //Check food
+            if (herbalRecipes.Any(foodRecipe => foodRecipe.RecipeIngredients.All(recipe.Contains)))
+            {
+                return true;
+            }
+            
+            //Check attempts
+            if(attempts != null && attempts.Any(attempt => attempt.All(recipe.Contains)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void LoadData(GameData data, bool newGame)
+        {
+            attempts = data.AttemptsRecipes;
+        }
+
+        public void SaveData(ref GameData data)
+        {
+            data.AttemptsRecipes = attempts;
         }
     }
 }

@@ -66,7 +66,7 @@ namespace CauldronCodebase
         {
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
-            Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
+            Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsManager>().FromInstance(catTipsManager).AsSingle();

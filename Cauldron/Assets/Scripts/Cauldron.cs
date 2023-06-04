@@ -3,8 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
-using UnityEngine.Serialization;
 using Zenject;
+using Random = UnityEngine.Random;
 
 
 namespace CauldronCodebase
@@ -29,16 +29,20 @@ namespace CauldronCodebase
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
+        private CatTipsManager catTipsManager;
+        private IngredientsData ingredientsData;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager)
+            SoundManager soundManager, TooltipManager tooltipManager, CatTipsManager tipsManager, IngredientsData ingredients)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
             this.gameStateMachine = gameStateMachine;
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
+            catTipsManager = tipsManager;
+            ingredientsData = ingredients;
         }
 
         private void Awake()
@@ -66,6 +70,27 @@ namespace CauldronCodebase
             Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
+
+            if (mix.Count == 2 && !tooltipManager.Highlighted)
+            {
+                Ingredients[] recipeToTips;
+                Ingredients randomIngredient;
+                
+                List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+                foreach (var ingredientInMix in mix)
+                {
+                    allIngredients.Remove(ingredientInMix);
+                }
+
+                do
+                {
+                    randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
+                    recipeToTips = new Ingredients[] {mix[0], mix[1], randomIngredient};
+
+                } while (recipeBook.CheckRecipeIsOpen(recipeToTips));
+                
+                catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient, ingredientsData.Get(randomIngredient)));
+            }
             if (mix.Count == 3)
             {
                 Brew();

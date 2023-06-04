@@ -10,6 +10,7 @@ namespace Save
     [Serializable]
     public class GameData
     {
+        public List<Ingredients[]> AttemptsRecipes;
         public int AttemptsLeft; // VisitorManager
 
         public List<string> CardPool; // EncounterDeck
@@ -42,6 +43,7 @@ namespace Save
 
         public GameData(int initialValue)
         {
+            AttemptsRecipes = new List<Ingredients[]>();
             AttemptsLeft = 3;
 
             CardPool = new List<string>(15);

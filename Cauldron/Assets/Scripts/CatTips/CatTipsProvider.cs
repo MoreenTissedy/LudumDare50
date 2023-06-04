@@ -6,28 +6,9 @@ using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
-using Random = System.Random;
-
 
 public class CatTipsProvider : MonoBehaviour
 {
-    [SerializeField] private CatTipsTextSO slowPlayerTips;
-
-    [Header("Special character tips")]
-    [SerializeField] private CatTipsTextSO DarkStrangerTips;
-    [SerializeField] private CatTipsTextSO WitchMemoryTips;
-    [SerializeField] private CatTipsTextSO InquisitionTips;
-
-
-    [Header("Scale tips")]
-    [SerializeField] private CatTipsTextSO highFameTips;
-    [SerializeField] private CatTipsTextSO lowFameTips;
-    [SerializeField] private CatTipsTextSO highFearTips;
-    [SerializeField] private CatTipsTextSO lowFearTips;
-    [Space(10)]
-    [SerializeField] private CatTipsTextSO ScaleUPTips;
-    [SerializeField] private CatTipsTextSO ScaleDOWNTips;
-
     private CatTipsManager catTipsManager;
     private GameStateMachine gameStateMachine;
     private GameDataHandler gameDataHandler;
@@ -91,136 +72,105 @@ public class CatTipsProvider : MonoBehaviour
         if (CheckSpecialVisitors()) return;
 
         await UniTask.Delay(TimeSpan.FromSeconds(0.5));
-        if(CheckScale()) return;
+        CheckScale();
     }
 
     private async UniTask WaitSlowTips()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.SlowTipsDelay));
-        if(tooltipManager.Highlighted) return;
+        if(tooltipManager.Highlighted && recipeBook.IsOpen) return;
 
         Ingredients[] randomRecipe;
 
         do
         {
-            randomRecipe = GenerateRandomRecipe();
-        } while (CheckRecipeIsOpen(randomRecipe));
+            randomRecipe = recipeBook.GenerateRandomRecipe();
+        } while (recipeBook.CheckRecipeIsOpen(randomRecipe));
 
         var ingredients = randomRecipe.Select(ingredient => ingredientsData.Get(ingredient)).ToList();
 
-        catTipsManager.ShowTips(CatTips.CreateTipsWithIngredients(slowPlayerTips, ingredients));
-    }
-
-    private Ingredients[] GenerateRandomRecipe()
-    {
-        var rnd = new Random(DateTime.Now.Millisecond);
-        
-        var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
-
-        return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
-
-    }
-
-    // It should be in the book, but for now i'm writing here so that there are no problems with the merge.
-    private bool CheckRecipeIsOpen(Ingredients[] recipe)
-    {
-        //Check magic
-        if (recipeBook.magicalRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
-        {
-            return true;
-        }
-        
-        //Check food
-        if (recipeBook.herbalRecipes.Any(foodRecipe => foodRecipe.RecipeIngredients.All(recipe.Contains)))
-        {
-            return true;
-        }
-        
-        //Check attempts
-        if (recipeBook.attempts.Any(attempt => attempt.All(recipe.Contains)))
-        {
-            return true;
-        }
-
-        return false;
+        catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredients(catTipsManager.SlowPlayerTips, ingredients));
     }
 
     private bool CheckSpecialVisitors()
     {
-        if (VisitorManager.SPECIALS.Contains(gameDataHandler.currentCard.villager.name))
+        switch (gameDataHandler.currentCard.villager.name)
         {
-            switch (gameDataHandler.currentCard.villager.name)
-            {
-                case "Inquisition":
-                    if (!InquisitorCame)
-                    {
-                        catTipsManager.ShowTips(CatTips.CreateTips(InquisitionTips));
-                        InquisitorCame = true;
-                        return true;
-                    }
-                    else
-                        return false;
-                    
-                case "Dark Stranger":
-                    if (!DarkStrangerCame)
-                    {
-                        catTipsManager.ShowTips(CatTips.CreateTips(DarkStrangerTips));
-                        DarkStrangerCame = true;
-                        return true;
-                    }
-                    else
-                        return false;
-                    
-            }
+            case "Inquisition":
+                if (!InquisitorCame)
+                {
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.InquisitionTips));
+                    InquisitorCame = true;
+                    return true;
+                }
+                else
+                    return false;
+                
+            case "Dark Stranger":
+                if (!DarkStrangerCame)
+                {
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.DarkStrangerTips));
+                    DarkStrangerCame = true;
+                    return true;
+                }
+                else
+                    return false;
+            
+            case "WitchMemory":
+                if (!WitchCame)
+                {
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.WitchMemoryTips));
+                    WitchCame = true;
+                    return true;
+                }
+                else
+                    return false;
         }
 
         return false;
     }
 
-    private bool CheckScale()
+    private void CheckScale()
     {
         var fame = gameDataHandler.Get(Statustype.Fame);
         var fear = gameDataHandler.Get(Statustype.Fear);
 
         if (fame > gameDataHandler.GetThreshold(Statustype.Fame, true))
         {
-            CheckVisitor(Statustype.Fame, highFameTips, true);
-            return true;
+            CheckVisitor(Statustype.Fame, catTipsManager.HighFameTips, true);
+            return;
         }
 
         if (fame < gameDataHandler.GetThreshold(Statustype.Fame, false))
         {
-            CheckVisitor(Statustype.Fame, lowFameTips, false);
-            return true;
+            CheckVisitor(Statustype.Fame, catTipsManager.LowFameTips, false);
+            return;
         }
 
         if (fear > gameDataHandler.GetThreshold(Statustype.Fear, true))
         {
-            CheckVisitor(Statustype.Fear, highFearTips, true);
-            return true;
+            CheckVisitor(Statustype.Fear, catTipsManager.HighFearTips, true);
+            return;
         }
 
         if (fear < gameDataHandler.GetThreshold(Statustype.Fear, false))
         {
-            CheckVisitor(Statustype.Fear, lowFearTips, false);
-            return true;
+            CheckVisitor(Statustype.Fear, catTipsManager.LowFearTips, false);
         }
-        
-        return false;
 
         void CheckVisitor(Statustype status, CatTipsTextSO scaleText, bool high)
         {
             if (gameDataHandler.currentCard.primaryInfluence == status)
             {
                 catTipsManager.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
-                    ? CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips)
-                    : CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
+                    ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleDOWNTips : catTipsManager.ScaleUPTips)
+                    : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
             }
             else if(gameDataHandler.currentCard.secondaryInfluence == status)
             {
                 catTipsManager.ShowTips(gameDataHandler.currentCard.secondaryCoef > 0
-                    ? CatTips.CreateTips(scaleText, high ? ScaleDOWNTips : ScaleUPTips)
-                    : CatTips.CreateTips(scaleText, high ? ScaleUPTips : ScaleDOWNTips));
+                    ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleDOWNTips : catTipsManager.ScaleUPTips)
+                    : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
             }
         }
     }

@@ -111,15 +111,7 @@ namespace CauldronCodebase
         private void ChangeFullscreenMode(bool set)
         {
             fullscreenMode = set;
-            if (fullscreenMode)
-            {
-                PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, 1);
-            }
-            else
-            {
-                PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, 0);
-            }
-
+            PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
         }
 

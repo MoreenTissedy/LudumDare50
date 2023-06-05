@@ -23,7 +23,10 @@ namespace CauldronCodebase
             //move to some sort of input manager?
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-
+                if (tutorial.canvas.enabled)
+                {
+                    tutorial.CloseAllPages();
+                }
                 if (recipeBook.bookObject.enabled)
                 {
                     recipeBook.CloseBook();
@@ -31,10 +34,6 @@ namespace CauldronCodebase
                 else if (endingPanel.bookObject.enabled)
                 {
                     endingPanel.CloseBook();
-                }
-                else if (tutorial.canvas.enabled)
-                {
-                    tutorial.CloseAllPages();
                 }
                 else if (GameLoader.IsMenuOpen())
                 {
@@ -44,6 +43,7 @@ namespace CauldronCodebase
                 {
                     GameLoader.LoadMenu();
                 }
+                
             }
         }
     }

@@ -42,8 +42,9 @@ namespace CauldronCodebase
             {
                 return nightEvent.bonusCards[0];
             }
-            
-            int random = Random.Range(0, nightEvent.bonusCards.Length);
+
+            var random = GetRandomValidIndex(nightEvent.bonusCards);
+
             for (var i = 0; i < nightEvent.bonusCards.Length; i++)
             {
                 if (i == random)
@@ -56,6 +57,28 @@ namespace CauldronCodebase
                 }
             }
             return nightEvent.bonusCards[random];
+        }
+
+        private int GetRandomValidIndex(Encounter[] cards)
+        {
+            Encounter priority = null;
+            int random = -1;
+            for (int i = 0; i < 10; i++)
+            {
+                random = Random.Range(0, cards.Length);
+                if (game.currentDeck.CheckStoryTags(cards[random]))
+                {
+                    priority = cards[random];
+                    break;
+                }
+            }
+
+            if (priority is null)
+            {
+                random = -1;
+            }
+
+            return random;
         }
 
         public int CalculateModifier(Statustype type, NightEvent nightEvent)

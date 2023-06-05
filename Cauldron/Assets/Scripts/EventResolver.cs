@@ -50,9 +50,9 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                if (!game.currentDeck.AddToDeck(nightEvent.bonusCard))
+                if (!game.currentDeck.AddToDeck(nightEvent.bonusCards[i]))
                 {
-                    game.currentDeck.AddToPool(nightEvent.bonusCard);
+                    game.currentDeck.AddToPool(nightEvent.bonusCards[i]);
                 }
             }
             return nightEvent.bonusCards[random];

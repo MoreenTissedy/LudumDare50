@@ -134,7 +134,7 @@ namespace CauldronCodebase
             v += brightness;
             v = Mathf.Clamp01(v);
             Color newColor = Color.HSVToRGB(h, s, v);
-            if (currentAlpha < color.a)
+            if (currentAlpha < newColor.a)
             {
                 newColor.a = currentAlpha;
             }

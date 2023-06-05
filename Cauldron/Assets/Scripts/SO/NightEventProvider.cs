@@ -179,10 +179,10 @@ namespace CauldronCodebase
             {
                 return;
             }
-            data.CurrentStoryEvents = storyEvents.Select(x => x.Id).ToArray();
-            data.CurrentConditionals = inGameConditionals.Select(x => x.Id).ToArray();
-            data.CurrentRandomEvents = inGameRandoms.Select(x => x.Id).ToArray();
-            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.Id).ToArray();
+            data.CurrentStoryEvents = storyEvents.Select(x => x.name).ToArray();
+            data.CurrentConditionals = inGameConditionals.Select(x => x.name).ToArray();
+            data.CurrentRandomEvents = inGameRandoms.Select(x => x.name).ToArray();
+            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.name).ToArray();
             data.CooldownDays = eventsOnCooldown.Select(x => x.Days).ToArray();
         }
     }

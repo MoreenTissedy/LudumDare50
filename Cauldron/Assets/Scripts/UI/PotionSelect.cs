@@ -1,5 +1,3 @@
-using FMOD;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
 using Zenject;
@@ -10,16 +8,35 @@ namespace CauldronCodebase
     {
         [Inject] private RecipeBook book;
         [Inject] private SoundManager soundManager;
+
+        public bool clickable;
         public override void OnPointerClick(PointerEventData eventData)
         {
+            if (!clickable)
+            {
+                return;
+            }
             base.OnPointerClick(eventData);
             book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
+            if (!clickable)
+            {
+                return;
+            }
             base.OnPointerEnter(eventData);
             soundManager.Play(Sounds.BookFocus);
+        }
+
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            if (!clickable)
+            {
+                return;
+            }
+            base.OnPointerExit(eventData);
         }
     }
 }

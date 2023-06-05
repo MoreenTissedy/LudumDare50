@@ -6,7 +6,7 @@ namespace CauldronCodebase.GameStates
     //it's a classic OOP factory pattern, unfortunately there is no sense in using Zenject factories here
     public class StateFactory
     {
-        EncounterDeckBase deck;
+        EncounterDeck deck;
         MainSettings settings;
         VisitorManager visitorManager;
         Cauldron cauldron;
@@ -19,11 +19,12 @@ namespace CauldronCodebase.GameStates
 
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
+        private readonly StatusChecker statusChecker;
 
         private readonly SoundManager soundManager;
 
         [Inject]
-        public StateFactory(EncounterDeckBase deck,
+        public StateFactory(EncounterDeck deck,
                             MainSettings settings,
                             VisitorManager visitorManager,
                             Cauldron cauldron,
@@ -34,10 +35,11 @@ namespace CauldronCodebase.GameStates
 
                             GameDataHandler gameDataHandler,
                             DataPersistenceManager dataPersistenceManager,
+                            PriorityLaneProvider priorityLaneProvider,
                             
                             GameStateMachine gameStateMachine,
                             SoundManager soundManager,
-                            GameFXManager fxManager)
+                            GameFXManager fxManager, StatusChecker statusChecker)
 
         {
             this.deck = deck;
@@ -55,13 +57,13 @@ namespace CauldronCodebase.GameStates
 
             this.soundManager = soundManager;
             gameFXManager = fxManager;
-
+            this.statusChecker = statusChecker;
         }
 
         public VisitorState CreateVisitorState()
         {
             return new VisitorState(deck, settings, gameDataHandler, visitorManager, cauldron,
-                gameStateMachine, nightEvents, soundManager);
+                gameStateMachine, nightEvents, soundManager, statusChecker);
         }
 
 
@@ -72,7 +74,8 @@ namespace CauldronCodebase.GameStates
 
         public NightState CreateNightState()
         {
-            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, gameStateMachine, recipeBook, gameFXManager);
+            return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
+                gameStateMachine, recipeBook, gameFXManager, statusChecker);
         }
 
         public EndGameState CreateEndGameState()

@@ -6,11 +6,11 @@ namespace CauldronCodebase
     public class EncounterResolver
     {
         private readonly GameDataHandler game;
-        private readonly EncounterDeckBase deck;
+        private readonly EncounterDeck deck;
         private readonly NightEventProvider nightEvents;
         private readonly MainSettings settings;
 
-        public EncounterResolver(MainSettings settings, GameDataHandler game, EncounterDeckBase deck, NightEventProvider nightEvents)
+        public EncounterResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck, NightEventProvider nightEvents)
         {
             this.game = game;
             this.deck = deck;
@@ -67,9 +67,16 @@ namespace CauldronCodebase
                 ModifyStat(encounter.primaryInfluence, encounter.primaryCoef, potionResult.influenceCoef);
                 ModifyStat(encounter.secondaryInfluence, encounter.secondaryCoef, potionResult.influenceCoef);
                 if (potionResult.bonusCard != null)
-                    deck.AddCardToPool(potionResult.bonusCard);
+                {
+                    if (!deck.AddToDeck(potionResult.bonusCard))
+                    {
+                        game.currentDeck.AddToPool(potionResult.bonusCard);
+                    }
+                }
                 if (potionResult.bonusEvent != null)
+                {
                     nightEvents.storyEvents.Add(potionResult.bonusEvent);
+                }
             }
 
             bool PotionInFilter(Potions filter)

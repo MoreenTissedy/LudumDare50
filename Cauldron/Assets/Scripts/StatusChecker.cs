@@ -1,30 +1,49 @@
-﻿namespace CauldronCodebase
+﻿using System.Collections.Generic;
+using CauldronCodebase.GameStates;
+using UnityEngine;
+using Zenject;
+
+namespace CauldronCodebase
 {
     public class StatusChecker
     {
-        private GameDataHandler gameDataHandler;
-        private MainSettings _settings;
+        private readonly GameDataHandler gameDataHandler;
+        private readonly PriorityLaneProvider cardProvider;
+        private readonly MainSettings settings;
 
+        private bool priorityCardSelected;
+
+        [Inject]
         public StatusChecker(MainSettings settings,
-                             GameDataHandler dataHandler)
+                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider, GameStateMachine gameStateMachine)
         {
-            _settings = settings;
-            gameDataHandler = dataHandler;
+            this.settings = settings;
+            this.gameDataHandler = gameDataHandler;
+            this.cardProvider = cardProvider;
+            gameStateMachine.OnChangeState += GameStateMachineOnChangeState;
         }
-        
+
+        private void GameStateMachineOnChangeState(GameStateMachine.GamePhase phase)
+        {
+            if (phase == GameStateMachine.GamePhase.Night)
+            {
+                priorityCardSelected = false;
+            }
+        }
+
         public EndingsProvider.Unlocks Run()
         {
-            if (gameDataHandler.Fame >= _settings.statusBars.Total)
+            if (gameDataHandler.Fame >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFame;
             }
 
-            if (gameDataHandler.Fear >= _settings.statusBars.Total)
+            if (gameDataHandler.Fear >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighFear;
             }
 
-            if (gameDataHandler.Money >= _settings.statusBars.Total)
+            if (gameDataHandler.Money >= settings.statusBars.Total)
             {
                 return EndingsProvider.Unlocks.HighMoney;
 
@@ -43,12 +62,40 @@
             return EndingsProvider.Unlocks.None;
         }
 
-        public void CheckStatusesThreshold()
+        public Encounter CheckStatusesThreshold()
         {
-            AddHighLowTag("high fear", Statustype.Fear);
-            AddHighLowTag("low fear", Statustype.Fear, false);
-            AddHighLowTag("high fame", Statustype.Fame);
-            AddHighLowTag("low fame", Statustype.Fame, false);
+            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FEAR, Statustype.Fear, out var card1))
+            {
+                return card1;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FAME, Statustype.Fame, out var card3))
+            {
+                return card3;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FEAR, Statustype.Fear, out var card2, false))
+            {
+                return card2;
+            }
+            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FAME, Statustype.Fame, out var card4, false))
+            {
+                return card4;
+            }
+            return null;
+        }
+
+        private bool TryGetPriorityCard(string tag, Statustype type, out Encounter card, bool checkHigh = true)
+        {
+            if (CheckThreshold(type, checkHigh) && !priorityCardSelected)
+            {
+                card = cardProvider.GetRandomCard(tag);
+                if (card != null)
+                {
+                    priorityCardSelected = true;
+                    return true;
+                }
+            }
+            card = null;
+            return false;
         }
 
         private bool CheckThreshold(Statustype type, bool checkHigh)
@@ -72,20 +119,6 @@
             } while (nextThreshold && gameDataHandler.ChangeThreshold(type, checkHigh));
 
             return thresholdReached;
-        }
-
-        private void AddHighLowTag(string tag, Statustype type, bool checkHigh = true)
-        {
-            bool thresholdReached = CheckThreshold(type, checkHigh);
-            if (thresholdReached)
-            {
-                gameDataHandler.AddTag(tag);
-            }
-            else
-            {
-                if(gameDataHandler.storyTags.Contains(tag))
-                    gameDataHandler.storyTags.Remove(tag);
-            }
         }
     }
 }

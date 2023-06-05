@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace CauldronCodebase
 {
     [CreateAssetMenu]
-    public class EncounterDeckAutoFilled : EncounterDeckBase
+    public class EncounterDeck : ScriptableObject, IDataPersistence
     {
         public Encounter[] introCards;
         public CardPoolPerDay[] cardPoolsByDay;
@@ -65,7 +65,7 @@ namespace CauldronCodebase
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
-        public override void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
+        public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
             SODictionary dictionary, MainSettings settings)
         {
             gameDataHandler = game;
@@ -104,12 +104,25 @@ namespace CauldronCodebase
 
             return newDeckList.ToArray();
         }
+        
+        public void ShuffleDeck()
+        {
+            List<Encounter> deckList = deck.ToList();
+            var newDeckList = new LinkedList<Encounter>();
+            while (deckList.Count > 0)
+            {
+                int random = Random.Range(0, deckList.Count);
+                newDeckList.AddFirst(deckList[random]);
+                deckList.RemoveAt(random);
+            }
+            deck = newDeckList;
+        }
 
         /// <summary>
         /// Form card pool, adding cards for the given 'day' (card set number).
         /// </summary>
         /// <param name="day">Day — card set number</param>
-        public override void NewDayPool(int day)
+        public void NewDayPool(int day)
         {
             foreach (var card in Shuffle(GetPoolForDay(day)))
             {
@@ -117,74 +130,69 @@ namespace CauldronCodebase
             }
         }
 
+        
         /// <summary>
-        /// Add X random cards from pool to deck
+        /// Add random cards from pool to deck until deck count reaches target.
         /// </summary>
-        /// <param name="num">X - number of cards</param>
-        public override void DealCards(int num)
+        /// <param name="target">X - target number of cards in deck</param>
+        public void DealCardsTo(int target)
         {
-            //TODO: separate array for story-related cards
-            AddStoryCards();
+            if (target - deck.Count <= 0)
+            {
+                return;
+            }
+            DealCards(target - deck.Count);
+        }
 
-            //ignore story-related cards
+        private void DealCards(int num)
+        {
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count == 0)
-                    return;
-                int randomIndex = 0;
-                do
                 {
-                    randomIndex = Random.Range(0, cardPool.Count);
-                } while (!string.IsNullOrEmpty(cardPool[randomIndex].requiredStoryTag));
+                    return;
+                }
 
-                if (deck == null) Debug.LogWarning("deck == null");
-                deck.AddLast(cardPool[randomIndex]);
-                cardPool.RemoveAt(randomIndex);
+                bool cardFound = false;
+                for (int j = 0; j< 10; j++)
+                {
+                    int randomIndex = Random.Range(0, cardPool.Count);
+                    if (CheckStoryTags(cardPool[randomIndex]))
+                    {
+                        deck.AddLast(cardPool[randomIndex]);
+                        cardPool.RemoveAt(randomIndex);
+                        cardFound = true;
+                        break;
+                    }
+                }
+
+                if (!cardFound)
+                {
+                    Debug.LogWarning("No suitable card found in pool");
+                }
             }
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
         }
 
-        public override void AddStoryCards()
+        public void AddToPool(Encounter card)
         {
-            //find story-related cards and add them as top-priority above count
-            List<Encounter> highPriorityCards = new List<Encounter>(3);
-
-            foreach (Encounter card in cardPool)
-            {
-                //if(card == null) return;
-                if (string.IsNullOrEmpty(card.requiredStoryTag))
-                {
-                    continue;
-                }
-
-                Debug.Log("checking card: " + card.name);
-                if (CheckStoryTags(gameDataHandler, card))
-                {
-                    deck.AddFirst(card);
-                    highPriorityCards.Add(card);
-                }
-            }
-
-            foreach (Encounter highPriorityCard in highPriorityCards)
-            {
-                Debug.Log("card added as priority " + highPriorityCard.name);
-                cardPool.Remove(highPriorityCard);
-            }
-        }
-
-        public override void AddCardToPool(Encounter card)
-        {
-            if (card is null)
-                return;
             cardPool.Add(card);
         }
 
-        public override void AddToDeck(Encounter card, bool asFirst = false)
+        public bool AddToDeck(Encounter card, bool asFirst = false)
         {
             if (card is null)
-                return;
+            {
+                return true;
+            }
+            
+            if (!CheckStoryTags(card) || deck.Contains(card))
+            {
+                return false;
+            }
+            
             if (asFirst)
             {
                 deck.AddFirst(card);
@@ -193,11 +201,11 @@ namespace CauldronCodebase
             {
                 deck.AddLast(card);
             }
-
             deckInfo = deck.ToArray();
+            return true;
         }
 
-        public override Encounter GetTopCard()
+        public Encounter GetTopCard()
         {
             if (loadedCard != null)
             {
@@ -223,7 +231,7 @@ namespace CauldronCodebase
 
         void SaveCurrentCardAsUnique()
         {
-            rememberedCards.Add(currentCard.Id);
+            rememberedCards.Add(currentCard.name);
             EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
             PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
@@ -231,7 +239,7 @@ namespace CauldronCodebase
         }
         
 
-        public override void LoadData(GameData data, bool newGame)
+        public void LoadData(GameData data, bool newGame)
         {
             loadedCard = gameDataHandler.currentCard;
 
@@ -283,35 +291,46 @@ namespace CauldronCodebase
             }
         }
 
-        public override void SaveData(ref GameData data)
+        public void SaveData(ref GameData data)
         {
             if (data == null) return;
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {
-                data.CardPool.Add(card.Id);
+                data.CardPool.Add(card.name);
             }
 
             data.CurrentDeck.Clear();
             foreach (var card in deck)
             {
-                data.CurrentDeck.Add(card.Id);
+                data.CurrentDeck.Add(card.name);
             }
         }
 
-        private static bool CheckStoryTags(GameDataHandler game, Encounter card)
+        public bool CheckStoryTags(Encounter card)
         {
+            if (string.IsNullOrWhiteSpace(card.requiredStoryTag.Trim()))
+            {
+                return true;
+            }
+
             string[] tags = card.requiredStoryTag.Split(',');
             bool valid = true;
             foreach (var tag in tags)
             {
+                string trim = tag.Trim();
+                if (trim == PriorityLaneProvider.LOW_FAME || trim == PriorityLaneProvider.LOW_FEAR ||
+                    trim == PriorityLaneProvider.HIGH_FAME || trim == PriorityLaneProvider.HIGH_FEAR)
+                {
+                    continue;
+                }
                 if (tag.StartsWith("!"))
                 {
-                    valid = valid && !game.storyTags.Contains(tag.Trim().TrimStart('!'));
+                    valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
                 }
                 else
                 {
-                    valid = valid && game.storyTags.Contains(tag.Trim());
+                    valid = valid && gameDataHandler.storyTags.Contains(trim);
                 }
             }
 

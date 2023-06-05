@@ -13,7 +13,13 @@ namespace Editor
 
         public static T LoadSingleAsset<T>() where T:ScriptableObject
         {
-            string guid = AssetDatabase.FindAssets($"t: {typeof(T)}")[0];
+            var assets = AssetDatabase.FindAssets($"t: {typeof(T)}");
+            if (assets.Length != 1)
+            {
+                Debug.LogError("Loading of asset failed");
+                return null;
+            }
+            string guid = assets[0];
             string assetPath = AssetDatabase.GUIDToAssetPath( guid );
             return AssetDatabase.LoadAssetAtPath<T>( assetPath );
         }

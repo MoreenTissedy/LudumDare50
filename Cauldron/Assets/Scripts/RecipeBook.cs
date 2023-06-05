@@ -34,8 +34,9 @@ namespace CauldronCodebase
         [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
-        public List<Recipe> magicalRecipes;
-        public List<Recipe> herbalRecipes;
+        public List<Recipe> allMagicalRecipes;
+        public List<Recipe> allHerbalRecipes;
+        [SerializeField] private List<Recipe> unlockedRecipes;
         public List<Ingredients[]> attempts;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -77,17 +78,22 @@ namespace CauldronCodebase
 
         private void LoadRecipes()
         {
-            foreach (Recipe recipe in recipeProvider.LoadRecipes())
+            List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+            if (loadRecipes.Count > 0)
             {
-                if (recipe.magical && !magicalRecipes.Contains(recipe))
-                {
-                    magicalRecipes.Add(recipe);
-                }
-                else if (!recipe.magical && !herbalRecipes.Contains(recipe))
-                {
-                    herbalRecipes.Add(recipe);
-                }
+                unlockedRecipes = loadRecipes.ToList();
             }
+
+            foreach (Recipe recipe in recipeProvider.allRecipes)
+            {
+                if (recipe.magical)
+                {
+                    allMagicalRecipes.Add(recipe);
+                }
+                else allHerbalRecipes.Add(recipe);
+            }
+            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
+            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
         }
 
         public void RecordAttempt(Ingredients[] mix)
@@ -101,31 +107,13 @@ namespace CauldronCodebase
 
         public bool IsRecipeInBook(Recipe recipe)
         {
-            if (recipe.magical)
-            {
-                return magicalRecipes.Contains(recipe);
-            }
-            else
-            {
-                return herbalRecipes.Contains(recipe);
-            }
+            return unlockedRecipes.Contains(recipe);
         }
 
         public void RecordRecipe(Recipe recipe)
         {
-            if (recipe.magical)
-            {
-                magicalRecipes.Add(recipe);
-            }
-            else
-            {
-                if (herbalRecipes is null)
-                {
-                    herbalRecipes = new List<Recipe>(10);
-                }
-                herbalRecipes.Add(recipe);
-            }
-            recipeProvider.SaveRecipes(magicalRecipes.Union(herbalRecipes));
+            unlockedRecipes.Add(recipe);
+            recipeProvider.SaveRecipes(unlockedRecipes);
         }
 
         public void ChangeMode(Mode newMode)
@@ -229,12 +217,10 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    totalPages = Mathf.CeilToInt((float)magicalRecipes.Count / recipeEntries.Length);
+                    totalPages = Mathf.CeilToInt((float)allMagicalRecipes.Count / recipeEntries.Length);
                     break;
                 case Mode.Herbal:
-                    if (herbalRecipes != null)
-                        totalPages = Mathf.CeilToInt((float) herbalRecipes.Count / foodEntries.Length);
-                    else totalPages = 1;
+                    totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     break;
                 case Mode.Attempts:
                     if (attempts != null) totalPages = Mathf.CeilToInt((float) attempts.Count / attemptEntries.Length);
@@ -276,7 +262,14 @@ namespace CauldronCodebase
                     int num = currentPage * entries.Length + i;
                     if (num < set.Count)
                     {
-                        entries[i].Display(set[num]);
+                        if(unlockedRecipes.Contains(set[num]))
+                        {
+                            entries[i].Display(set[num]);
+                        }
+                        else
+                        {
+                            entries[i].DisplayLocked(set[num]);
+                        }
                     }
                     else
                     {
@@ -288,10 +281,10 @@ namespace CauldronCodebase
             switch (currentMode)
             {
                 case Mode.Magical:
-                    DisplaySet(magicalRecipes);
+                    DisplaySet(allMagicalRecipes);
                     break;
                 case Mode.Herbal:
-                    DisplaySet(herbalRecipes);
+                    DisplaySet(allHerbalRecipes);
                     break;
                 case Mode.Attempts:
                     DisplayAttempts();

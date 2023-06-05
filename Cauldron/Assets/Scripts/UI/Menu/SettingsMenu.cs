@@ -126,7 +126,7 @@ namespace CauldronCodebase
 
         private void UpdateSliderLabel(string vca, float value)
         {
-            string labelValue = (value * 100) + "%";
+            string labelValue = Mathf.RoundToInt(value * 100) + "%";
             switch (vca)
             {
                 case "Music":

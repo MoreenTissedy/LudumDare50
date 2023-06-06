@@ -8,5 +8,6 @@
         public const string SoundsValueSettings = "SoundsValue";
         public const string ResolutionSettings = "ResolutionSettings";
         public const string FullscreenModeSettings = "SetFullscreenSettings";
+        public const string LanguageKey = "LanguageSettings";
     }
 }

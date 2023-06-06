@@ -15,14 +15,15 @@ namespace CauldronCodebase
         [SerializeField] private Slider music;
         [SerializeField] private Slider sounds;
 
-        [SerializeField] private Button translate;
-
-        [Inject] private LocalizationTool locTool;
         [SerializeField] private TextMeshProUGUI musicLabel;
         [SerializeField] private TextMeshProUGUI soundsLabel;
+        
+        [Header("Language")]
+        [SerializeField] private TMP_Dropdown language;
 
         [Header("Resolution")] 
         [SerializeField] private TMP_Dropdown resolutionDropdown;
+
         private Resolution[] resolutions;
 
         [Header("Toggle Fullscreen")] 
@@ -30,14 +31,17 @@ namespace CauldronCodebase
 
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
+
         [SerializeField] private Button openResetButton;
-        [SerializeField] private GameObject dialougeReset;
+        [FormerlySerializedAs("dialougeReset")] [SerializeField] private GameObject dialogueReset;
         [SerializeField] private Button acceptResetButton;
         [SerializeField] private Button declineResetButton;
-        
+
         [Header("Other")]
         [SerializeField] private Button closeSettingsButton;
 
+
+        [Inject] private LocalizationTool locTool;
         private bool fullscreenMode;
         
         private void OnValidate()
@@ -49,8 +53,9 @@ namespace CauldronCodebase
         {
             LoadVolumeValues();
             LoadResolution();
+            LoadLanguage();
             Close();
-            translate.onClick.AddListener(() => locTool.LoadLanguage(locTool.loadedLanguage == Language.EN ? Language.RU : Language.EN));
+            language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
@@ -59,6 +64,21 @@ namespace CauldronCodebase
             closeSettingsButton.onClick.AddListener(Close);
             acceptResetButton.onClick.AddListener(ResetGameData);
             declineResetButton.onClick.AddListener(CloseResetDialogue);
+        }
+
+        private void LoadLanguage()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.LanguageKey))
+            {
+                language.SetValueWithoutNotify(PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.EN.ToString() ? 0 : 1);
+            }
+        }
+
+        private void ChangeLanguage(int index)
+        {
+            var newLanguage = index > 0 ? Language.RU : Language.EN;
+            locTool.LoadLanguage(newLanguage);
+            PlayerPrefs.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
         }
 
         private void LoadResolution()
@@ -88,12 +108,12 @@ namespace CauldronCodebase
 
         private void OpenResetDialogue()
         {
-            dialougeReset.SetActive(true);
+            dialogueReset.SetActive(true);
         }
         
         private void CloseResetDialogue()
         {
-            dialougeReset.SetActive(false);
+            dialogueReset.SetActive(false);
         }
 
         private void LoadResolutionDropdown()

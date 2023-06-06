@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
+using CauldronCodebase;
 using UnityEditor.SceneManagement;
 using UnityEditor;
 #endif
@@ -37,13 +38,24 @@ namespace EasyLoc
             //unload scenes
         }
 
+        private void Start()
+        {
+            LoadSavedLanguage();
+        }
+
+        public void LoadSavedLanguage()
+        {
+            var language = Language.EN;
+            if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
+                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
+            {
+                language = Language.RU;
+            }
+            LoadLanguage(language);
+        }
+
         public void LoadLanguage(Language language)
         {
-            if (loadedLanguage == language)
-            {
-                return;
-            }
-
             Debug.LogWarning("changing language to " + language);
             var units = GetUnits();
             Debug.Log("Found SO to localize: " + units.Length);

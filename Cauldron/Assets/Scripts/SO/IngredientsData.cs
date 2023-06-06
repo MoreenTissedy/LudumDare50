@@ -27,6 +27,8 @@ namespace CauldronCodebase
         
         public Ingredient[] book;
 
+        public event Action Changed;
+
         public Ingredient Get(Ingredients type)
         {
             return (book.Where(x => x.type == type).ToArray()[0]);
@@ -74,7 +76,7 @@ namespace CauldronCodebase
                 }
             }
 
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 1; i <= book.Length; i++)
             {
                 string[] data = lines[i].Split(';');
                 if (book[i - 1].type.ToString() != data[0])
@@ -86,6 +88,7 @@ namespace CauldronCodebase
                 book[i - 1].TextInABook = data[requiredColumns[1]];
             }
 
+            Changed?.Invoke();
             return true;
         }
     }

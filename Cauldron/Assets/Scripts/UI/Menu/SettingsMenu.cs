@@ -1,7 +1,8 @@
-using System;
+using EasyLoc;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -9,10 +10,15 @@ namespace CauldronCodebase
     {
         [SerializeField] private Slider music;
         [SerializeField] private Slider sounds;
+
+        [SerializeField] private Button translate;
+
+        [Inject] private LocalizationTool locTool;
         
         private void Start()
         {
             Close();
+            translate.onClick.AddListener(() => locTool.LoadLanguage(locTool.loadedLanguage == Language.EN ? Language.RU : Language.EN));
             //0.4 as temp measure
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x, 0.4f));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));

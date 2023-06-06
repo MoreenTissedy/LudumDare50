@@ -41,12 +41,13 @@ namespace CauldronCodebase
             tooltipText = tooltipCanvas.GetComponentInChildren<Text>();
             if (tooltipText != null && tooltipText.text == String.Empty)
             {
-                tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
+                ChangeText();
             }
 
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
         }
+
 #endif
         
         [Inject]
@@ -55,6 +56,12 @@ namespace CauldronCodebase
             this.cauldron = cauldron;
             ingredientManager = cauldron.tooltipManager;
             ingredientManager.AddIngredient(this);
+            dataList.Changed += ChangeText;
+        }
+
+        private void ChangeText()
+        {
+            tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
         }
 
         private void OnEnable()

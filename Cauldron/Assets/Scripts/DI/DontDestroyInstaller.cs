@@ -1,3 +1,4 @@
+using EasyLoc;
 using Save;
 using UnityEngine;
 using Zenject;
@@ -10,7 +11,8 @@ namespace CauldronCodebase
         [SerializeField] private MainSettings mainSettings;
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
-        
+
+        [SerializeField] private LocalizationTool locTool;
         [SerializeField] private SoundManager soundManager;
         public override void InstallBindings()
         {
@@ -24,6 +26,7 @@ namespace CauldronCodebase
             DataPersistenceManager dataPersistenceScript = Container.InstantiatePrefab(dataPersistenceManager).GetComponent<DataPersistenceManager>();
             Container.Bind<DataPersistenceManager>().FromInstance(dataPersistenceScript).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
+            Container.Bind<LocalizationTool>().FromComponentInNewPrefab(locTool).AsSingle();
         }
     }
 }

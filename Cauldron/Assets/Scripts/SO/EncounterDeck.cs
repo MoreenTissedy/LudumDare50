@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Save;
 using UnityEngine;
@@ -336,5 +337,20 @@ namespace CauldronCodebase
 
             return valid;
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Export Cards Tool")]
+        void ExportCards()
+        {
+            var file = File.CreateText(Application.dataPath + "/Localize/Cards.csv");
+            file.WriteLine("id;description_RU;description_EN");
+            foreach (Encounter unit in Resources.FindObjectsOfTypeAll<Encounter>())
+            {
+                file.WriteLine(unit.name + ";" + unit.text);
+            }
+
+            file.Close();
+        }
+#endif
     }
 }

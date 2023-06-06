@@ -1,13 +1,12 @@
-﻿using System;
+﻿using System.Collections;
 using System.Linq;
-using System.Threading;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
-using Cysharp.Threading.Tasks;
+using Save;
 using UnityEngine;
 using Zenject;
 
-public class CatTipsProvider : MonoBehaviour
+public class CatTipsProvider : MonoBehaviour, IDataPersistence
 {
     private CatTipsManager catTipsManager;
     private GameStateMachine gameStateMachine;
@@ -16,7 +15,6 @@ public class CatTipsProvider : MonoBehaviour
     private TooltipManager tooltipManager;
     private RecipeBook recipeBook;
     private IngredientsData ingredientsData;
-    private CancellationTokenSource cancellationTokenSource;
 
     private bool DarkStrangerCame, WitchCame, InquisitorCame;
 
@@ -28,7 +26,8 @@ public class CatTipsProvider : MonoBehaviour
                             CatTipsView tipsView,
                             TooltipManager tooltip,
                             RecipeBook book,
-                            IngredientsData ingredients)
+                            IngredientsData ingredients,
+                            DataPersistenceManager persistenceManager)
     {
         catTipsManager = tipsManager;
         gameStateMachine = stateMachine;
@@ -37,14 +36,11 @@ public class CatTipsProvider : MonoBehaviour
         tooltipManager = tooltip;
         recipeBook = book;
         ingredientsData = ingredients;
-    }
-
-    private void Start()
-    {
-        cancellationTokenSource = new CancellationTokenSource();
+        persistenceManager.AddToDataPersistenceObjList(this);
+        
         gameStateMachine.OnChangeState += SubscribeOnChangeState;
     }
-
+    
     private void OnDestroy()
     {
         gameStateMachine.OnChangeState -= SubscribeOnChangeState;
@@ -52,48 +48,62 @@ public class CatTipsProvider : MonoBehaviour
 
     private void SubscribeOnChangeState(GameStateMachine.GamePhase phase)
     {
-        if (phase != GameStateMachine.GamePhase.Visitor)
+        if (phase != GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name == "Cat")
         {
-            cancellationTokenSource?.Cancel();
+            Debug.Log("Stop cat tips provider coroutines");
+            StopAllCoroutines();
             return;
         }
         
-        cancellationTokenSource = new CancellationTokenSource();
-        CheckTipsCondition(phase).AttachExternalCancellation(cancellationTokenSource.Token);
+        StartCoroutine(CheckTipsCondition(phase));
     }
 
-    private async UniTask CheckTipsCondition(GameStateMachine.GamePhase phase)
+    private IEnumerator CheckTipsCondition(GameStateMachine.GamePhase phase)
     {
-        if(phase != GameStateMachine.GamePhase.Visitor) return;
-        
-        WaitSlowTips().AttachExternalCancellation(cancellationTokenSource.Token);
+        if(phase != GameStateMachine.GamePhase.Visitor) yield break;
 
-        await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.VisitorCheckDelay));
-        if (CheckSpecialVisitors()) return;
+        StartCoroutine(WaitSlowTips());
 
-        await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+        yield return new WaitForSeconds(settings.catTips.VisitorCheckDelay);
+        if (CheckSpecialVisitors()) yield break;
+
+        yield return new WaitForSeconds(0.5f);
         CheckScale();
     }
 
-    private async UniTask WaitSlowTips()
+    private IEnumerator WaitSlowTips()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(settings.catTips.SlowTipsDelay));
-        if(tooltipManager.Highlighted && recipeBook.IsOpen) return;
+        Debug.Log("Run slow tip");
+        yield return new WaitForSeconds(settings.catTips.SlowTipsDelay);
+
+        Debug.Log("Slow tip wait done");
+        if (tooltipManager.Highlighted || recipeBook.IsOpen)
+        {
+            Debug.Log("Slow tips brake");
+            yield break;
+        }
 
         Ingredients[] randomRecipe;
+        int tryCount = 0;
 
         do
         {
             randomRecipe = recipeBook.GenerateRandomRecipe();
+            
+            tryCount += 1;
+            if(tryCount >= RecipeBook.MAX_COMBINATIONS_COUNT) yield break;
+            
         } while (recipeBook.CheckRecipeIsOpen(randomRecipe));
+        
 
         var ingredients = randomRecipe.Select(ingredient => ingredientsData.Get(ingredient)).ToList();
-
+        
         catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredients(catTipsManager.SlowPlayerTips, ingredients));
     }
 
     private bool CheckSpecialVisitors()
     {
+        Debug.Log("Check special visitors");
         switch (gameDataHandler.currentCard.villager.name)
         {
             case "Inquisition":
@@ -132,6 +142,7 @@ public class CatTipsProvider : MonoBehaviour
 
     private void CheckScale()
     {
+        Debug.Log("Check scale");
         var fame = gameDataHandler.Get(Statustype.Fame);
         var fear = gameDataHandler.Get(Statustype.Fear);
 
@@ -173,5 +184,19 @@ public class CatTipsProvider : MonoBehaviour
                     : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
             }
         }
+    }
+
+    public void LoadData(GameData data, bool newGame)
+    {
+        DarkStrangerCame = data.DarkStrangerCame;
+        WitchCame = data.WitchCame;
+        InquisitorCame = data.InquisitorCame;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.DarkStrangerCame = DarkStrangerCame;
+        data.WitchCame = WitchCame;
+        data.InquisitorCame = InquisitorCame;
     }
 }

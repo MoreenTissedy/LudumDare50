@@ -1,35 +1,52 @@
-﻿using System;
+﻿using CauldronCodebase;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class CatTipsView : MonoBehaviour
 {
-    [SerializeField] private GameObject icon;
-    [SerializeField] private GameObject bubble;
+    [SerializeField] private DialogIcon dialogIcon;
+    [SerializeField] private CatDialogBubble catDialogBubble;
     [SerializeField] private TMP_Text text;
+    
+    [Inject] private SoundManager soundManager;
 
     private bool tipEnabled;
-
-    private void Start()
-    {
-        HideView();
-    }
-
+    
     public void ChangeTipView()
     {
-        icon.SetActive(!icon.activeSelf);
-        bubble.SetActive(!bubble.activeSelf);
+        Debug.Log("Cat tips change view");
+        switch (tipEnabled)
+        {
+            case true:
+                catDialogBubble.DisableBubble();
+                dialogIcon.EnableIcon();
+                tipEnabled = false;
+                break;
+            case false:
+                catDialogBubble.EnableBubble();
+                dialogIcon.DisableIcon();
+                tipEnabled = true;
+                break;
+        }
+
     }
 
     public void ShowTips(CatTips tips)
     {
-        bubble.SetActive(true);
+        Debug.Log("ShowTips");
         text.text = tips.TipsText;
+        tipEnabled = true;
+        soundManager.PlayCat(CatSound.Attention);
+        catDialogBubble.EnableBubble();
     }
 
     public void HideView()
     {
-        icon.SetActive(false);
-        bubble.SetActive(false);
+        dialogIcon.DisableIcon();
+        if (tipEnabled)
+        {
+            catDialogBubble.DisableBubble();
+        }
     }
 }

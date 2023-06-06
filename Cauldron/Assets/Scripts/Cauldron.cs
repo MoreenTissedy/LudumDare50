@@ -31,10 +31,12 @@ namespace CauldronCodebase
         private SoundManager soundManager;
         private CatTipsManager catTipsManager;
         private IngredientsData ingredientsData;
+        private CatTipsView catTipsView;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, CatTipsManager tipsManager, IngredientsData ingredients)
+            SoundManager soundManager, TooltipManager tooltipManager, CatTipsManager tipsManager,
+            IngredientsData ingredients, CatTipsView tipsView)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
@@ -43,6 +45,7 @@ namespace CauldronCodebase
             this.tooltipManager = tooltipManager;
             catTipsManager = tipsManager;
             ingredientsData = ingredients;
+            catTipsView = tipsView;
         }
 
         private void Awake()
@@ -82,14 +85,21 @@ namespace CauldronCodebase
                     allIngredients.Remove(ingredientInMix);
                 }
 
+                int tryCount = allIngredients.Count;
                 do
                 {
                     randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
-                    recipeToTips = new Ingredients[] {mix[0], mix[1], randomIngredient};
+                    recipeToTips = new [] {mix[0], mix[1], randomIngredient};
+
+                    tryCount -= 1;
+                    if(tryCount <= 0) break;
 
                 } while (recipeBook.CheckRecipeIsOpen(recipeToTips));
-                
-                catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient, ingredientsData.Get(randomIngredient)));
+
+                if (tryCount > 0)
+                {
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient, ingredientsData.Get(randomIngredient)));
+                }
             }
             if (mix.Count == 3)
             {
@@ -106,6 +116,7 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
+            catTipsView.HideView();
             soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
@@ -132,7 +143,7 @@ namespace CauldronCodebase
                 }
             }
 
-            recipeBook.RecordAttempt(mix.ToArray());
+            recipeBook.RecordAttempt(new WrongPotion(mix));
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);

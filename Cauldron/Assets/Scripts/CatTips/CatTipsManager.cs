@@ -50,17 +50,18 @@ public class CatTipsManager : MonoBehaviour
 
     public void ShowTips(CatTips tips)
     {
-        if(tipsWasShown || gameDataHandler.currentCard.villager.name == "Cat") return;
+        if(tipsWasShown) return;
+        if(gameDataHandler.currentCard.villager.name == "Cat") return;
         
         tipsWasShown = true;
         
         catTipsView.ShowTips(tips);
-
+        Debug.Log(tips.TipsText);
     }
 
     private void ReadyToShow(GameStateMachine.GamePhase phase)
     {
-        catTipsView.HideView();
+        //catTipsView.HideView();
         if(phase != GameStateMachine.GamePhase.Visitor) return;
         tipsWasShown = false;
     }

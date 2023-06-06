@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -31,6 +32,8 @@ namespace CauldronCodebase
         
         [Header("Other")]
         [SerializeField] private Button closeSettingsButton;
+
+        [SerializeField] [Inject] private FadeController fadeController;
 
         private bool fullscreenMode;
         
@@ -72,14 +75,13 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fade.FadeIn();
+            fadeController.FadeIn(duration: 1f, endAlpha:0.5f);
         }
 
         public void Close()
         {
-            fade.FadeOut();
+            fadeController.FadeOut(duration: 1f);
             gameObject.SetActive(false);
-            
         }
 
         private void OpenResetDialogue()

@@ -7,10 +7,18 @@ namespace CauldronCodebase
     public class FadeController : MonoBehaviour
     {
         [SerializeField] private Image fadeImage;
-        [SerializeField] [Range(0f, 1f)] private float fadeAlpha;
-        [SerializeField] [Tooltip("Fade in seconds")] private float fadeDuration;
+       
+        public async UniTask FadeIn(float startAlpha = 0f, float endAlpha = 1f, float duration = 1f)
+        {
+            await Fade(startAlpha, endAlpha,  duration);
+        }
 
-        public async UniTask FadeIn(float duration, float targetAlpha)
+        public async UniTask FadeOut(float endAlpha = 0f, float duration = 1f)
+        {
+            await Fade(fadeImage.color.a, endAlpha, duration);
+        }
+        
+        private async UniTask Fade(float startAlpha, float endAlpha, float duration)
         {
             fadeImage.gameObject.SetActive(true);
             float elapsedTime = 0;
@@ -18,54 +26,15 @@ namespace CauldronCodebase
             while (elapsedTime < duration)
             {
                 elapsedTime += Time.unscaledDeltaTime;
-                float alpha = Mathf.Lerp(0, 1, elapsedTime / duration * targetAlpha);
+                float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
                 fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, alpha);
                 await UniTask.Yield();
             }
 
-        }
-        
-        public async UniTask FadeIn()
-        {
-            fadeImage.gameObject.SetActive(true);
-            float elapsedTime = 0;
-            while (elapsedTime < fadeDuration)
+            if (endAlpha == 0)
             {
-                elapsedTime += Time.unscaledDeltaTime;
-                float alpha = Mathf.Lerp(0, 1, elapsedTime / fadeDuration * fadeAlpha);
-                fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, alpha);
-                await UniTask.Yield();
+                fadeImage.gameObject.SetActive(false);
             }
-        }
-        
-        public async UniTask FadeOut()
-        {
-            float initialAlpha = fadeImage.color.a;
-            float elapsedTime = 0;
-            while (elapsedTime < fadeDuration)
-            {
-                elapsedTime += Time.unscaledDeltaTime;
-                float alpha = Mathf.Lerp(initialAlpha, 0, elapsedTime / fadeDuration);
-                fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, alpha);
-                await UniTask.Yield();
-            }
-            fadeImage.gameObject.SetActive(false);
-            
-        }
-        
-        public async UniTask FadeOut(float duration)
-        {
-            float initialAlpha = fadeImage.color.a;
-            float elapsedTime = 0;
-            while (elapsedTime < duration)
-            {
-                elapsedTime += Time.unscaledDeltaTime;
-                float alpha = Mathf.Lerp(initialAlpha, 0, elapsedTime / duration);
-                fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, alpha);
-                await UniTask.Yield();
-            }
-            fadeImage.gameObject.SetActive(false);
-            
         }
     }
     

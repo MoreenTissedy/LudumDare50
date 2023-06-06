@@ -24,12 +24,12 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fade.FadeIn();
+            fade.FadeIn(endAlpha:0.5f);
         }
         
         public void Close()
         {
-            fade.FadeOut();
+            fade.FadeOut(duration:1f);
             gameObject.SetActive(false);
             
         }

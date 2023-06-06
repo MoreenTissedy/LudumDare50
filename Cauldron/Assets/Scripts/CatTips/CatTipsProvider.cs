@@ -121,7 +121,7 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
                 else
                     return false;
                 
-            case "Dark Stranger":
+            case "DarkStranger":
                 if (!DarkStrangerCame)
                 {
                     catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.DarkStrangerTips));

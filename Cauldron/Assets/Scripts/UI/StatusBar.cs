@@ -53,7 +53,6 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            GrowSymbol();
             SetValue(this.gameDataHandler.Get(type), false);
         }
 

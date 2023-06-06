@@ -20,7 +20,6 @@ namespace CauldronCodebase
         {
             if (attempt.Length != 3)
             {
-                Debug.LogError("failed attempts are recorded as an array of 3 ingredients");
                 return;
             }
             

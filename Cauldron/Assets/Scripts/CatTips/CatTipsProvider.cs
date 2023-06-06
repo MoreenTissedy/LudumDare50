@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
@@ -50,7 +51,6 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
     {
         if (phase != GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name == "Cat")
         {
-            Debug.Log("Stop cat tips provider coroutines");
             StopAllCoroutines();
             return;
         }
@@ -73,25 +73,31 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
 
     private IEnumerator WaitSlowTips()
     {
-        Debug.Log("Run slow tip");
         yield return new WaitForSeconds(settings.catTips.SlowTipsDelay);
-
-        Debug.Log("Slow tip wait done");
+        
         if (tooltipManager.Highlighted || recipeBook.IsOpen)
         {
-            Debug.Log("Slow tips brake");
             yield break;
         }
 
         Ingredients[] randomRecipe;
+        List<Ingredients[]> generatedRecipe = new List<Ingredients[]>(RecipeBook.MAX_COMBINATIONS_COUNT);
         int tryCount = 0;
 
         do
         {
             randomRecipe = recipeBook.GenerateRandomRecipe();
-            
-            tryCount += 1;
-            if(tryCount >= RecipeBook.MAX_COMBINATIONS_COUNT) yield break;
+
+            if (generatedRecipe.Any(recipe => recipe.All(randomRecipe.Contains)))
+            {
+                continue;
+            }
+
+            tryCount++;
+            if (tryCount >= RecipeBook.MAX_COMBINATIONS_COUNT)
+            {
+                yield break;
+            }
             
         } while (recipeBook.CheckRecipeIsOpen(randomRecipe));
         
@@ -103,7 +109,6 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
 
     private bool CheckSpecialVisitors()
     {
-        Debug.Log("Check special visitors");
         switch (gameDataHandler.currentCard.villager.name)
         {
             case "Inquisition":
@@ -142,47 +147,47 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
 
     private void CheckScale()
     {
-        Debug.Log("Check scale");
         var fame = gameDataHandler.Get(Statustype.Fame);
         var fear = gameDataHandler.Get(Statustype.Fear);
+        
+        CheckVisitor(gameDataHandler.currentCard.primaryInfluence);
+        CheckVisitor(gameDataHandler.currentCard.secondaryInfluence);
 
-        if (fame > gameDataHandler.GetThreshold(Statustype.Fame, true))
+        void CheckVisitor(Statustype status)
         {
-            CheckVisitor(Statustype.Fame, catTipsManager.HighFameTips, true);
-            return;
-        }
-
-        if (fame < gameDataHandler.GetThreshold(Statustype.Fame, false))
-        {
-            CheckVisitor(Statustype.Fame, catTipsManager.LowFameTips, false);
-            return;
-        }
-
-        if (fear > gameDataHandler.GetThreshold(Statustype.Fear, true))
-        {
-            CheckVisitor(Statustype.Fear, catTipsManager.HighFearTips, true);
-            return;
-        }
-
-        if (fear < gameDataHandler.GetThreshold(Statustype.Fear, false))
-        {
-            CheckVisitor(Statustype.Fear, catTipsManager.LowFearTips, false);
-        }
-
-        void CheckVisitor(Statustype status, CatTipsTextSO scaleText, bool high)
-        {
-            if (gameDataHandler.currentCard.primaryInfluence == status)
+            switch (status)
             {
-                catTipsManager.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
-                    ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleDOWNTips : catTipsManager.ScaleUPTips)
-                    : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
+                case Statustype.Fame:
+                    if (fame >= gameDataHandler.GetThreshold(Statustype.Fame, true))
+                    {
+                        CreateTip(catTipsManager.HighFameTips, true);
+                    }
+
+                    if (fame <= gameDataHandler.GetThreshold(Statustype.Fame, false))
+                    {
+                        CreateTip(catTipsManager.LowFameTips, false);
+                    }
+                    break;
+                case Statustype.Fear:
+                    if (fear >= gameDataHandler.GetThreshold(Statustype.Fear, true))
+                    {
+                        CreateTip(catTipsManager.HighFearTips, true);
+                    }
+
+                    if (fear <= gameDataHandler.GetThreshold(Statustype.Fear, false))
+                    {
+                        CreateTip(catTipsManager.LowFearTips, false);
+                    }
+                    break;
             }
-            else if(gameDataHandler.currentCard.secondaryInfluence == status)
-            {
-                catTipsManager.ShowTips(gameDataHandler.currentCard.secondaryCoef > 0
-                    ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleDOWNTips : catTipsManager.ScaleUPTips)
-                    : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
-            }
+        }
+
+        void CreateTip(CatTipsTextSO scaleText, bool high)
+        {
+            catTipsManager.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
+                ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleDOWNTips : catTipsManager.ScaleUPTips)
+                : CatTipsGenerator.CreateTips(scaleText, high ? catTipsManager.ScaleUPTips : catTipsManager.ScaleDOWNTips));
+            
         }
     }
 

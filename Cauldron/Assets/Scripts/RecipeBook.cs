@@ -110,7 +110,7 @@ namespace CauldronCodebase
                 wrongPotions = new List<WrongPotion>(10);
             }
 
-            if (!wrongPotions.Contains(mix))
+            if (!wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(mix.IngredientsList.Contains)))
             {
                 wrongPotions.Add(mix);
             }
@@ -414,7 +414,7 @@ namespace CauldronCodebase
         
         public Ingredients[] GenerateRandomRecipe()
         {
-            var rnd = new Random(DateTime.Now.Millisecond);
+            var rnd = new Random(Guid.NewGuid().GetHashCode());
         
             var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
 
@@ -438,12 +438,9 @@ namespace CauldronCodebase
             }
             
             //Check attempts
-            if(wrongPotions.Count != 0)
+            if(wrongPotions.Count != 0 && wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
             {
-                foreach (var potion in wrongPotions)
-                {
-                    if (potion.IngredientsList.All(recipe.Contains)) return true;
-                }
+                return true;
             }
 
             return false;

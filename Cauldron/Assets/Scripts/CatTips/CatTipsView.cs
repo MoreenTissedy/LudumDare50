@@ -15,7 +15,6 @@ public class CatTipsView : MonoBehaviour
     
     public void ChangeTipView()
     {
-        Debug.Log("Cat tips change view");
         switch (tipEnabled)
         {
             case true:
@@ -34,7 +33,6 @@ public class CatTipsView : MonoBehaviour
 
     public void ShowTips(CatTips tips)
     {
-        Debug.Log("ShowTips");
         text.text = tips.TipsText;
         tipEnabled = true;
         soundManager.PlayCat(CatSound.Attention);

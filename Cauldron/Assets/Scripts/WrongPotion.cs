@@ -10,7 +10,7 @@ namespace CauldronCodebase
         public List<Ingredients> IngredientsList;
         public WrongPotion(List<Ingredients> ingredients)
         {
-            IngredientsList = ingredients;
+            IngredientsList = new List<Ingredients>(ingredients);
             
             IngredientsNameList = new List<string>(3);
             foreach (var ingredient in ingredients)

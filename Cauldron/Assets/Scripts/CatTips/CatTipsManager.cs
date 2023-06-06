@@ -56,12 +56,10 @@ public class CatTipsManager : MonoBehaviour
         tipsWasShown = true;
         
         catTipsView.ShowTips(tips);
-        Debug.Log(tips.TipsText);
     }
 
     private void ReadyToShow(GameStateMachine.GamePhase phase)
     {
-        //catTipsView.HideView();
         if(phase != GameStateMachine.GamePhase.Visitor) return;
         tipsWasShown = false;
     }

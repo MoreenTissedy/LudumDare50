@@ -2,6 +2,7 @@
 using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -9,12 +10,8 @@ namespace CauldronCodebase
     {
         [SerializeField] private Button closePanelButton;
         [Header("Fade In Out")]
-        [SerializeField] private FadeController fade;
-
-        private void OnValidate()
-        {
-            if (!fade) fade = FindObjectOfType<FadeController>(true);
-        }
+        [SerializeField] [Inject] private FadeController fadeController;
+        
 
         private void Start()
         {
@@ -24,12 +21,12 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fade.FadeIn(endAlpha:0.5f);
+            fadeController.FadeIn(endAlpha:0.5f);
         }
         
         public void Close()
         {
-            fade.FadeOut(duration:1f);
+            fadeController.FadeOut(duration:1f);
             gameObject.SetActive(false);
             
         }

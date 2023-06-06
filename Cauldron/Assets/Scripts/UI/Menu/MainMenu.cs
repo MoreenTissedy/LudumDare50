@@ -12,6 +12,8 @@ namespace CauldronCodebase
         public Button continueGame;
         public Button quit;
         public Button newGame;
+        
+        [Header("Settings")]
         public Button settings;
         public SettingsMenu settingsMenu;
         
@@ -21,7 +23,7 @@ namespace CauldronCodebase
         [SerializeField] private Button authorsButton;
         [SerializeField] private GameObject authorsPanel;
 
-        [Header("FadeInOut")]
+        [Header("Fade In Out")]
         [SerializeField] [Inject] private FadeController fadeController;
         [SerializeField] [Tooltip("Fade in seconds")] private float fadeNewGameDuration;
         
@@ -73,7 +75,7 @@ namespace CauldronCodebase
 
         private async void NewGameClick()
         {
-            await fadeController.FadeIn(fadeNewGameDuration, 1);
+            await fadeController.FadeIn(duration: fadeNewGameDuration );
             switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 case true: 

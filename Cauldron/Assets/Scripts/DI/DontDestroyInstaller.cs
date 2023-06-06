@@ -10,15 +10,12 @@ namespace CauldronCodebase
         [SerializeField] private MainSettings mainSettings;
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
-        
         [SerializeField] private SoundManager soundManager;
-        [SerializeField] private FadeController fadeController;
         public override void InstallBindings()
         {
             Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
             Container.Bind<Camera>().FromInstance(mainCameraScript).AsSingle();
             Container.Bind<SODictionary>().FromInstance(soDictionary).AsSingle();
-            Container.Bind<FadeController>().FromInstance(fadeController).AsSingle();
             soDictionary.LoadDictionary();
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();

@@ -38,11 +38,16 @@ namespace CauldronCodebase
             //for playtests
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                PlayerPrefs.DeleteAll();
-                dataPersistenceManager.NewGame();
-                HideContinueButton();
-                Debug.LogWarning("All data cleared!");
+                ResetGameData();
             }
+        }
+
+        public void ResetGameData()
+        {
+            PlayerPrefs.DeleteAll();
+            dataPersistenceManager.NewGame();
+            HideContinueButton();
+            Debug.LogWarning("All data cleared!");
         }
 
         private void HideContinueButton()

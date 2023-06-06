@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace CauldronCodebase
@@ -23,7 +24,13 @@ namespace CauldronCodebase
 
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
-        [SerializeField] private Button resetButton;
+        [SerializeField] private Button openResetButton;
+        [SerializeField] private GameObject dialougeReset;
+        [SerializeField] private Button acceptResetButton;
+        [SerializeField] private Button declineResetButton;
+        
+        [Header("Other")]
+        [SerializeField] private Button closeSettingsButton;
 
         private bool fullscreenMode;
         
@@ -41,8 +48,10 @@ namespace CauldronCodebase
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
-            resetButton.onClick.AddListener(ResetGameData);
-
+            openResetButton.onClick.AddListener(OpenResetDialogue);
+            closeSettingsButton.onClick.AddListener(Close);
+            acceptResetButton.onClick.AddListener(ResetGameData);
+            declineResetButton.onClick.AddListener(CloseResetDialogue);
         }
 
         private void LoadResolution()
@@ -68,6 +77,16 @@ namespace CauldronCodebase
         public void Close()
         {
             gameObject.SetActive(false);
+        }
+
+        private void OpenResetDialogue()
+        {
+            dialougeReset.SetActive(true);
+        }
+        
+        private void CloseResetDialogue()
+        {
+            dialougeReset.SetActive(false);
         }
 
         private void LoadResolutionDropdown()
@@ -156,6 +175,7 @@ namespace CauldronCodebase
         private void ResetGameData()
         {
             mainMenu.ResetGameData();
+            CloseResetDialogue();
         }
     }
 }

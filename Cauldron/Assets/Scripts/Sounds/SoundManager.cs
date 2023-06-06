@@ -100,7 +100,6 @@ namespace CauldronCodebase
             musicStarted = true;
             Play(Sounds.Music);
             Play(Sounds.Bubbling);
-            RuntimeManager.GetVCA("vca:/Music").setVolume(0.3f);
         }
 
         public void Play(Sounds sound)

@@ -32,15 +32,16 @@ namespace CauldronCodebase
         
         [Header("Other")]
         [SerializeField] private Button closeSettingsButton;
-
-        [SerializeField] [Inject] private FadeController fadeController;
+        
 
         private bool fullscreenMode;
         
+        #if UNITY_EDITOR
         private void OnValidate()
         {
             if (!mainMenu) mainMenu = FindObjectOfType<MainMenu>();
         }
+        #endif
 
         private void Start()
         {
@@ -75,12 +76,10 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fadeController.FadeIn(duration: 1f, endAlpha:0.5f);
         }
 
         public void Close()
         {
-            fadeController.FadeOut(duration: 1f);
             gameObject.SetActive(false);
         }
 

@@ -24,19 +24,22 @@ namespace CauldronCodebase
         [SerializeField] private GameObject authorsPanel;
 
         [Header("Fade In Out")]
-        [SerializeField] [Inject] private FadeController fadeController;
+        [SerializeField] private FadeController fadeController;
         [SerializeField] [Tooltip("Fade in seconds")] private float fadeNewGameDuration;
         
         [Inject] private DataPersistenceManager dataPersistenceManager;
 
 
+        #if UNITY_EDITOR
         private void OnValidate()
         {
+            if (!fadeController) fadeController = FindObjectOfType<FadeController>(true);
             if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
             if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
             if (!authorsButton) authorsButton = GameObject.Find("AuthorsButton").GetComponent<Button>();
             if (!authorsPanel) authorsPanel = GameObject.Find("Authors_panel");
         }
+        #endif
         
         private void Start()
         {
@@ -75,7 +78,6 @@ namespace CauldronCodebase
 
         private async void NewGameClick()
         {
-            await fadeController.FadeIn(duration: fadeNewGameDuration );
             switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 case true: 

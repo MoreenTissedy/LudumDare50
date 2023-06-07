@@ -33,6 +33,11 @@ namespace CauldronCodebase
         [Header("Other")]
         [SerializeField] private Button closeSettingsButton;
         
+        
+        [Header("Fade")]
+        [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;
+        [Inject] private FadeController fadeController;
+        
 
         private bool fullscreenMode;
         
@@ -76,10 +81,12 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
+            fadeController.FadeIn(endAlpha: fadeInTargetAlpha);
         }
 
         public void Close()
         {
+            fadeController.FadeOut();
             gameObject.SetActive(false);
         }
 

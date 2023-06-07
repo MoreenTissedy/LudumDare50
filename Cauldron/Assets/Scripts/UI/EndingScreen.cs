@@ -1,111 +1,94 @@
 using System;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using DG.Tweening;
+using Spine.Unity;
 
 namespace CauldronCodebase
 {
-    public class EndingScreen : Book
+    public class EndingScreen: MonoBehaviour
     {
-        private const float unlockFadeDuration = 8f;
-
         [Inject]
         private EndingsProvider endings;
 
+        [SerializeField] private SkeletonGraphic map;
+        [SerializeField] private EndingScreenButton[] buttons;
+        [SerializeField] private Button closeButton; 
+        [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
+        [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
+        
         [Header("Ending display")] 
-        public TMP_Text title;
+        [SerializeField] private GameObject screen;
+        [SerializeField] private TMP_Text title;
+        [SerializeField] private TMP_Text description;
+        [SerializeField] private Image picture;
 
-        public TMP_Text text;
-        public Image image;
-        public event Action<int> OnPageUpdate;
-        
-        
-        //DEBUG - no menu
-        protected override void Update()
+        public event Action OnClose;
+
+        [ContextMenu("Find buttons")]
+        void FindButtons()
         {
-            base.Update();
-            if (!bookObject.enabled && Input.GetKeyDown(KeyCode.K))
+            buttons = GetComponentsInChildren<EndingScreenButton>();
+            map = GetComponentInChildren<SkeletonGraphic>();
+        }
+
+        private void Start()
+        {
+            gameObject.SetActive(false);
+            for (var i = 0; i < buttons.Length; i++)
             {
-                OpenBook();
+                buttons[i].OnClick += OnEndingClick;
             }
+            closeButton.onClick.AddListener(Close);
         }
 
-        public override void OpenBook()
+        private async void OnEndingClick(string tag)
         {
-            base.OpenBook();
-            InitTotalPages();
-        }
-
-        public void OpenBookWithEnding(EndingsProvider.Unlocks ending)
-        {
-            Debug.Log("open book with ending "+ending);
-            currentPage = endings.GetIndexOf(ending);
-            OpenBook();
-            if (!endings.Unlocked(ending))
-            {
-                UnlockThisEnding();
-            }
-        }
-
-        private void UnlockThisEnding()
-        {
-            endings.Unlock(currentPage);
-            image.DOFade(1, unlockFadeDuration).From(0);
-            DOTween.To(() => text.alpha, (i) => text.alpha = i, 1, 3f);
-        }
-
-        private void Show(Ending ending)
-        {
+            Ending ending = endings.Get(tag);
+            screen.SetActive(true);
             title.text = ending.title;
-            image.sprite = ending.image;
-            text.text = ending.text;
-            if (endings.Unlocked(ending))
+            description.text = ending.text;
+            picture.sprite = ending.image;
+            await UniTask.Delay(TimeSpan.FromSeconds(1));
+            await UniTask.WaitUntil(() => Input.anyKey);
+            screen.SetActive(false);
+        }
+
+        public void Open(string endingTag = "none")
+        {
+            var unlock = !endings.Unlocked(endingTag);
+            map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
+            if (unlock)
             {
-                text.alpha = 1;
-                image.color = Color.white;
+                endings.Unlock(endingTag);
             }
-            else
+        }
+
+        private void OnComplete(string tag)
+        {
+            foreach (var button in buttons)
             {
-                text.alpha = 0;
-                image.color = Color.clear;
+                button.Show(endings.Unlocked(tag), button.Tag == tag);
             }
         }
-        
 
-        protected override void InitTotalPages()
+        public void Close()
         {
-            totalPages = endings.Endings.Count;
-        }
-
-        protected override void UpdatePage()
-        {
-            Show(endings.Get(currentPage));
-            OnPageUpdate?.Invoke(currentPage);
-        }
-
-        protected override void UpdateBookButtons()
-        {
-            //cyclic pages - do nothing
-        }
-
-        public override void NextPage()
-        {
-            if (currentPage == totalPages - 1)
+            if (!gameObject.activeInHierarchy)
             {
-                currentPage = -1;
+                return;
             }
-            base.NextPage();
-        }
-
-        public override void PrevPage()
-        {
-            if (currentPage == 0)
+            foreach (var button in buttons)
             {
-                currentPage = totalPages;
+                button.Hide();
             }
-            base.PrevPage();
+            map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
+            {
+                gameObject.SetActive(false);
+                OnClose?.Invoke();
+            };
         }
     }
 }

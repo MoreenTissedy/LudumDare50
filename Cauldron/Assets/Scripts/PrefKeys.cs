@@ -4,6 +4,7 @@
     {
         public const string UniqueCards = "RememberedCards";
         public const string CurrentRound = "CurrentRound";
+        public const string UnlockedEndings = "Endings";
         public const string MusicValueSettings = "MusicValue";
         public const string SoundsValueSettings = "SoundsValue";
         public const string ResolutionSettings = "ResolutionSettings";

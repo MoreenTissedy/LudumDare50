@@ -48,12 +48,9 @@ namespace CauldronCodebase.GameStates
             Encounter currentCard = cardDeck.GetTopCard();
             gameDataHandler.currentCard = currentCard;
 
-            //in case we run out of cards
             if (gameDataHandler.currentCard is null)
             {
-                stateMachine.currentEnding = EndingsProvider.Unlocks.HighMoney;
-                stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
-                gameDataHandler.RememberRound();
+                Debug.LogError("Run out of cards!");
                 return;
             }
                      

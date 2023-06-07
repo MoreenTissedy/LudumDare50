@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -8,68 +8,43 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "Endings Provider", menuName = "Endings Provider", order = 10)]
     public class EndingsProvider : ScriptableObject
     {
-        [Flags]
-        public enum Unlocks {
-            None = 0,
-            HighMoney = 1,
-            HighFame = 2,
-            HighFear = 4,
-            LowFame = 8,
-            LowFear = 16
-        }
-        [Tooltip("High money, high fame, high fear, low fame, low fear")]
-        [SerializeField] private Ending[] endings;
+        public const string HIGH_FAME = "high fame";
+        public const string LOW_FAME = "low fame";
+        public const string HIGH_FEAR = "high fear";
+        public const string LOW_FEAR = "low fear";
+        public const string ENOUGH_MONEY = "high money";
+        
+        public Ending[] endings;
 
-        private Unlocks unlocked;
-        private const string _KEY_ = "Endings";
-        public Dictionary<Unlocks, Ending> Endings;
+        private List<string> unlocked;
+        public Dictionary<string, Ending> Endings;
 
         public void Init()
         {
-            Endings = new Dictionary<Unlocks, Ending>(10)
+            Endings = new Dictionary<string, Ending>(12);
+            foreach (var ending in endings)
             {
-                {Unlocks.HighMoney, endings[0]},
-                {Unlocks.HighFame, endings[1]},
-                {Unlocks.HighFear, endings[2]},
-                {Unlocks.LowFame, endings[3]},
-                {Unlocks.LowFear, endings[4]}
-            };
+                Endings.Add(ending.tag, ending);
+            }
 
-            if (PlayerPrefs.HasKey(_KEY_))
+            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
             {
-                unlocked = (Unlocks)PlayerPrefs.GetInt(_KEY_);
+                unlocked = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
             }
             else
             {
-                unlocked = 0;
-            }
-
-            foreach (var unlock in Endings.Keys)
-            {
-                //Debug.Log($"ending {unlock} unlocked: {Unlocked(unlock)}");
+                unlocked = new List<string>();
             }
         }
 
         public int GetUnlockedEndingsCount()
         {
-            int count = 0;
-            //TODO: find a better way
-            if (unlocked.HasFlag(Unlocks.HighFame)) count++;
-            if (unlocked.HasFlag(Unlocks.HighFear)) count++;
-            if (unlocked.HasFlag(Unlocks.HighMoney)) count++;
-            if (unlocked.HasFlag(Unlocks.LowFame)) count++;
-            if (unlocked.HasFlag(Unlocks.LowFear)) count++;
-            return count;
+            return unlocked.Count;
         }
 
-        public bool Unlocked(Unlocks ending)
+        public bool Unlocked(string tag)
         {
-            return unlocked.HasFlag(ending);
-        }
-
-        public bool Unlocked(int i)
-        {
-            return ((int)unlocked & (1 << i)) > 0;
+            return unlocked.Contains(tag);
         }
 
         public bool Unlocked(Ending ending)
@@ -83,55 +58,28 @@ namespace CauldronCodebase
             }
             return false;
         }
-
-        public Ending Get(int i)
-        {
-            int index = 1 << i;
-            return Endings[(Unlocks)index];
-        }
         
-        public Ending Get(Unlocks i)
+        public Ending Get(string tag)
         {
-            return Endings[i];
+            return Endings[tag];
         }
 
-        public void Unlock(int i)
+        public void Unlock(string tag)
         {
-            unlocked += 1 << i;
-            PlayerPrefs.SetInt(_KEY_, (int)unlocked);
+            unlocked.Add(tag);
+            PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
         }
 
-        public void Unlock(Unlocks ending)
-        {
-            unlocked |= ending;
-            PlayerPrefs.SetInt(_KEY_, (int)unlocked);
-        }
-        
-        
-        public int GetIndexOf(Unlocks ending)
-        {
-            var intPtr = (int)ending;
-            int k = 1;
-            int step = 0;
-            while (step < Endings.Count)
-            {
-                if (k == intPtr)
-                    return step;
-                step++;
-                k = k * 2;
-            }
-
-            return -1;
-        }
-        
         [ContextMenu("Export Endings to CSV")]
         public void ExportEndings()
         {
             var file = File.CreateText(Application.dataPath+"/Localize/Endings.csv");
-            file.WriteLine("id;description_RU;description_EN");
+            file.WriteLine("id;string_RU;string_EN");
             foreach (var ending in endings)
             {
-                file.WriteLine(ending.name+";"+ending.text);
+                file.WriteLine($"{ending.name}.title;{ending.title}");
+                file.WriteLine($"{ending.name}.description;{ending.text}");
+                file.WriteLine($"{ending.name}.short;{ending.shortTextForEndingAnimation}");
             }
             file.Close();
         }

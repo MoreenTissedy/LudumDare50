@@ -2,18 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Save;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
     [CreateAssetMenu]
     public class PriorityLaneProvider : ScriptableObject, IDataPersistence
     {
-        public const string HIGH_FAME = "high fame";
-        public const string LOW_FAME = "low fame";
-        public const string HIGH_FEAR = "high fear";
-        public const string LOW_FEAR = "low fear";
-        
         public Encounter[] priorityCards;
         
         private EncounterDeck deck;
@@ -40,19 +34,19 @@ namespace CauldronCodebase
             foreach (Encounter card in cards)
             {
                 var tags = card.requiredStoryTag.Split(',').Select(x => x.Trim()).ToArray();
-                if (tags.Contains(HIGH_FAME))
+                if (tags.Contains(EndingsProvider.HIGH_FAME))
                 {
                     highFame.Add(card);
                 }
-                else if (tags.Contains(HIGH_FEAR))
+                else if (tags.Contains(EndingsProvider.HIGH_FEAR))
                 {
                     highFear.Add(card);
                 }
-                else if (tags.Contains(LOW_FAME))
+                else if (tags.Contains(EndingsProvider.LOW_FAME))
                 {
                     lowFame.Add(card);
                 }
-                else if (tags.Contains(LOW_FEAR))
+                else if (tags.Contains(EndingsProvider.LOW_FEAR))
                 {
                     lowFear.Add(card);
                 }
@@ -79,19 +73,19 @@ namespace CauldronCodebase
         
         public List<Encounter> GetCardSet(string tag)
         {
-            if (tag == HIGH_FAME)
+            if (tag == EndingsProvider.HIGH_FAME)
             {
                 return highFame;
             }
-            else if (tag == HIGH_FEAR)
+            else if (tag == EndingsProvider.HIGH_FEAR)
             {
                 return highFear;
             }
-            else if (tag == LOW_FAME)
+            else if (tag == EndingsProvider.LOW_FAME)
             {
                 return lowFame;
             }
-            else if (tag == LOW_FEAR)
+            else if (tag == EndingsProvider.LOW_FEAR)
             {
                 return lowFear;
             }

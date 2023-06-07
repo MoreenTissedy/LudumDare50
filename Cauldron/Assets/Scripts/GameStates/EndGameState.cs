@@ -7,21 +7,16 @@ namespace CauldronCodebase.GameStates
 {
     public class EndGameState : BaseGameState
     {
-        private GameStateMachine gameStateMachine;
-        
         private EndingScreen _endingScreen;
-
         private DataPersistenceManager dataPersistenceManager;
-
         private GameFXManager gameFXManager;
+        private string currentEnding;
 
         public EndGameState(EndingScreen endingScreen,
-                            GameStateMachine stateMachine,
                             DataPersistenceManager persistenceManager,
                             GameFXManager fxManager)
         {
             _endingScreen = endingScreen;
-            gameStateMachine = stateMachine;
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
         }
@@ -30,10 +25,15 @@ namespace CauldronCodebase.GameStates
             ShowEffectAndEnding().Forget();
         }
 
+        public void SetEnding(string tag)
+        {
+            currentEnding = tag;
+        }
+
         private async UniTaskVoid ShowEffectAndEnding()
         {
-            await gameFXManager.ShowEndGame(gameStateMachine.currentEnding);
-            _endingScreen.OpenBookWithEnding(gameStateMachine.currentEnding);
+            await gameFXManager.ShowEndGame(currentEnding);
+            _endingScreen.Open(currentEnding);
             _endingScreen.OnClose += ReloadGame;
         }
 
@@ -42,7 +42,7 @@ namespace CauldronCodebase.GameStates
             gameFXManager.Clear();
             if (_endingScreen.isActiveAndEnabled)
             {
-                _endingScreen.CloseBook();
+                _endingScreen.Close();
             }
         }
 

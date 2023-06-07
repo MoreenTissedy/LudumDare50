@@ -1,4 +1,3 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -12,41 +11,41 @@ namespace CauldronCodebase
         public Button continueGame;
         public Button quit;
         public Button newGame;
-        
-        [Header("Settings")]
-        public Button settings;
+
+        [Header("Settings")] public Button settings;
         public SettingsMenu settingsMenu;
-        
-        
-        [Header("Authors")]
-        [SerializeField] private AuthorsMenu authorsMenu;
+
+        [Header("Authors")] [SerializeField] private AuthorsMenu authorsMenu;
         [SerializeField] private Button authorsButton;
         [SerializeField] private GameObject authorsPanel;
 
-        [Header("Fade In Out")]
-        [SerializeField] private FadeController fadeController;
-        [SerializeField] [Tooltip("Fade in seconds")] private float fadeNewGameDuration;
-        
+        [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
+        private float fadeNewGameDuration;
+
         [Inject] private DataPersistenceManager dataPersistenceManager;
+        [Inject] private FadeController fadeController;
 
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!fadeController) fadeController = FindObjectOfType<FadeController>(true);
             if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
             if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
+            //This brings me pain)) Такой OnValidate нужен только для упрощения сериализации, чтобы не руками в инспекторе шорошиться, а просто код написать.
+            //За названиями ты явно в инспектор лазил, еще и ошибки наделать можно, тогда весь смысл пропадает))
+            //Если быстрее перенести руками, просто переносим руками. 
             if (!authorsButton) authorsButton = GameObject.Find("AuthorsButton").GetComponent<Button>();
             if (!authorsPanel) authorsPanel = GameObject.Find("Authors_panel");
         }
-        #endif
-        
+#endif
+
         private void Start()
         {
             if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 HideContinueButton();
             }
+
             continueGame.onClick.AddListener(ContinueClick);
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
@@ -76,20 +75,19 @@ namespace CauldronCodebase
             continueGame.gameObject.SetActive(false);
         }
 
-        private async void NewGameClick()
+        private void NewGameClick()
         {
             switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
-                case true: 
+                case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
                     StartNewGame();
                     break;
-                
+
                 case false:
                     StartNewGame();
                     break;
             }
-            
         }
 
         private void ContinueClick()
@@ -103,10 +101,5 @@ namespace CauldronCodebase
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
         }
-        
-        
-        
-        
-
     }
 }

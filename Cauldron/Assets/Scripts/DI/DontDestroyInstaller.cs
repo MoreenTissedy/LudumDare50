@@ -11,6 +11,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
         [SerializeField] private SoundManager soundManager;
+        [SerializeField] private FadeController fadeController;
         public override void InstallBindings()
         {
             Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
@@ -20,9 +21,9 @@ namespace CauldronCodebase
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
             
-            DataPersistenceManager dataPersistenceScript = Container.InstantiatePrefab(dataPersistenceManager).GetComponent<DataPersistenceManager>();
-            Container.Bind<DataPersistenceManager>().FromInstance(dataPersistenceScript).AsSingle().NonLazy();
+            Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
+            Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
         }
     }
 }

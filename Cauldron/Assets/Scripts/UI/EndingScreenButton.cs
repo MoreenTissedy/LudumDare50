@@ -28,10 +28,11 @@ namespace CauldronCodebase
             effect.SetActive(withEffect);
             if (withEffect)
             {
-                await UniTask.DelayFrame(Tag == "high money" ? 50 : 15);
+                background.SetActive(false);
+                await UniTask.DelayFrame(Tag == "high money" ? 70 : 15);
             }
             background.SetActive(unlocked);
-            image.color = unlocked ? Color.white : new Color (0.5f, 0.5f, 0.5f, 0.2f);
+            image.color = unlocked ? Color.white : new Color (1f, 1f, 1f, 0.5f);
             active = unlocked;
         }
 

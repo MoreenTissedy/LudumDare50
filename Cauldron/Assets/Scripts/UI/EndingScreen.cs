@@ -58,6 +58,7 @@ namespace CauldronCodebase
 
         public void Open(string endingTag = "none")
         {
+            gameObject.SetActive(true);
             var unlock = !endings.Unlocked(endingTag);
             map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
             if (unlock)
@@ -70,7 +71,7 @@ namespace CauldronCodebase
         {
             foreach (var button in buttons)
             {
-                button.Show(endings.Unlocked(tag), button.Tag == tag);
+                button.Show(endings.Unlocked(button.Tag), button.Tag == tag);
             }
         }
 

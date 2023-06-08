@@ -1,17 +1,21 @@
 using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Universal;
 
 namespace CauldronCodebase
 {
-    public class EndingScreenButton : GrowOnMouseEnter 
+    public class EndingScreenButton : GrowOnMouseEnter
     {
+        const float _FADE_IN_DURATION_ = 0.4f;
+        const float _FADE_OUT_DURATION_ = 0.2f;
+        
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private GameObject effect;
-        [SerializeField] private Image image;
         [SerializeField] private GameObject background;
+        [SerializeField] private AnimatorEventCallback animator;
         public string Tag;
 
         private bool active;
@@ -22,22 +26,27 @@ namespace CauldronCodebase
             gameObject.SetActive(false);
         }
 
-        public async void Show(bool unlocked, bool withEffect = false)
+        public async void Show(bool unlocked)
         {
             gameObject.SetActive(true);
-            effect.SetActive(withEffect);
-            if (withEffect)
-            {
-                background.SetActive(false);
-                await UniTask.DelayFrame(Tag == "high money" ? 70 : 15);
-            }
+            canvasGroup.alpha = 0;
             background.SetActive(unlocked);
-            image.color = unlocked ? Color.white : new Color (1f, 1f, 1f, 0.5f);
+            effect.SetActive(false);
+            await canvasGroup.DOFade(1, _FADE_IN_DURATION_);
             active = unlocked;
         }
 
-        public void Hide()
+        public async void Unlock()
         {
+            effect.SetActive(true);
+            await UniTask.WaitUntil(() => animator.callbackReceived);
+            background.SetActive(true);
+            active = true;
+        }
+
+        public async void Hide()
+        {
+            await canvasGroup.DOFade(0, _FADE_OUT_DURATION_);
             gameObject.SetActive(false);
             effect.SetActive(false);
         }

@@ -26,6 +26,7 @@ namespace CauldronCodebase
         [SerializeField] private Image picture;
 
         public event Action OnClose;
+        private bool active;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -58,38 +59,56 @@ namespace CauldronCodebase
 
         public void Open(string endingTag = "none")
         {
-            gameObject.SetActive(true);
-            var unlock = !endings.Unlocked(endingTag);
-            map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
-            if (unlock)
-            {
-                endings.Unlock(endingTag);
-            }
-        }
-
-        private void OnComplete(string tag)
-        {
-            foreach (var button in buttons)
-            {
-                button.Show(endings.Unlocked(button.Tag), button.Tag == tag);
-            }
-        }
-
-        public void Close()
-        {
-            if (!gameObject.activeInHierarchy)
+            if (active)
             {
                 return;
             }
-            foreach (var button in buttons)
+            gameObject.SetActive(true);
+            active = true;
+            map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
+        }
+
+        private async void OnComplete(string tag)
+        {
+            EndingScreenButton buttonToUnlock = null;
+            foreach (EndingScreenButton button in buttons)
             {
-                button.Hide();
+                await UniTask.DelayFrame(15);
+                if (button.Tag == tag)
+                {
+                    buttonToUnlock = button;
+                }
+                button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
+            if (!endings.Unlocked(tag))
+            {
+                endings.Unlock(tag);
+            }
+            if (buttonToUnlock != null)
+            {
+                await UniTask.DelayFrame(15);
+                buttonToUnlock.Unlock();
+            }
+        }
+
+        public async void Close()
+        {
+            if (!active)
+            {
+                return;
+            }
+            active = false;
+            
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {
                 gameObject.SetActive(false);
                 OnClose?.Invoke();
             };
+            foreach (var button in buttons)
+            {
+                await UniTask.DelayFrame(5);
+                button.Hide();
+            }
         }
     }
 }

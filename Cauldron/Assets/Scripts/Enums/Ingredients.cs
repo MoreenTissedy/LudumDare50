@@ -1,5 +1,8 @@
+using System;
+
 namespace CauldronCodebase
 {
+    [Serializable]
     public enum Ingredients
     {
         Root1, Root2, Leaf1, Leaf2, 

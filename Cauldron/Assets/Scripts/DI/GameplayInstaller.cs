@@ -22,6 +22,7 @@ namespace CauldronCodebase
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
+        [SerializeField] private CatTipsManager catTipsManager;
 
         [Header("UI")]
         [SerializeField] private EndingScreen endingScreen;
@@ -31,6 +32,7 @@ namespace CauldronCodebase
         [SerializeField] private NightPanel nightPanel;
         
         [SerializeField] private Tutorial tutorial;
+        [SerializeField] private CatTipsView catTipsView;
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
@@ -61,6 +63,7 @@ namespace CauldronCodebase
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
             Container.Bind<Tutorial>().FromInstance(tutorial).AsSingle();
+            Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
         }
 
         private void BindGameplay()
@@ -68,9 +71,10 @@ namespace CauldronCodebase
             Container.Bind<StatusChecker>().FromNew().AsSingle();
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
-            Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle();
+            Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
+            Container.Bind<CatTipsManager>().FromInstance(catTipsManager).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }

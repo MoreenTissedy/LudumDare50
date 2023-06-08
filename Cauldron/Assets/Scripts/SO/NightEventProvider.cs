@@ -11,7 +11,8 @@ namespace CauldronCodebase
     [Serializable]
     public class NightEventProvider : ScriptableObject, IDataPersistence
     {
-        private const int _EVENT_COOLDOWN_ = 3;
+        //TODO: move to settings
+        private const int _EVENT_COOLDOWN_ = 5;
         private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 1;
 
         [Serializable]

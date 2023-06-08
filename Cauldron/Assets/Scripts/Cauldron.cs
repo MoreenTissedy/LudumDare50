@@ -3,8 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
-using UnityEngine.Serialization;
 using Zenject;
+using Random = UnityEngine.Random;
 
 
 namespace CauldronCodebase
@@ -29,16 +29,23 @@ namespace CauldronCodebase
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
+        private CatTipsManager catTipsManager;
+        private IngredientsData ingredientsData;
+        private CatTipsView catTipsView;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager)
+            SoundManager soundManager, TooltipManager tooltipManager, CatTipsManager tipsManager,
+            IngredientsData ingredients, CatTipsView tipsView)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
             this.gameStateMachine = gameStateMachine;
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
+            catTipsManager = tipsManager;
+            ingredientsData = ingredients;
+            catTipsView = tipsView;
         }
 
         private void Awake()
@@ -66,9 +73,49 @@ namespace CauldronCodebase
             Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
+
+            TryShowCatTip();
+            
             if (mix.Count == 3)
             {
                 Brew();
+            }
+        }
+
+        
+        //TODO: refactor away from here
+        private void TryShowCatTip()
+        {
+            if (Random.Range(0, 3) > 0)
+            {
+                return;
+            }
+            if (mix.Count == 2 && !tooltipManager.Highlighted)
+            {
+                Ingredients[] recipeToTips;
+                Ingredients randomIngredient;
+
+                List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+                foreach (var ingredientInMix in mix)
+                {
+                    allIngredients.Remove(ingredientInMix);
+                }
+
+                int tryCount = allIngredients.Count;
+                do
+                {
+                    randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
+                    recipeToTips = new[] {mix[0], mix[1], randomIngredient};
+
+                    tryCount -= 1;
+                    if (tryCount <= 0) break;
+                } while (recipeBook.IsIngredientSetKnown(recipeToTips));
+
+                if (tryCount > 0)
+                {
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient,
+                        ingredientsData.Get(randomIngredient)));
+                }
             }
         }
 
@@ -81,6 +128,7 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
+            catTipsView.HideView();
             soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
@@ -107,7 +155,7 @@ namespace CauldronCodebase
                 }
             }
 
-            recipeBook.RecordAttempt(mix.ToArray());
+            recipeBook.RecordAttempt(new WrongPotion(mix));
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);

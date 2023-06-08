@@ -8,6 +8,7 @@ namespace CauldronCodebase
     {
         public Gameplay gameplay;
         public StatusBars statusBars;
+        public CatTips catTips;
         
         [Serializable]
         public class Gameplay
@@ -25,6 +26,13 @@ namespace CauldronCodebase
              public int roundsWithUniqueStartingCards = 2;
              public int daysWithUniqueStartingCards = 3;
 
+        }
+        
+        [Serializable]
+        public class CatTips
+        {
+            public float SlowTipsDelay = 60;
+            public float VisitorCheckDelay = 1;
         }
 
         [Serializable]

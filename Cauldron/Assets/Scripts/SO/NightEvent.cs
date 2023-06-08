@@ -14,18 +14,10 @@ namespace CauldronCodebase
         public string flavourText;
         public Sprite picture;
         public float moneyCoef, fearCoef, fameCoef;
-        public Encounter bonusCard;
         public Encounter[] bonusCards;
         public string storyTag;
         [Header("Only for conditionals")]
         public bool repeat;
-
-        //serialize helper
-        private void OnValidate()
-        {
-            bonusCards = new Encounter[1];
-            bonusCards[0] = bonusCard;
-        }
 
         public override bool Localize(Language language)
         {

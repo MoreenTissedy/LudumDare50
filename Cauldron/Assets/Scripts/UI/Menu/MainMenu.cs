@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,27 +11,46 @@ namespace CauldronCodebase
         public Button continueGame;
         public Button quit;
         public Button newGame;
-        public Button settings;
+
+        [Header("Settings")] public Button settings;
         public SettingsMenu settingsMenu;
 
-        [Inject] private DataPersistenceManager dataPersistenceManager;
+        [Header("Authors")] [SerializeField] private AuthorsMenu authorsMenu;
+        [SerializeField] private Button authorsButton;
+        [SerializeField] private GameObject authorsPanel;
 
+        [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
+        private float fadeNewGameDuration;
+
+        [Inject] private DataPersistenceManager dataPersistenceManager;
+        [Inject] private FadeController fadeController;
+
+
+#if UNITY_EDITOR
         private void OnValidate()
         {
-            if (!settingsMenu)
-                settingsMenu = FindObjectOfType<SettingsMenu>();
+            if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
+            if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
+            //This brings me pain)) Такой OnValidate нужен только для упрощения сериализации, чтобы не руками в инспекторе шорошиться, а просто код написать.
+            //За названиями ты явно в инспектор лазил, еще и ошибки наделать можно, тогда весь смысл пропадает))
+            //Если быстрее перенести руками, просто переносим руками. 
+            if (!authorsButton) authorsButton = GameObject.Find("AuthorsButton").GetComponent<Button>();
+            if (!authorsPanel) authorsPanel = GameObject.Find("Authors_panel");
         }
-        
+#endif
+
         private void Start()
         {
             if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 HideContinueButton();
             }
+
             continueGame.onClick.AddListener(ContinueClick);
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);
             settings.onClick.AddListener(settingsMenu.Open);
+            authorsButton.onClick.AddListener(authorsMenu.Open);
         }
 
         private void Update()
@@ -59,11 +79,11 @@ namespace CauldronCodebase
         {
             switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
-                case true:  // A place to open the menu to confirm the start of a new game
+                case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
                     StartNewGame();
                     break;
-                
+
                 case false:
                     StartNewGame();
                     break;
@@ -75,8 +95,9 @@ namespace CauldronCodebase
             GameLoader.UnloadMenu();
         }
 
-        private void StartNewGame()
+        private async void StartNewGame()
         {
+            await fadeController.FadeIn(duration: fadeNewGameDuration);
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
         }

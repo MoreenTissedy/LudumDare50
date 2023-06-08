@@ -50,6 +50,7 @@ namespace CauldronCodebase
 
         private void ShowText(Encounter card)
         {
+            if(visitorText == null) return;
             visitorText.Display(card);
         }
 
@@ -109,7 +110,10 @@ namespace CauldronCodebase
                     soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
                     await UniTask.Delay(300);
                     soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
-                    visitors[i].Enter();
+                    if (visitors[i] != null)
+                    {
+                        visitors[i].Enter();
+                    }
                     soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
                     currentVisitorIndex = i;
                     break;
@@ -118,9 +122,12 @@ namespace CauldronCodebase
 
             await UniTask.Delay(150);
             ShowText(card);
-            
+
             //if cat - disable cat, else - enable cat
-            witchCat.SetActive(villager.name != "Cat");
+            if (witchCat != null)
+            {
+                witchCat.SetActive(villager.name != "Cat");
+            }
         }
 
         public void Exit()

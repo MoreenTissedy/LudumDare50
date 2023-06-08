@@ -10,6 +10,7 @@ namespace Save
     [Serializable]
     public class GameData
     {
+        public List<WrongPotion> AttemptsRecipes;
         public int AttemptsLeft; // VisitorManager
 
         public List<string> CardPool; // EncounterDeck
@@ -41,9 +42,12 @@ namespace Save
 
         public Status Status;  //GameDataHandler
         public GameStateMachine.GamePhase Phase;
+        
+        public bool DarkStrangerCame, WitchCame, InquisitorCame;
 
         public GameData(int initialValue)
         {
+            AttemptsRecipes = new List<WrongPotion>(10);
             AttemptsLeft = 3;
 
             CardPool = new List<string>(15);
@@ -68,6 +72,10 @@ namespace Save
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
+
+            DarkStrangerCame = false;
+            WitchCame = false;
+            InquisitorCame = false;
             
             Debug.Log("GameData has been created");
         }

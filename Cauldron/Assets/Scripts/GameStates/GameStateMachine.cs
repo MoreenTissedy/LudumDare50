@@ -17,7 +17,6 @@ namespace CauldronCodebase.GameStates
             EndGame
         }
 
-        [HideInInspector] public EndingsProvider.Unlocks currentEnding = EndingsProvider.Unlocks.None;
         [HideInInspector] public GamePhase currentGamePhase = GamePhase.VisitorWaiting;
 
         private readonly Dictionary<GamePhase, BaseGameState> gameStates = new Dictionary<GamePhase, BaseGameState>();
@@ -94,6 +93,14 @@ namespace CauldronCodebase.GameStates
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
             dataPersistenceManager.SaveGame();
+        }
+
+        public void SwitchToEnding(string tag)
+        {
+            var night = gameStates[GamePhase.EndGame] as EndGameState;
+            night?.SetEnding(tag);
+            gameData.RememberRound();
+            SwitchState(GamePhase.EndGame);
         }
     }
 }

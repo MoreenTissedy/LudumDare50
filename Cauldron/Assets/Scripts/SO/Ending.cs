@@ -7,6 +7,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_ending", menuName = "Ending", order = 9)]
     public class Ending : LocalizableSO
     {
+        public string tag;
         public string title;
         [TextArea(3, 10)]
         public string text;
@@ -29,16 +30,29 @@ namespace CauldronCodebase
                 }
             }
 
+            int line = 0;
             for (int i = 1; i < lines.Length; i++)
             {
                 string[] data = lines[i].Split(';');
-                if (data[0] == name)
+                if (data[0].StartsWith(name))
                 {
-                    text = data[requiredColumns[0]];
-                    return true;
+                    string lineText = data[requiredColumns[0]];
+                    if (line == 0)
+                    {
+                        title = lineText;
+                    }
+                    else if (line == 1)
+                    {
+                        text = lineText;
+                    }
+                    else
+                    {
+                        shortTextForEndingAnimation = lineText;
+                    }
+                    line++;
                 }
             }
-            return false;
+            return line>0;
         }
     }
 }

@@ -1,117 +1,82 @@
-using UnityEditor;
+using System;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using Zenject;
+using Universal;
 
 namespace CauldronCodebase
 {
-    public class EndingScreenButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class EndingScreenButton : GrowOnMouseEnter
     {
-        private State currentState;
-        enum  State
-        {
-            Locked,
-            Unlocked,
-            Current
-        }
+        const float _FADE_IN_DURATION_ = 0.4f;
+        const float _FADE_OUT_DURATION_ = 0.2f;
         
-        [Inject]
-        private EndingsProvider provider;
-        [SerializeField] private EndingScreen panel;
-        [SerializeField] private int number = -1;
-        [SerializeField] private Image image;
+        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private GameObject effect;
+        [SerializeField] private GameObject background;
+        [SerializeField] private AnimatorEventCallback animator;
+        public string Tag;
 
-        [SerializeField] private Sprite unlocked, locked, current, lockedHighlighted;
+        private bool active;
+        public event Action<string> OnClick;
 
-
-        #if UNITY_EDITOR
-        void OnValidate()
+        private void Start()
         {
-            if (panel is null)
-            {
-                panel = GetComponentInParent<EndingScreen>();
-            }
-
-            if (number <= 0)
-            {
-                number = transform.GetSiblingIndex() - 1;
-            }
-
-            if (image is null)
-            {
-                image = GetComponentInChildren<Image>();
-            }
-
-            if (PrefabUtility.IsPartOfPrefabInstance(this))
-            {
-                PrefabUtility.RecordPrefabInstancePropertyModifications(this);
-            }
-        }
-        #endif
-
-        void UpdateColor(int page)
-        {
-            if (panel.CurrentPage == number)
-            {
-                currentState = State.Current;
-                image.sprite = unlocked;
-                image.color = Color.white;
-            }
-            else if (provider.Unlocked(number))
-            {
-                currentState = State.Unlocked;
-                image.sprite = unlocked;
-                image.color = Color.gray;
-            }
-            else
-            {
-                currentState = State.Locked;
-                image.sprite = locked;
-                image.color = Color.white;
-            }
+            gameObject.SetActive(false);
         }
 
-        private void OnEnable()
+        public async void Show(bool unlocked)
         {
-            panel.OnPageUpdate += UpdateColor;
+            gameObject.SetActive(true);
+            canvasGroup.alpha = 0;
+            background.SetActive(unlocked);
+            effect.SetActive(false);
+            await canvasGroup.DOFade(1, _FADE_IN_DURATION_);
+            active = unlocked;
         }
 
-        private void OnDisable()
+        public async void Unlock()
         {
-            panel.OnPageUpdate -= UpdateColor;
+            effect.SetActive(true);
+            await UniTask.WaitUntil(() => animator.callbackReceived);
+            background.SetActive(true);
+            active = true;
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public async void Hide()
         {
-            if (currentState == State.Current)
+            await canvasGroup.DOFade(0, _FADE_OUT_DURATION_);
+            gameObject.SetActive(false);
+            effect.SetActive(false);
+        }
+
+        public override void OnPointerClick(PointerEventData eventData)
+        {
+            if (!active)
+            {
                 return;
-            panel.OpenPage(number);
+            }
+            OnClick?.Invoke(Tag);
+            base.OnPointerClick(eventData);
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public override void OnPointerEnter(PointerEventData eventData)
         {
-            if (currentState == State.Locked)
+            if (!active)
             {
-                image.sprite = lockedHighlighted;
+                return;
             }
-            else if (currentState == State.Unlocked)
-            {
-                image.color = Color.Lerp(Color.gray, Color.white, 0.5f);
-            }
+            base.OnPointerEnter(eventData);
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public override void OnPointerExit(PointerEventData eventData)
         {
-            
-            if (currentState == State.Locked)
+            if (!active)
             {
-                image.sprite = locked;
+                return;
             }
-            else if (currentState == State.Unlocked)
-            {
-                image.color = Color.gray;
-            }
+            base.OnPointerExit(eventData);
         }
     }
 }

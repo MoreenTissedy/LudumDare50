@@ -25,10 +25,10 @@ namespace Editor
             Encounter[] cards = ScriptableObjectHelper.LoadAllAssets<Encounter>();
             foreach (var card in cards)
             {
-                if (card.requiredStoryTag.Split(',').Any((x) => x.Trim() == PriorityLaneProvider.LOW_FAME ||
-                                                                x.Trim() == PriorityLaneProvider.HIGH_FAME
-                                                                || x.Trim() == PriorityLaneProvider.LOW_FEAR ||
-                                                                x.Trim() == PriorityLaneProvider.HIGH_FEAR))
+                if (card.requiredStoryTag.Split(',').Any((x) => x.Trim() == EndingsProvider.LOW_FAME ||
+                                                                x.Trim() == EndingsProvider.HIGH_FAME
+                                                                || x.Trim() == EndingsProvider.LOW_FEAR ||
+                                                                x.Trim() == EndingsProvider.HIGH_FEAR))
                 {
                     card.addToDeckOnDay = -1;
                     EditorUtility.SetDirty(card);

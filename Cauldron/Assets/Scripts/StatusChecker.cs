@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using CauldronCodebase.GameStates;
-using UnityEngine;
+﻿using CauldronCodebase.GameStates;
 using Zenject;
 
 namespace CauldronCodebase
@@ -31,52 +29,52 @@ namespace CauldronCodebase
             }
         }
 
-        public EndingsProvider.Unlocks Run()
+        public string Run()
         {
             if (gameDataHandler.Fame >= settings.statusBars.Total)
             {
-                return EndingsProvider.Unlocks.HighFame;
+                return EndingsProvider.HIGH_FAME;
             }
 
             if (gameDataHandler.Fear >= settings.statusBars.Total)
             {
-                return EndingsProvider.Unlocks.HighFear;
+                return EndingsProvider.HIGH_FEAR;
             }
 
             if (gameDataHandler.Money >= settings.statusBars.Total)
             {
-                return EndingsProvider.Unlocks.HighMoney;
+                return EndingsProvider.ENOUGH_MONEY;
 
             }
 
             if (gameDataHandler.Fame <= 0)
             {
-                return EndingsProvider.Unlocks.LowFame;
+                return EndingsProvider.LOW_FAME;
             }
 
             if (gameDataHandler.Fear <= 0)
             {
-                return EndingsProvider.Unlocks.LowFear;
+                return EndingsProvider.LOW_FEAR;
             }
 
-            return EndingsProvider.Unlocks.None;
+            return string.Empty;
         }
 
         public Encounter CheckStatusesThreshold()
         {
-            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FEAR, Statustype.Fear, out var card1))
+            if (TryGetPriorityCard(EndingsProvider.HIGH_FEAR, Statustype.Fear, out var card1))
             {
                 return card1;
             }
-            if (TryGetPriorityCard(PriorityLaneProvider.HIGH_FAME, Statustype.Fame, out var card3))
+            if (TryGetPriorityCard(EndingsProvider.HIGH_FAME, Statustype.Fame, out var card3))
             {
                 return card3;
             }
-            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FEAR, Statustype.Fear, out var card2, false))
+            if (TryGetPriorityCard(EndingsProvider.LOW_FEAR, Statustype.Fear, out var card2, false))
             {
                 return card2;
             }
-            if (TryGetPriorityCard(PriorityLaneProvider.LOW_FAME, Statustype.Fame, out var card4, false))
+            if (TryGetPriorityCard(EndingsProvider.LOW_FAME, Statustype.Fame, out var card4, false))
             {
                 return card4;
             }

@@ -99,7 +99,7 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
                 yield break;
             }
             
-        } while (recipeBook.CheckRecipeIsOpen(randomRecipe));
+        } while (recipeBook.IsIngredientSetKnown(randomRecipe));
         
 
         var ingredients = randomRecipe.Select(ingredient => ingredientsData.Get(ingredient)).ToList();

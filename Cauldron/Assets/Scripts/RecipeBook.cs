@@ -415,21 +415,14 @@ namespace CauldronCodebase
 
         }
     
-        public bool CheckRecipeIsOpen(Ingredients[] recipe)
+        public bool IsIngredientSetKnown(Ingredients[] recipe)
         {
-            
-            //Check magic
-            if (magicalRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+            //Check potions
+            if (unlockedRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
             {
                 return true;
             }
-        
-            //Check food
-            if (herbalRecipes.Any(foodRecipe => foodRecipe.RecipeIngredients.All(recipe.Contains)))
-            {
-                return true;
-            }
-            
+
             //Check attempts
             if(wrongPotions.Count != 0 && wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
             {

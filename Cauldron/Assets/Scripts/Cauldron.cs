@@ -94,7 +94,7 @@ namespace CauldronCodebase
                     tryCount -= 1;
                     if(tryCount <= 0) break;
 
-                } while (recipeBook.CheckRecipeIsOpen(recipeToTips));
+                } while (recipeBook.IsIngredientSetKnown(recipeToTips));
 
                 if (tryCount > 0)
                 {

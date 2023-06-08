@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ namespace CauldronCodebase
 {
     public class EndingScreen: MonoBehaviour
     {
+        private const float _ENDING_SCREEN_FADE_DURATION_ = 0.2f;
+        
         [Inject]
         private EndingsProvider endings;
 
@@ -21,6 +24,7 @@ namespace CauldronCodebase
         
         [Header("Ending display")] 
         [SerializeField] private GameObject screen;
+        [SerializeField] private CanvasGroup screenFader;
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
@@ -49,12 +53,14 @@ namespace CauldronCodebase
         {
             Ending ending = endings.Get(tag);
             screen.SetActive(true);
+            screenFader.alpha = 0;
+            screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
             description.text = ending.text;
             picture.sprite = ending.image;
-            await UniTask.Delay(TimeSpan.FromSeconds(1));
+            await UniTask.Delay(TimeSpan.FromSeconds(2));
             await UniTask.WaitUntil(() => Input.anyKey);
-            screen.SetActive(false);
+            screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() => screen.SetActive(false));
         }
 
         public void Open(string endingTag = "none")
@@ -64,6 +70,7 @@ namespace CauldronCodebase
                 return;
             }
             gameObject.SetActive(true);
+            closeButton.gameObject.SetActive(false);
             active = true;
             map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
         }
@@ -89,6 +96,7 @@ namespace CauldronCodebase
                 await UniTask.DelayFrame(15);
                 buttonToUnlock.Unlock();
             }
+            closeButton.gameObject.SetActive(true);
         }
 
         public async void Close()
@@ -98,7 +106,7 @@ namespace CauldronCodebase
                 return;
             }
             active = false;
-            
+            closeButton.gameObject.SetActive(false);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {
                 gameObject.SetActive(false);

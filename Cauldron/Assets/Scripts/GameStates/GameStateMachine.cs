@@ -32,6 +32,7 @@ namespace CauldronCodebase.GameStates
         private GameFXManager gameFXManager;
 
         public event Action<GamePhase> OnChangeState;
+        public event Action OnGameStarted;
 
 
         [Inject]
@@ -68,6 +69,10 @@ namespace CauldronCodebase.GameStates
                 fadeController.FadeOut(0, 0.1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
+            else
+            {
+                await UniTask.NextFrame(); //to avoid injection problems
+            }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {
                 PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
@@ -76,7 +81,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
-            sounds.Start();
+            OnGameStarted?.Invoke();
             currentGameState.Enter();
         }
  

@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace CauldronCodebase
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
+        [Inject] private SoundManager soundManager; 
 
 
 #if UNITY_EDITOR
@@ -31,16 +33,15 @@ namespace CauldronCodebase
         {
             if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
             if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
-            //This brings me pain)) Такой OnValidate нужен только для упрощения сериализации, чтобы не руками в инспекторе шорошиться, а просто код написать.
-            //За названиями ты явно в инспектор лазил, еще и ошибки наделать можно, тогда весь смысл пропадает))
-            //Если быстрее перенести руками, просто переносим руками. 
-            if (!authorsButton) authorsButton = GameObject.Find("AuthorsButton").GetComponent<Button>();
-            if (!authorsPanel) authorsPanel = GameObject.Find("Authors_panel");
         }
 #endif
 
         private void Start()
         {
+            if (!GameLoader.IsGameLoaded())
+            {
+                soundManager.SetMusic(Sounds.Menu, false);
+            }
             if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 HideContinueButton();

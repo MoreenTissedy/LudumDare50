@@ -275,9 +275,9 @@ namespace Editor
             foreach (NightEvent storyEvent in storyEvents.Union(startingEvents))
             {
                 string eventName = storyEvent.name.Replace(".", "_").Replace("-", "_");
-                if (storyEvent.bonusCard != null)
+                foreach (var card in storyEvent.bonusCards)
                 {
-                    string bonusCard = storyEvent.bonusCard.name.Replace(".", "_").Replace("-", "_");
+                    string bonusCard = card.name.Replace(".", "_").Replace("-", "_");
                     dotNotation += $"{eventName} -> {bonusCard}\n";
                 }
             }

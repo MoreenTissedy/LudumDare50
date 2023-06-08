@@ -26,6 +26,8 @@ namespace CauldronCodebase.GameStates
 
         private DataPersistenceManager dataPersistenceManager;
         private GameDataHandler gameData;
+        private SoundManager sounds;
+        private FadeController fadeController;
 
         private GameFXManager gameFXManager;
 
@@ -33,7 +35,8 @@ namespace CauldronCodebase.GameStates
 
 
         [Inject]
-        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, GameDataHandler gameData, GameFXManager fxManager)
+        public void Construct(StateFactory factory, DataPersistenceManager persistenceManager, 
+            GameDataHandler gameData, GameFXManager fxManager, SoundManager sounds, FadeController fadeController)
         {
             gameStates.Add(GamePhase.VisitorWaiting, factory.CreateVisitorWaitingState());
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
@@ -43,6 +46,8 @@ namespace CauldronCodebase.GameStates
             dataPersistenceManager = persistenceManager;
             this.gameData = gameData;
             gameFXManager = fxManager;
+            this.sounds = sounds;
+            this.fadeController = fadeController;
         }
 
         private void Start()
@@ -60,6 +65,7 @@ namespace CauldronCodebase.GameStates
                 {
                     return;
                 }
+                fadeController.FadeOut(0, 0.1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
@@ -70,6 +76,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+            sounds.Start();
             currentGameState.Enter();
         }
  

@@ -11,7 +11,8 @@ namespace CauldronCodebase
     [Serializable]
     public class NightEventProvider : ScriptableObject, IDataPersistence
     {
-        private const int _EVENT_COOLDOWN_ = 3;
+        //TODO: move to settings
+        private const int _EVENT_COOLDOWN_ = 5;
         private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 1;
 
         [Serializable]
@@ -179,10 +180,10 @@ namespace CauldronCodebase
             {
                 return;
             }
-            data.CurrentStoryEvents = storyEvents.Select(x => x.Id).ToArray();
-            data.CurrentConditionals = inGameConditionals.Select(x => x.Id).ToArray();
-            data.CurrentRandomEvents = inGameRandoms.Select(x => x.Id).ToArray();
-            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.Id).ToArray();
+            data.CurrentStoryEvents = storyEvents.Select(x => x.name).ToArray();
+            data.CurrentConditionals = inGameConditionals.Select(x => x.name).ToArray();
+            data.CurrentRandomEvents = inGameRandoms.Select(x => x.name).ToArray();
+            data.CooldownEvents = eventsOnCooldown.Select(x => x.Event.name).ToArray();
             data.CooldownDays = eventsOnCooldown.Select(x => x.Days).ToArray();
         }
     }

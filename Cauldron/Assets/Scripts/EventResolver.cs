@@ -1,4 +1,5 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -18,7 +19,6 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, nightEvent);
             game.Fear += CalculateModifier(Statustype.Fear, nightEvent);
             game.Money += CalculateModifier(Statustype.Money, nightEvent);
-            game.currentDeck.AddToDeck(nightEvent.bonusCard, true);
             string storyTag = nightEvent.storyTag;
             if (storyTag.StartsWith("-"))
             {
@@ -29,6 +29,56 @@ namespace CauldronCodebase
                 game.AddTag(storyTag);
                 Debug.Log($"Add story tag: {storyTag}");
             }
+        }
+
+        public Encounter AddBonusCards(NightEvent nightEvent)
+        {
+            if (nightEvent.bonusCards is null || nightEvent.bonusCards.Length == 0)
+            {
+                return null;
+            }
+
+            if (nightEvent.bonusCards.Length == 1)
+            {
+                return nightEvent.bonusCards[0];
+            }
+
+            var random = GetRandomValidIndex(nightEvent.bonusCards);
+
+            for (var i = 0; i < nightEvent.bonusCards.Length; i++)
+            {
+                if (i == random)
+                {
+                    continue;
+                }
+                if (!game.currentDeck.AddToDeck(nightEvent.bonusCards[i]))
+                {
+                    game.currentDeck.AddToPool(nightEvent.bonusCards[i]);
+                }
+            }
+            return nightEvent.bonusCards[random];
+        }
+
+        private int GetRandomValidIndex(Encounter[] cards)
+        {
+            Encounter priority = null;
+            int random = -1;
+            for (int i = 0; i < 10; i++)
+            {
+                random = Random.Range(0, cards.Length);
+                if (game.currentDeck.CheckStoryTags(cards[random]))
+                {
+                    priority = cards[random];
+                    break;
+                }
+            }
+
+            if (priority is null)
+            {
+                random = -1;
+            }
+
+            return random;
         }
 
         public int CalculateModifier(Statustype type, NightEvent nightEvent)

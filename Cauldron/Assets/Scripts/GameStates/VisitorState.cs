@@ -6,7 +6,7 @@ namespace CauldronCodebase.GameStates
 {
     public class VisitorState : BaseGameState
     {
-        private readonly EncounterDeckBase cardDeck;
+        private readonly EncounterDeck cardDeck;
         private readonly GameDataHandler gameDataHandler;
         private readonly VisitorManager visitorManager;
         private readonly Cauldron cauldron;
@@ -16,14 +16,15 @@ namespace CauldronCodebase.GameStates
         private readonly EncounterResolver resolver;
         private readonly StatusChecker statusChecker;
 
-        public VisitorState(EncounterDeckBase deck,
+        public VisitorState(EncounterDeck deck,
                             MainSettings settings,
                             GameDataHandler gameDataHandler,
                             VisitorManager visitorManager,
                             Cauldron cauldron,
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider, 
-                            SoundManager soundManager)
+                            SoundManager soundManager,
+                            StatusChecker statusChecker)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
@@ -32,13 +33,18 @@ namespace CauldronCodebase.GameStates
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
+            this.statusChecker = statusChecker;
 
-            statusChecker = new StatusChecker(settings, gameDataHandler);
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
         
         public override void Enter()
         {
+            var priorityCard = statusChecker.CheckStatusesThreshold();
+            if (priorityCard)
+            {
+                cardDeck.AddToDeck(priorityCard, true);
+            }
             Encounter currentCard = cardDeck.GetTopCard();
             gameDataHandler.currentCard = currentCard;
 
@@ -66,9 +72,6 @@ namespace CauldronCodebase.GameStates
         {
             PlayRelevantSound(potion);
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
-
-            statusChecker.CheckStatusesThreshold();
-            cardDeck.AddStoryCards();
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 

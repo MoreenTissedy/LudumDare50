@@ -14,7 +14,7 @@ namespace CauldronCodebase
         public string flavourText;
         public Sprite picture;
         public float moneyCoef, fearCoef, fameCoef;
-        public Encounter bonusCard;
+        public Encounter[] bonusCards;
         public string storyTag;
         [Header("Only for conditionals")]
         public bool repeat;

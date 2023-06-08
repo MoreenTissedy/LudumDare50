@@ -10,6 +10,8 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private Tutorial tutorial;
 
+        private bool debug;
+
         [Inject]
         private void Construct(EndingScreen endingPanel, RecipeBook recipeBook, Tutorial tutorial)
         {
@@ -20,9 +22,11 @@ namespace CauldronCodebase
         
         private void Update()
         {
+            //DEBUG
             if (Input.GetKeyDown(KeyCode.K))
             {
-                endingPanel.Open();
+                endingPanel.Open(debug ? "high money" : "high fame");
+                debug = true;
             }
             
             //move to some sort of input manager?

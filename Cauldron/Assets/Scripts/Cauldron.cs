@@ -74,11 +74,27 @@ namespace CauldronCodebase
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
 
+            TryShowCatTip();
+            
+            if (mix.Count == 3)
+            {
+                Brew();
+            }
+        }
+
+        
+        //TODO: refactor away from here
+        private void TryShowCatTip()
+        {
+            if (Random.Range(0, 3) > 0)
+            {
+                return;
+            }
             if (mix.Count == 2 && !tooltipManager.Highlighted)
             {
                 Ingredients[] recipeToTips;
                 Ingredients randomIngredient;
-                
+
                 List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
                 foreach (var ingredientInMix in mix)
                 {
@@ -89,21 +105,17 @@ namespace CauldronCodebase
                 do
                 {
                     randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
-                    recipeToTips = new [] {mix[0], mix[1], randomIngredient};
+                    recipeToTips = new[] {mix[0], mix[1], randomIngredient};
 
                     tryCount -= 1;
-                    if(tryCount <= 0) break;
-
+                    if (tryCount <= 0) break;
                 } while (recipeBook.IsIngredientSetKnown(recipeToTips));
 
                 if (tryCount > 0)
                 {
-                    catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient, ingredientsData.Get(randomIngredient)));
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient,
+                        ingredientsData.Get(randomIngredient)));
                 }
-            }
-            if (mix.Count == 3)
-            {
-                Brew();
             }
         }
 

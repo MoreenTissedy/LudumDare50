@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DG.Tweening;
+using EasyLoc;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -10,7 +11,9 @@ namespace CauldronCodebase
     public class VisitorTextBox : MonoBehaviour
     {
         const string DEVIL = "devil";
-        
+
+        [Localize]
+        public string devilDefault = "Привет, милая. Как делишки? Покажи-ка, что ты умеешь.";
         public float offScreen = -1000;
         public float animTime = 0.5f;
         public TMP_Text text;
@@ -45,7 +48,7 @@ namespace CauldronCodebase
                 Recipe unlockRecipe = GetRecipeToUnlock();
                 if (unlockRecipe == null)
                 {
-                    text.text = "Свари мне что-нибудь.";
+                    text.text = devilDefault;
                 }
                 text.text = Format(card, unlockRecipe);
             }

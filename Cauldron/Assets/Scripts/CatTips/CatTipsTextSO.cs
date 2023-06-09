@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [CreateAssetMenu]
 public class CatTipsTextSO : LocalizableSO
@@ -30,7 +33,7 @@ public class CatTipsTextSO : LocalizableSO
             return false;
         }
         TextList.Clear();
-        for (int i = 1; i <= lines.Length; i++)
+        for (int i = 1; i < lines.Length; i++)
         {
             string[] data = lines[i].Split(';');
             if (data[0].StartsWith(name))
@@ -41,6 +44,7 @@ public class CatTipsTextSO : LocalizableSO
         return true;
     }
 
+#if UNITY_EDITOR
     [ContextMenu("Export all tip providers")]
     public void ExportTips()
     {
@@ -68,4 +72,5 @@ public class CatTipsTextSO : LocalizableSO
             }
         }
     }
+    #endif
 }

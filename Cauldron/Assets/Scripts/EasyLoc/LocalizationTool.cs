@@ -38,11 +38,6 @@ namespace EasyLoc
             //unload scenes
         }
 
-        private void Start()
-        {
-            LoadSavedLanguage();
-        }
-
         public void LoadSavedLanguage()
         {
             var language = Language.EN;
@@ -72,9 +67,9 @@ namespace EasyLoc
                         if (!Application.isPlaying) EditorUtility.SetDirty(unit);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    Debug.LogError("failed to localize "+unit.name);
+                    Debug.LogError("failed to localize "+unit.name+": "+e.Message);
                     continue;
                 }
             }

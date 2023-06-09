@@ -204,7 +204,7 @@ namespace EasyLoc
                 Type monoType = mono.GetType();
 
                 // Retreive the fields from the monobeh
-                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                 // search all fields and find the attribute [Localize]
                 for (int i = 0; i < objectFields.Length; i++)

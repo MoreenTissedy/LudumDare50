@@ -37,8 +37,8 @@ namespace CauldronCodebase
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            tooltipCanvas = GetComponentInChildren<Canvas>();
-            tooltipText = tooltipCanvas.GetComponentInChildren<Text>();
+            tooltipCanvas = GetComponentInChildren<Canvas>(true);
+            tooltipText = tooltipCanvas.GetComponentInChildren<Text>(true);
             if (tooltipText != null && tooltipText.text == String.Empty)
             {
                 ChangeText();

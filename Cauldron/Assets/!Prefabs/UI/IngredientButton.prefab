@@ -315,7 +315,7 @@ MonoBehaviour:
   returntime: 0.4
   dataList: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
   tooltipText: {fileID: 2301198565767257074}
-  tooltipCanvas: {fileID: 2301198565875016110}
+  tooltipCanvas: {fileID: 0}
   image: {fileID: 3238362719770474279}
   ingredientParticle: {fileID: 7843061478358679080}
   dragTrail: {fileID: 3360730278269549510}
@@ -428,7 +428,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2301198565875016109
 RectTransform:
   m_ObjectHideFlags: 0
@@ -673,6 +673,10 @@ PrefabInstance:
     - target: {fileID: 4633796836846010269, guid: 350fa8b8c347ec041acc18ede1e140cd, type: 3}
       propertyPath: m_Name
       value: Target_trail
+      objectReference: {fileID: 0}
+    - target: {fileID: 4633796836846010269, guid: 350fa8b8c347ec041acc18ede1e140cd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4637370222047424299, guid: 350fa8b8c347ec041acc18ede1e140cd, type: 3}
       propertyPath: m_LocalPosition.x

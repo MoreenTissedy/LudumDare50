@@ -50,7 +50,7 @@ namespace CauldronCodebase.GameStates
 
             if (gameDataHandler.currentCard is null)
             {
-                Debug.LogError("Run out of cards!");
+                stateMachine.SwitchToEnding("high money");
                 return;
             }
                      

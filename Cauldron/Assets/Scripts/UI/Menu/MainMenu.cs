@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
 using Save;
@@ -26,6 +27,7 @@ namespace CauldronCodebase
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
         [Inject] private LocalizationTool locTool;
+        [Inject] private SoundManager soundManager; 
 
 
 #if UNITY_EDITOR
@@ -38,6 +40,10 @@ namespace CauldronCodebase
 
         private void Start()
         {
+            if (!GameLoader.IsGameLoaded())
+            {
+                soundManager.SetMusic(Sounds.Menu, false);
+            }
             if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {
                 HideContinueButton();

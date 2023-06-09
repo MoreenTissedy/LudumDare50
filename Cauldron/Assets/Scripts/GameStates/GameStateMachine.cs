@@ -17,7 +17,6 @@ namespace CauldronCodebase.GameStates
             EndGame
         }
 
-        [HideInInspector] public EndingsProvider.Unlocks currentEnding = EndingsProvider.Unlocks.None;
         [HideInInspector] public GamePhase currentGamePhase = GamePhase.VisitorWaiting;
 
         private readonly Dictionary<GamePhase, BaseGameState> gameStates = new Dictionary<GamePhase, BaseGameState>();
@@ -32,6 +31,7 @@ namespace CauldronCodebase.GameStates
         private GameFXManager gameFXManager;
 
         public event Action<GamePhase> OnChangeState;
+        public event Action OnGameStarted;
 
 
         [Inject]
@@ -68,6 +68,10 @@ namespace CauldronCodebase.GameStates
                 fadeController.FadeOut(0, 0.1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
+            else
+            {
+                await UniTask.NextFrame(); //to avoid injection problems
+            }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {
                 PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
@@ -76,7 +80,7 @@ namespace CauldronCodebase.GameStates
             {
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
-            sounds.Start();
+            OnGameStarted?.Invoke();
             currentGameState.Enter();
         }
  
@@ -89,6 +93,14 @@ namespace CauldronCodebase.GameStates
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
             dataPersistenceManager.SaveGame();
+        }
+
+        public void SwitchToEnding(string tag)
+        {
+            var night = gameStates[GamePhase.EndGame] as EndGameState;
+            night?.SetEnding(tag);
+            gameData.RememberRound();
+            SwitchState(GamePhase.EndGame);
         }
     }
 }

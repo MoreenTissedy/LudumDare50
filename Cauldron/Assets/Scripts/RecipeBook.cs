@@ -105,8 +105,7 @@ namespace CauldronCodebase
                 }
                 else allHerbalRecipes.Add(recipe);
             }
-            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
-            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
+            
         }
 
         public void RecordAttempt(WrongPotion mix)
@@ -231,6 +230,9 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
+            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
+            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
+            
             switch (currentMode)
             {
                 case Mode.Magical:

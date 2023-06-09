@@ -45,7 +45,7 @@ namespace CauldronCodebase
             await PlayFX(CreateFx(moonFX).SetText(endGameText));
         }
 
-        public async UniTask ShowEndGame(EndingsProvider.Unlocks ending)
+        public async UniTask ShowEndGame(string ending)
         {
             await PlayFX(CreateFx(endGameFX).SelectEnding(endingsProvider.Get(ending)));
         }

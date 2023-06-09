@@ -208,6 +208,10 @@ namespace CauldronCodebase
 
         public Encounter GetTopCard()
         {
+            if (deck.Count == 0)
+            {
+                return null;
+            }
             if (loadedCard != null)
             {
                 currentCard = loadedCard;
@@ -320,8 +324,8 @@ namespace CauldronCodebase
             foreach (var tag in tags)
             {
                 string trim = tag.Trim();
-                if (trim == PriorityLaneProvider.LOW_FAME || trim == PriorityLaneProvider.LOW_FEAR ||
-                    trim == PriorityLaneProvider.HIGH_FAME || trim == PriorityLaneProvider.HIGH_FEAR)
+                if (trim == EndingsProvider.LOW_FAME || trim == EndingsProvider.LOW_FEAR ||
+                    trim == EndingsProvider.HIGH_FAME || trim == EndingsProvider.HIGH_FEAR)
                 {
                     continue;
                 }

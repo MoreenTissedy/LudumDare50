@@ -1,6 +1,8 @@
 using System;
+using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace CauldronCodebase
 {
@@ -28,6 +30,10 @@ namespace CauldronCodebase
         StartSpark,
         StartDay,
         EndDay,
+        EndingUnlock,
+        SpecialEndingUnlock,
+        Music2,
+        Menu
     }
 
     public enum VisitorSound
@@ -89,17 +95,42 @@ namespace CauldronCodebase
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
 
-        private bool musicStarted;
+        private EventInstance currentMusic;
+        private EventInstance bubbling;
 
-        public void Start()
+        public void SetMusic(Sounds music, bool withBubbling)
         {
-            if (musicStarted)
+            if (!bubbling.isValid())
             {
-                return;
+                bubbling = RuntimeManager.CreateInstance(sounds[(int)Sounds.Bubbling]);
             }
-            musicStarted = true;
-            Play(Sounds.Music);
-            Play(Sounds.Bubbling);
+            if (currentMusic.isValid())
+            {
+                currentMusic.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+            currentMusic = RuntimeManager.CreateInstance(sounds[(int)music]);
+            currentMusic.start();
+            if (withBubbling)
+            {
+                bubbling.start();
+            }
+            else
+            {
+                bubbling.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+        }
+
+        public void StopMusic()
+        {
+            if (bubbling.isValid())
+            {
+                bubbling.stop(STOP_MODE.ALLOWFADEOUT);
+            }
+
+            if (currentMusic.isValid())
+            {
+                currentMusic.stop(STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
         public void Play(Sounds sound)

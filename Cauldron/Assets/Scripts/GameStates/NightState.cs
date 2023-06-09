@@ -106,11 +106,9 @@ namespace CauldronCodebase.GameStates
         private bool IsGameEnd()
         {
             var check = statusChecker.Run();
-            if (check != EndingsProvider.Unlocks.None)
+            if (!string.IsNullOrEmpty(check))
             {
-                stateMachine.currentEnding = check;
-                stateMachine.SwitchState(GameStateMachine.GamePhase.EndGame);
-                gameDataHandler.RememberRound();
+                stateMachine.SwitchToEnding(check);
                 return true;
             }
 

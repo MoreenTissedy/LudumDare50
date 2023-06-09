@@ -35,11 +35,10 @@ namespace CauldronCodebase.GameStates
 
                             GameDataHandler gameDataHandler,
                             DataPersistenceManager dataPersistenceManager,
-                            PriorityLaneProvider priorityLaneProvider,
-                            
                             GameStateMachine gameStateMachine,
                             SoundManager soundManager,
-                            GameFXManager fxManager, StatusChecker statusChecker)
+                            GameFXManager fxManager, 
+                            StatusChecker statusChecker)
 
         {
             this.deck = deck;
@@ -80,7 +79,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, gameStateMachine, dataPersistenceManager, gameFXManager);
+            return new EndGameState(endingScreen, dataPersistenceManager, gameFXManager);
         }
 
     }

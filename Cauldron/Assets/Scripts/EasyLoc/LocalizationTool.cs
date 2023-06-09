@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +24,9 @@ namespace EasyLoc
         [SerializeField] private Language selectLanguage;
 
         public Language loadedLanguage;
+        public event Action OnLanguageChanged;
+
+        private bool languageLoaded;
 
         #if UNITY_EDITOR
         
@@ -46,12 +48,30 @@ namespace EasyLoc
             {
                 language = Language.RU;
             }
-            LoadLanguage(language);
+            if (languageLoaded)
+            {
+                ImportUI(language);
+            }
+            else
+            {
+                LoadLanguage(language);
+            }
         }
 
         public void LoadLanguage(Language language)
         {
-            Debug.LogWarning("changing language to " + language);
+            ImportScriptableObjects(language);
+            ImportUI(language);
+            languageLoaded = true;
+            if (loadedLanguage != language)
+            {
+                OnLanguageChanged?.Invoke();
+            }
+            loadedLanguage = language;
+        }
+
+        private void ImportScriptableObjects(Language language)
+        {
             var units = GetUnits();
             Debug.Log("Found SO to localize: " + units.Length);
             foreach (LocalizableSO unit in units)
@@ -69,13 +89,12 @@ namespace EasyLoc
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("failed to localize "+unit.name+": "+e.Message);
+                    Debug.LogError("failed to localize " + unit.name + ": " + e.Message);
                     continue;
                 }
             }
+
             if (!Application.isPlaying) AssetDatabase.SaveAssets();
-            ImportUI(language);
-            loadedLanguage = language;
         }
 
         LocalizableSO[] GetUnits()

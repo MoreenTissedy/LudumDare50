@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
-using UnityEditor;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -61,17 +59,6 @@ namespace CauldronCodebase
                 file.WriteLine($"{nightEvent.name};{nightEvent.title};{nightEvent.flavourText}");
             }
             file.Close();
-        }
-
-        [ContextMenu("Fix localization asset")]
-        public void SetLocAsset()
-        {
-            var nEvents = Resources.FindObjectsOfTypeAll<Encounter>();
-            foreach (var nEvent in nEvents)
-            {
-                    nEvent.localizationCSV = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets"+"/Localize/Cards.csv");
-                    EditorUtility.SetDirty(nEvent);
-            }
         }
     }
     

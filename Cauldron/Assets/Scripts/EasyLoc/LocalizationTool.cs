@@ -6,9 +6,9 @@ using UnityEngine;
 using System.Reflection;
 using JetBrains.Annotations;
 using UnityEngine.SceneManagement;
+using CauldronCodebase;
 
 #if UNITY_EDITOR
-using CauldronCodebase;
 using UnityEditor.SceneManagement;
 using UnityEditor;
 #endif
@@ -28,8 +28,6 @@ namespace EasyLoc
 
         private bool languageLoaded;
 
-        #if UNITY_EDITOR
-        
         [UsedImplicitly]
         void LoadCurrentLanguage()
         {
@@ -72,7 +70,7 @@ namespace EasyLoc
 
         private void ImportScriptableObjects(Language language)
         {
-            var units = GetUnits();
+            var units = Resources.FindObjectsOfTypeAll<LocalizableSO>();
             Debug.Log("Found SO to localize: " + units.Length);
             foreach (LocalizableSO unit in units)
             {
@@ -82,10 +80,12 @@ namespace EasyLoc
                     {
                         Debug.LogWarning(unit.name + " not found in " + unit.localizationCSV.name);
                     }
+                    #if UNITY_EDITOR
                     else
                     {
                         if (!Application.isPlaying) EditorUtility.SetDirty(unit);
                     }
+                    #endif
                 }
                 catch (Exception e)
                 {
@@ -94,21 +94,23 @@ namespace EasyLoc
                 }
             }
 
+#if UNITY_EDITOR
             if (!Application.isPlaying) AssetDatabase.SaveAssets();
+#endif
         }
 
-        LocalizableSO[] GetUnits()
-        {
-            var guids = AssetDatabase.FindAssets("t: LocalizableSO");
-            List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
-            foreach (var guid in guids)
-            {
-                list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
-            }
-            return list.ToArray();
-        }
-        #endif
-
+        // LocalizableSO[] GetUnits()
+        // {
+        //     var guids = AssetDatabase.FindAssets("t: LocalizableSO");
+        //     List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
+        //     foreach (var guid in guids)
+        //     {
+        //         list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
+        //     }
+        //     return list.ToArray();
+        // }
+        
+#if UNITY_EDITOR
         [ContextMenu("Collect UI")]
         void CollectFieldsWithAttribute()
         {
@@ -162,6 +164,7 @@ namespace EasyLoc
             file.Close();
             Debug.Log("ui collected!");
         }
+#endif
 
         void ImportUI(Language language)
         {

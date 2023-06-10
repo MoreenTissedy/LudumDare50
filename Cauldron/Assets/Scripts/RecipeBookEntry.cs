@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -6,6 +7,8 @@ namespace CauldronCodebase
 {
     public class RecipeBookEntry : MonoBehaviour
     {
+        private HashSet<Ingredients> lockedIngredients = new HashSet<Ingredients>() {Ingredients.Agaricus, Ingredients.Root1};
+        
         public Text fullName;
         public Text description;
         public Image image;
@@ -51,10 +54,20 @@ namespace CauldronCodebase
             ingredient2.enabled = false;
             ingredient3.enabled = false;
             fullName.text = "???";
-            description.text = "";
+            description.text = IsRecipeUnavailable(recipe) ? "Unavailable in demo" : "";
             image.sprite = recipe.image;
             image.material = lockedMaterial;
             potionButton.clickable = false;
+        }
+
+        private bool IsRecipeUnavailable(Recipe recipe)
+        {
+            foreach (var ingr in recipe.RecipeIngredients)
+            {
+                if (lockedIngredients.Contains(ingr))
+                    return true;
+            }
+            return false;
         }
 
         public void Clear()

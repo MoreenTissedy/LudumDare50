@@ -1,15 +1,12 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
-using  UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    //TODO: 3 separate scripts, bar, icon, tooltip
-    public class StatusBar : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    //TODO: separate scripts: bar, icon
+    public class StatusBar : MonoBehaviour
     {
         public RectTransform mask;
         public GameObject effect;
@@ -17,14 +14,13 @@ namespace CauldronCodebase
         public GameObject effectTemp;
         public float gradualReduce = 3f;
         public float effectDelay = 1.5f;
-        [FormerlySerializedAs("sign")] public RectTransform symbol;
+        public RectTransform symbol;
         public GameObject signCritical;
         public float criticalThreshold = 0.2f;
         public float signSizeChangeTime = 0.5f;
         public float signSizeChange = 1.3f;
         public bool vertical;
         public Statustype type;
-        private Text tooltip;
         
         private float initialDimension;
 
@@ -37,11 +33,6 @@ namespace CauldronCodebase
         { 
            gameDataHandler = dataHandler;
            settings = mainSettings;
-           tooltip = GetComponentInChildren<Text>();
-           if (tooltip != null)
-           {   
-               tooltip.gameObject.SetActive(false);
-           }
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
            gameDataHandler.StatusChanged += UpdateValue;
@@ -123,20 +114,6 @@ namespace CauldronCodebase
             symbol.DOSizeDelta(symbol.sizeDelta * signSizeChange, signSizeChangeTime).
                 SetLoops(2, LoopType.Yoyo).
                 SetEase(Ease.InQuad);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (tooltip is null)
-                return;
-            tooltip.gameObject.SetActive(true);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (tooltip is null)
-                return;
-            tooltip.gameObject.SetActive(false);
         }
 
     }

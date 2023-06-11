@@ -48,7 +48,7 @@ public class CatTipsTextSO : LocalizableSO
     [ContextMenu("Export all tip providers")]
     public void ExportTips()
     {
-        string path = "/Localize/Tips.csv";
+        string path = "/Localize/Tips_source.csv";
         var file = File.CreateText(Application.dataPath+path);
         file.WriteLine("id;_RU;_EN");
         var tips = Resources.FindObjectsOfTypeAll<CatTipsTextSO>();

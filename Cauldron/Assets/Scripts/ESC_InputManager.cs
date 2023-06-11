@@ -22,13 +22,6 @@ namespace CauldronCodebase
         
         private void Update()
         {
-            //DEBUG
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                endingPanel.Open(debug ? "high money" : "high fame");
-                debug = true;
-            }
-            
             //move to some sort of input manager?
             if (Input.GetKeyDown(KeyCode.Escape))
             {

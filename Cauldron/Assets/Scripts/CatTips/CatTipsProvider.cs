@@ -114,7 +114,7 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
             case "Inquisition":
                 if (!InquisitorCame)
                 {
-                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.InquisitionTips));
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateRandomTips(catTipsManager.InquisitionTips));
                     InquisitorCame = true;
                     return true;
                 }
@@ -124,7 +124,7 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
             case "DarkStranger":
                 if (!DarkStrangerCame)
                 {
-                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.DarkStrangerTips));
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateRandomTips(catTipsManager.DarkStrangerTips));
                     DarkStrangerCame = true;
                     return true;
                 }
@@ -132,14 +132,12 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
                     return false;
             
             case "WitchMemory":
-                if (!WitchCame)
+                if (int.TryParse(gameDataHandler.currentCard.name, out int index))
                 {
-                    catTipsManager.ShowTips(CatTipsGenerator.CreateTips(catTipsManager.WitchMemoryTips));
-                    WitchCame = true;
+                    catTipsManager.ShowTips(CatTipsGenerator.CreateSequencedTips(catTipsManager.WitchMemoryTips, index-1));
                     return true;
                 }
-                else
-                    return false;
+                return false;
         }
 
         return false;

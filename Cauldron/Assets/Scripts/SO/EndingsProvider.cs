@@ -13,6 +13,7 @@ namespace CauldronCodebase
         public const string HIGH_FEAR = "high fear";
         public const string LOW_FEAR = "low fear";
         public const string ENOUGH_MONEY = "high money";
+        public const string FINAL = "Bobby";
         
         public Ending[] endings;
 

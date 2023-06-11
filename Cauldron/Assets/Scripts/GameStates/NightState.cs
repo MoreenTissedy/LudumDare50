@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -18,6 +19,7 @@ namespace CauldronCodebase.GameStates
         private readonly RecipeBook recipeBook;
         
         private readonly GameFXManager gameFXManager;
+        private string storyEnding;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -57,10 +59,25 @@ namespace CauldronCodebase.GameStates
             await gameFXManager.ShowSunset();
 
             gameDataHandler.CalculatePotionsOnLastDays();
-            var events = nightEvents.GetEvents(gameDataHandler);
-            nightPanel.OpenBookWithEvents(events);
+            var events = nightEvents.GetEvents(gameDataHandler).ToList();
+            CheckStoryEnding(events);
+            nightPanel.OpenBookWithEvents(events.ToArray());
             nightPanel.OnClose += NightPanelOnOnClose;
             nightPanel.EventClicked += NightPanelOnEventClicked;
+        }
+
+        private void CheckStoryEnding(List<NightEvent> events)
+        {
+            for (var index = 0; index < events.Count; index++)
+            {
+                string tag = events[index].storyTag;
+                if (tag.StartsWith("^"))
+                {
+                    storyEnding = tag.TrimStart('^').Trim();
+                    events.RemoveAt(index);
+                    break;
+                }
+            }
         }
 
         private void NightPanelOnEventClicked(NightEvent nightEvent)
@@ -105,18 +122,23 @@ namespace CauldronCodebase.GameStates
 
         private bool IsGameEnd()
         {
+            if (!string.IsNullOrEmpty(storyEnding))
+            {
+                stateMachine.SwitchToEnding(storyEnding);
+                return true;
+            }
             var check = statusChecker.Run();
             if (!string.IsNullOrEmpty(check))
             {
                 stateMachine.SwitchToEnding(check);
                 return true;
             }
-
             return false;
         }
 
         public override void Exit()
-        {           
+        {
+            storyEnding = string.Empty;
             storyCards.Clear();
             gameFXManager.Clear();
             nightPanel.OnClose -= NightPanelOnOnClose;

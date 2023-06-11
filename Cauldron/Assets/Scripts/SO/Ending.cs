@@ -36,7 +36,7 @@ namespace CauldronCodebase
                 string[] data = lines[i].Split(';');
                 if (data[0].StartsWith(name))
                 {
-                    string lineText = data[requiredColumns[0]];
+                    string lineText = data[requiredColumns[line]];
                     if (line == 0)
                     {
                         title = lineText;

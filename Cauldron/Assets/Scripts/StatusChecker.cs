@@ -41,7 +41,7 @@ namespace CauldronCodebase
                 return EndingsProvider.HIGH_FEAR;
             }
 
-            if (gameDataHandler.Money >= settings.statusBars.Total)
+            if (gameDataHandler.Money >= settings.statusBars.MoneyTotal)
             {
                 return EndingsProvider.ENOUGH_MONEY;
 

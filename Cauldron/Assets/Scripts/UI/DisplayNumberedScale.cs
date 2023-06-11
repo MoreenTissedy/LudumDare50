@@ -27,7 +27,7 @@ namespace CauldronCodebase
 
         private void UpdateMoney()
         {
-            text.text = $"{gameDataHandler.Money} / {settings.statusBars.Total}";
+            text.text = $"{gameDataHandler.Money} / {settings.statusBars.MoneyTotal}";
         }
     
     }

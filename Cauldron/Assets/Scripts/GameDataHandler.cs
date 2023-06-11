@@ -117,8 +117,8 @@ namespace CauldronCodebase
             if (type == Statustype.Money && num < 0)
                 return statValue;
             statValue += num;
-            if (statValue > statusSettings.Total)
-                statValue = statusSettings.Total;
+            if (statValue > ((type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total))
+                statValue = (type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total;
             else if (statValue < 0)
                 statValue = 0;
             switch (type)

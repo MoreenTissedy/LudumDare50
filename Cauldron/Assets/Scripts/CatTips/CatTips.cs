@@ -5,9 +5,14 @@ using Random = UnityEngine.Random;
 
 public static class CatTipsGenerator
 {
-    public static CatTips CreateTips(CatTipsTextSO tips)
+    public static CatTips CreateRandomTips(CatTipsTextSO tips)
     {
         return new CatTips(tips.TextList[Random.Range(0, tips.TextList.Count)]);
+    }
+    
+    public static CatTips CreateSequencedTips(CatTipsTextSO tips, int index)
+    {
+        return new CatTips(tips.TextList[index]);
     }
 
     public static CatTips CreateTips(CatTipsTextSO firstTips, CatTipsTextSO secondTips)

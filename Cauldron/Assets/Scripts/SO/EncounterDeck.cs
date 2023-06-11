@@ -255,7 +255,9 @@ namespace CauldronCodebase
                 case true:
                     NewDayPool(0);
                     //if not first time
-                    if (PlayerPrefs.GetInt(PrefKeys.CurrentRound) != 0)
+                    int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+                    Debug.LogError(round);
+                    if (round != 0)
                     {
                         DealCards(2);
                         deck.AddFirst(introCards[2]);

@@ -32,6 +32,8 @@ namespace CauldronCodebase
         public event Action OnClose;
         private bool active;
 
+        private bool final;
+
         [ContextMenu("Find buttons")]
         void FindButtons()
         {
@@ -69,6 +71,7 @@ namespace CauldronCodebase
             {
                 return;
             }
+            final = endingTag == EndingsProvider.FINAL;
             gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
             active = true;
@@ -95,6 +98,8 @@ namespace CauldronCodebase
             {
                 await UniTask.DelayFrame(15);
                 buttonToUnlock.Unlock();
+                await UniTask.Delay(TimeSpan.FromSeconds(2));
+                OnEndingClick(tag);
             }
             closeButton.gameObject.SetActive(true);
         }
@@ -103,6 +108,12 @@ namespace CauldronCodebase
         {
             if (!active)
             {
+                return;
+            }
+            if (final)
+            {
+                Debug.LogError("Exit!");
+                GameLoader.Exit();
                 return;
             }
             active = false;

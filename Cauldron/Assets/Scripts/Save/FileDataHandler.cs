@@ -19,10 +19,15 @@ namespace Save
             fullPath = Path.Combine(dataDirPath, dataFileName);
         }
 
+        public bool IsSaveValid()
+        {
+            return File.Exists(fullPath);
+        }
+
         public GameData Load()
         {
             GameData loadedData = null;
-            if (File.Exists(fullPath))
+            if (IsSaveValid())
             {
                 try
                 {

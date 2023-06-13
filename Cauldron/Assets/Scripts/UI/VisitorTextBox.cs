@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using EasyLoc;
@@ -61,13 +62,15 @@ namespace CauldronCodebase
             currentEncounter = card;
             if (card.name.Contains(DEVIL))
             {
-                //what if everything is unlocked?
                 Recipe unlockRecipe = GetRecipeToUnlock();
                 if (unlockRecipe == null)
                 {
                     text.text = devilDefault;
                 }
-                text.text = Format(card, unlockRecipe);
+                else
+                {
+                    text.text = Format(card, unlockRecipe);
+                }
             }
             else
             {
@@ -101,12 +104,8 @@ namespace CauldronCodebase
         //move?
         private Recipe GetRecipeToUnlock()
         {
-            Recipe recipe = recipeProvider.allRecipes.
-                Where(x => x.magical).
-                FirstOrDefault(x => !recipeBook.IsRecipeInBook(x));
-            
-            Debug.Log($"Get recipe to unlock {recipe}");
-            return recipe;
+            return recipeProvider.allRecipes.Where(x => x.magical).FirstOrDefault((x =>
+                !recipeBook.IsRecipeInBook(x) && x.RecipeIngredients.Except(IngredientsData.LOCKED).Count() == 3));
         }
     }
 }

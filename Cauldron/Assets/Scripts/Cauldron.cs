@@ -95,7 +95,7 @@ namespace CauldronCodebase
                 Ingredients[] recipeToTips;
                 Ingredients randomIngredient;
 
-                List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+                List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().Except(IngredientsData.LOCKED).ToList();
                 foreach (var ingredientInMix in mix)
                 {
                     allIngredients.Remove(ingredientInMix);

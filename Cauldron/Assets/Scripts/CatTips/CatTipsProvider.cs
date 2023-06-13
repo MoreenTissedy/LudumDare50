@@ -132,7 +132,7 @@ public class CatTipsProvider : MonoBehaviour, IDataPersistence
                     return false;
             
             case "WitchMemory":
-                if (int.TryParse(gameDataHandler.currentCard.name, out int index))
+                if (int.TryParse(gameDataHandler.currentCard.name[gameDataHandler.currentCard.name.Length-1].ToString(), out int index))
                 {
                     catTipsManager.ShowTips(CatTipsGenerator.CreateSequencedTips(catTipsManager.WitchMemoryTips, index-1));
                     return true;

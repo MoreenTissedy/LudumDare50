@@ -19,7 +19,6 @@ namespace CauldronCodebase
 
         [Header("Authors")] [SerializeField] private AuthorsMenu authorsMenu;
         [SerializeField] private Button authorsButton;
-        [SerializeField] private GameObject authorsPanel;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
@@ -28,15 +27,6 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
         [Inject] private LocalizationTool locTool;
         [Inject] private SoundManager soundManager; 
-
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
-            if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
-        }
-#endif
 
         private void Start()
         {

@@ -105,7 +105,7 @@ namespace CauldronCodebase
         private Recipe GetRecipeToUnlock()
         {
             return recipeProvider.allRecipes.Where(x => x.magical).FirstOrDefault((x =>
-                !recipeBook.IsRecipeInBook(x) && x.RecipeIngredients.Except(IngredientsData.LOCKED).Count() == 3));
+                !recipeBook.IsRecipeInBook(x)));
         }
     }
 }

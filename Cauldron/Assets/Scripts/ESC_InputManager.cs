@@ -31,11 +31,7 @@ namespace CauldronCodebase
                 {
                     recipeBook.CloseBook();
                 }
-                else if (GameLoader.IsMenuOpen())
-                {
-                    GameLoader.UnloadMenu();
-                }
-                else
+                if (!GameLoader.IsMenuOpen())
                 {
                     GameLoader.LoadMenu();
                 }

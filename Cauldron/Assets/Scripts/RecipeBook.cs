@@ -411,7 +411,7 @@ namespace CauldronCodebase
         {
             var rnd = new Random(Guid.NewGuid().GetHashCode());
         
-            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().Except(IngredientsData.LOCKED).ToList();
 
             return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
 

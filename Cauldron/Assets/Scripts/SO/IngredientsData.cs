@@ -11,6 +11,8 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "Ingredients Book", menuName = "Ingredients", order = 0)]
     public class IngredientsData : LocalizableSO
     {
+        public static readonly HashSet<Ingredients> LOCKED = new HashSet<Ingredients>() {Ingredients.Agaricus, Ingredients.Root1};
+        
         [Serializable]
         public class Ingredient
         {

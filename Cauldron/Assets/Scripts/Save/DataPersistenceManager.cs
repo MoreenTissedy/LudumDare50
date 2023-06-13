@@ -75,7 +75,7 @@ namespace Save
 
         private bool CheckForGameSave()
         {
-            return PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey);
+            return PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey) && fileDataHandler.IsSaveValid();
         }
 
         public void LoadDataPersistenceObj()

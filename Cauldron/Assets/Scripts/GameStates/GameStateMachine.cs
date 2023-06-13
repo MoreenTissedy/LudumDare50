@@ -65,7 +65,7 @@ namespace CauldronCodebase.GameStates
                 {
                     return;
                 }
-                fadeController.FadeOut(0, 0.1f).Forget();
+                fadeController.FadeOut(0, 1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
             else

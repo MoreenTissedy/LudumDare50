@@ -58,7 +58,7 @@ namespace CauldronCodebase
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            soundManager.PlayCat(CatSound.Purr);
+            soundManager.PlayCat(CatSound.Annoyed);
             PlayAnimationOneShot(strokeAnimation);
         }
 

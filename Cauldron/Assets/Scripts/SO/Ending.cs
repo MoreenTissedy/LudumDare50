@@ -1,6 +1,5 @@
 using UnityEngine;
 using EasyLoc;
-using System.Collections.Generic;
 
 namespace CauldronCodebase
 {
@@ -20,39 +19,41 @@ namespace CauldronCodebase
                 return false;
             //cache??
             string[] lines = localizationCSV.text.Split('\n');
-            List<int> requiredColumns = new List<int>();
+            int requiredColumn = -1;
             string[] headers = lines[0].Split(';');
             for (int i = 0; i < headers.Length; i++)
             {
                 if (headers[i].Contains("_"+language.ToString()))
                 {
-                    requiredColumns.Add(i);
+                    requiredColumn = i;
+                    break;
                 }
             }
+            if (requiredColumn < 1)
+            {
+                return false;
+            }
 
-            int line = 0;
+            bool found = false;
             for (int i = 1; i < lines.Length; i++)
             {
                 string[] data = lines[i].Split(';');
-                if (data[0].StartsWith(name))
+                if (data[0] == $"{name}.title")
                 {
-                    string lineText = data[requiredColumns[line]];
-                    if (line == 0)
-                    {
-                        title = lineText;
-                    }
-                    else if (line == 1)
-                    {
-                        text = lineText;
-                    }
-                    else
-                    {
-                        shortTextForEndingAnimation = lineText;
-                    }
-                    line++;
+                    title = data[requiredColumn];
+                    found = true;
+                }
+                else if (data[0] == $"{name}.description")
+                {
+                    text = data[requiredColumn];
+                    found = true;
+                }
+                else if (data[0] == $"{name}.short")
+                {
+                    shortTextForEndingAnimation = data[requiredColumn];
                 }
             }
-            return line>0;
+            return found;
         }
     }
 }

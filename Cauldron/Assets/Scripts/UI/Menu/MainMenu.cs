@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using EasyLoc;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,23 +19,14 @@ namespace CauldronCodebase
 
         [Header("Authors")] [SerializeField] private AuthorsMenu authorsMenu;
         [SerializeField] private Button authorsButton;
-        [SerializeField] private GameObject authorsPanel;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
+        [Inject] private LocalizationTool locTool;
         [Inject] private SoundManager soundManager; 
-
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            if (!authorsMenu) authorsMenu = FindObjectOfType<AuthorsMenu>(true);
-            if (!settingsMenu) settingsMenu = FindObjectOfType<SettingsMenu>();
-        }
-#endif
 
         private void Start()
         {
@@ -47,6 +39,7 @@ namespace CauldronCodebase
                 HideContinueButton();
             }
 
+            locTool.LoadSavedLanguage();
             continueGame.onClick.AddListener(ContinueClick);
             quit.onClick.AddListener(GameLoader.Exit);
             newGame.onClick.AddListener(NewGameClick);

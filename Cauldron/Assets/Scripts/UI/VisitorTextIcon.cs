@@ -1,3 +1,4 @@
+using EasyLoc;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,6 +8,10 @@ namespace CauldronCodebase
 {
     public class VisitorTextIcon : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [Localize] public string fearHint = "Если вы поможете или навредите, изменится шкала страха.";
+        [Localize] public string moneyHint = "Этот персонаж даст вам денег, если вы поможете ему.";
+        [Localize] public string fameHint = "Если вы поможете или навредите, изменится шкала славы.";
+        
         public Image icon;
         public Sprite fame, fear, money, question, item;
         public GameObject hint;
@@ -17,18 +22,6 @@ namespace CauldronCodebase
         {
             icon.sprite = item;
             gameObject.SetActive(true);
-            switch (villager.name)
-            {
-                case "DarkStranger":
-                    hintText = "Договор подписан, и теперь вы с ним связаны.";
-                    break;
-                case "WitchMemory":
-                    hintText = "Мои воспоминания не дают мне покоя.";
-                    break;
-                case "Cat":
-                    hintText = "Мой котик Бобби. Мы всегда будем вместе.";
-                    break;
-            }
         }
         
         public void Display(Statustype type, bool hidden = false)
@@ -48,16 +41,16 @@ namespace CauldronCodebase
                 case Statustype.Money:
                     gameObject.SetActive(true);
                     icon.sprite = money;
-                    hintText = "Этот персонаж даст вам денег, если вы поможете ему.";
+                    hintText = moneyHint;
                     break;
                 case Statustype.Fear:
                     gameObject.SetActive(true);
                     icon.sprite = fear;
-                    hintText = "Если вы поможете или навредите, изменится шкала страха.";
+                    hintText = fearHint;
                     break;
                 case Statustype.Fame:
                     gameObject.SetActive(true);
-                    hintText = "Если вы поможете или навредите, изменится шкала славы.";
+                    hintText = fameHint;
                     icon.sprite = fame;
                     break;
             }

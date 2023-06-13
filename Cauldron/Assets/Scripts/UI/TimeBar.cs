@@ -15,8 +15,6 @@ namespace CauldronCodebase
         private float rectWidth;
         private float step;
         public float speed = 2;
-        [Localize]
-        public string dayText = "День";
 
         private MainSettings settings;
         private GameStateMachine gameStateMachine;
@@ -79,7 +77,7 @@ namespace CauldronCodebase
 
         void NewDayReset(int day)
         {
-            string dayNumberText = $"{dayText} {day}";
+            string dayNumberText = day.ToString();
             dayNumber.text = dayNumberText;
             timeBar.anchoredPosition = new Vector2(-rectWidth / 2, 0);
         }

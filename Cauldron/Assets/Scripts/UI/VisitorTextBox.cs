@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using EasyLoc;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -10,7 +12,9 @@ namespace CauldronCodebase
     public class VisitorTextBox : MonoBehaviour
     {
         const string DEVIL = "devil";
-        
+
+        [Localize]
+        public string devilDefault = "Привет, милая. Как делишки? Покажи-ка, что ты умеешь.";
         public float offScreen = -1000;
         public float animTime = 0.5f;
         public TMP_Text text;
@@ -19,6 +23,9 @@ namespace CauldronCodebase
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private IngredientsData ingredients;
+        [Inject] private LocalizationTool locTool;
+
+        private Encounter currentEncounter;
 
         
         [ContextMenu("Find Icon Objects")]
@@ -27,10 +34,23 @@ namespace CauldronCodebase
             iconObjects = GetComponentsInChildren<VisitorTextIcon>();
         }
 
-        
+        private void Start()
+        {
+            locTool.OnLanguageChanged += ReloadVisitorText;
+        }
+
+        private void ReloadVisitorText()
+        {
+            if (currentEncounter != null)
+            {
+                Display(currentEncounter);
+                //fix devil?
+            }
+        }
 
         public void Hide()
         {
+            currentEncounter = null;
             gameObject.SetActive(false);
         } 
         
@@ -39,15 +59,18 @@ namespace CauldronCodebase
             gameObject.transform.DOLocalMoveX(gameObject.transform.localPosition.x, animTime)
                 .From(offScreen);
 
+            currentEncounter = card;
             if (card.name.Contains(DEVIL))
             {
-                //what if everything is unlocked?
                 Recipe unlockRecipe = GetRecipeToUnlock();
                 if (unlockRecipe == null)
                 {
-                    text.text = "Свари мне что-нибудь.";
+                    text.text = devilDefault;
                 }
-                text.text = Format(card, unlockRecipe);
+                else
+                {
+                    text.text = Format(card, unlockRecipe);
+                }
             }
             else
             {
@@ -81,12 +104,8 @@ namespace CauldronCodebase
         //move?
         private Recipe GetRecipeToUnlock()
         {
-            Recipe recipe = recipeProvider.allRecipes.
-                Where(x => x.magical).
-                FirstOrDefault(x => !recipeBook.IsRecipeInBook(x));
-            
-            Debug.Log($"Get recipe to unlock {recipe}");
-            return recipe;
+            return recipeProvider.allRecipes.Where(x => x.magical).FirstOrDefault((x =>
+                !recipeBook.IsRecipeInBook(x) && x.RecipeIngredients.Except(IngredientsData.LOCKED).Count() == 3));
         }
     }
 }

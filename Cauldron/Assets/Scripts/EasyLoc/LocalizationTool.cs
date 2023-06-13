@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using CauldronCodebase;
+using System.Linq;
 using UnityEngine;
 using System.Reflection;
+using JetBrains.Annotations;
+using UnityEngine.SceneManagement;
+using CauldronCodebase;
 
 #if UNITY_EDITOR
+using UnityEditor.SceneManagement;
 using UnityEditor;
 #endif
 
@@ -17,53 +21,107 @@ namespace EasyLoc
 
         [Header ("Load Language with right click!")]
         [ContextMenuItem("Load language", "LoadCurrentLanguage")]
-        public Language selectLanguage;
+        [SerializeField] private Language selectLanguage;
 
         public Language loadedLanguage;
+        public event Action OnLanguageChanged;
 
-        #if UNITY_EDITOR
+        private bool languageLoaded;
+
+        [UsedImplicitly]
         void LoadCurrentLanguage()
         {
+            //TODO: make a normal interface
+            //Load all scenes
+            LoadLanguage(selectLanguage);
             loadedLanguage = selectLanguage;
-            var units = GetUnits();
-            Debug.Log("Found to localize: "+units.Length);
+            //unload scenes
+        }
+
+        public void LoadSavedLanguage()
+        {
+            var language = Language.EN;
+            if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
+                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
+            {
+                language = Language.RU;
+            }
+            if (languageLoaded)
+            {
+                ImportUI(language);
+            }
+            else
+            {
+                LoadLanguage(language);
+            }
+        }
+
+        public void LoadLanguage(Language language)
+        {
+            ImportScriptableObjects(language);
+            ImportUI(language);
+            languageLoaded = true;
+            if (loadedLanguage != language)
+            {
+                OnLanguageChanged?.Invoke();
+            }
+            loadedLanguage = language;
+        }
+
+        private void ImportScriptableObjects(Language language)
+        {
+            var units = Resources.FindObjectsOfTypeAll<LocalizableSO>();
+            Debug.Log("Found SO to localize: " + units.Length);
             foreach (LocalizableSO unit in units)
             {
                 try
                 {
-                    if (!unit.Localize(selectLanguage))
+                    if (!unit.Localize(language))
                     {
                         Debug.LogWarning(unit.name + " not found in " + unit.localizationCSV.name);
                     }
+                    #if UNITY_EDITOR
                     else
                     {
-                        EditorUtility.SetDirty(unit);
+                        if (!Application.isPlaying) EditorUtility.SetDirty(unit);
                     }
+                    #endif
                 }
-                catch {continue;}
-            }
-            AssetDatabase.SaveAssets();
-            ImportUI();
-        }
-
-        LocalizableSO[] GetUnits()
-        {
-            var guids = AssetDatabase.FindAssets("t: LocalizableSO");
-            List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
-            foreach (var guid in guids)
-            {
-                list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
+                catch (Exception e)
+                {
+                    Debug.LogError("failed to localize " + unit.name + ": " + e.Message);
+                    continue;
+                }
             }
 
-            return list.ToArray();
+#if UNITY_EDITOR
+            if (!Application.isPlaying) AssetDatabase.SaveAssets();
+#endif
         }
-        #endif
 
+        // LocalizableSO[] GetUnits()
+        // {
+        //     var guids = AssetDatabase.FindAssets("t: LocalizableSO");
+        //     List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
+        //     foreach (var guid in guids)
+        //     {
+        //         list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
+        //     }
+        //     return list.ToArray();
+        // }
+        
+#if UNITY_EDITOR
         [ContextMenu("Collect UI")]
         void CollectFieldsWithAttribute()
         {
-            //only current scene
-            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>();
+            //load all scenes
+            List<string> scenePaths = EditorBuildSettings.scenes.Select(scene => scene.path).ToList();
+            foreach (string scenePath in scenePaths)
+            {
+                EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
+            }
+            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>(true);
+            HashSet<string> uniqueKeys = new HashSet<string>();
 
             var file = File.CreateText(Application.dataPath + "/Localize/UI.csv");
             file.WriteLine("class;id;string_RU");
@@ -72,8 +130,8 @@ namespace EasyLoc
             {
                 Type monoType = mono.GetType();
 
-                // Retreive the fields from the mono instance
-                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                // Retrieve the fields from the mono instance
+                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                 // search all fields and find the attribute [Localize]
                 for (int i = 0; i < objectFields.Length; i++)
@@ -83,26 +141,32 @@ namespace EasyLoc
                         typeof(LocalizeAttribute)) is LocalizeAttribute attribute)
                     {
                         string id;
-                        if (mono is EasyLocTextTool textTool)
+                        if (mono is ILocTextTool textTool)
                         {
-                            id = textTool.id;
+                            id = textTool.GetId();
                         }
                         else
                         {
                             id = objectFields[i].Name;
                         }
-                        file.WriteLine("{0};{1};{2}", 
-                            monoType.ToString(), 
-                            id, 
-                            objectFields[i].GetValue(mono)
-                            );
+                        string key = $"{monoType.ToString()};{id}";
+                        if (uniqueKeys.Contains(key))
+                        {
+                            Debug.LogWarning("duplicate key "+key);
+                            continue;
+                        }
+                        uniqueKeys.Add(key);
+                        file.WriteLine($"{key};{objectFields[i].GetValue(mono)}");
+                        Debug.Log($"{key};{objectFields[i].GetValue(mono)}");
                     }
                 }
             }
             file.Close();
+            Debug.Log("ui collected!");
         }
+#endif
 
-        void ImportUI()
+        void ImportUI(Language language)
         {
             Debug.Log("UI import");
             //fetch data from csv into a dictionary
@@ -112,7 +176,7 @@ namespace EasyLoc
             int langIndex = -1;
             for (int i = 0; i < headers.Length; i++)
             {
-                if (headers[i].Contains("_"+selectLanguage.ToString()))
+                if (headers[i].Contains("_"+language.ToString()))
                 {
                     langIndex = i;
                     break;
@@ -136,14 +200,14 @@ namespace EasyLoc
             }
 
             //search all Monobeh scripts, only current scene
-            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>();
+            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>(true);
             
             foreach (MonoBehaviour mono in sceneActive)
             {
                 Type monoType = mono.GetType();
 
                 // Retreive the fields from the monobeh
-                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
                 // search all fields and find the attribute [Localize]
                 for (int i = 0; i < objectFields.Length; i++)
@@ -155,13 +219,13 @@ namespace EasyLoc
                         bool hasData = false;
                         //for UI.Text components we have special TextTool script
                         //that allows us to specify the text ID (but doesn't ensure its uniqueness for now)
-                        if (mono is EasyLocTextTool textTool)
+                        if (mono is ILocTextTool textTool)
                         {
-                            if (locData.TryGetValue(textTool.id, out string textValue))
+                            if (locData.TryGetValue(textTool.GetId(), out string textValue))
                             {
                                 hasData = true;
                                 textTool.SetText(textValue);
-                                Debug.Log(textTool.id+" "+textValue);
+                                Debug.Log(textTool.GetId()+" "+textValue);
                             }
                         }
                         //for the custom scripts their respective class and field act as ID
@@ -178,6 +242,10 @@ namespace EasyLoc
                         //so the values are reverted to prefab defaults at the very first possibility.
                         //to change this behaviour we need this:
                         #if UNITY_EDITOR
+                        if (Application.isPlaying)
+                        {
+                            continue;
+                        }
                         if (hasData && UnityEditor.PrefabUtility.IsPartOfPrefabInstance(mono))
                         {
                             UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
@@ -188,21 +256,14 @@ namespace EasyLoc
                     }
                 }
             }
-            //signal that scene has changed
-            //EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-        }
-
-        [ContextMenu("Export Cards Tool")]
-        //temp helper
-        void ExportCards()
-        {
-            var file = File.CreateText(Application.dataPath+"/Localize/Cards.csv");
-            file.WriteLine("id;description_RU;description_EN");
-            foreach (Encounter unit in Resources.FindObjectsOfTypeAll<Encounter>())
+#if UNITY_EDITOR
+            if (Application.isPlaying)
             {
-                file.WriteLine(unit.name+";"+unit.text);
+                return;
             }
-            file.Close();
+            //signal that scene has changed
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+#endif
         }
 
     }

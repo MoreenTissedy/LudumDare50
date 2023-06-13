@@ -1,4 +1,5 @@
 using CauldronCodebase.GameStates;
+using EasyLoc;
 using Save;
 using UnityEngine;
 using Zenject;
@@ -36,6 +37,7 @@ namespace CauldronCodebase
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
+        [Inject] private LocalizationTool localization;
 
         public override void InstallBindings()
         {
@@ -84,6 +86,7 @@ namespace CauldronCodebase
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager);
             endings.Init();
+            localization.LoadSavedLanguage();
         }
     }
 }

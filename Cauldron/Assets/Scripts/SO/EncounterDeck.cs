@@ -257,7 +257,6 @@ namespace CauldronCodebase
                     NewDayPool(0);
                     //if not first time
                     int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-                    Debug.LogError(round);
                     if (round != 0)
                     {
                         DealCards(2);

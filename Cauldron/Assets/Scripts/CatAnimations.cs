@@ -3,6 +3,7 @@ using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -18,6 +19,8 @@ namespace CauldronCodebase
         public float maxIdleInterval = 1f;
 
         private Vector2 startDragPosition;
+
+        [Inject] private SoundManager soundManager;
 
         private void Start()
         {
@@ -39,6 +42,7 @@ namespace CauldronCodebase
             {
                 return;
             }
+            soundManager.PlayCat(CatSound.Annoyed);
             PlayAnimationOneShot(randomActions[Random.Range(0, randomActions.Length)]);
         }
 
@@ -54,6 +58,7 @@ namespace CauldronCodebase
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            soundManager.PlayCat(CatSound.Purr);
             PlayAnimationOneShot(strokeAnimation);
         }
 

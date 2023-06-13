@@ -1,5 +1,3 @@
-using System;
-using Cysharp.Threading.Tasks;
 using EasyLoc;
 using Save;
 using UnityEngine;
@@ -13,6 +11,8 @@ namespace CauldronCodebase
         public Button continueGame;
         public Button quit;
         public Button newGame;
+        public Button VKRedirect;
+        public Button DiscordRedirect;
 
         [Header("Settings")] public Button settings;
         public SettingsMenu settingsMenu;
@@ -45,6 +45,8 @@ namespace CauldronCodebase
             newGame.onClick.AddListener(NewGameClick);
             settings.onClick.AddListener(settingsMenu.Open);
             authorsButton.onClick.AddListener(authorsMenu.Open);
+            VKRedirect.onClick.AddListener(() => Application.OpenURL("https://vk.com/theironhearthg"));
+            DiscordRedirect.onClick.AddListener(() => Application.OpenURL("https://discord.gg/pUfAGsYDDw"));
         }
 
         private void Update()

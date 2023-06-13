@@ -4,6 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -16,10 +17,13 @@ namespace CauldronCodebase
         [SerializeField] private GameObject effect;
         [SerializeField] private GameObject background;
         [SerializeField] private AnimatorEventCallback animator;
+        [SerializeField] private Sounds sound = Sounds.EndingUnlock;
         public string Tag;
 
         private bool active;
         public event Action<string> OnClick;
+
+        [Inject] private SoundManager soundManager;
 
         private void Start()
         {
@@ -38,6 +42,7 @@ namespace CauldronCodebase
 
         public async void Unlock()
         {
+            soundManager.Play(sound);
             effect.SetActive(true);
             await UniTask.WaitUntil(() => animator.callbackReceived);
             background.SetActive(true);

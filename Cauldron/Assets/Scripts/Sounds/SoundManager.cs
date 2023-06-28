@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -6,10 +7,8 @@ using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace CauldronCodebase
 {
-    //Please add new sounds to the end of the list
     public enum Sounds
     {
-        Music,
         Bubbling,
         Splash,
         PotionReady,
@@ -24,16 +23,21 @@ namespace CauldronCodebase
         MenuClick,
         TimerBreak,
         StartFlash,
-        GameEnd,
         NightCardEnter,
         NightCardExit,
         StartSpark,
         StartDay,
         EndDay,
+        GameEnd,
         EndingUnlock,
-        SpecialEndingUnlock,
-        Music2,
-        Menu
+        SpecialEndingUnlock
+    }
+
+    public enum Music
+    {
+        Menu,
+        Location1,
+        Location2
     }
 
     public enum VisitorSound
@@ -91,14 +95,53 @@ namespace CauldronCodebase
     [CreateAssetMenu]
     public class SoundManager : ScriptableObject
     {
+        public string[] soundKeys;
+        public string[] musicKeys;
         public EventReference[] sounds;
+        public EventReference[] musics;
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
 
         private EventInstance currentMusic;
         private EventInstance bubbling;
 
-        public void SetMusic(Sounds music, bool withBubbling)
+        private void OnValidate()
+        {
+            if (EnumHasChanged<Sounds>(soundKeys))
+            {
+                RearrangeArrays<Sounds>(ref soundKeys, ref sounds);
+            }
+            if (EnumHasChanged<Music>(musicKeys))
+            {
+                RearrangeArrays<Music>(ref musicKeys, ref musics);
+            }
+        }
+
+        private bool EnumHasChanged<T>(in string[] array)
+        {
+            var enumKeys = Enum.GetNames(typeof(T));
+            return enumKeys != array;
+        }
+
+        private void RearrangeArrays<T>(ref string[] keys, ref EventReference[] values)
+        {
+            int enumSize = Enum.GetValues(typeof(T)).Length;
+            Dictionary<string, EventReference> dict = new Dictionary<string, EventReference>(enumSize);
+            for (int i = 0; i < keys.Length; i++)
+            {
+                dict.Add(keys[i], values[i]);
+            }
+            keys = Enum.GetNames(typeof(T));
+            var soundList = new List<EventReference>(enumSize);
+            foreach (var key in keys)
+            {
+                dict.TryGetValue(key, out var value);
+                soundList.Add(value);
+            }
+            values = soundList.ToArray();
+        }
+
+        public void SetMusic(Music music, bool withBubbling)
         {
             if (!bubbling.isValid())
             {
@@ -108,7 +151,7 @@ namespace CauldronCodebase
             {
                 currentMusic.stop(STOP_MODE.ALLOWFADEOUT);
             }
-            currentMusic = RuntimeManager.CreateInstance(sounds[(int)music]);
+            currentMusic = RuntimeManager.CreateInstance(musics[(int)music]);
             currentMusic.start();
             if (withBubbling)
             {

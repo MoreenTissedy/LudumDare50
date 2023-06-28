@@ -32,7 +32,7 @@ namespace CauldronCodebase
         {
             if (!GameLoader.IsGameLoaded())
             {
-                soundManager.SetMusic(Sounds.Menu, false);
+                soundManager.SetMusic(Music.Menu, false);
             }
             if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
             {

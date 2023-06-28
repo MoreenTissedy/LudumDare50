@@ -12,13 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152f3e4df7c042c59fa7ebfc5842fd40, type: 3}
   m_Name: Sound Manager
   m_EditorClassIdentifier: 
+  soundKeys:
+  - Bubbling
+  - Splash
+  - PotionReady
+  - PotionUnlock
+  - PotionPopupClick
+  - PotionSuccess
+  - PotionFailure
+  - BookFocus
+  - BookClick
+  - BookSwitch
+  - MenuFocus
+  - MenuClick
+  - TimerBreak
+  - StartFlash
+  - NightCardEnter
+  - NightCardExit
+  - StartSpark
+  - StartDay
+  - EndDay
+  - GameEnd
+  - EndingUnlock
+  - SpecialEndingUnlock
+  musicKeys:
+  - Menu
+  - Location1
+  - Location2
   sounds:
-  - Guid:
-      Data1: -1194859955
-      Data2: 1215088978
-      Data3: 1710768003
-      Data4: -1834542631
-    Path: event:/Location/House/mus
   - Guid:
       Data1: -248018065
       Data2: 1286203235
@@ -104,12 +125,6 @@ MonoBehaviour:
       Data4: 534937985
     Path: event:/Game/StartGame/whoosh
   - Guid:
-      Data1: -528153210
-      Data2: 1092747596
-      Data3: -602540892
-      Data4: -1422591904
-    Path: event:/Game/game_end
-  - Guid:
       Data1: -1296143467
       Data2: 1087338784
       Data3: -1641858925
@@ -140,6 +155,12 @@ MonoBehaviour:
       Data4: -1077230187
     Path: event:/Game/day_end
   - Guid:
+      Data1: -528153210
+      Data2: 1092747596
+      Data3: -602540892
+      Data4: -1422591904
+    Path: event:/Game/game_end
+  - Guid:
       Data1: 189883242
       Data2: 1212021980
       Data3: -1655152220
@@ -151,18 +172,25 @@ MonoBehaviour:
       Data3: 1913108927
       Data4: 585427627
     Path: event:/Game/ending_coven
-  - Guid:
-      Data1: 1153922902
-      Data2: 1258888018
-      Data3: -786064255
-      Data4: -904282465
-    Path: event:/Location/Forest/bgm
+  musics:
   - Guid:
       Data1: 150303394
       Data2: 1292631159
       Data3: -243293038
       Data4: -696187729
     Path: event:/Location/Menu/bgm
+  - Guid:
+      Data1: -1194859955
+      Data2: 1215088978
+      Data3: 1710768003
+      Data4: -1834542631
+    Path: event:/Location/House/mus
+  - Guid:
+      Data1: 1153922902
+      Data2: 1258888018
+      Data3: -786064255
+      Data4: -904282465
+    Path: event:/Location/Forest/bgm
   defaultVisitorSounds:
     Door:
       Guid:

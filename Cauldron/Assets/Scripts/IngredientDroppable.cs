@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ namespace CauldronCodebase
         public IngredientsData dataList;
         
         [SerializeField, HideInInspector]
-        private Text tooltipText;
+        private TMP_Text tooltipText;
         [SerializeField, HideInInspector]
         private Canvas tooltipCanvas;
         [SerializeField, HideInInspector]
@@ -38,7 +39,7 @@ namespace CauldronCodebase
         private void OnValidate()
         {
             tooltipCanvas = GetComponentInChildren<Canvas>();
-            tooltipText = tooltipCanvas.GetComponentInChildren<Text>();
+            tooltipText = tooltipCanvas.GetComponentInChildren<TMP_Text>();
             if (tooltipText != null && tooltipText.text == String.Empty)
             {
                 ChangeText();

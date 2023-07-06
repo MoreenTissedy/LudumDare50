@@ -132,7 +132,7 @@ namespace Editor
                 }
 
                 //AddOnDay
-                card.addToDeckOnDay = ConvertIntFromString(data[1]);
+                card.addToDeckOnRound = ConvertIntFromString(data[1]);
 
                 //Villager
                 bool foundVillager = false;
@@ -234,7 +234,7 @@ namespace Editor
             foreach (var encounter in encounters)
             {
                 string encounterName = encounter.name.Replace(".", "_").Replace("-", "_");
-                if (encounter.addToDeckOnDay >= 0)
+                if (encounter.addToDeckOnRound >= 0)
                 {
                     dotNotation += $"{encounterName} [style=filled, color=yellow]\n";
                 }

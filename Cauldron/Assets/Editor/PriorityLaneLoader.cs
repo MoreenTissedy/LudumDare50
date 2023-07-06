@@ -30,7 +30,7 @@ namespace Editor
                                                                 || x.Trim() == EndingsProvider.LOW_FEAR ||
                                                                 x.Trim() == EndingsProvider.HIGH_FEAR))
                 {
-                    card.addToDeckOnDay = -1;
+                    card.addToDeckOnRound = -1;
                     EditorUtility.SetDirty(card);
                     list.Add(card);
                 }

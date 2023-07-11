@@ -28,6 +28,11 @@ namespace Universal
         private Sequence tweenSequence;
         private ContentSizeFitter fitter;
 
+        private void Awake()
+        {
+            canvas.enabled = false;
+        }
+
         [ContextMenu("TestOpen")]
         public void TestOpen()
         {
@@ -85,6 +90,11 @@ namespace Universal
                 .Insert(scrollDuration - scrollFadeDuration + textFadeDelay, scrollFader.DOFade(0, scrollFadeDuration))
                 .AppendCallback(() => canvas.enabled = false)
                 .Play();
+        }
+
+        private void OnDestroy()
+        {
+            tweenSequence?.Kill();
         }
     }
 }

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -6,8 +7,8 @@ namespace CauldronCodebase
 {
     public class RecipeBookEntry : MonoBehaviour
     {
-        public Text fullName;
-        public Text description;
+        public TMP_Text fullName;
+        public TMP_Text description;
         public Image image;
         public Image ingredient1, ingredient2, ingredient3;
         public PotionSelect potionButton;

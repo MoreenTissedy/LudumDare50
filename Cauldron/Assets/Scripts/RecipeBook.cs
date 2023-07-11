@@ -96,7 +96,7 @@ namespace CauldronCodebase
             {
                 unlockedRecipes = loadRecipes.ToList();
             }
-
+            
             foreach (Recipe recipe in recipeProvider.allRecipes)
             {
                 if (recipe.magical)
@@ -228,11 +228,23 @@ namespace CauldronCodebase
                 ToggleBook();
         }
 
+        private void SortPotions()
+        {
+            List<Recipe> lockedMagicalRecipes = allMagicalRecipes.Except(unlockedRecipes).ToList();
+            allMagicalRecipes.Clear();
+            allMagicalRecipes = unlockedRecipes.Where(element => element.magical).ToList();
+            allMagicalRecipes.AddRange(lockedMagicalRecipes);
+
+            List<Recipe> lockedHerbalRecipes = allHerbalRecipes.Except(unlockedRecipes).ToList();
+            allHerbalRecipes.Clear();
+            allHerbalRecipes = unlockedRecipes.Where(element => !element.magical).ToList();
+            allHerbalRecipes.AddRange(lockedHerbalRecipes);
+
+        }
+
         protected override void InitTotalPages()
         {
-            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
-            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
-            
+            SortPotions();
             switch (currentMode)
             {
                 case Mode.Magical:

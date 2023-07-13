@@ -26,6 +26,7 @@ namespace CauldronCodebase
         public List<string> rememberedCards;
 
         private MainSettings mainSettings;
+        private int lastExtendedRoundNumber;
 
         [Serializable]
         public struct CardPoolByRound
@@ -48,6 +49,7 @@ namespace CauldronCodebase
         /// <param name="round">Round — card set number</param>
         private void InitCardPool(int round)
         {
+            lastExtendedRoundNumber = gameDataHandler.currentRound;
             List<Encounter> totalPool = new List<Encounter>();
             foreach (var pool in cardPoolsByRound)
             {
@@ -139,8 +141,7 @@ namespace CauldronCodebase
         {
             if (cardPool.Count < num)
             {
-                cardPool.AddRange(cardPoolsByRound.First(x => x.round > gameDataHandler.currentRound).cards);
-                Debug.LogWarning("card pool extended");
+                ExtendPool();
             }
             for (int i = 0; i < num; i++)
             {
@@ -165,6 +166,17 @@ namespace CauldronCodebase
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
+        }
+
+        private void ExtendPool()
+        {
+            var nextPool = cardPoolsByRound.FirstOrDefault(x => x.round > lastExtendedRoundNumber);
+            if (nextPool.cards != null && nextPool.cards.Length > 0)
+            {
+                cardPool.AddRange(nextPool.cards);
+                lastExtendedRoundNumber++;
+                Debug.LogWarning("card pool extended");
+            }
         }
 
         public void AddToPool(Encounter card)

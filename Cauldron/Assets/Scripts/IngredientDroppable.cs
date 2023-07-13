@@ -1,9 +1,7 @@
-using System;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -18,9 +16,7 @@ namespace CauldronCodebase
         public IngredientsData dataList;
         
         [SerializeField, HideInInspector]
-        private TMP_Text tooltipText;
-        [SerializeField, HideInInspector]
-        private Canvas tooltipCanvas;
+        private ScrollTooltip tooltip;
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
 
@@ -38,15 +34,16 @@ namespace CauldronCodebase
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            tooltipCanvas = GetComponentInChildren<Canvas>();
-            tooltipText = tooltipCanvas.GetComponentInChildren<TMP_Text>();
-            if (tooltipText != null && tooltipText.text == String.Empty)
-            {
-                ChangeText();
-            }
+            tooltip = GetComponentInChildren<ScrollTooltip>();
+            ChangeText();
 
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
+        }
+
+        private void ChangeText()
+        {
+            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified");
         }
 
 #endif
@@ -58,11 +55,6 @@ namespace CauldronCodebase
             ingredientManager = cauldron.tooltipManager;
             ingredientManager.AddIngredient(this);
             dataList.Changed += ChangeText;
-        }
-
-        private void ChangeText()
-        {
-            tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
         }
 
         private void OnEnable()
@@ -83,10 +75,9 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            if (tooltipCanvas != null)
+            if (tooltip != null)
             {
-                tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
-                tooltipCanvas.gameObject.SetActive(false);
+                ChangeText();
             }
 
             initialPosition = transform.position;
@@ -96,9 +87,7 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (tooltipCanvas is null)
-                return;
-            tooltipCanvas.gameObject.SetActive(true);
+            tooltip?.Open();
             if (!cauldron.Mix.Contains(ingredient))
                 image.gameObject.transform.
                     DORotate(new Vector3(0,0, initialRotation+rotateAngle), rotateSpeed).
@@ -109,9 +98,8 @@ namespace CauldronCodebase
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (tooltipCanvas is null)
-                return;
-            tooltipCanvas.gameObject.SetActive(false);
+            tooltip?.Close();
+            
             image.transform.DOKill();
             image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
         }

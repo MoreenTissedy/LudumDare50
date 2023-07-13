@@ -7,6 +7,14 @@ namespace Universal
     {
         [SerializeField] private ScrollTooltip tooltip;
 
+        private void OnValidate()
+        {
+            if (!tooltip)
+            {
+                tooltip = GetComponentInChildren<ScrollTooltip>();
+            }
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             tooltip.Open();

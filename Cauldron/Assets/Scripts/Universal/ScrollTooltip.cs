@@ -14,8 +14,8 @@ namespace Universal
         public CanvasGroup scrollFader;
         public TMP_Text textField;
         public CanvasGroup textFader;
-        [FormerlySerializedAs("minWidth")] public float startScrollWidth = 170;
-        [FormerlySerializedAs("scrollTime")] public float scrollDuration = 0.7f;
+        public float startScrollWidth = 170;
+        public float scrollDuration = 0.7f;
         public float scrollFadeDuration = 0.3f;
         public Ease scrollOutEase;
         public Ease scrollInEase;
@@ -27,10 +27,18 @@ namespace Universal
 
         private Sequence tweenSequence;
         private ContentSizeFitter fitter;
+        private float targetWidth;
 
-        private void Awake()
+        private void Start()
         {
             canvas.enabled = false;
+            WaitLayoutAndSave().Forget();
+        }
+
+        private async UniTaskVoid WaitLayoutAndSave()
+        {
+            await UniTask.DelayFrame(2);
+            targetWidth = scroll.sizeDelta.x;
         }
 
         [ContextMenu("TestOpen")]
@@ -57,23 +65,30 @@ namespace Universal
             {
                 fitter = scroll.GetComponent<ContentSizeFitter>();
             }
-            
             fitter.enabled = true;
-            
             textField.text = text;
-            await UniTask.DelayFrame(2); //to rearrange the layout
-            
-            fitter.enabled = false;
+            if (Application.isPlaying)
+            {
+                await UniTask.DelayFrame(2); //to rearrange the layout
+                targetWidth = scroll.sizeDelta.x;
+            }
         }
 
         private void OpenAnimation()
         {
+            if (!fitter)
+            {
+                fitter = scroll.GetComponent<ContentSizeFitter>();
+            }
+            fitter.enabled = false;
             canvas.enabled = true;
             tweenSequence?.Kill();
             tweenSequence = DOTween.Sequence();
             tweenSequence
-                .Append(scroll.DOSizeDelta(scroll.sizeDelta, scrollDuration).From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
+                .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
+                    .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
                     .SetEase(scrollOutEase))
+                .SetSpeedBased()
                 .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
                 .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
                 .Play();
@@ -86,8 +101,10 @@ namespace Universal
             tweenSequence = DOTween.Sequence();
             tweenSequence
                 .Append(textFader.DOFade(0, textFadeDuration))
-                .Insert(textFadeDelay, scroll.DOSizeDelta(new Vector2(startScrollWidth, scroll.sizeDelta.y), scrollDuration).SetEase(scrollInEase))
-                .Insert(scrollDuration - scrollFadeDuration + textFadeDelay, scrollFader.DOFade(0, scrollFadeDuration))
+                .Insert(0, scroll.DOSizeDelta(new Vector2(startScrollWidth, scroll.sizeDelta.y), scrollDuration)
+                    .SetEase(scrollInEase))
+                .SetSpeedBased()
+                .Insert(0, scrollFader.DOFade(0, scrollFadeDuration))
                 .AppendCallback(() => canvas.enabled = false)
                 .Play();
         }

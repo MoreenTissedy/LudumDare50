@@ -12,7 +12,7 @@ namespace CauldronCodebase
     public class EncounterDeck : ScriptableObject, IDataPersistence
     {
         public Encounter[] introCards;
-        public CardPoolPerDay[] cardPoolsByDay;
+        public CardPoolByRound[] cardPoolsByRound;
         public LinkedList<Encounter> deck;
 
         [Header("DEBUG")] public Encounter currentCard;
@@ -26,42 +26,48 @@ namespace CauldronCodebase
         public List<string> rememberedCards;
 
         private MainSettings mainSettings;
+        private int lastExtendedRoundNumber;
 
         [Serializable]
-        public struct CardPoolPerDay
+        public struct CardPoolByRound
         {
             [HideInInspector] public string title;
-            public int day;
+            public int round;
             public Encounter[] cards;
 
-            public CardPoolPerDay(int day, Encounter[] cards)
+            public CardPoolByRound(int round, Encounter[] cards)
             {
-                this.day = day;
+                this.round = round;
                 this.cards = cards;
-                title = $"Day {day}: {cards.Length} cards";
+                title = $"Round {round}: {cards.Length} cards";
             }
         }
 
-        private Encounter[] GetPoolForDay(int day)
+        /// <summary>
+        /// Form card pool, adding cards sets up to the given game round and excluding unique cards.
+        /// </summary>
+        /// <param name="round">Round — card set number</param>
+        private void InitCardPool(int round)
         {
-            foreach (var pool in cardPoolsByDay)
+            lastExtendedRoundNumber = gameDataHandler.currentRound;
+            List<Encounter> totalPool = new List<Encounter>();
+            foreach (var pool in cardPoolsByRound)
             {
-                if (pool.day == day)
+                if (pool.round <= round)
                 {
-                    if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards
-                        && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards)
+                    if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
                     {
-                        return pool.cards.Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray();
+                        totalPool.AddRange(pool.cards);
                     }
-
-                    return pool.cards;
-
+                    else
+                    {
+                        totalPool.AddRange(pool.cards.Except(rememberedCards.
+                            Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+                    }
                 }
             }
-
-            return Array.Empty<Encounter>();
+            cardPool = Shuffle(totalPool);
         }
-
 
         /// <summary>
         /// Form new deck and starting card pool.
@@ -92,20 +98,18 @@ namespace CauldronCodebase
             }
         }
 
-        private static Encounter[] Shuffle(Encounter[] deck)
+        private static List<Encounter> Shuffle(List<Encounter> deck)
         {
-            List<Encounter> deckList = deck.ToList();
-            var newDeckList = new List<Encounter>(deckList.Count);
-            while (deckList.Count > 0)
+            var newDeckList = new List<Encounter>(deck.Count);
+            while (deck.Count > 0)
             {
-                int random = Random.Range(0, deckList.Count);
-                newDeckList.Add(deckList[random]);
-                deckList.RemoveAt(random);
+                int random = Random.Range(0, deck.Count);
+                newDeckList.Add(deck[random]);
+                deck.RemoveAt(random);
             }
-
-            return newDeckList.ToArray();
+            return newDeckList;
         }
-        
+
         public void ShuffleDeck()
         {
             List<Encounter> deckList = deck.ToList();
@@ -119,19 +123,7 @@ namespace CauldronCodebase
             deck = newDeckList;
         }
 
-        /// <summary>
-        /// Form card pool, adding cards for the given 'day' (card set number).
-        /// </summary>
-        /// <param name="day">Day — card set number</param>
-        public void NewDayPool(int day)
-        {
-            foreach (var card in Shuffle(GetPoolForDay(day)))
-            {
-                cardPool.Add(card);
-            }
-        }
 
-        
         /// <summary>
         /// Add random cards from pool to deck until deck count reaches target.
         /// </summary>
@@ -147,13 +139,12 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
+            if (cardPool.Count < num)
+            {
+                ExtendPool();
+            }
             for (int i = 0; i < num; i++)
             {
-                if (cardPool.Count == 0)
-                {
-                    return;
-                }
-
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
@@ -175,6 +166,17 @@ namespace CauldronCodebase
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
+        }
+
+        private void ExtendPool()
+        {
+            var nextPool = cardPoolsByRound.FirstOrDefault(x => x.round > lastExtendedRoundNumber);
+            if (nextPool.cards != null && nextPool.cards.Length > 0)
+            {
+                cardPool.AddRange(nextPool.cards);
+                lastExtendedRoundNumber++;
+                Debug.LogWarning("card pool extended");
+            }
         }
 
         public void AddToPool(Encounter card)
@@ -254,22 +256,7 @@ namespace CauldronCodebase
             switch (newGame)
             {
                 case true:
-                    NewDayPool(0);
-                    //if not first time
-                    int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-                    if (round != 0)
-                    {
-                        DealCards(2);
-                        deck.AddFirst(introCards[2]);
-                    }
-                    else
-                    {
-                        DealCards(1);
-                        deck.AddFirst(introCards[0]);
-                        deck.AddLast(introCards[1]);
-                    }
-
-
+                    SetStartingDecks();
                     break;
                 case false:
                     cardPool = new List<Encounter>();
@@ -294,6 +281,24 @@ namespace CauldronCodebase
                     }
 
                     break;
+            }
+        }
+
+        private void SetStartingDecks()
+        {
+            int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            InitCardPool(round);
+            //if not first time
+            if (round != 0)
+            {
+                DealCards(2);
+                deck.AddFirst(introCards[2]);
+            }
+            else
+            {
+                DealCards(1);
+                deck.AddFirst(introCards[0]);
+                deck.AddLast(introCards[1]);
             }
         }
 

@@ -101,7 +101,6 @@ namespace CauldronCodebase.GameStates
         private void UpdateDeck()
         {
             gameDataHandler.NextDay();
-            cardDeck.NewDayPool(gameDataHandler.currentDay);
             
             var priorityCard = statusChecker.CheckStatusesThreshold();
             if (priorityCard)

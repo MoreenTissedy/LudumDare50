@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EasyLoc;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -12,7 +10,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
-        public int addToDeckOnDay = -1;
+        [FormerlySerializedAs("addToDeckOnDay")] public int addToDeckOnRound = -1;
         public string requiredStoryTag;
 
         [Serializable]

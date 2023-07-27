@@ -7,6 +7,8 @@ namespace CauldronCodebase
     {
         public RectTransform[] pages;
         public Canvas canvas;
+
+        public bool IsVisible => canvas.enabled;
         private void Start()
         {
             CloseAllPages();

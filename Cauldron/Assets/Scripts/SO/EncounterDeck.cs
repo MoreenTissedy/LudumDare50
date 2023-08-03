@@ -19,6 +19,7 @@ namespace CauldronCodebase
         public Encounter[] deckInfo;
         public List<Encounter> cardPool;
 
+        private RecipeProvider recipeProvider;
         private GameDataHandler gameDataHandler;
         private SODictionary soDictionary;
         private Encounter loadedCard;
@@ -27,6 +28,21 @@ namespace CauldronCodebase
 
         private MainSettings mainSettings;
         private int lastExtendedRoundNumber;
+
+        /// <summary>
+        /// Form new deck and starting card pool.
+        /// </summary>
+        public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes)
+        {
+            gameDataHandler = game;
+            soDictionary = dictionary;
+            mainSettings = settings;
+            recipeProvider = recipes;
+            dataPersistenceManager.AddToDataPersistenceObjList(this);
+
+            InitRememberedCards();
+        }
 
         [Serializable]
         public struct CardPoolByRound
@@ -67,20 +83,6 @@ namespace CauldronCodebase
                 }
             }
             cardPool = Shuffle(totalPool);
-        }
-
-        /// <summary>
-        /// Form new deck and starting card pool.
-        /// </summary>
-        public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings)
-        {
-            gameDataHandler = game;
-            soDictionary = dictionary;
-            mainSettings = settings;
-            dataPersistenceManager.AddToDataPersistenceObjList(this);
-
-            InitRememberedCards();
         }
 
         private void InitRememberedCards()
@@ -292,7 +294,15 @@ namespace CauldronCodebase
             if (round != 0)
             {
                 DealCards(2);
-                deck.AddFirst(introCards[2]);
+                List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+                if (loadRecipes.Count < 20)
+                {
+                    deck.AddFirst(introCards[3]);
+                }
+                else
+                {
+                    deck.AddFirst(introCards[2]);
+                }
             }
             else
             {

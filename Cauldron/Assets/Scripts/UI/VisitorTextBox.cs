@@ -11,7 +11,8 @@ namespace CauldronCodebase
 {
     public class VisitorTextBox : MonoBehaviour
     {
-        const string DEVIL = "devil";
+        private const string DEVIL = "devil";
+        private const string CAT_UNLOCK = "intro-4";
 
         [Localize]
         public string devilDefault = "Привет, милая. Как делишки? Покажи-ка, что ты умеешь.";
@@ -71,6 +72,11 @@ namespace CauldronCodebase
                 {
                     text.text = Format(card, unlockRecipe);
                 }
+            }
+            else if (card.name.Contains(CAT_UNLOCK))
+            {
+                Recipe unlockRecipe = GetRecipeToUnlock();
+                text.text = Format(card, unlockRecipe);
             }
             else
             {

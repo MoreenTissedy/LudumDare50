@@ -1,3 +1,5 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,6 +31,7 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private TooltipManager ingredientManager;
         private float initialRotation;
+        private CancellationTokenSource cancellationTokenSource;
 
         
 #if UNITY_EDITOR
@@ -87,17 +90,28 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            tooltip?.Open();
             if (!cauldron.Mix.Contains(ingredient))
-                image.gameObject.transform.
-                    DORotate(new Vector3(0,0, initialRotation+rotateAngle), rotateSpeed).
-                    SetLoops(-1, LoopType.Yoyo).
-                    From(new Vector3(0, 0, initialRotation-rotateAngle)).
-                    SetEase(Ease.InOutSine);
+            {
+                image.gameObject.transform.DORotate(new Vector3(0, 0, initialRotation + rotateAngle), rotateSpeed)
+                    .SetLoops(-1, LoopType.Yoyo).From(new Vector3(0, 0, initialRotation - rotateAngle))
+                    .SetEase(Ease.InOutSine);
+            }
+            OpenTooltipWithDelay().Forget();
+        }
+
+        private async UniTask OpenTooltipWithDelay()
+        {
+            cancellationTokenSource = new CancellationTokenSource();
+            await UniTask.Delay(600, DelayType.Realtime, PlayerLoopTiming.FixedUpdate, cancellationTokenSource.Token);
+            if (!cancellationTokenSource.IsCancellationRequested)
+            {
+                tooltip?.Open();
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            cancellationTokenSource?.Cancel();
             tooltip?.Close();
             
             image.transform.DOKill();

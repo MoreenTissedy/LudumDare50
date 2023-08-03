@@ -98,13 +98,24 @@ namespace Universal
         public void Close()
         {
             tweenSequence?.Kill();
+            if (!canvas.enabled)
+            {
+                return;
+            }
+
             tweenSequence = DOTween.Sequence();
-            tweenSequence
-                .Append(textFader.DOFade(0, textFadeDuration))
-                .Insert(0, scroll.DOSizeDelta(new Vector2(startScrollWidth, scroll.sizeDelta.y), scrollDuration)
-                    .SetEase(scrollInEase))
+            float delay = 0;
+            if (textFader.alpha > 0)
+            {
+                delay = textFadeDuration;
+                tweenSequence
+                    .Append(textFader.DOFade(0, textFadeDuration));
+            }
+            tweenSequence.Insert(delay,
+                    scroll.DOSizeDelta(new Vector2(startScrollWidth, scroll.sizeDelta.y), scrollDuration)
+                        .SetEase(scrollInEase))
                 .SetSpeedBased()
-                .Insert(0, scrollFader.DOFade(0, scrollFadeDuration))
+                .Insert(delay, scrollFader.DOFade(0, scrollFadeDuration))
                 .AppendCallback(() => canvas.enabled = false)
                 .Play();
         }

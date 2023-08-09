@@ -97,7 +97,7 @@ namespace CauldronCodebase.GameStates
         {
             if (IsGameEnd()) return;
             UpdateDeck();
-            LoggerTool.TheOne.Log("NEW DAY " + gameData.currentDay);
+            LoggerTool.TheOne.Log("NEW DAY " + gameDataHandler.currentDay);
             await gameFXManager.ShowSunrise();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }

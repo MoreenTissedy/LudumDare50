@@ -43,13 +43,12 @@ namespace CauldronCodebase
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
         }
+#endif
 
         private void ChangeText()
         {
             tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified");
         }
-
-#endif
         
         [Inject]
         public void Construct(Cauldron cauldron)

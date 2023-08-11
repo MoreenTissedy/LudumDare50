@@ -49,7 +49,8 @@ namespace CauldronCodebase
 
         private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
-        
+        public event Action<Encounter> OnNewCard; 
+
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
 
@@ -135,6 +136,12 @@ namespace CauldronCodebase
             }
             StatusChanged?.Invoke();
             return statValue;
+        }
+
+        public void SetCurrentCard(Encounter card)
+        {
+            currentCard = card;
+            OnNewCard?.Invoke(currentCard);
         }
 
         public int Add(Statustype type, int value)

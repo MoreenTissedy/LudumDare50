@@ -46,7 +46,7 @@ namespace CauldronCodebase.GameStates
                 cardDeck.AddToDeck(priorityCard, true);
             }
             Encounter currentCard = cardDeck.GetTopCard();
-            gameDataHandler.currentCard = currentCard;
+            gameDataHandler.SetCurrentCard(currentCard);
 
             if (gameDataHandler.currentCard is null)
             {

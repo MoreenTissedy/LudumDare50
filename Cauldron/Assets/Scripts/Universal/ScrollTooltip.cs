@@ -21,6 +21,7 @@ namespace Universal
         public Ease scrollInEase;
         public float textFadeDelay = 0.5f;
         public float textFadeDuration = 0.3f;
+        [SerializeField] private GraphicRaycaster raycaster;
         
         [Header("For tests use context menu")]
         public string testText = "Корень мандрагоры";
@@ -56,6 +57,7 @@ namespace Universal
 
         public void Open()
         {
+            
             OpenAnimation();
         }
 
@@ -92,6 +94,11 @@ namespace Universal
                 .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
                 .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
                 .Play();
+            
+            if (raycaster != null)
+            {
+                raycaster.enabled = true;
+            }
         }
 
         [ContextMenu("TestClose")]
@@ -118,6 +125,11 @@ namespace Universal
                 .Insert(delay, scrollFader.DOFade(0, scrollFadeDuration))
                 .AppendCallback(() => canvas.enabled = false)
                 .Play();
+            
+            if (raycaster != null)
+            {
+                raycaster.enabled = false;
+            }
         }
 
         private void OnDestroy()

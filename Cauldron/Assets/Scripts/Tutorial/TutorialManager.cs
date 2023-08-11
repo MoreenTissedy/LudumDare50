@@ -43,7 +43,7 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         recipeBook.OnOpenBook += ViewBookTutorial;
-        gameDataHandler.OnNewCard += ViewVisitorTutorial;
+        cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;
     }
@@ -59,12 +59,11 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void ViewVisitorTutorial(Encounter encounter)
+    private void ViewVisitorTutorial(Potions potion)
     {
-        Debug.LogWarning(encounter);
-        if (encounter == targetTutorialVisitor)
+        if (gameDataHandler.currentCard == targetTutorialVisitor)
         {
-            gameDataHandler.OnNewCard -= ViewVisitorTutorial;
+            cauldron.PotionAccepted -= ViewVisitorTutorial;
             if (PlayerPrefs.GetInt(VISITOR_KEY, 0) == 0)
             {
                 PlayerPrefs.SetInt(VISITOR_KEY, 1);
@@ -78,7 +77,7 @@ public class TutorialManager : MonoBehaviour
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
         if (PlayerPrefs.GetInt(SCALE_CHANGE_KEY, 0) == 0)
         {
-            PlayerPrefs.GetInt(SCALE_CHANGE_KEY, 1);
+            PlayerPrefs.SetInt(SCALE_CHANGE_KEY, 1);
             tooltipPrefab.Open(ScaleTutorialText).Forget();
         }
     }

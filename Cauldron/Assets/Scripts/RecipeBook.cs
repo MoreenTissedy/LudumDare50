@@ -43,6 +43,7 @@ namespace CauldronCodebase
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnOpenBook;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -87,6 +88,7 @@ namespace CauldronCodebase
         {
             base.OpenBook();
             ChangeMode(Mode.Magical);
+            OnOpenBook?.Invoke();
         }
 
         private void LoadRecipes()

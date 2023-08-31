@@ -1,7 +1,6 @@
 using CauldronCodebase;
 using UnityEditor;
 using UnityEngine;
-using Zenject;
 
 namespace Editor
 {

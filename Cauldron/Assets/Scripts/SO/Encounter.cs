@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EasyLoc;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -14,7 +15,6 @@ namespace CauldronCodebase
         public string requiredStoryTag;
 
         [Serializable]
-        //TODO custom property drawer
         public class PotionResult
         {
             public Potions potion = Potions.DEFAULT;
@@ -32,6 +32,7 @@ namespace CauldronCodebase
         public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
+        [ReorderableList]
         public PotionResult[] resultsByPotion = Array.Empty<PotionResult>();
 
         public static Encounter GetRandom(Encounter[] set)

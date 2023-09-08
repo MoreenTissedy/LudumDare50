@@ -17,18 +17,18 @@ namespace CauldronCodebase
         };
 
         public GameObject witchCat;
-        public Villager[] villagers;
-        public Visitor[] visitors;
         
         public VisitorTextBox visitorText;
         public VisitorTimer visitorTimer;
 
-        private int currentVisitorIndex = -1;
         private int attemptsLeft;
         
         private Cauldron cauldron;
         public event Action VisitorLeft;
 
+        private Visitor currentVisitor;
+        private Villager currentVillager;
+        
         private bool ignoreSavedAttempts = false;
         private GameData gameData;
         private SoundManager soundManager;
@@ -61,7 +61,7 @@ namespace CauldronCodebase
 
         private void Wait()
         {
-            if (currentVisitorIndex < 0)
+            if (!currentVisitor)
             {
                 return;
             }
@@ -102,23 +102,17 @@ namespace CauldronCodebase
                     visitorTimer.ReduceTimer();
                 }
             }
-            
-            for (int i = 0; i < villagers.Length; i++)
+
+            currentVillager = villager;
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
+            await UniTask.Delay(300);
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
+            currentVisitor = Instantiate(villager.visitorPrefab, transform);
+            if (currentVisitor)
             {
-                if (villagers[i] == villager)
-                {
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
-                    await UniTask.Delay(300);
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
-                    if (visitors[i] != null)
-                    {
-                        visitors[i].Enter();
-                    }
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
-                    currentVisitorIndex = i;
-                    break;
-                }
+                currentVisitor.Enter();
             }
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
 
             await UniTask.Delay(150);
             ShowText(card);
@@ -132,12 +126,13 @@ namespace CauldronCodebase
 
         public void Exit()
         {
-            if(currentVisitorIndex < 0) return;
+            if(!currentVisitor) return;
             
             HideText();
-            visitors[currentVisitorIndex].Exit();
-            soundManager.PlayVisitor(villagers[currentVisitorIndex].sounds, VisitorSound.Exit);
-            currentVisitorIndex = -1;
+            currentVisitor.ExitWithDestroy();
+            soundManager.PlayVisitor(currentVillager.sounds, VisitorSound.Exit);
+            currentVisitor = null;
+            currentVillager = null;
         }
 
         public void LoadData(GameData data, bool newGame)

@@ -230,7 +230,7 @@ namespace CauldronCodebase
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
                 && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards
-                && !VisitorManager.SPECIALS.Contains(currentCard.villager.name))
+                && !EncounterIdents.GetAllSpecialCharacters().Contains(currentCard.villager.name))
             {
                 SaveCurrentCardAsUnique();
             }

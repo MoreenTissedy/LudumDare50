@@ -33,6 +33,7 @@ namespace CauldronCodebase
         {
             public float SlowTipsDelay = 60;
             public float VisitorCheckDelay = 1;
+            public float ScaleCheckDelay = 1.5f;
         }
 
         [Serializable]

@@ -6,7 +6,6 @@ using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Random = System.Random;
 
 namespace CauldronCodebase
 {
@@ -420,17 +419,7 @@ namespace CauldronCodebase
         {
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
-        
-        public Ingredients[] GenerateRandomRecipe()
-        {
-            var rnd = new Random(Guid.NewGuid().GetHashCode());
-        
-            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
 
-            return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
-
-        }
-    
         public bool IsIngredientSetKnown(Ingredients[] recipe)
         {
             //Check potions

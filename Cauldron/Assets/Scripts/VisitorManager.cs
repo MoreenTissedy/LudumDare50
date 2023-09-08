@@ -9,13 +9,6 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour, IDataPersistence
     {
-        public static readonly HashSet<string> SPECIALS = new HashSet<string>()
-        {
-            "Cat",
-            "Inquisition", 
-            "Dark Stranger"
-        };
-
         public GameObject witchCat;
         public Villager[] villagers;
         public Visitor[] visitors;
@@ -126,7 +119,7 @@ namespace CauldronCodebase
             //if cat - disable cat, else - enable cat
             if (witchCat != null)
             {
-                witchCat.SetActive(villager.name != "Cat");
+                witchCat.SetActive(villager.name != EncounterIdents.CAT);
             }
         }
 

@@ -27,19 +27,24 @@ namespace CauldronCodebase.CatTips
 
         protected virtual void Start()
         {
-            gameStateMachine.OnChangeState += CallTips;
+            gameStateMachine.OnChangeState += TryCallTips;
         }
 
         protected virtual void OnDestroy()
         {
-            gameStateMachine.OnChangeState -= CallTips;
+            gameStateMachine.OnChangeState -= TryCallTips;
         }
 
-        protected virtual void CallTips(GameStateMachine.GamePhase gamePhase)
+        protected virtual void CallTips()
         {
-            if (gamePhase != GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name == "Cat")
+        }
+
+        private void TryCallTips(GameStateMachine.GamePhase gamePhase)
+        {
+            StopAllCoroutines();
+            if (gamePhase == GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name != "Cat")
             {
-                StopAllCoroutines();
+                CallTips();
             }
         }
     }

@@ -29,22 +29,17 @@ namespace CauldronCodebase
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
-        private CatTipsValidator catTipsValidator;
-        private IngredientsData ingredientsData;
         private CatTipsView catTipsView;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, CatTipsValidator tipsValidator,
-            IngredientsData ingredients, CatTipsView tipsView)
+            SoundManager soundManager, TooltipManager tooltipManager, CatTipsView tipsView)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
             this.gameStateMachine = gameStateMachine;
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
-            catTipsValidator = tipsValidator;
-            ingredientsData = ingredients;
             catTipsView = tipsView;
         }
 
@@ -74,8 +69,6 @@ namespace CauldronCodebase
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
 
-            //TryShowCatTip();
-            
             if (mix.Count == 3)
             {
                 Brew();

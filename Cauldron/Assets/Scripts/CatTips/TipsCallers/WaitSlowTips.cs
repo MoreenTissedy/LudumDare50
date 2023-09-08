@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CauldronCodebase.GameStates;
 using Zenject;
 
 namespace CauldronCodebase.CatTips
@@ -12,11 +11,10 @@ namespace CauldronCodebase.CatTips
         [Inject] private TooltipManager tooltipManager;
         [Inject] private RecipeBook recipeBook;
         [Inject] private IngredientsData ingredientsData;
+        [Inject] private Cauldron cauldron;
 
-        protected override void CallTips(GameStateMachine.GamePhase gamePhase)
+        protected override void CallTips()
         {
-            base.CallTips(gamePhase);
-
             StartCoroutine(WaitSlow());
         }
 
@@ -24,7 +22,8 @@ namespace CauldronCodebase.CatTips
         {
             yield return new WaitForSeconds(settings.catTips.SlowTipsDelay);
         
-            if (tooltipManager.Highlighted || recipeBook.IsOpen)
+            if (tooltipManager.Highlighted || recipeBook.IsOpen 
+                || cauldron.Mix.Count != 0 || cauldron.potionPopup.gameObject.activeSelf)
             {
                 yield break;
             }

@@ -19,10 +19,8 @@ namespace CauldronCodebase.CatTips
             base.Start();
         }
 
-        protected override void CallTips(GameStateMachine.GamePhase gamePhase)
+        protected override void CallTips()
         {
-            base.CallTips(gamePhase);
-
             StartCoroutine(CheckSpecialVisitors());
         }
 

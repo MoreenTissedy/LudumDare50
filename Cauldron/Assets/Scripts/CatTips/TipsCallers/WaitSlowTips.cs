@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Zenject;
+using Random = System.Random;
 
 namespace CauldronCodebase.CatTips
 {
@@ -34,7 +36,7 @@ namespace CauldronCodebase.CatTips
 
             do
             {
-                randomRecipe = recipeBook.GenerateRandomRecipe();
+                randomRecipe = GenerateRandomRecipe();
 
                 if (generatedRecipe.Any(recipe => recipe.All(randomRecipe.Contains)))
                 {
@@ -54,6 +56,16 @@ namespace CauldronCodebase.CatTips
             var ingredients = randomRecipe.Select(ingredient => ingredientsData.Get(ingredient)).ToList();
         
             CatTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredients(catTipsProvider.SlowPlayerTips, ingredients));
+        }
+
+        private Ingredients[] GenerateRandomRecipe()
+        {
+            var rnd = new Random(Guid.NewGuid().GetHashCode());
+        
+            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+
+            return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
+
         }
     }
 }

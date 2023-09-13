@@ -2,12 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
+using NaughtyAttributes;
 using Save;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
+    [Serializable]
+    public struct CardPoolByRound
+    {
+        [UsedImplicitly] [HideInInspector] public string title;
+        public int round;
+        public Encounter[] cards;
+
+        public CardPoolByRound(int round, Encounter[] cards)
+        {
+            this.round = round;
+            this.cards = cards;
+            title = $"Round {round}: {cards.Length} cards";
+        }
+    }
+    
     [CreateAssetMenu]
     public class EncounterDeck : ScriptableObject, IDataPersistence
     {
@@ -15,19 +33,27 @@ namespace CauldronCodebase
         public CardPoolByRound[] cardPoolsByRound;
         public LinkedList<Encounter> deck;
 
-        [Header("DEBUG")] public Encounter currentCard;
-        public Encounter[] deckInfo;
-        public List<Encounter> cardPool;
+        [Header("DEBUG"), HorizontalLine]
+        [SerializeField] private Encounter currentCard;
+        [SerializeField, UsedImplicitly] private Encounter[] deckInfo;
+        [SerializeField] private List<Encounter> cardPool;
+        [SerializeField] private List<string> rememberedCards;
 
         private RecipeProvider recipeProvider;
         private GameDataHandler gameDataHandler;
         private SODictionary soDictionary;
         private Encounter loadedCard;
-
-        public List<string> rememberedCards;
-
         private MainSettings mainSettings;
         private int lastExtendedRoundNumber;
+
+        private void OnValidate()
+        {
+            for (var index = 0; index < cardPoolsByRound.Length; index++)
+            {
+                ref var pool = ref cardPoolsByRound[index];
+                pool.title = $"Round {pool.round}: {pool.cards.Length} cards";
+            }
+        }
 
         /// <summary>
         /// Form new deck and starting card pool.
@@ -42,21 +68,6 @@ namespace CauldronCodebase
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
-        }
-
-        [Serializable]
-        public struct CardPoolByRound
-        {
-            [HideInInspector] public string title;
-            public int round;
-            public Encounter[] cards;
-
-            public CardPoolByRound(int round, Encounter[] cards)
-            {
-                this.round = round;
-                this.cards = cards;
-                title = $"Round {round}: {cards.Length} cards";
-            }
         }
 
         /// <summary>
@@ -172,13 +183,17 @@ namespace CauldronCodebase
 
         private void ExtendPool()
         {
-            var nextPool = cardPoolsByRound.FirstOrDefault(x => x.round > lastExtendedRoundNumber);
-            if (nextPool.cards != null && nextPool.cards.Length > 0)
+            var nextPools = cardPoolsByRound.Where(x => x.round == lastExtendedRoundNumber+1).ToArray();
+            if (nextPools.Length == 0)
             {
-                cardPool.AddRange(nextPool.cards);
-                lastExtendedRoundNumber++;
-                Debug.LogWarning("card pool extended");
+                return;
             }
+            foreach (var pool in nextPools)
+            {
+                cardPool.AddRange(pool.cards);
+            }
+            lastExtendedRoundNumber++;
+            Debug.LogWarning("card pool extended");
         }
 
         public void AddToPool(Encounter card)
@@ -370,6 +385,19 @@ namespace CauldronCodebase
             }
 
             file.Close();
+        }
+
+        [ContextMenu("Update round for all cards")]
+        void UpdateCards()
+        {
+            foreach (var pool in cardPoolsByRound)
+            {
+                foreach (var card in pool.cards)
+                {
+                    card.addToDeckOnRound = pool.round;
+                    EditorUtility.SetDirty(card);
+                }
+            }
         }
 #endif
     }

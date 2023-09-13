@@ -85,7 +85,7 @@ namespace CauldronCodebase
             gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);
-            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager);
+            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
             endings.Init();
             localization.LoadSavedLanguage();
         }

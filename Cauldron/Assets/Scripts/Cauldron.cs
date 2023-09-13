@@ -30,16 +30,18 @@ namespace CauldronCodebase
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
         private CatTipsView catTipsView;
+        private GameDataHandler game;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, CatTipsView tipsView)
+            SoundManager soundManager, TooltipManager tooltipManager, CatTipsView tipsView, GameDataHandler game)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
             this.gameStateMachine = gameStateMachine;
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
+            this.game = game;
             catTipsView = tipsView;
         }
 
@@ -93,6 +95,10 @@ namespace CauldronCodebase
                 {
                     if (recipe.RecipeIngredients.All(ingredient => mix.Contains(ingredient)))
                     {
+                        if (!StoryTagHelper.Check(recipe.requiredStoryTag, game))
+                        {
+                            continue;
+                        }
                         if (!recipeBook.IsRecipeInBook(recipe))
                         {
                             potionPopup.Show(recipe, true);

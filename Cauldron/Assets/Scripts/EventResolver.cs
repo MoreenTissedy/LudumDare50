@@ -66,7 +66,7 @@ namespace CauldronCodebase
             for (int i = 0; i < 10; i++)
             {
                 random = Random.Range(0, cards.Length);
-                if (game.currentDeck.CheckStoryTags(cards[random]))
+                if (StoryTagHelper.Check(cards[random], game))
                 {
                     priority = cards[random];
                     break;

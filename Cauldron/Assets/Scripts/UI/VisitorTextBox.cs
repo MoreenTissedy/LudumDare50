@@ -25,6 +25,7 @@ namespace CauldronCodebase
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private IngredientsData ingredients;
         [Inject] private LocalizationTool locTool;
+        [Inject] private GameDataHandler gameDataHandler;
 
         private Encounter currentEncounter;
 
@@ -63,7 +64,7 @@ namespace CauldronCodebase
             currentEncounter = card;
             if (card.name.Contains(DEVIL))
             {
-                Recipe unlockRecipe = GetRecipeToUnlock();
+                Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
                 if (unlockRecipe == null)
                 {
                     text.text = devilDefault;
@@ -75,7 +76,7 @@ namespace CauldronCodebase
             }
             else if (card.name.Contains(CAT_UNLOCK))
             {
-                Recipe unlockRecipe = GetRecipeToUnlock();
+                Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
                 text.text = Format(card, unlockRecipe);
             }
             else
@@ -105,13 +106,6 @@ namespace CauldronCodebase
             }
 
             gameObject.SetActive(true);
-        }
-        
-        //move?
-        private Recipe GetRecipeToUnlock()
-        {
-            return recipeProvider.allRecipes.Where(x => x.magical).FirstOrDefault((x =>
-                !recipeBook.IsRecipeInBook(x)));
         }
     }
 }

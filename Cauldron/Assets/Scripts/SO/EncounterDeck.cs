@@ -162,7 +162,7 @@ namespace CauldronCodebase
                 for (int j = 0; j< 10; j++)
                 {
                     int randomIndex = Random.Range(0, cardPool.Count);
-                    if (CheckStoryTags(cardPool[randomIndex]))
+                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler))
                     {
                         deck.AddLast(cardPool[randomIndex]);
                         cardPool.RemoveAt(randomIndex);
@@ -208,7 +208,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!CheckStoryTags(card) || deck.Contains(card))
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
             {
                 return false;
             }
@@ -341,36 +341,6 @@ namespace CauldronCodebase
             {
                 data.CurrentDeck.Add(card.name);
             }
-        }
-
-        public bool CheckStoryTags(Encounter card)
-        {
-            if (string.IsNullOrWhiteSpace(card.requiredStoryTag.Trim()))
-            {
-                return true;
-            }
-
-            string[] tags = card.requiredStoryTag.Split(',');
-            bool valid = true;
-            foreach (var tag in tags)
-            {
-                string trim = tag.Trim();
-                if (trim == EndingsProvider.LOW_FAME || trim == EndingsProvider.LOW_FEAR ||
-                    trim == EndingsProvider.HIGH_FAME || trim == EndingsProvider.HIGH_FEAR)
-                {
-                    continue;
-                }
-                if (tag.StartsWith("!"))
-                {
-                    valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
-                }
-                else
-                {
-                    valid = valid && gameDataHandler.storyTags.Contains(trim);
-                }
-            }
-
-            return valid;
         }
 
 #if UNITY_EDITOR

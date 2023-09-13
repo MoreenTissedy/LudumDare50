@@ -12,16 +12,18 @@ namespace CauldronCodebase
         
         private EncounterDeck deck;
         private SODictionary dictionary;
+        private GameDataHandler game;
 
         public List<Encounter> highFame;
         public List<Encounter> highFear;
         public List<Encounter> lowFame;
         public List<Encounter> lowFear;
 
-        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager)
+        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager, GameDataHandler game)
         {
             this.deck = deck;
             this.dictionary = dictionary;
+            this.game = game;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -62,7 +64,7 @@ namespace CauldronCodebase
             {
                 random = Random.Range(0, set.Count);
                 card = set[random];
-                if (deck.CheckStoryTags(card))
+                if (StoryTagHelper.Check(card, game))
                 {
                     set.RemoveAt(random);
                     return card;

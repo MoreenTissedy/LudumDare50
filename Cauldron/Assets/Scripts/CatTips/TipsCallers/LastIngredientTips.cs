@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -27,31 +25,24 @@ namespace CauldronCodebase.CatTips
         {
             if (cauldron.Mix.Count != 2 || tooltipManager.Highlighted) return;
             if (Random.Range(0, 3) > 0) return;
+
             
-            Ingredients[] recipeToTips;
-            Ingredients randomIngredient;
-
-            List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
-            foreach (var ingredientInMix in cauldron.Mix)
+            Ingredients[] randomRecipe;
+            if (gameDataHandler.wrongPotionsCount >= WrongPotionThreshold && Random.Range(0, 100) <= ChanceToUnlock)
             {
-                allIngredients.Remove(ingredientInMix);
+                randomRecipe = RecipeGenerator.GenerateCorrectLastIngredientRecipe(cauldron.Mix.ToArray(), recipeBook);
+            }
+            else
+            {
+                randomRecipe = RecipeGenerator.GenerateLastIngredientRecipe(cauldron.Mix.ToArray(), recipeBook);
             }
 
-            int tryCount = allIngredients.Count;
-            do
-            {
-                randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
-                recipeToTips = new[] {cauldron.Mix[0], cauldron.Mix[1], randomIngredient};
+            if (randomRecipe == null) return;
 
-                tryCount -= 1;
-                if (tryCount <= 0) break;
-            } while (recipeBook.IsIngredientSetKnown(recipeToTips));
-
-            if (tryCount > 0)
-            {
-                CatTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsProvider.RandomLastIngredient,
+            var randomIngredient = randomRecipe.Except(cauldron.Mix).ToArray()[0];
+            CatTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsProvider.RandomLastIngredient,
                     ingredientsData.Get(randomIngredient)));
-            }
+            
         }
     }
 }

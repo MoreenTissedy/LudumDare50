@@ -38,6 +38,7 @@ namespace CauldronCodebase
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
+        public List<Recipe> LockedRecipe { get; private set; }
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -106,7 +107,8 @@ namespace CauldronCodebase
                 }
                 else allHerbalRecipes.Add(recipe);
             }
-            
+
+            LockedRecipe = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
         }
 
         public void RecordAttempt(WrongPotion mix)
@@ -130,6 +132,7 @@ namespace CauldronCodebase
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);
+            LockedRecipe.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
         }
 
@@ -423,7 +426,7 @@ namespace CauldronCodebase
         public bool IsIngredientSetKnown(Ingredients[] recipe)
         {
             //Check potions
-            if (unlockedRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+            if (unlockedRecipes.Any(unlockedRecipe => unlockedRecipe.RecipeIngredients.All(recipe.Contains)))
             {
                 return true;
             }

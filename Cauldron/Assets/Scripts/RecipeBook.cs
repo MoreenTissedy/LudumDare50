@@ -38,7 +38,7 @@ namespace CauldronCodebase
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
-        public List<Recipe> LockedRecipe { get; private set; }
+        public List<Recipe> LockedRecipes { get; private set; }
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -108,7 +108,7 @@ namespace CauldronCodebase
                 else allHerbalRecipes.Add(recipe);
             }
 
-            LockedRecipe = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
+            LockedRecipes = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
         }
 
         public void RecordAttempt(WrongPotion mix)
@@ -132,7 +132,7 @@ namespace CauldronCodebase
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);
-            LockedRecipe.Remove(recipe);
+            LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
         }
 

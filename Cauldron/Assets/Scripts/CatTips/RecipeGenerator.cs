@@ -37,7 +37,7 @@ namespace CauldronCodebase
 
         public static Recipe GenerateLockedRecipe(RecipeBook book)
         {
-            return book.LockedRecipe.Count == 0 ? null : book.LockedRecipe[UnityEngine.Random.Range(0, book.LockedRecipe.Count)];
+            return book.LockedRecipes.Count == 0 ? null : book.LockedRecipes[UnityEngine.Random.Range(0, book.LockedRecipes.Count)];
         }
 
         public static Ingredients[] GenerateLastIngredientRecipe(Ingredients[] mix, RecipeBook book)
@@ -68,7 +68,7 @@ namespace CauldronCodebase
         {
             List<Recipe> potentialRecipes = new List<Recipe>();
 
-            foreach (var recipe in book.LockedRecipe)
+            foreach (var recipe in book.LockedRecipes)
             {
                 if(mix.All(recipe.RecipeIngredients.Contains))
                 {

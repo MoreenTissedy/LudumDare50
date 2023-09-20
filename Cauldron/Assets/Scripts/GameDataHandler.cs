@@ -41,6 +41,7 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
+        public FractionStatus fractionStatus;
         public EncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
@@ -72,6 +73,8 @@ namespace CauldronCodebase
             
             currentDeck = deck;
             currentEvents = events;
+
+            fractionStatus = new FractionStatus();
         }
 
         public void AddTag(string tag)
@@ -283,6 +286,7 @@ namespace CauldronCodebase
             cardsDrawnToday = data.CardDrawnToday;
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
+            fractionStatus.Load(data.FractionData);
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -317,6 +321,7 @@ namespace CauldronCodebase
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
             data.Phase = gamePhase;
+            data.FractionData = fractionStatus.Save();
 
             if (currentCard != null)
             {

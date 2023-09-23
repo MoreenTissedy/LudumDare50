@@ -37,8 +37,8 @@ namespace CauldronCodebase
         {
             if (!string.IsNullOrEmpty(exit))
             {
-                anim.AnimationState.SetAnimation(0, exit, false);
-                anim.AnimationState.Complete += Hide;
+                TrackEntry trackEntry = anim.AnimationState.SetAnimation(0, exit, false);
+                trackEntry.Complete += Hide;
             }
             else
             {

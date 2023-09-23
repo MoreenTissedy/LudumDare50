@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -9,20 +8,21 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour, IDataPersistence
     {
-        public GameObject witchCat;
+        [SerializeField] private GameObject witchCat;
         
-        public VisitorTextBox visitorText;
-        public VisitorTimer visitorTimer;
+        [SerializeField] private VisitorTextBox visitorText;
+        [SerializeField] private VisitorTimer visitorTimer;
+        [SerializeField] private ParticleSystem positiveReaction;
+        [SerializeField] private ParticleSystem negativeReaction;
 
-        private int attemptsLeft;
-        
-        private Cauldron cauldron;
         public event Action VisitorLeft;
 
+        private int attemptsLeft;
         private Visitor currentVisitor;
         private Villager currentVillager;
-        
         private bool ignoreSavedAttempts = false;
+        
+        private Cauldron cauldron;
         private GameData gameData;
         private SoundManager soundManager;
         private DataPersistenceManager dataPersistenceManager;
@@ -126,6 +126,18 @@ namespace CauldronCodebase
             soundManager.PlayVisitor(currentVillager.sounds, VisitorSound.Exit);
             currentVisitor = null;
             currentVillager = null;
+        }
+
+        public void PlayReaction(bool positive)
+        {
+            if (positive)
+            {
+                positiveReaction.Play();
+            }
+            else
+            {
+                negativeReaction.Play();
+            }
         }
 
         public void LoadData(GameData data, bool newGame)

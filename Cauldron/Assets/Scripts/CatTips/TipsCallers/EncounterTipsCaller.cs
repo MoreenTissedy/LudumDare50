@@ -1,32 +1,26 @@
-﻿using CauldronCodebase.GameStates;
-using NaughtyAttributes;
+﻿using System.Collections;
+using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
 namespace CauldronCodebase.CatTips
 {
-    public class TipsCaller : MonoBehaviour
+    public abstract class EncounterTipsCaller : MonoBehaviour
     {
-        [SerializeField] protected bool TipsWithRecipe;
-        [Header("Potion unlock settings")] 
-        [ShowIf("TipsWithRecipe")]
-        [SerializeField] protected int WrongPotionThreshold = 3;
-        [ShowIf("TipsWithRecipe")]
-        [SerializeField][Range(0, 100)] protected float ChanceToUnlock = 70;
-        
-        protected CatTipsValidator CatTipsValidator;
+        protected CatTipsValidator catTipsValidator;
         protected CatTipsProvider catTipsProvider;
         protected GameDataHandler gameDataHandler;
         protected MainSettings settings;
 
         private GameStateMachine gameStateMachine;
+        protected abstract bool TipShown { get; set; }
 
         [Inject]
         private void Construct(CatTipsValidator tipsValidator, GameDataHandler dataHandler,
                                 MainSettings mainSettings, GameStateMachine stateMachine,
                                 CatTipsProvider tipsProvider)
         {
-            CatTipsValidator = tipsValidator;
+            catTipsValidator = tipsValidator;
             gameDataHandler = dataHandler;
             settings = mainSettings;
             gameStateMachine = stateMachine;
@@ -43,17 +37,20 @@ namespace CauldronCodebase.CatTips
             gameStateMachine.OnChangeState -= TryCallTips;
         }
 
-        protected virtual void CallTips()
-        {
-        }
-
         private void TryCallTips(GameStateMachine.GamePhase gamePhase)
         {
             StopAllCoroutines();
-            if (gamePhase == GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name != "Cat")
+            if (gamePhase == GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name != EncounterIdents.CAT)
             {
-                CallTips();
+                StartCoroutine(CallTips());
+            }
+            else if (TipShown)
+            {
+                catTipsValidator.HideTips();
+                TipShown= false;
             }
         }
+
+        protected abstract IEnumerator CallTips();
     }
 }

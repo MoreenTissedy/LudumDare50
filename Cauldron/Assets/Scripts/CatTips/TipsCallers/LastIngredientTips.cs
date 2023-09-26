@@ -1,47 +1,66 @@
 ﻿using System.Linq;
+using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase.CatTips
 {
-    public class LastIngredientTips : TipsCaller
+    public class LastIngredientTips : MonoBehaviour
     {
         [Inject] private Cauldron cauldron;
         [Inject] private TooltipManager tooltipManager;
         [Inject] private IngredientsData ingredientsData;
         [Inject] private RecipeBook recipeBook;
+        [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private MainSettings settings;
+        [Inject] private CatTipsProvider catTipsProvider;
+        [Inject] private CatTipsValidator catTipsValidator;
 
-        protected override void Start()
+        private bool tooltipShown;
+        protected void Start()
         {
             cauldron.IngredientAdded += TryShowCatTip;
+            cauldron.PotionBrewed += HideTip;
         }
 
-        protected override void OnDestroy()
+        protected void OnDestroy()
         {
             cauldron.IngredientAdded -= TryShowCatTip;
+            cauldron.PotionBrewed -= HideTip;
         }
-        
+
+        private void HideTip(Potions obj)
+        {
+            if (tooltipShown)
+            {
+                catTipsValidator.HideTips();
+                tooltipShown = false;
+            }
+        }
+
         private void TryShowCatTip(Ingredients ingredients)
         {
             if (cauldron.Mix.Count != 2 || tooltipManager.Highlighted) return;
-            if (Random.Range(0, 3) > 0) return;
-
             
             Ingredients[] randomRecipe;
-            if (gameDataHandler.wrongPotionsCount >= WrongPotionThreshold && Random.Range(0, 100) <= ChanceToUnlock)
+            if (gameDataHandler.wrongExperiments >= settings.catTips.WrongExperimentThreshold && Random.Range(0, 100) <= settings.catTips.ChanceToUnlock)
             {
+                gameDataHandler.wrongExperiments = 0;
                 randomRecipe = RecipeGenerator.GenerateCorrectLastIngredientRecipe(cauldron.Mix.ToArray(), recipeBook);
             }
-            else
+            else if (Random.Range(0, 100) <= settings.catTips.ChanceToFail) 
             {
                 randomRecipe = RecipeGenerator.GenerateLastIngredientRecipe(cauldron.Mix.ToArray(), recipeBook);
             }
-
-            if (randomRecipe == null) return;
+            else
+            {
+                return;
+            }
 
             var randomIngredient = randomRecipe.Except(cauldron.Mix).ToArray()[0];
-            CatTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsProvider.RandomLastIngredient,
-                    ingredientsData.Get(randomIngredient)));
+            tooltipShown = catTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(
+                catTipsProvider.RandomLastIngredient,
+                ingredientsData.Get(randomIngredient)));
             
         }
     }

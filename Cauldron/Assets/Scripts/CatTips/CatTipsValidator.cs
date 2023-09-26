@@ -29,14 +29,23 @@ public class CatTipsValidator : MonoBehaviour
         gameStateMachine.OnChangeState -= ReadyToShow;
     }
 
-    public void ShowTips(CatTips tips)
+    public bool ShowTips(CatTips tips)
     {
-        if(tipsWasShown) return;
-        if(gameDataHandler.currentCard.villager.name == "Cat") return;
+        if(tipsWasShown) return false;
+        if(gameDataHandler.currentCard.villager.name == "Cat") return false;
         
         tipsWasShown = true;
         
         catTipsView.ShowTips(tips);
+        return true;
+    }
+
+    public void HideTips()
+    {
+        if (tipsWasShown)
+        {
+            catTipsView.HideView();
+        }
     }
 
     private void ReadyToShow(GameStateMachine.GamePhase phase)

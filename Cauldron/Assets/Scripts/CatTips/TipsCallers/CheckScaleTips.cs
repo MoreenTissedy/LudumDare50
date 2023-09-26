@@ -1,19 +1,14 @@
 ﻿using System.Collections;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 
 namespace CauldronCodebase.CatTips
 {
-    public class CheckScaleTips : TipsCaller
+    public class CheckScaleTips : EncounterTipsCaller
     {
-        protected override void CallTips()
+        protected override bool TipShown { get; set; }
+        protected override IEnumerator CallTips()
         {
-            StartCoroutine(CheckScale());
-        }
-
-        private IEnumerator CheckScale()
-        {
-            yield return new WaitForSeconds(settings.catTips.VisitorCheckDelay);
+            yield return new WaitForSeconds(settings.catTips.ScaleCheckDelay);
             
             var fame = gameDataHandler.Get(Statustype.Fame);
             var fear = gameDataHandler.Get(Statustype.Fear);
@@ -52,7 +47,7 @@ namespace CauldronCodebase.CatTips
 
             void CreateTip(CatTipsTextSO scaleText, bool high)
             {
-                CatTipsValidator.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
+                TipShown = catTipsValidator.ShowTips(gameDataHandler.currentCard.primaryCoef > 0
                     ? CatTipsGenerator.CreateTips(scaleText, high ? catTipsProvider.ScaleDOWNTips : catTipsProvider.ScaleUPTips)
                     : CatTipsGenerator.CreateTips(scaleText, high ? catTipsProvider.ScaleUPTips : catTipsProvider.ScaleDOWNTips));
             

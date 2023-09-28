@@ -1,4 +1,6 @@
 using System;
+using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -72,6 +74,7 @@ namespace CauldronCodebase
                 return;
             }
             data[(int) fraction - 1].Status += shift;
+            LoggerTool.TheOne.Log(ToString());
         }
 
         public override string ToString()

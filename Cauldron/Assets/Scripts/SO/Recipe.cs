@@ -17,6 +17,7 @@ namespace CauldronCodebase
         [TextArea(2, 10)]
         public string description;
         public Sprite image;
+        public string requiredStoryTag;
 
         public override bool Localize(Language language)
         {

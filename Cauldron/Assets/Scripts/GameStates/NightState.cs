@@ -86,6 +86,7 @@ namespace CauldronCodebase.GameStates
         private void NightPanelOnEventClicked(NightEvent nightEvent)
         {
             eventResolver.ApplyModifiers(nightEvent);
+            eventResolver.ApplyFractionShift(nightEvent.fractionData);
             var priorityEvent = eventResolver.AddBonusCards(nightEvent);
             if (priorityEvent)
             {

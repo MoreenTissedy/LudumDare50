@@ -38,10 +38,10 @@ namespace Editor
                 }
             }
 
-            var listPool = new List<EncounterDeck.CardPoolByRound>();
+            var listPool = new List<CardPoolByRound>();
             foreach (var keyValuePair in dict)
             {
-                listPool.Add(new EncounterDeck.CardPoolByRound(
+                listPool.Add(new CardPoolByRound(
                     keyValuePair.Key, keyValuePair.Value.ToArray()));
             }
             

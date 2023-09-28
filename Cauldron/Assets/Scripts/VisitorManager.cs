@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -9,27 +8,21 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour, IDataPersistence
     {
-        public static readonly HashSet<string> SPECIALS = new HashSet<string>()
-        {
-            "Cat",
-            "Inquisition", 
-            "Dark Stranger"
-        };
-
-        public GameObject witchCat;
-        public Villager[] villagers;
-        public Visitor[] visitors;
+        [SerializeField] private GameObject witchCat;
         
-        public VisitorTextBox visitorText;
-        public VisitorTimer visitorTimer;
+        [SerializeField] private VisitorTextBox visitorText;
+        [SerializeField] private VisitorTimer visitorTimer;
+        [SerializeField] private ParticleSystem positiveReaction;
+        [SerializeField] private ParticleSystem negativeReaction;
 
-        private int currentVisitorIndex = -1;
-        private int attemptsLeft;
-        
-        private Cauldron cauldron;
         public event Action VisitorLeft;
 
+        private int attemptsLeft;
+        private Visitor currentVisitor;
+        private Villager currentVillager;
         private bool ignoreSavedAttempts = false;
+        
+        private Cauldron cauldron;
         private GameData gameData;
         private SoundManager soundManager;
         private DataPersistenceManager dataPersistenceManager;
@@ -61,7 +54,7 @@ namespace CauldronCodebase
 
         private void Wait()
         {
-            if (currentVisitorIndex < 0)
+            if (!currentVisitor)
             {
                 return;
             }
@@ -102,23 +95,17 @@ namespace CauldronCodebase
                     visitorTimer.ReduceTimer();
                 }
             }
-            
-            for (int i = 0; i < villagers.Length; i++)
+
+            currentVillager = villager;
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
+            await UniTask.Delay(300);
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
+            currentVisitor = Instantiate(villager.visitorPrefab, transform);
+            if (currentVisitor)
             {
-                if (villagers[i] == villager)
-                {
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
-                    await UniTask.Delay(300);
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
-                    if (visitors[i] != null)
-                    {
-                        visitors[i].Enter();
-                    }
-                    soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
-                    currentVisitorIndex = i;
-                    break;
-                }
+                currentVisitor.Enter();
             }
+            soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
 
             await UniTask.Delay(150);
             ShowText(card);
@@ -126,18 +113,31 @@ namespace CauldronCodebase
             //if cat - disable cat, else - enable cat
             if (witchCat != null)
             {
-                witchCat.SetActive(villager.name != "Cat");
+                witchCat.SetActive(villager.name != EncounterIdents.CAT);
             }
         }
 
         public void Exit()
         {
-            if(currentVisitorIndex < 0) return;
+            if(!currentVisitor) return;
             
             HideText();
-            visitors[currentVisitorIndex].Exit();
-            soundManager.PlayVisitor(villagers[currentVisitorIndex].sounds, VisitorSound.Exit);
-            currentVisitorIndex = -1;
+            currentVisitor.ExitWithDestroy();
+            soundManager.PlayVisitor(currentVillager.sounds, VisitorSound.Exit);
+            currentVisitor = null;
+            currentVillager = null;
+        }
+
+        public void PlayReaction(bool positive)
+        {
+            if (positive)
+            {
+                positiveReaction.Play();
+            }
+            else
+            {
+                negativeReaction.Play();
+            }
         }
 
         public void LoadData(GameData data, bool newGame)

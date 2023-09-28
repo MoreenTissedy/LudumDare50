@@ -277,6 +277,10 @@ namespace Editor
                 string eventName = storyEvent.name.Replace(".", "_").Replace("-", "_");
                 foreach (var card in storyEvent.bonusCards)
                 {
+                    if (card is null)
+                    {
+                        continue;
+                    }
                     string bonusCard = card.name.Replace(".", "_").Replace("-", "_");
                     dotNotation += $"{eventName} -> {bonusCard}\n";
                 }

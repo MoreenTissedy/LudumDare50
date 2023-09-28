@@ -6,7 +6,6 @@ using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Random = System.Random;
 
 namespace CauldronCodebase
 {
@@ -39,6 +38,7 @@ namespace CauldronCodebase
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
+        public List<Recipe> LockedRecipes { get; private set; }
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -107,7 +107,8 @@ namespace CauldronCodebase
                 }
                 else allHerbalRecipes.Add(recipe);
             }
-            
+
+            LockedRecipes = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
         }
 
         public void RecordAttempt(WrongPotion mix)
@@ -131,6 +132,7 @@ namespace CauldronCodebase
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);
+            LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
         }
 
@@ -420,21 +422,11 @@ namespace CauldronCodebase
         {
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
-        
-        public Ingredients[] GenerateRandomRecipe()
-        {
-            var rnd = new Random(Guid.NewGuid().GetHashCode());
-        
-            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
 
-            return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
-
-        }
-    
         public bool IsIngredientSetKnown(Ingredients[] recipe)
         {
             //Check potions
-            if (unlockedRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+            if (unlockedRecipes.Any(unlockedRecipe => unlockedRecipe.RecipeIngredients.All(recipe.Contains)))
             {
                 return true;
             }

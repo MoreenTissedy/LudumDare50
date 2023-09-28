@@ -11,6 +11,7 @@ namespace CauldronCodebase
         [SerializeField] private MainSettings mainSettings;
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
+        [SerializeField] private CatTipsProvider catTipsProvider;
 
         [SerializeField] private LocalizationTool locTool;
         [SerializeField] private SoundManager soundManager;
@@ -19,6 +20,7 @@ namespace CauldronCodebase
         {
             Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
             Container.Bind<Camera>().FromInstance(mainCameraScript).AsSingle();
+            Container.Bind<CatTipsProvider>().FromInstance(catTipsProvider).AsSingle();
             Container.Bind<SODictionary>().FromInstance(soDictionary).AsSingle();
             soDictionary.LoadDictionary();
 

@@ -33,6 +33,7 @@ namespace Save
         public string CurrentVillager;
 
         public List<string> StoryTags;  // GameDataHandler
+        public int[] FractionData;
         
         public List<string> PotionsTotalOnRun;  //GameDataHandler
         public int WrongPotionsCountOnRun;  //GameDataHandler

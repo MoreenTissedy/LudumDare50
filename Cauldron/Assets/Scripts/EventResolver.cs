@@ -31,6 +31,11 @@ namespace CauldronCodebase
             }
         }
 
+        public void ApplyFractionShift(FractionData shift)
+        {
+            game.fractionStatus.ChangeStatus(shift.Fraction, shift.Status);
+        }
+
         public Encounter AddBonusCards(NightEvent nightEvent)
         {
             if (nightEvent.bonusCards is null || nightEvent.bonusCards.Length == 0)
@@ -66,7 +71,7 @@ namespace CauldronCodebase
             for (int i = 0; i < 10; i++)
             {
                 random = Random.Range(0, cards.Length);
-                if (game.currentDeck.CheckStoryTags(cards[random]))
+                if (StoryTagHelper.Check(cards[random], game))
                 {
                     priority = cards[random];
                     break;

@@ -57,6 +57,19 @@ namespace CauldronCodebase
             }
         }
         
+        public Recipe GetRecipeToUnlock(RecipeBook book, GameDataHandler gameDataHandler)
+        {
+            foreach (var recipe in allRecipes)
+            {
+                if (recipe.magical && !book.IsRecipeInBook(recipe) &&
+                    StoryTagHelper.Check(recipe.requiredStoryTag, gameDataHandler))
+                {
+                    return recipe;
+                }
+            }
+            return null;
+        }
+        
         
         [ContextMenu("Export Recipes to CSV")]
         public void ExportRecipes()

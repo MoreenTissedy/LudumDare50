@@ -8,6 +8,7 @@ namespace CauldronCodebase
     {
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
+        [Inject] private GameDataHandler gameDataHandler;
 
         [ContextMenu("Unlock all recipes")]
         public void UnlockAllRecipes()
@@ -19,6 +20,14 @@ namespace CauldronCodebase
                     continue;
                 }
                 recipeBook.RecordRecipe(recipe);
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Debug.LogWarning(gameDataHandler.fractionStatus);
             }
         }
     }

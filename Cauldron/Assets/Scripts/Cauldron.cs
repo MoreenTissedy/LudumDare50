@@ -18,7 +18,7 @@ namespace CauldronCodebase
         public TooltipManager tooltipManager;
         private List<Ingredients> mix = new List<Ingredients>();
 
-        [SerializeField] public List<Ingredients> Mix => mix;
+        public List<Ingredients> Mix => mix;
         public event Action MouseEnterCauldronZone;
         public event Action<Ingredients> IngredientAdded;
         public event Action<Potions> PotionBrewed;
@@ -31,23 +31,18 @@ namespace CauldronCodebase
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
-        private CatTipsManager catTipsManager;
-        private IngredientsData ingredientsData;
-        private CatTipsView catTipsView;
+        private GameDataHandler game;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, CatTipsManager tipsManager,
-            IngredientsData ingredients, CatTipsView tipsView)
+            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
             this.gameStateMachine = gameStateMachine;
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
-            catTipsManager = tipsManager;
-            ingredientsData = ingredients;
-            catTipsView = tipsView;
+            this.game = game;
         }
 
         private void Awake()
@@ -76,51 +71,12 @@ namespace CauldronCodebase
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
 
-            TryShowCatTip();
-            
             if (mix.Count == 3)
             {
                 Brew();
             }
         }
-
         
-        //TODO: refactor away from here
-        private void TryShowCatTip()
-        {
-            if (Random.Range(0, 3) > 0)
-            {
-                return;
-            }
-            if (mix.Count == 2 && !tooltipManager.Highlighted)
-            {
-                Ingredients[] recipeToTips;
-                Ingredients randomIngredient;
-
-                List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
-                foreach (var ingredientInMix in mix)
-                {
-                    allIngredients.Remove(ingredientInMix);
-                }
-
-                int tryCount = allIngredients.Count;
-                do
-                {
-                    randomIngredient = allIngredients[Random.Range(0, allIngredients.Count)];
-                    recipeToTips = new[] {mix[0], mix[1], randomIngredient};
-
-                    tryCount -= 1;
-                    if (tryCount <= 0) break;
-                } while (recipeBook.IsIngredientSetKnown(recipeToTips));
-
-                if (tryCount > 0)
-                {
-                    catTipsManager.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(catTipsManager.RandomLastIngredient,
-                        ingredientsData.Get(randomIngredient)));
-                }
-            }
-        }
-
         public void Clear(GameStateMachine.GamePhase phase)
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
@@ -130,7 +86,6 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
-            catTipsView.HideView();
             soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
@@ -139,6 +94,10 @@ namespace CauldronCodebase
                 {
                     if (recipe.RecipeIngredients.All(ingredient => mix.Contains(ingredient)))
                     {
+                        if (!StoryTagHelper.Check(recipe.requiredStoryTag, game))
+                        {
+                            continue;
+                        }
                         if (!recipeBook.IsRecipeInBook(recipe))
                         {
                             potionPopup.Show(recipe, true);
@@ -161,6 +120,7 @@ namespace CauldronCodebase
 
             LoggerTool.TheOne.Log("Potion fail");
             recipeBook.RecordAttempt(new WrongPotion(mix));
+            game.wrongExperiments++;
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);

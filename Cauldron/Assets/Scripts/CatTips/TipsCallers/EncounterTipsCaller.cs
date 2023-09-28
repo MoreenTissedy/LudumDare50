@@ -40,7 +40,7 @@ namespace CauldronCodebase.CatTips
         private void TryCallTips(GameStateMachine.GamePhase gamePhase)
         {
             StopAllCoroutines();
-            if (gamePhase == GameStateMachine.GamePhase.Visitor || gameDataHandler.currentCard.villager.name != EncounterIdents.CAT)
+            if (gamePhase == GameStateMachine.GamePhase.Visitor)
             {
                 StartCoroutine(CallTips());
             }

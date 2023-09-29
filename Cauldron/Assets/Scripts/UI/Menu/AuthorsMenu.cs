@@ -17,7 +17,6 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            gameObject.SetActive(false);
             closePanelButton.onClick.AddListener(Close);
         }
 

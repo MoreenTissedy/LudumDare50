@@ -62,7 +62,6 @@ namespace CauldronCodebase
             LoadVolumeValues();
             LoadResolution();
             LoadLanguage();
-            Close();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
@@ -112,8 +111,8 @@ namespace CauldronCodebase
 
         public void Close()
         {
-            fadeController.FadeOut();
             gameObject.SetActive(false);
+            fadeController.FadeOut();
         }
 
         private void OpenResetDialogue()

@@ -18,10 +18,10 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] private ScrollTooltip tooltipPrefab;
 
-    [Localize] public string BookTutorialText;
-    [Localize] public string VisitorTutorialText;
-    [Localize] public string ScaleTutorialText;
-    [Localize] public string PotionDeniedTutorialText;
+    [Localize] [TextArea (5, 10)] public string BookTutorialText;
+    [Localize] [TextArea (5, 10)] public string VisitorTutorialText;
+    [Localize] [TextArea (5, 10)] public string ScaleTutorialText;
+    [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     

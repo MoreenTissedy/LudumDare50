@@ -9,6 +9,8 @@ namespace CauldronCodebase
         public const string WITCH_MEMORY = "WitchMemory";
         public const string CAT = "Cat";
         
+        public const string CAT_UNLOCK = "intro-4";
+        
         public static HashSet<string> GetAllSpecialCharacters()
         {
             return new HashSet<string> { INQUISITION, DARK_STRANGER, WITCH_MEMORY, CAT};

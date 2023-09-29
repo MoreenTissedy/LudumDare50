@@ -38,6 +38,7 @@ namespace CauldronCodebase
         public Encounter currentCard;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
+        public int wrongExperiments = 0;  //no need to save
 
         //TODO: separate entities
         public List<string> storyTags;

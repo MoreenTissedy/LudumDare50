@@ -29,12 +29,11 @@ namespace CauldronCodebase
         private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
-        private CatTipsView catTipsView;
         private GameDataHandler game;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, CatTipsView tipsView, GameDataHandler game)
+            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
@@ -42,7 +41,6 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
             this.game = game;
-            catTipsView = tipsView;
         }
 
         private void Awake()
@@ -86,7 +84,6 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
-            catTipsView.HideView();
             soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
@@ -118,6 +115,7 @@ namespace CauldronCodebase
             }
 
             recipeBook.RecordAttempt(new WrongPotion(mix));
+            game.wrongExperiments++;
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);

@@ -1,5 +1,4 @@
 ﻿using CauldronCodebase;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
@@ -7,41 +6,39 @@ public class CatTipsValidator : MonoBehaviour
 {
     private bool tipsWasShown;
 
-    private GameStateMachine gameStateMachine;
     private GameDataHandler gameDataHandler;
     private CatTipsView catTipsView;
 
     [Inject]
-    private void Construct(GameStateMachine stateMachine, GameDataHandler dataHandler, CatTipsView tipsView)
+    private void Construct(GameDataHandler dataHandler, CatTipsView tipsView)
     {
-        gameStateMachine = stateMachine;
         gameDataHandler = dataHandler;
         catTipsView = tipsView;
     }
 
-    private void Start()
+    public bool ShowTips(CatTips tips)
     {
-        gameStateMachine.OnChangeState += ReadyToShow;
-    }
+        if (tipsWasShown)
+        {
+            return false;
+        }
 
-    private void OnDestroy()
-    {
-        gameStateMachine.OnChangeState -= ReadyToShow;
-    }
-
-    public void ShowTips(CatTips tips)
-    {
-        if(tipsWasShown) return;
-        if(gameDataHandler.currentCard.villager.name == "Cat") return;
+        if (gameDataHandler.currentCard.villager.name == EncounterIdents.CAT)
+        {
+            return false;
+        }
         
         tipsWasShown = true;
-        
         catTipsView.ShowTips(tips);
+        return true;
     }
 
-    private void ReadyToShow(GameStateMachine.GamePhase phase)
+    public void HideTips()
     {
-        if(phase != GameStateMachine.GamePhase.Visitor) return;
-        tipsWasShown = false;
+        if (tipsWasShown)
+        {
+            catTipsView.HideView();
+            tipsWasShown = false;
+        }
     }
 }

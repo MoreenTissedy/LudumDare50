@@ -11,9 +11,6 @@ namespace CauldronCodebase
 {
     public class VisitorTextBox : MonoBehaviour
     {
-        private const string DEVIL = "devil";
-        private const string CAT_UNLOCK = "intro-4";
-
         [Localize]
         public string devilDefault = "Привет, милая. Как делишки? Покажи-ка, что ты умеешь.";
         public float offScreen = -1000;
@@ -62,7 +59,7 @@ namespace CauldronCodebase
                 .From(offScreen);
 
             currentEncounter = card;
-            if (card.name.Contains(DEVIL))
+            if (card.villager.name.Contains(EncounterIdents.DARK_STRANGER))
             {
                 Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
                 if (unlockRecipe == null)
@@ -74,7 +71,7 @@ namespace CauldronCodebase
                     text.text = Format(card, unlockRecipe);
                 }
             }
-            else if (card.name.Contains(CAT_UNLOCK))
+            else if (card.name.Contains(EncounterIdents.CAT_UNLOCK))
             {
                 Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
                 text.text = Format(card, unlockRecipe);

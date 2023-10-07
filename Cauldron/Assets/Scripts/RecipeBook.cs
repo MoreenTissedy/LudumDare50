@@ -42,6 +42,7 @@ namespace CauldronCodebase
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         
         private TooltipManager tooltipManager;
@@ -417,6 +418,7 @@ namespace CauldronCodebase
 
         private void TryHighlightIncorrectRecipe()
         {
+            OnSelectIncorrectRecipe?.Invoke();
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
 

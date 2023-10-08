@@ -22,7 +22,13 @@ namespace CauldronCodebase
             cauldron.IngredientAdded += ShowContent;
             cauldron.PotionBrewed += HideContent;
         }
-        
+
+        private void OnDestroy()
+        {
+            cauldron.IngredientAdded -= ShowContent;
+            cauldron.PotionBrewed -= HideContent;
+        }
+
         private void ShowContent(Ingredients ingredient)
         {
             if (Math.Abs(contentTransform.anchoredPosition.y - shownPosition) > 0.1)

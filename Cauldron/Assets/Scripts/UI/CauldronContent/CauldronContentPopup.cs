@@ -4,16 +4,16 @@ using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
-public class PopUp_CauldronContent : MonoBehaviour
+public class CauldronContentPopup : MonoBehaviour
 {
     [Header("Position")]
-    [SerializeField] private float hiddenPosition;
-    [SerializeField] private float shownPosition;
+    [SerializeField] private float hiddenPosition = 90;
+    [SerializeField] private float shownPosition = -190;
     
     [Header("Time")]
-    [SerializeField] private float showSpeed;
-    [SerializeField] private float showTime;
-    [SerializeField] private float hideSpeed;
+    [SerializeField] private float showSpeed = 1;
+    [SerializeField] private float showTime = 0.5f;
+    [SerializeField] private float hideSpeed = 0.5f;
     
     [SerializeField] private IngredientView[] ingredients;
 

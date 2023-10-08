@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 {
@@ -14,6 +15,7 @@ namespace CauldronCodebase
         public Sprite picture;
         public float moneyCoef, fearCoef, fameCoef;
         public Encounter[] bonusCards;
+        public FractionData fractionData;
         public string storyTag;
         [Header("Only for conditionals")]
         public bool repeat;

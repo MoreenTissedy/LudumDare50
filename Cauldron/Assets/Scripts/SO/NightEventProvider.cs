@@ -54,12 +54,12 @@ namespace CauldronCodebase
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
-        private NightEvent GetRandomEvent(int day)
+        private NightEvent GetRandomEvent(GameDataHandler gameDataHandler)
         {
             var validEvents = new List<RandomNightEvent>(inGameRandoms.Count);
             foreach (var randomNightEvent in inGameRandoms)
             {
-                if (randomNightEvent.minDay <= day)
+                if (randomNightEvent.Valid(gameDataHandler))
                 {
                     validEvents.Add(randomNightEvent);
                 }
@@ -116,7 +116,7 @@ namespace CauldronCodebase
             }
             if (returnEvents.Count <= _EVENT_COUNT_FOR_RANDOM_EVENT_)
             {
-                returnEvents.Add(GetRandomEvent(game.currentDay));
+                returnEvents.Add(GetRandomEvent(game));
             }
 
             storyEvents.Clear();

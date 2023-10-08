@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using EasyLoc;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Zenject;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -12,11 +11,10 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "New_Encounter", menuName = "Encounter", order = 1)]
     public class Encounter : LocalizableSO
     {
-        public int addToDeckOnDay = -1;
+        [FormerlySerializedAs("addToDeckOnDay")] public int addToDeckOnRound = -1;
         public string requiredStoryTag;
 
         [Serializable]
-        //TODO custom property drawer
         public class PotionResult
         {
             public Potions potion = Potions.DEFAULT;
@@ -34,6 +32,7 @@ namespace CauldronCodebase
         public bool hidden = false, quest = false;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
+        [ReorderableList]
         public PotionResult[] resultsByPotion = Array.Empty<PotionResult>();
 
         public static Encounter GetRandom(Encounter[] set)

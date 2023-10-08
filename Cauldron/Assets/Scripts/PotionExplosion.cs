@@ -26,6 +26,7 @@ namespace CauldronCodebase
         [SerializeField] RecipeProvider recipes;
         
         [Inject] private Cauldron cauldron;
+        [Inject] private SoundManager sound;
 
         private void OnValidate()
         {
@@ -63,6 +64,7 @@ namespace CauldronCodebase
 
         private void PlayEffect(Potions potion)
         {
+            sound.Play(potion);
             if (currentEffect)
             {
                 currentEffect.SetActive(false);

@@ -46,7 +46,7 @@ namespace CauldronCodebase.GameStates
                 cardDeck.AddToDeck(priorityCard, true);
             }
             Encounter currentCard = cardDeck.GetTopCard();
-            gameDataHandler.currentCard = currentCard;
+            gameDataHandler.SetCurrentCard(currentCard);
 
             if (gameDataHandler.currentCard is null)
             {
@@ -67,21 +67,23 @@ namespace CauldronCodebase.GameStates
 
         private void EndEncounter(Potions potion)
         {
-            PlayRelevantSound(potion);
+            SignalPotionSuccess(potion);
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
-        private void PlayRelevantSound(Potions potion)
+        private void SignalPotionSuccess(Potions potion)
         {
             var potionCoef = gameDataHandler.currentCard.resultsByPotion.FirstOrDefault(x => x.potion == potion)?.influenceCoef ?? 0;
             if (potionCoef > 0)
             {
                 soundManager.Play(Sounds.PotionSuccess);
+                visitorManager.PlayReaction(true);
             }
             else if (potionCoef < 0)
             {
                 soundManager.Play(Sounds.PotionFailure);
+                visitorManager.PlayReaction(false);
             }
         }
 

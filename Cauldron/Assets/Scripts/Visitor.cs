@@ -2,6 +2,7 @@ using System;
 using Spine;
 using UnityEngine;
 using Spine.Unity;
+using Object = System.Object;
 
 namespace CauldronCodebase
 {
@@ -32,12 +33,12 @@ namespace CauldronCodebase
             anim.AnimationState.AddAnimation(0, idle, true, 0f);
         }
 
-        public virtual void Exit()
+        public virtual void ExitWithDestroy()
         {
             if (!string.IsNullOrEmpty(exit))
             {
-                anim.AnimationState.SetAnimation(0, exit, false);
-                anim.AnimationState.Complete += Hide;
+                TrackEntry trackEntry = anim.AnimationState.SetAnimation(0, exit, false);
+                trackEntry.Complete += Hide;
             }
             else
             {
@@ -48,7 +49,7 @@ namespace CauldronCodebase
         void Hide(TrackEntry trackEntry)
         {
             anim.AnimationState.Complete -= Hide;
-            rend.enabled = false;
+            Destroy(gameObject);
         }
     }
 }

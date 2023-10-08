@@ -1,8 +1,9 @@
-using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -17,9 +18,7 @@ namespace CauldronCodebase
         public IngredientsData dataList;
         
         [SerializeField, HideInInspector]
-        private Text tooltipText;
-        [SerializeField, HideInInspector]
-        private Canvas tooltipCanvas;
+        private ScrollTooltip tooltip;
         [SerializeField, HideInInspector]
         private SpriteRenderer image;
 
@@ -32,23 +31,24 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private TooltipManager ingredientManager;
         private float initialRotation;
+        private CancellationTokenSource cancellationTokenSource;
 
         
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            tooltipCanvas = GetComponentInChildren<Canvas>(true);
-            tooltipText = tooltipCanvas.GetComponentInChildren<Text>(true);
-            if (tooltipText != null && tooltipText.text == String.Empty)
-            {
-                ChangeText();
-            }
+            tooltip = GetComponentInChildren<ScrollTooltip>();
+            ChangeText();
 
             image = GetComponentInChildren<SpriteRenderer>();
             image.sprite = dataList?.Get(ingredient)?.image;
         }
-
 #endif
+
+        private void ChangeText()
+        {
+            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified");
+        }
         
         [Inject]
         public void Construct(Cauldron cauldron)
@@ -57,11 +57,6 @@ namespace CauldronCodebase
             ingredientManager = cauldron.tooltipManager;
             ingredientManager.AddIngredient(this);
             dataList.Changed += ChangeText;
-        }
-
-        private void ChangeText()
-        {
-            tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
         }
 
         private void OnEnable()
@@ -82,10 +77,9 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            if (tooltipCanvas != null)
+            if (tooltip != null)
             {
-                tooltipText.text = dataList?.Get(ingredient)?.friendlyName ?? "not specified";
-                tooltipCanvas.gameObject.SetActive(false);
+                ChangeText();
             }
 
             initialPosition = transform.position;
@@ -95,22 +89,30 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (tooltipCanvas is null)
-                return;
-            tooltipCanvas.gameObject.SetActive(true);
             if (!cauldron.Mix.Contains(ingredient))
-                image.gameObject.transform.
-                    DORotate(new Vector3(0,0, initialRotation+rotateAngle), rotateSpeed).
-                    SetLoops(-1, LoopType.Yoyo).
-                    From(new Vector3(0, 0, initialRotation-rotateAngle)).
-                    SetEase(Ease.InOutSine);
+            {
+                image.gameObject.transform.DORotate(new Vector3(0, 0, initialRotation + rotateAngle), rotateSpeed)
+                    .SetLoops(-1, LoopType.Yoyo).From(new Vector3(0, 0, initialRotation - rotateAngle))
+                    .SetEase(Ease.InOutSine);
+            }
+            OpenTooltipWithDelay().Forget();
+        }
+
+        private async UniTask OpenTooltipWithDelay()
+        {
+            cancellationTokenSource = new CancellationTokenSource();
+            await UniTask.Delay(600, DelayType.Realtime, PlayerLoopTiming.FixedUpdate, cancellationTokenSource.Token);
+            if (!cancellationTokenSource.IsCancellationRequested)
+            {
+                tooltip?.Open();
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (tooltipCanvas is null)
-                return;
-            tooltipCanvas.gameObject.SetActive(false);
+            cancellationTokenSource?.Cancel();
+            tooltip?.Close();
+            
             image.transform.DOKill();
             image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
         }

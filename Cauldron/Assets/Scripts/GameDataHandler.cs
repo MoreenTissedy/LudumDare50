@@ -38,9 +38,11 @@ namespace CauldronCodebase
         public Encounter currentCard;
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
+        public int wrongExperiments = 0;  //no need to save
 
         //TODO: separate entities
         public List<string> storyTags;
+        public FractionStatus fractionStatus;
         public EncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
@@ -49,7 +51,8 @@ namespace CauldronCodebase
 
         private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
-        
+        public event Action<Encounter> OnNewCard; 
+
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
 
@@ -71,6 +74,8 @@ namespace CauldronCodebase
             
             currentDeck = deck;
             currentEvents = events;
+
+            fractionStatus = new FractionStatus();
         }
 
         public void AddTag(string tag)
@@ -135,6 +140,12 @@ namespace CauldronCodebase
             }
             StatusChanged?.Invoke();
             return statValue;
+        }
+
+        public void SetCurrentCard(Encounter card)
+        {
+            currentCard = card;
+            OnNewCard?.Invoke(currentCard);
         }
 
         public int Add(Statustype type, int value)
@@ -276,6 +287,7 @@ namespace CauldronCodebase
             cardsDrawnToday = data.CardDrawnToday;
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
+            fractionStatus.Load(data.FractionData);
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -310,6 +322,7 @@ namespace CauldronCodebase
             data.CardDrawnToday = cardsDrawnToday;
             data.StoryTags = storyTags;
             data.Phase = gamePhase;
+            data.FractionData = fractionStatus.Save();
 
             if (currentCard != null)
             {

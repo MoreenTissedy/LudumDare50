@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: Wake_potion_apples
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: 3
+  addToDeckOnRound: 2
   requiredStoryTag: 
   villager: {fileID: 11400000, guid: 729d7149828c1794b96e1ba380d6e0a3, type: 2}
-  text: "Someone's stealing my apples, but I can't catch the thieves \u2014 soon
-    as the sun sets I fall asleep. Give me something to stay awake. When I catch
-    them, I'll reward you plenty.\r"
+  text: "\u0423 \u043C\u0435\u043D\u044F \u044F\u0431\u043B\u043E\u043A\u0438 \u0432\u043E\u0440\u0443\u0435\u0442
+    \u043A\u0442\u043E-\u0442\u043E, \u0430 \u044F \u043F\u043E\u0439\u043C\u0430\u0442\u044C
+    \u043D\u0435 \u043C\u043E\u0433\u0443 \u2014 \u0442\u043E\u043B\u044C\u043A\u043E
+    \u0441\u043E\u043B\u043D\u0446\u0435 \u0441\u044F\u0434\u0435\u0442, \u0441\u0440\u0430\u0437\u0443
+    \u0437\u0430\u0441\u044B\u043F\u0430\u044E. \u041E\u0442\u0433\u043E\u043D\u0438
+    \u0441\u043E\u043D \u043D\u0430 \u043F\u0430\u0440\u0443 \u0434\u043D\u0435\u0439.
+    \u041A\u043E\u043B\u0438 \u0432\u043E\u0440\u0438\u0448\u043A\u0443 \u043F\u043E\u0439\u043C\u0430\u044E
+    \u2014 \u043F\u0440\u0435\u043C\u043D\u043E\u0433\u043E \u0431\u043B\u0430\u0433\u043E\u0434\u0430\u0440\u0435\u043D
+    \u0431\u0443\u0434\u0443."
   hidden: 0
   quest: 0
   primaryInfluence: 3
@@ -29,7 +35,7 @@ MonoBehaviour:
   - potion: 9
     influenceCoef: 1
     bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 11400000, guid: 6dfe497e56eeab84da483a7849c0c684, type: 2}
+    bonusCard: {fileID: 0}
   - potion: 16
     influenceCoef: 0.2
     bonusEvent: {fileID: 0}
@@ -42,7 +48,3 @@ MonoBehaviour:
     influenceCoef: 0.2
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
-  - potion: 105
-    influenceCoef: 0
-    bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 11400000}

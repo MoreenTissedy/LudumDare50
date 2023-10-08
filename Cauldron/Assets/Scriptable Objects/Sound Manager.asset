@@ -12,13 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 152f3e4df7c042c59fa7ebfc5842fd40, type: 3}
   m_Name: Sound Manager
   m_EditorClassIdentifier: 
+  soundKeys:
+  - Bubbling
+  - Splash
+  - PotionReady
+  - PotionUnlock
+  - PotionPopupClick
+  - PotionSuccess
+  - PotionFailure
+  - BookFocus
+  - BookClick
+  - BookSwitch
+  - MenuFocus
+  - MenuClick
+  - TimerBreak
+  - StartFlash
+  - NightCardEnter
+  - NightCardExit
+  - StartSpark
+  - StartDay
+  - EndDay
+  - GameEnd
+  - EndingUnlock
+  - SpecialEndingUnlock
+  musicKeys:
+  - Menu
+  - Location1
+  - Location2
   sounds:
-  - Guid:
-      Data1: -1194859955
-      Data2: 1215088978
-      Data3: 1710768003
-      Data4: -1834542631
-    Path: event:/Location/House/mus
   - Guid:
       Data1: -248018065
       Data2: 1286203235
@@ -38,11 +59,11 @@ MonoBehaviour:
       Data4: 30564739
     Path: event:/Game/potion_brewed
   - Guid:
-      Data1: -448958082
-      Data2: 1213714196
-      Data3: -1428382556
-      Data4: 30564739
-    Path: event:/Game/potion_brewed
+      Data1: 472608145
+      Data2: 1157609419
+      Data3: -685312865
+      Data4: 1074406678
+    Path: event:/UX/potion_unlock
   - Guid:
       Data1: 99115271
       Data2: 1262855970
@@ -104,12 +125,6 @@ MonoBehaviour:
       Data4: 534937985
     Path: event:/Game/StartGame/whoosh
   - Guid:
-      Data1: -528153210
-      Data2: 1092747596
-      Data3: -602540892
-      Data4: -1422591904
-    Path: event:/Game/game_end
-  - Guid:
       Data1: -1296143467
       Data2: 1087338784
       Data3: -1641858925
@@ -140,6 +155,12 @@ MonoBehaviour:
       Data4: -1077230187
     Path: event:/Game/day_end
   - Guid:
+      Data1: -528153210
+      Data2: 1092747596
+      Data3: -602540892
+      Data4: -1422591904
+    Path: event:/Game/game_end
+  - Guid:
       Data1: 189883242
       Data2: 1212021980
       Data3: -1655152220
@@ -151,18 +172,25 @@ MonoBehaviour:
       Data3: 1913108927
       Data4: 585427627
     Path: event:/Game/ending_coven
-  - Guid:
-      Data1: 1153922902
-      Data2: 1258888018
-      Data3: -786064255
-      Data4: -904282465
-    Path: event:/Location/Forest/bgm
+  musics:
   - Guid:
       Data1: 150303394
       Data2: 1292631159
       Data3: -243293038
       Data4: -696187729
     Path: event:/Location/Menu/bgm
+  - Guid:
+      Data1: -1194859955
+      Data2: 1215088978
+      Data3: 1710768003
+      Data4: -1834542631
+    Path: event:/Location/House/mus
+  - Guid:
+      Data1: 1153922902
+      Data2: 1258888018
+      Data3: -786064255
+      Data4: -904282465
+    Path: event:/Location/Forest/bgm
   defaultVisitorSounds:
     Door:
       Guid:
@@ -228,3 +256,136 @@ MonoBehaviour:
         Data3: 397700530
         Data4: 1611905687
       Path: event:/Chars/Cat/annoy
+  potionEffects:
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: -812259935
+      Data2: 1256342655
+      Data3: -658822480
+      Data4: -1606696779
+    Path: event:/Game/Potions/chamelion
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: -639448077
+      Data2: 1327284836
+      Data3: 803627933
+      Data4: -1175867403
+    Path: event:/Game/Potions/sleep
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: -1157310164
+      Data2: 1111267954
+      Data3: 632043711
+      Data4: -693531406
+    Path: event:/Game/Potions/laughter
+  - Guid:
+      Data1: 2030632597
+      Data2: 1300768158
+      Data3: 2029671571
+      Data4: 903095561
+    Path: event:/Game/Potions/voice
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 486582163
+      Data2: 1119209448
+      Data3: 1150318777
+      Data4: -52591472
+    Path: event:/Game/Potions/foolishness
+  - Guid:
+      Data1: 1688733578
+      Data2: 1243649711
+      Data3: -258673501
+      Data4: -2102952097
+    Path: event:/Game/Potions/numb
+  - Guid:
+      Data1: 305267595
+      Data2: 1269436401
+      Data3: 173597072
+      Data4: 479678087
+    Path: event:/Game/Potions/perception
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  - Guid:
+      Data1: -802060397
+      Data2: 1175021307
+      Data3: -581629255
+      Data4: -603863019
+    Path: event:/Game/Potions/clumsiness
+  - Guid:
+      Data1: -1159894359
+      Data2: 1125128722
+      Data3: -107694416
+      Data4: -489474731
+    Path: event:/UX/potion_wrong
+  - Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 

@@ -2,79 +2,98 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
+using NaughtyAttributes;
 using Save;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
+    [Serializable]
+    public struct CardPoolByRound
+    {
+        [UsedImplicitly] [HideInInspector] public string title;
+        public int round;
+        public Encounter[] cards;
+
+        public CardPoolByRound(int round, Encounter[] cards)
+        {
+            this.round = round;
+            this.cards = cards;
+            title = $"Round {round}: {cards.Length} cards";
+        }
+    }
+    
     [CreateAssetMenu]
     public class EncounterDeck : ScriptableObject, IDataPersistence
     {
         public Encounter[] introCards;
-        public CardPoolPerDay[] cardPoolsByDay;
+        public CardPoolByRound[] cardPoolsByRound;
         public LinkedList<Encounter> deck;
 
-        [Header("DEBUG")] public Encounter currentCard;
-        public Encounter[] deckInfo;
-        public List<Encounter> cardPool;
+        [Header("DEBUG"), HorizontalLine]
+        [SerializeField] private Encounter currentCard;
+        [SerializeField, UsedImplicitly] private Encounter[] deckInfo;
+        [SerializeField] private List<Encounter> cardPool;
+        [SerializeField] private List<string> rememberedCards;
 
+        private RecipeProvider recipeProvider;
         private GameDataHandler gameDataHandler;
         private SODictionary soDictionary;
         private Encounter loadedCard;
-
-        public List<string> rememberedCards;
-
         private MainSettings mainSettings;
+        private int lastExtendedRoundNumber;
 
-        [Serializable]
-        public struct CardPoolPerDay
+        private void OnValidate()
         {
-            [HideInInspector] public string title;
-            public int day;
-            public Encounter[] cards;
-
-            public CardPoolPerDay(int day, Encounter[] cards)
+            for (var index = 0; index < cardPoolsByRound.Length; index++)
             {
-                this.day = day;
-                this.cards = cards;
-                title = $"Day {day}: {cards.Length} cards";
+                ref var pool = ref cardPoolsByRound[index];
+                pool.title = $"Round {pool.round}: {pool.cards.Length} cards";
             }
         }
-
-        private Encounter[] GetPoolForDay(int day)
-        {
-            foreach (var pool in cardPoolsByDay)
-            {
-                if (pool.day == day)
-                {
-                    if (gameDataHandler.currentDay <= mainSettings.gameplay.daysWithUniqueStartingCards
-                        && gameDataHandler.currentRound <= mainSettings.gameplay.roundsWithUniqueStartingCards)
-                    {
-                        return pool.cards.Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray();
-                    }
-
-                    return pool.cards;
-
-                }
-            }
-
-            return Array.Empty<Encounter>();
-        }
-
 
         /// <summary>
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
             mainSettings = settings;
+            recipeProvider = recipes;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
+        }
+
+        /// <summary>
+        /// Form card pool, adding cards sets up to the given game round and excluding unique cards.
+        /// </summary>
+        /// <param name="round">Round — card set number</param>
+        private void InitCardPool(int round)
+        {
+            lastExtendedRoundNumber = gameDataHandler.currentRound;
+            List<Encounter> totalPool = new List<Encounter>();
+            foreach (var pool in cardPoolsByRound)
+            {
+                if (pool.round <= round)
+                {
+                    if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
+                    {
+                        totalPool.AddRange(pool.cards);
+                    }
+                    else
+                    {
+                        totalPool.AddRange(pool.cards.Except(rememberedCards.
+                            Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+                    }
+                }
+            }
+            cardPool = Shuffle(totalPool);
         }
 
         private void InitRememberedCards()
@@ -92,20 +111,18 @@ namespace CauldronCodebase
             }
         }
 
-        private static Encounter[] Shuffle(Encounter[] deck)
+        private static List<Encounter> Shuffle(List<Encounter> deck)
         {
-            List<Encounter> deckList = deck.ToList();
-            var newDeckList = new List<Encounter>(deckList.Count);
-            while (deckList.Count > 0)
+            var newDeckList = new List<Encounter>(deck.Count);
+            while (deck.Count > 0)
             {
-                int random = Random.Range(0, deckList.Count);
-                newDeckList.Add(deckList[random]);
-                deckList.RemoveAt(random);
+                int random = Random.Range(0, deck.Count);
+                newDeckList.Add(deck[random]);
+                deck.RemoveAt(random);
             }
-
-            return newDeckList.ToArray();
+            return newDeckList;
         }
-        
+
         public void ShuffleDeck()
         {
             List<Encounter> deckList = deck.ToList();
@@ -119,19 +136,7 @@ namespace CauldronCodebase
             deck = newDeckList;
         }
 
-        /// <summary>
-        /// Form card pool, adding cards for the given 'day' (card set number).
-        /// </summary>
-        /// <param name="day">Day — card set number</param>
-        public void NewDayPool(int day)
-        {
-            foreach (var card in Shuffle(GetPoolForDay(day)))
-            {
-                cardPool.Add(card);
-            }
-        }
 
-        
         /// <summary>
         /// Add random cards from pool to deck until deck count reaches target.
         /// </summary>
@@ -147,18 +152,17 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
+            if (cardPool.Count < num)
+            {
+                ExtendPool();
+            }
             for (int i = 0; i < num; i++)
             {
-                if (cardPool.Count == 0)
-                {
-                    return;
-                }
-
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
                     int randomIndex = Random.Range(0, cardPool.Count);
-                    if (CheckStoryTags(cardPool[randomIndex]))
+                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler))
                     {
                         deck.AddLast(cardPool[randomIndex]);
                         cardPool.RemoveAt(randomIndex);
@@ -177,6 +181,21 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
 
+        private void ExtendPool()
+        {
+            var nextPools = cardPoolsByRound.Where(x => x.round == lastExtendedRoundNumber+1).ToArray();
+            if (nextPools.Length == 0)
+            {
+                return;
+            }
+            foreach (var pool in nextPools)
+            {
+                cardPool.AddRange(pool.cards);
+            }
+            lastExtendedRoundNumber++;
+            Debug.LogWarning("card pool extended");
+        }
+
         public void AddToPool(Encounter card)
         {
             cardPool.Add(card);
@@ -189,7 +208,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!CheckStoryTags(card) || deck.Contains(card))
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
             {
                 return false;
             }
@@ -226,7 +245,7 @@ namespace CauldronCodebase
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
                 && gameDataHandler.currentRound < mainSettings.gameplay.roundsWithUniqueStartingCards
-                && !VisitorManager.SPECIALS.Contains(currentCard.villager.name))
+                && !EncounterIdents.GetAllSpecialCharacters().Contains(currentCard.villager.name))
             {
                 SaveCurrentCardAsUnique();
             }
@@ -254,22 +273,7 @@ namespace CauldronCodebase
             switch (newGame)
             {
                 case true:
-                    NewDayPool(0);
-                    //if not first time
-                    int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-                    if (round != 0)
-                    {
-                        DealCards(2);
-                        deck.AddFirst(introCards[2]);
-                    }
-                    else
-                    {
-                        DealCards(1);
-                        deck.AddFirst(introCards[0]);
-                        deck.AddLast(introCards[1]);
-                    }
-
-
+                    SetStartingDecks();
                     break;
                 case false:
                     cardPool = new List<Encounter>();
@@ -297,6 +301,32 @@ namespace CauldronCodebase
             }
         }
 
+        private void SetStartingDecks()
+        {
+            int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            InitCardPool(round);
+            //if not first time
+            if (round != 0)
+            {
+                DealCards(2);
+                List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+                if (loadRecipes.Count < 20)
+                {
+                    deck.AddFirst(introCards[3]);
+                }
+                else
+                {
+                    deck.AddFirst(introCards[2]);
+                }
+            }
+            else
+            {
+                DealCards(1);
+                deck.AddFirst(introCards[0]);
+                deck.AddLast(introCards[1]);
+            }
+        }
+
         public void SaveData(ref GameData data)
         {
             if (data == null) return;
@@ -313,36 +343,6 @@ namespace CauldronCodebase
             }
         }
 
-        public bool CheckStoryTags(Encounter card)
-        {
-            if (string.IsNullOrWhiteSpace(card.requiredStoryTag.Trim()))
-            {
-                return true;
-            }
-
-            string[] tags = card.requiredStoryTag.Split(',');
-            bool valid = true;
-            foreach (var tag in tags)
-            {
-                string trim = tag.Trim();
-                if (trim == EndingsProvider.LOW_FAME || trim == EndingsProvider.LOW_FEAR ||
-                    trim == EndingsProvider.HIGH_FAME || trim == EndingsProvider.HIGH_FEAR)
-                {
-                    continue;
-                }
-                if (tag.StartsWith("!"))
-                {
-                    valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
-                }
-                else
-                {
-                    valid = valid && gameDataHandler.storyTags.Contains(trim);
-                }
-            }
-
-            return valid;
-        }
-
 #if UNITY_EDITOR
         [ContextMenu("Export Cards Tool")]
         void ExportCards()
@@ -355,6 +355,19 @@ namespace CauldronCodebase
             }
 
             file.Close();
+        }
+
+        [ContextMenu("Update round for all cards")]
+        void UpdateCards()
+        {
+            foreach (var pool in cardPoolsByRound)
+            {
+                foreach (var card in pool.cards)
+                {
+                    card.addToDeckOnRound = pool.round;
+                    EditorUtility.SetDirty(card);
+                }
+            }
         }
 #endif
     }

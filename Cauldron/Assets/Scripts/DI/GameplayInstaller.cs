@@ -2,6 +2,7 @@ using CauldronCodebase.GameStates;
 using EasyLoc;
 using Save;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -22,7 +23,7 @@ namespace CauldronCodebase
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
-        [SerializeField] private CatTipsManager catTipsManager;
+        [SerializeField] private CatTipsValidator catTipsValidator;
 
         [Header("UI")]
         [SerializeField] private EndingScreen endingScreen;
@@ -74,7 +75,7 @@ namespace CauldronCodebase
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
-            Container.Bind<CatTipsManager>().FromInstance(catTipsManager).AsSingle();
+            Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }
@@ -82,9 +83,9 @@ namespace CauldronCodebase
         private void Initialize()
         {
             gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
-            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);
-            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager);
+            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
             endings.Init();
             localization.LoadSavedLanguage();
         }

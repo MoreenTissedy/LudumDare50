@@ -40,11 +40,11 @@ namespace EasyLoc
 
         public void LoadSavedLanguage()
         {
-            var language = Language.EN;
+            var language = Language.RU;
             if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
-                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
+                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.EN.ToString())
             {
-                language = Language.RU;
+                language = Language.EN;
             }
             if (languageLoaded)
             {
@@ -225,7 +225,6 @@ namespace EasyLoc
                             {
                                 hasData = true;
                                 textTool.SetText(textValue);
-                                Debug.Log(textTool.GetId()+" "+textValue);
                             }
                         }
                         //for the custom scripts their respective class and field act as ID
@@ -235,7 +234,6 @@ namespace EasyLoc
                             {
                                 hasData = true;
                                 objectFields[i].SetValue(mono, textValue);
-                                Debug.Log(objectFields[i].Name+" "+textValue);
                             }
                         }
                         //changes to prefab instances in editor are not recorded automatically,

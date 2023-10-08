@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -14,14 +15,14 @@ namespace CauldronCodebase
         
         public Image icon;
         public Sprite fame, fear, money, question, item;
-        public GameObject hint;
+        public ScrollTooltip hint;
 
         private string hintText;
 
+        //TODO: special hints?
         public void DisplayItem(Villager villager)
         {
-            icon.sprite = item;
-            gameObject.SetActive(true);
+            Display(Statustype.None);
         }
         
         public void Display(Statustype type, bool hidden = false)
@@ -65,14 +66,13 @@ namespace CauldronCodebase
         {
             if (!string.IsNullOrEmpty(hintText))
             {
-                hint.SetActive(true);
-                hint.GetComponentInChildren<TMP_Text>().text = hintText;
+                hint.Open(hintText).Forget();
             } 
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            hint.SetActive(false);
+            hint.Close();
         }
     }
 }

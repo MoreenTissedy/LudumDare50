@@ -11,8 +11,6 @@ namespace CauldronCodebase
 {
     public class VisitorTextBox : MonoBehaviour
     {
-        const string DEVIL = "devil";
-
         [Localize]
         public string devilDefault = "Привет, милая. Как делишки? Покажи-ка, что ты умеешь.";
         public float offScreen = -1000;
@@ -24,6 +22,7 @@ namespace CauldronCodebase
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private IngredientsData ingredients;
         [Inject] private LocalizationTool locTool;
+        [Inject] private GameDataHandler gameDataHandler;
 
         private Encounter currentEncounter;
 
@@ -60,9 +59,9 @@ namespace CauldronCodebase
                 .From(offScreen);
 
             currentEncounter = card;
-            if (card.name.Contains(DEVIL))
+            if (card.villager.name.Contains(EncounterIdents.DARK_STRANGER))
             {
-                Recipe unlockRecipe = GetRecipeToUnlock();
+                Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
                 if (unlockRecipe == null)
                 {
                     text.text = devilDefault;
@@ -71,6 +70,11 @@ namespace CauldronCodebase
                 {
                     text.text = Format(card, unlockRecipe);
                 }
+            }
+            else if (card.name.Contains(EncounterIdents.CAT_UNLOCK))
+            {
+                Recipe unlockRecipe = recipeProvider.GetRecipeToUnlock(recipeBook, gameDataHandler);
+                text.text = Format(card, unlockRecipe);
             }
             else
             {
@@ -99,13 +103,6 @@ namespace CauldronCodebase
             }
 
             gameObject.SetActive(true);
-        }
-        
-        //move?
-        private Recipe GetRecipeToUnlock()
-        {
-            return recipeProvider.allRecipes.Where(x => x.magical).FirstOrDefault((x =>
-                !recipeBook.IsRecipeInBook(x) && x.RecipeIngredients.Except(IngredientsData.LOCKED).Count() == 3));
         }
     }
 }

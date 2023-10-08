@@ -6,7 +6,6 @@ using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using Random = System.Random;
 
 namespace CauldronCodebase
 {
@@ -31,18 +30,21 @@ namespace CauldronCodebase
         
         [Header("Recipe Book")] 
         
-        [SerializeField] protected RecipeBookEntry[] recipeEntries;
-        [SerializeField] protected RecipeBookEntry[] foodEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
+        public List<Recipe> LockedRecipes { get; private set; }
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnSelectIncorrectRecipe;
+        public event Action OnOpenBook;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -63,8 +65,8 @@ namespace CauldronCodebase
         void FindEntries()
         {
             attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
-            foodEntries = foodDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeEntryMagical>();
+            foodEntries = foodDisplay.GetComponentsInChildren<RecipeEntryCommon>();
         }
         [Inject]
         private void Construct(DataPersistenceManager dataPersistenceManager,
@@ -87,6 +89,7 @@ namespace CauldronCodebase
         {
             base.OpenBook();
             ChangeMode(Mode.Magical);
+            OnOpenBook?.Invoke();
         }
 
         private void LoadRecipes()
@@ -96,7 +99,7 @@ namespace CauldronCodebase
             {
                 unlockedRecipes = loadRecipes.ToList();
             }
-
+            
             foreach (Recipe recipe in recipeProvider.allRecipes)
             {
                 if (recipe.magical)
@@ -105,7 +108,8 @@ namespace CauldronCodebase
                 }
                 else allHerbalRecipes.Add(recipe);
             }
-            
+
+            LockedRecipes = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
         }
 
         public void RecordAttempt(WrongPotion mix)
@@ -129,6 +133,7 @@ namespace CauldronCodebase
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);
+            LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
         }
 
@@ -228,11 +233,23 @@ namespace CauldronCodebase
                 ToggleBook();
         }
 
+        private void SortPotions()
+        {
+            List<Recipe> lockedMagicalRecipes = allMagicalRecipes.Except(unlockedRecipes).ToList();
+            allMagicalRecipes.Clear();
+            allMagicalRecipes = unlockedRecipes.Where(element => element.magical).ToList();
+            allMagicalRecipes.AddRange(lockedMagicalRecipes);
+
+            List<Recipe> lockedHerbalRecipes = allHerbalRecipes.Except(unlockedRecipes).ToList();
+            allHerbalRecipes.Clear();
+            allHerbalRecipes = unlockedRecipes.Where(element => !element.magical).ToList();
+            allHerbalRecipes.AddRange(lockedHerbalRecipes);
+
+        }
+
         protected override void InitTotalPages()
         {
-            allMagicalRecipes = allMagicalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
-            allHerbalRecipes = allHerbalRecipes.OrderByDescending(potion => unlockedRecipes.Contains(potion)).ToList();
-            
+            SortPotions();
             switch (currentMode)
             {
                 case Mode.Magical:
@@ -257,7 +274,7 @@ namespace CauldronCodebase
         {
             void DisplaySet(List<Recipe> set)
             {
-                RecipeBookEntry[] entries = new RecipeBookEntry[] { };
+                RecipeBookEntryHolder[] entries = { };
                 switch (currentMode)
                 {
                     case Mode.Magical:
@@ -283,11 +300,11 @@ namespace CauldronCodebase
                     {
                         if(unlockedRecipes.Contains(set[num]))
                         {
-                            entries[i].Display(set[num]);
+                            entries[i].SetUnlocked(set[num]);
                         }
                         else
                         {
-                            entries[i].DisplayLocked(set[num]);
+                            entries[i].SetLocked(set[num]);
                         }
                     }
                     else
@@ -353,8 +370,6 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.gameObject.SetActive(true);
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
-                
-                //ingredientsEntries[i].RebuildLayout();
             }
         }
 
@@ -404,23 +419,14 @@ namespace CauldronCodebase
 
         private void TryHighlightIncorrectRecipe()
         {
+            OnSelectIncorrectRecipe?.Invoke();
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
-        
-        public Ingredients[] GenerateRandomRecipe()
-        {
-            var rnd = new Random(Guid.NewGuid().GetHashCode());
-        
-            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().Except(IngredientsData.LOCKED).ToList();
 
-            return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
-
-        }
-    
         public bool IsIngredientSetKnown(Ingredients[] recipe)
         {
             //Check potions
-            if (unlockedRecipes.Any(magicalRecipe => magicalRecipe.RecipeIngredients.All(recipe.Contains)))
+            if (unlockedRecipes.Any(unlockedRecipe => unlockedRecipe.RecipeIngredients.All(recipe.Contains)))
             {
                 return true;
             }

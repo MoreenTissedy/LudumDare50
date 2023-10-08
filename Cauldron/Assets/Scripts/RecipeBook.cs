@@ -370,8 +370,6 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.gameObject.SetActive(true);
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
-                
-                //ingredientsEntries[i].RebuildLayout();
             }
         }
 

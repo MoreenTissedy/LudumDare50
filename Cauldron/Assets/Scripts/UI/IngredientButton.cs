@@ -15,6 +15,7 @@ namespace CauldronCodebase
         private bool interactable;
 
         [Inject] private IngredientsData ingredientsData;
+        [Inject] private RecipeBook recipeBook;
 
         public void Set(Ingredients ingredient)
         {
@@ -58,7 +59,8 @@ namespace CauldronCodebase
                 return;
             }
             base.OnPointerClick(eventData);
-            Debug.Log("open page "+data.friendlyName);
+            recipeBook.ChangeMode(RecipeBook.Mode.Ingredients);
+            recipeBook.OpenPage(ingredientsData.IndexOf(data)/2);
         }
     }
 }

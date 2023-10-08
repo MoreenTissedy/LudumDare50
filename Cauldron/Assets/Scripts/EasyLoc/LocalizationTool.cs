@@ -40,11 +40,11 @@ namespace EasyLoc
 
         public void LoadSavedLanguage()
         {
-            var language = Language.RU;
+            var language = Language.EN;
             if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
-                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.EN.ToString())
+                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
             {
-                language = Language.EN;
+                language = Language.RU;
             }
             if (languageLoaded)
             {

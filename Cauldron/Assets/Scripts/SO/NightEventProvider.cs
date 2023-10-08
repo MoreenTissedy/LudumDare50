@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using Save;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -34,8 +35,10 @@ namespace CauldronCodebase
         }
 
         public NightEvent intro;
-        public List<ConditionalEvent> conditionalEvents;
-        public List<RandomNightEvent> randomEvents;
+        [ReorderableList]
+        public ConditionalEvent[] conditionalEvents;
+        [ReorderableList]
+        public RandomNightEvent[] randomEvents;
         [Header("Readonly")]
         public List<NightEvent> storyEvents;
         public List<ConditionalEvent> inGameConditionals;
@@ -46,9 +49,9 @@ namespace CauldronCodebase
         public void Init(DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
             eventsOnCooldown = new List<CooldownEvent>(5);
-            inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
+            inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Length);
             inGameConditionals.AddRange(conditionalEvents);
-            inGameRandoms = new List<RandomNightEvent>(randomEvents.Count);
+            inGameRandoms = new List<RandomNightEvent>(randomEvents.Length);
             inGameRandoms.AddRange(randomEvents);
             soDictionary = dictionary;
             dataPersistenceManager.AddToDataPersistenceObjList(this);

@@ -52,8 +52,8 @@ namespace Editor
                 }
                 data.RemoveAt(dice);
             }
-            provider.conditionalEvents = conditionalDeck;
-            provider.randomEvents = randomDeck;
+            provider.conditionalEvents = conditionalDeck.ToArray();
+            provider.randomEvents = randomDeck.ToArray();
             EditorUtility.SetDirty(provider);
         }
     }

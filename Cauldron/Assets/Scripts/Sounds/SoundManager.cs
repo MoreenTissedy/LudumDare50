@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -101,9 +102,11 @@ namespace CauldronCodebase
         public EventReference[] musics;
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
+        public EventReference[] potionEffects;
 
         private EventInstance currentMusic;
         private EventInstance bubbling;
+
 
         private void OnValidate()
         {
@@ -174,6 +177,28 @@ namespace CauldronCodebase
             {
                 currentMusic.stop(STOP_MODE.ALLOWFADEOUT);
             }
+        }
+
+        public void Play(Potions potion)
+        {
+            EventReference reference;
+            if (potion == Potions.Placebo)
+            {
+                reference = potionEffects[20];
+            }
+            else if (PotionFilter.Get(Potions.MAGIC).Contains(potion))
+            {
+                reference = potionEffects[(int) potion];
+            }
+            else
+            {
+                reference = potionEffects[21];
+            }
+            if (reference.IsNull)
+            {
+                return;
+            }
+            RuntimeManager.PlayOneShot(reference);
         }
 
         public void Play(Sounds sound)

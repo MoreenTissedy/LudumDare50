@@ -30,8 +30,8 @@ namespace CauldronCodebase
         
         [Header("Recipe Book")] 
         
-        [SerializeField] protected RecipeBookEntry[] recipeEntries;
-        [SerializeField] protected RecipeBookEntry[] foodEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
@@ -43,6 +43,7 @@ namespace CauldronCodebase
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         
         private TooltipManager tooltipManager;
@@ -64,8 +65,8 @@ namespace CauldronCodebase
         void FindEntries()
         {
             attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
-            foodEntries = foodDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeEntryMagical>();
+            foodEntries = foodDisplay.GetComponentsInChildren<RecipeEntryCommon>();
         }
         [Inject]
         private void Construct(DataPersistenceManager dataPersistenceManager,
@@ -273,7 +274,7 @@ namespace CauldronCodebase
         {
             void DisplaySet(List<Recipe> set)
             {
-                RecipeBookEntry[] entries = new RecipeBookEntry[] { };
+                RecipeBookEntryHolder[] entries = { };
                 switch (currentMode)
                 {
                     case Mode.Magical:
@@ -299,11 +300,11 @@ namespace CauldronCodebase
                     {
                         if(unlockedRecipes.Contains(set[num]))
                         {
-                            entries[i].Display(set[num]);
+                            entries[i].SetUnlocked(set[num]);
                         }
                         else
                         {
-                            entries[i].DisplayLocked(set[num]);
+                            entries[i].SetLocked(set[num]);
                         }
                     }
                     else
@@ -369,8 +370,6 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.gameObject.SetActive(true);
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
-                
-                //ingredientsEntries[i].RebuildLayout();
             }
         }
 
@@ -420,6 +419,7 @@ namespace CauldronCodebase
 
         private void TryHighlightIncorrectRecipe()
         {
+            OnSelectIncorrectRecipe?.Invoke();
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
 

@@ -34,6 +34,7 @@ public class IngredientView : MonoBehaviour
 
     public void SetImage(Sprite sprite)
     {
+        
         IngredientShown = true;
         ingredientImage.sprite = sprite;
         if (ingredientImage.color.a == 0)
@@ -42,8 +43,17 @@ public class IngredientView : MonoBehaviour
         }
     }
 
-    public void HideImage()
+    public void HideImage(bool hideWithoutAnimation = false)
     {
-        hideSequence.Restart();
+        if (hideWithoutAnimation)
+        {
+            ingredientImage.color = new Color(1, 1, 1, 0);
+            ingredientImage.sprite = null;
+            IngredientShown = false;
+        }
+        else
+        {
+            hideSequence.Restart();
+        }
     }
 }

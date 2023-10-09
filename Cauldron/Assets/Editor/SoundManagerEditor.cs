@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using Editor;
 using UnityEditor;
+using UnityEditor.Experimental;
 using UnityEngine;
 
 namespace CauldronCodebase.Editor
@@ -39,7 +42,37 @@ namespace CauldronCodebase.Editor
             var cat = serializedObject.FindProperty("catSounds");
             EditorGUILayout.PropertyField(cat);
             
+            EditorGUILayout.Separator();
+            EditorGUILayout.HelpBox(new GUIContent("Potion effects"));
+            var effects = serializedObject.FindProperty("potionEffects");
+            var potions = GetListOfPotions();
+            effects.arraySize = potions.Length;
+            for (int i = 0; i < potions.Length; i++)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PropertyField(effects.GetArrayElementAtIndex(i), new GUIContent(Enum.GetName(typeof(Potions), potions[i])));
+                EditorGUILayout.EndHorizontal();
+            }
+            
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private int[] GetListOfPotions()
+        {
+            RecipeProvider provider = ScriptableObjectHelper.LoadSingleAsset<RecipeProvider>();
+            List<int> list = new List<int>(10);
+            for (var index = 0; index < 20; index++)
+            {
+                var recipe = (Potions)index;
+                if (provider.GetRecipeForPotion(recipe).magical)
+                {
+                    list.Add(index);
+                }
+            }
+            
+            list.Add(99);
+            list.Add(105);
+            return list.ToArray();
         }
     }
 }

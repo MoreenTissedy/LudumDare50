@@ -1,24 +1,23 @@
 using EasyLoc;
 using Save;
 using UnityEngine;
-using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
     public class MainMenu : MonoBehaviour
     {
-        public Button continueGame;
-        public Button quit;
-        public Button newGame;
-        public Button VKRedirect;
-        public Button DiscordRedirect;
+        public AnimatedButton continueGame;
+        public AnimatedButton quit;
+        public AnimatedButton newGame;
 
-        [Header("Settings")] public Button settings;
+        [Header("Settings")] public AnimatedButton settings;
         public SettingsMenu settingsMenu;
 
-        [Header("Authors")] [SerializeField] private AuthorsMenu authorsMenu;
-        [SerializeField] private Button authorsButton;
+        [Header("Authors")] 
+        [SerializeField] private AnimatedButton authorsButton;
+        [SerializeField] private AuthorsMenu authorsMenu;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
@@ -40,13 +39,11 @@ namespace CauldronCodebase
             }
 
             locTool.LoadSavedLanguage();
-            continueGame.onClick.AddListener(ContinueClick);
-            quit.onClick.AddListener(GameLoader.Exit);
-            newGame.onClick.AddListener(NewGameClick);
-            settings.onClick.AddListener(settingsMenu.Open);
-            authorsButton.onClick.AddListener(authorsMenu.Open);
-            VKRedirect.onClick.AddListener(() => Application.OpenURL("https://vk.com/theironhearthg"));
-            DiscordRedirect.onClick.AddListener(() => Application.OpenURL("https://discord.gg/pUfAGsYDDw"));
+            continueGame.OnClick += ContinueClick;
+            quit.OnClick += GameLoader.Exit;
+            newGame.OnClick += NewGameClick;
+            settings.OnClick += settingsMenu.Open;
+            authorsButton.OnClick += authorsMenu.Open;
         }
 
         private void Update()

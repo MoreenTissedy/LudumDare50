@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -32,13 +32,13 @@ namespace CauldronCodebase
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
 
-        [SerializeField] private Button openResetButton;
-        [FormerlySerializedAs("dialougeReset")] [SerializeField] private GameObject dialogueReset;
+        [SerializeField] private AnimatedButton openResetButton;
+        [SerializeField] private GameObject dialogueReset;
         [SerializeField] private Button acceptResetButton;
         [SerializeField] private Button declineResetButton;
 
         [Header("Other")]
-        [SerializeField] private Button closeSettingsButton;
+        [SerializeField] private AnimatedButton closeSettingsButton;
         
         
         [Header("Fade")]
@@ -67,8 +67,8 @@ namespace CauldronCodebase
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
-            openResetButton.onClick.AddListener(OpenResetDialogue);
-            closeSettingsButton.onClick.AddListener(Close);
+            openResetButton.OnClick += OpenResetDialogue;
+            closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
             declineResetButton.onClick.AddListener(CloseResetDialogue);
         }

@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,14 +21,15 @@ namespace CauldronCodebase
         {
             locked.gameObject.SetActive(false);
             unlocked.gameObject.SetActive(true);
-            unlocked.Display(recipe);
+            unlocked.Display(recipe, false);
         }
 
         public void SetLocked(Recipe recipe)
         {
             locked.gameObject.SetActive(true);
             unlocked.gameObject.SetActive(false);
-            locked.Display(recipe);
+            var ingredients = RecipeGenerator.GetIngredientsList();
+            locked.Display(recipe, true, recipe.RecipeIngredients.Any(x => !ingredients.Contains(x)));
         }
         
         public void Clear()
@@ -47,7 +49,7 @@ namespace CauldronCodebase
         private Recipe currentRecipe;
         public Recipe CurrentRecipe => currentRecipe;
 
-        public void Display(Recipe recipe)
+        public void Display(Recipe recipe, bool noDescription, bool unavailable = false)
         {
             currentRecipe = recipe;
             image.enabled = true;
@@ -58,7 +60,11 @@ namespace CauldronCodebase
                 fullName.text = recipe.potionName;
             }
 
-            if (description)
+            if (noDescription)
+            {
+                description.text = unavailable ? "Unavailable in demo" : "";
+            }
+            else
             {
                 description.text = recipe.description;
             }

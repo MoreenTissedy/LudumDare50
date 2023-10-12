@@ -51,6 +51,7 @@ namespace CauldronCodebase
         private Cauldron cauldron;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
+        public static int DEMO_COMBINATIONS_COUNT = 56;
 
         private Mode currentMode;
         public enum Mode
@@ -453,6 +454,20 @@ namespace CauldronCodebase
         public void SaveData(ref GameData data)
         {
             data.AttemptsRecipes = wrongPotions;
+        }
+
+        public List<Recipe> GetAvailableLockedRecipes()
+        {
+           List<Recipe> recipes = LockedRecipes.ToList();
+           foreach (var recipe in LockedRecipes)
+           {
+               if (recipe.RecipeIngredients.Contains(Ingredients.Root1) ||
+                   recipe.RecipeIngredients.Contains(Ingredients.Agaricus))
+               {
+                   recipes.Remove(recipe);
+               }
+           }
+           return recipes;
         }
     }
 }

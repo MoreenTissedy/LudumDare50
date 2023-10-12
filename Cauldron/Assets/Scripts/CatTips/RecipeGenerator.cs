@@ -10,7 +10,7 @@ namespace CauldronCodebase
         public static Ingredients[] GenerateRandomRecipe(RecipeBook book)
         {
             Ingredients[] randomRecipe;
-            var generatedRecipe = new List<Ingredients[]>(RecipeBook.MAX_COMBINATIONS_COUNT);
+            var generatedRecipe = new List<Ingredients[]>(RecipeBook.DEMO_COMBINATIONS_COUNT);
             int tryCount = 0;
 
             do
@@ -25,7 +25,7 @@ namespace CauldronCodebase
                 tryCount++;
                 generatedRecipe.Add(randomRecipe);
 
-                if (tryCount >= RecipeBook.MAX_COMBINATIONS_COUNT)
+                if (tryCount >= RecipeBook.DEMO_COMBINATIONS_COUNT)
                 {
                     return null;
                 }
@@ -37,7 +37,8 @@ namespace CauldronCodebase
 
         public static Recipe GenerateLockedRecipe(RecipeBook book)
         {
-            return book.LockedRecipes.Count == 0 ? null : book.LockedRecipes[UnityEngine.Random.Range(0, book.LockedRecipes.Count)];
+            int recipeCount = book.GetAvailableLockedRecipes().Count;
+            return recipeCount == 0 ? null : book.GetAvailableLockedRecipes()[UnityEngine.Random.Range(0, recipeCount)];
         }
 
         public static Ingredients[] GenerateLastIngredientRecipe(Ingredients[] mix, RecipeBook book)
@@ -45,7 +46,7 @@ namespace CauldronCodebase
             Ingredients[] recipeToTips;
             Ingredients randomIngredient;
 
-            List<Ingredients> allIngredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+            List<Ingredients> allIngredients = GetIngredientsList();
             foreach (var ingredientInMix in mix)
             {
                 allIngredients.Remove(ingredientInMix);
@@ -64,11 +65,19 @@ namespace CauldronCodebase
             return tryCount > 0 ? recipeToTips : null;
         }
 
+        public static List<Ingredients> GetIngredientsList()
+        {
+            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+            ingredients.Remove(Ingredients.Root1);
+            ingredients.Remove(Ingredients.Agaricus);
+            return ingredients;
+        }
+
         public static Ingredients[] GenerateCorrectLastIngredientRecipe(Ingredients[] mix, RecipeBook book)
         {
             List<Recipe> potentialRecipes = new List<Recipe>();
 
-            foreach (var recipe in book.LockedRecipes)
+            foreach (var recipe in book.GetAvailableLockedRecipes())
             {
                 if(mix.All(recipe.RecipeIngredients.Contains))
                 {
@@ -76,15 +85,19 @@ namespace CauldronCodebase
                 }
             }
 
+            if (potentialRecipes.Count == 0)
+            {
+                return null;
+            }
             return potentialRecipes[UnityEngine.Random.Range(0, potentialRecipes.Count)].RecipeIngredients.ToArray();
         }
 
         private static Ingredients[] GenerateIngredients()
         {
             var rnd = new Random(Guid.NewGuid().GetHashCode());
-        
-            var ingredients = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
 
+            var ingredients = GetIngredientsList();
+            
             return ingredients.OrderBy(x => rnd.Next()).Take(3).ToArray();
         }
     }

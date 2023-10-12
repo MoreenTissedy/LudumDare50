@@ -59,10 +59,9 @@ namespace CauldronCodebase
         
         public Recipe GetRecipeToUnlock(RecipeBook book, GameDataHandler gameDataHandler)
         {
-            foreach (var recipe in allRecipes)
+            foreach (var recipe in book.GetAvailableLockedRecipes())
             {
-                if (recipe.magical && !book.IsRecipeInBook(recipe) &&
-                    StoryTagHelper.Check(recipe.requiredStoryTag, gameDataHandler))
+                if (recipe.magical && StoryTagHelper.Check(recipe.requiredStoryTag, gameDataHandler))
                 {
                     return recipe;
                 }

@@ -193,7 +193,6 @@ namespace CauldronCodebase
                 cardPool.AddRange(pool.cards);
             }
             lastExtendedRoundNumber++;
-            Debug.LogWarning("card pool extended");
         }
 
         public void AddToPool(Encounter card)
@@ -285,6 +284,8 @@ namespace CauldronCodebase
                         }
                     }
 
+                    lastExtendedRoundNumber = data.LastExtendedPoolNumber;
+
                     if (data.CurrentDeck != null)
                     {
                         List<Encounter> currentDeck = new List<Encounter>();
@@ -330,6 +331,8 @@ namespace CauldronCodebase
         public void SaveData(ref GameData data)
         {
             if (data == null) return;
+            data.LastExtendedPoolNumber = lastExtendedRoundNumber;
+            
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {

@@ -15,6 +15,7 @@ namespace Save
 
         public List<string> CardPool; // EncounterDeck
         public List<string> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
+        public int LastExtendedPoolNumber;
 
         public List<string> PriorityCards; //PriorityLaneProvider
         

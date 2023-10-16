@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
@@ -17,13 +18,15 @@ namespace CauldronCodebase
         [Inject] private IngredientsData ingredientsData;
         [Inject] private RecipeBook recipeBook;
 
-        public void Set(Ingredients ingredient)
+        public async void Set(Ingredients ingredient)
         {
             data = ingredientsData.Get(ingredient);
             image.enabled = true;
             image.sprite = data.image;
-            interactable = true;
+            interactable = false;
             scrollTooltip.Close();
+            await scrollTooltip.SetText(data.friendlyName);
+            interactable = true;
         }
 
         public void Clear()
@@ -39,7 +42,7 @@ namespace CauldronCodebase
                 return;
             }
             base.OnPointerEnter(eventData);
-            scrollTooltip.Open(data.friendlyName).Forget();
+            scrollTooltip.Open();
         }
 
         public override void OnPointerExit(PointerEventData eventData)

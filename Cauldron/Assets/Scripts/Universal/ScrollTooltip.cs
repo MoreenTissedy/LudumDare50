@@ -48,7 +48,7 @@ namespace Universal
             Open(testText);
         }
 
-        public async UniTaskVoid Open(string text)
+        public async UniTask Open(string text)
         {
             canvas.enabled = false;
             await SetText(text);

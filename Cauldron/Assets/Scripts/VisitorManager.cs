@@ -20,6 +20,7 @@ namespace CauldronCodebase
         private int attemptsLeft;
         private Visitor currentVisitor;
         private Villager currentVillager;
+        public Villager CurrentVillager => currentVillager;
         private bool ignoreSavedAttempts = false;
         
         private Cauldron cauldron;

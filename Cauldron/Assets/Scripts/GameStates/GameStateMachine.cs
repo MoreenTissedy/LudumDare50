@@ -85,6 +85,7 @@ namespace CauldronCodebase.GameStates
                 gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
             OnGameStarted?.Invoke();
+            dataPersistenceManager.SaveGame();
             currentGameState.Enter();
         }
  

@@ -71,6 +71,10 @@ namespace CauldronCodebase.GameStates
             else
             {
                 await UniTask.NextFrame(); //to avoid injection problems
+                while (GameLoader.IsMenuOpen())
+                {
+                    await UniTask.NextFrame(); 
+                }
             }
             if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {

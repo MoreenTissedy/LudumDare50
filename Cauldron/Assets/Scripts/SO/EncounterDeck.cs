@@ -311,7 +311,7 @@ namespace CauldronCodebase
             {
                 DealCards(2);
                 List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
-                if (loadRecipes.Count < 20)
+                if (loadRecipes.Count < 8)
                 {
                     deck.AddFirst(introCards[3]);
                 }

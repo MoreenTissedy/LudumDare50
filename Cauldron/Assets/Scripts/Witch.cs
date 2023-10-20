@@ -21,7 +21,7 @@ namespace CauldronCodebase
 
         [SpineSkin()] public string premiumSkin;
 
-        [Inject] private GameDataHandler gameData;
+        [Inject] private EndingsProvider endings;
         
         public bool Hidden { get; private set; }
 
@@ -34,7 +34,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            if (gameData.currentRound > 0 && !string.IsNullOrEmpty(premiumSkin))
+            if (endings.GetUnlockedEndingsCount() > 0 && !string.IsNullOrEmpty(premiumSkin))
             {
                 anim.Skeleton.SetSkin(premiumSkin);
             }

@@ -1,6 +1,9 @@
+using System;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -15,6 +18,10 @@ namespace CauldronCodebase
         public string hide;
         [SpineAnimation]
         public string unhide;
+
+        [SpineSkin()] public string premiumSkin;
+
+        [Inject] private GameDataHandler gameData;
         
         public bool Hidden { get; private set; }
 
@@ -23,6 +30,14 @@ namespace CauldronCodebase
         {
             //Respond to Brew, Nightfall, NewDay events
             anim = GetComponent<SkeletonAnimation>();
+        }
+
+        private void Start()
+        {
+            if (gameData.currentRound > 0 && !string.IsNullOrEmpty(premiumSkin))
+            {
+                anim.Skeleton.SetSkin(premiumSkin);
+            }
         }
 
         public void Activate()

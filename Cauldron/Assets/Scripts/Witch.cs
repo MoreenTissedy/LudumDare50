@@ -1,4 +1,3 @@
-using System;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,9 +18,13 @@ namespace CauldronCodebase
         [SpineAnimation]
         public string unhide;
 
+        [SpineAnimation()] public string angry;
+
         [SpineSkin()] public string premiumSkin;
 
         [Inject] private EndingsProvider endings;
+        [Inject] private Cauldron cauldron;
+        [Inject] private GameDataHandler gameDataHandler;
         
         public bool Hidden { get; private set; }
 
@@ -37,6 +40,16 @@ namespace CauldronCodebase
             if (endings.GetUnlockedEndingsCount() > 0 && !string.IsNullOrEmpty(premiumSkin))
             {
                 anim.Skeleton.SetSkin(premiumSkin);
+            }
+            cauldron.PotionBrewed += CauldronOnPotionBrewed;
+        }
+
+        private void CauldronOnPotionBrewed(Potions potion)
+        {
+            if (potion == Potions.Placebo && gameDataHandler.wrongExperiments > 3)
+            {
+                anim.AnimationState.SetAnimation(1, angry, false);
+                anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);
             }
         }
 

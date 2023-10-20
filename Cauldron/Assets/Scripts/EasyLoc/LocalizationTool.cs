@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using System.Reflection;
-using JetBrains.Annotations;
-using UnityEngine.SceneManagement;
 using CauldronCodebase;
+using Zenject;
 
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -15,30 +14,18 @@ using UnityEditor;
 
 namespace EasyLoc
 {
-    public class LocalizationTool : MonoBehaviour
+    public class LocalizationTool
     {
-        public TextAsset UI;
+        private Language loadedLanguage;
+        public event Action<Language> OnLanguageChanged;
 
-        [Header ("Load Language with right click!")]
-        [ContextMenuItem("Load language", "LoadCurrentLanguage")]
-        [SerializeField] private Language selectLanguage;
-
-        public Language loadedLanguage;
-        public event Action OnLanguageChanged;
-
-        private bool languageLoaded;
-
-        [UsedImplicitly]
-        void LoadCurrentLanguage()
+        [Inject]
+        private void Startup()
         {
-            //TODO: make a normal interface
-            //Load all scenes
-            LoadLanguage(selectLanguage);
-            loadedLanguage = selectLanguage;
-            //unload scenes
+            LoadLanguage(GetSavedLanguage());
         }
 
-        public void LoadSavedLanguage()
+        public Language GetSavedLanguage()
         {
             var language = Language.EN;
             if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
@@ -46,32 +33,25 @@ namespace EasyLoc
             {
                 language = Language.RU;
             }
-            if (languageLoaded)
-            {
-                ImportUI(language);
-            }
-            else
-            {
-                LoadLanguage(language);
-            }
+
+            return language;
         }
 
         public void LoadLanguage(Language language)
         {
-            ImportScriptableObjects(language);
-            ImportUI(language);
-            languageLoaded = true;
-            if (loadedLanguage != language)
+            if (loadedLanguage == language)
             {
-                OnLanguageChanged?.Invoke();
+                return;
             }
+            ImportScriptableObjects(language);
             loadedLanguage = language;
+            OnLanguageChanged?.Invoke(language);
         }
 
         private void ImportScriptableObjects(Language language)
         {
+            Debug.Log("[Loc] translating SOs to "+language+"...");
             var units = Resources.FindObjectsOfTypeAll<LocalizableSO>();
-            Debug.Log("Found SO to localize: " + units.Length);
             foreach (LocalizableSO unit in units)
             {
                 try
@@ -99,17 +79,8 @@ namespace EasyLoc
 #endif
         }
 
-        // LocalizableSO[] GetUnits()
-        // {
-        //     var guids = AssetDatabase.FindAssets("t: LocalizableSO");
-        //     List<LocalizableSO> list = new List<LocalizableSO>(guids.Length);
-        //     foreach (var guid in guids)
-        //     {
-        //         list.Add(AssetDatabase.LoadAssetAtPath<LocalizableSO>(AssetDatabase.GUIDToAssetPath(guid)));
-        //     }
-        //     return list.ToArray();
-        // }
         
+        //TODO: collectUI directly in scenes
 #if UNITY_EDITOR
         [ContextMenu("Collect UI")]
         void CollectFieldsWithAttribute()
@@ -165,104 +136,6 @@ namespace EasyLoc
             Debug.Log("ui collected!");
         }
 #endif
-
-        void ImportUI(Language language)
-        {
-            Debug.Log("UI import");
-            //fetch data from csv into a dictionary
-            Dictionary<string, string> locData = new Dictionary<string, string>();
-            string[] lines = UI.text.Split('\n');
-            string[] headers = lines[0].Split(';');
-            int langIndex = -1;
-            for (int i = 0; i < headers.Length; i++)
-            {
-                if (headers[i].Contains("_"+language.ToString()))
-                {
-                    langIndex = i;
-                    break;
-                }
-            }
-
-            if (langIndex < 0)
-                return;
-            
-            for (var i = 1; i < lines.Length; i++)
-            {
-                var line = lines[i];
-                string[] data = line.Split(';');
-                if (langIndex >= data.Length)
-                {
-                    continue;
-                }
-
-                data[langIndex] = data[langIndex].Replace('>', '\n');
-                locData.Add(data[1],data[langIndex]);
-            }
-
-            //search all Monobeh scripts, only current scene
-            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>(true);
-            
-            foreach (MonoBehaviour mono in sceneActive)
-            {
-                Type monoType = mono.GetType();
-
-                // Retreive the fields from the monobeh
-                FieldInfo[] objectFields = monoType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-                // search all fields and find the attribute [Localize]
-                for (int i = 0; i < objectFields.Length; i++)
-                {
-                    // if we detect the attribute, try to find the respective localization data by id.
-                    if (Attribute.GetCustomAttribute(objectFields[i],
-                        typeof(LocalizeAttribute)) is LocalizeAttribute)
-                    {
-                        bool hasData = false;
-                        //for UI.Text components we have special TextTool script
-                        //that allows us to specify the text ID (but doesn't ensure its uniqueness for now)
-                        if (mono is ILocTextTool textTool)
-                        {
-                            if (locData.TryGetValue(textTool.GetId(), out string textValue))
-                            {
-                                hasData = true;
-                                textTool.SetText(textValue.Replace(">", "\n"));
-                            }
-                        }
-                        //for the custom scripts their respective class and field act as ID
-                        else
-                        {
-                            if (locData.TryGetValue(objectFields[i].Name, out string textValue))
-                            {
-                                hasData = true;
-                                objectFields[i].SetValue(mono, textValue.Replace(">", "\n"));
-                            }
-                        }
-                        //changes to prefab instances in editor are not recorded automatically,
-                        //so the values are reverted to prefab defaults at the very first possibility.
-                        //to change this behaviour we need this:
-                        #if UNITY_EDITOR
-                        if (Application.isPlaying)
-                        {
-                            continue;
-                        }
-                        if (hasData && UnityEditor.PrefabUtility.IsPartOfPrefabInstance(mono))
-                        {
-                            UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(mono);
-                            Debug.Log("record prefab");
-                        }
-                        UnityEditor.SceneManagement.EditorSceneManager.MarkAllScenesDirty();
-                        #endif
-                    }
-                }
-            }
-#if UNITY_EDITOR
-            if (Application.isPlaying)
-            {
-                return;
-            }
-            //signal that scene has changed
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-#endif
-        }
 
     }
 }

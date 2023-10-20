@@ -24,7 +24,6 @@ namespace CauldronCodebase
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
-        [Inject] private LocalizationTool locTool;
         [Inject] private SoundManager soundManager; 
 
         private void Start()
@@ -38,7 +37,6 @@ namespace CauldronCodebase
                 HideContinueButton();
             }
 
-            locTool.LoadSavedLanguage();
             continueGame.OnClick += ContinueClick;
             quit.OnClick += GameLoader.Exit;
             newGame.OnClick += NewGameClick;

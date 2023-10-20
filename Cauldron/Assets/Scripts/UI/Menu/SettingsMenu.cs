@@ -1,5 +1,6 @@
 using EasyLoc;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
@@ -84,8 +85,8 @@ namespace CauldronCodebase
         private void ChangeLanguage(int index)
         {
             var newLanguage = index > 0 ? Language.RU : Language.EN;
-            locTool.LoadLanguage(newLanguage);
             PlayerPrefs.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
+            locTool.LoadLanguage(newLanguage);
         }
 
         private void LoadResolution()
@@ -106,13 +107,13 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fadeController.FadeIn(endAlpha: fadeInTargetAlpha);
+            fadeController.FadeIn(endAlpha: fadeInTargetAlpha).Forget();
         }
 
         public void Close()
         {
             gameObject.SetActive(false);
-            fadeController.FadeOut();
+            fadeController.FadeOut().Forget();
         }
 
         private void OpenResetDialogue()

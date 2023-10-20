@@ -38,7 +38,12 @@ namespace CauldronCodebase
             locTool.OnLanguageChanged += ReloadVisitorText;
         }
 
-        private void ReloadVisitorText()
+        private void OnDestroy()
+        {
+            locTool.OnLanguageChanged -= ReloadVisitorText;
+        }
+
+        private void ReloadVisitorText(Language lang)
         {
             if (currentEncounter != null)
             {

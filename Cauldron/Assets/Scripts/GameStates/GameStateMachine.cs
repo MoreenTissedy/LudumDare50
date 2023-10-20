@@ -76,14 +76,6 @@ namespace CauldronCodebase.GameStates
                     await UniTask.NextFrame(); 
                 }
             }
-            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
-            {
-                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
-            }
-            else
-            {
-                gameData.currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-            }
             OnGameStarted?.Invoke();
             dataPersistenceManager.SaveGame();
             currentGameState.Enter();

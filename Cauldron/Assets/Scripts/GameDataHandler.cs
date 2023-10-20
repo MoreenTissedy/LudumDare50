@@ -76,6 +76,15 @@ namespace CauldronCodebase
             currentEvents = events;
 
             fractionStatus = new FractionStatus();
+            
+            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
+            {
+                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
+            }
+            else
+            {
+                currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            }
         }
 
         public void AddTag(string tag)

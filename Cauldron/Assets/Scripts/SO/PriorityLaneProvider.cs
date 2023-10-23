@@ -10,7 +10,7 @@ namespace CauldronCodebase
     {
         public Encounter[] priorityCards;
         
-        private EncounterDeck deck;
+        private RecipeBook book;
         private SODictionary dictionary;
         private GameDataHandler game;
 
@@ -19,9 +19,9 @@ namespace CauldronCodebase
         public List<Encounter> lowFame;
         public List<Encounter> lowFear;
 
-        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager, GameDataHandler game)
+        public void Init(SODictionary dictionary, DataPersistenceManager dataPersistenceManager, GameDataHandler game, RecipeBook book)
         {
-            this.deck = deck;
+            this.book = book;
             this.dictionary = dictionary;
             this.game = game;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
@@ -64,6 +64,10 @@ namespace CauldronCodebase
             {
                 random = Random.Range(0, set.Count);
                 card = set[random];
+                if (card.villager.name == EncounterIdents.DARK_STRANGER && IsAllMagicRecipesUnlocked())
+                {
+                    return null;
+                }
                 if (StoryTagHelper.Check(card, game))
                 {
                     set.RemoveAt(random);
@@ -71,6 +75,18 @@ namespace CauldronCodebase
                 }
             }
             return null;
+        }
+
+        private bool IsAllMagicRecipesUnlocked()
+        {
+            foreach (var recipe in book.GetAvailableLockedRecipes())
+            {
+                if (recipe.magical)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         
         public List<Encounter> GetCardSet(string tag)

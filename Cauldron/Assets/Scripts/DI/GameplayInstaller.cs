@@ -79,7 +79,7 @@ namespace CauldronCodebase
             gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);
-            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
+            priorityLane.Init(soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
             endings.Init();
         }
     }

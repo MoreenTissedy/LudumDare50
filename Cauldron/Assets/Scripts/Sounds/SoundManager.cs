@@ -38,7 +38,8 @@ namespace CauldronCodebase
     {
         Menu,
         Location1,
-        Location2
+        Location2,
+        Halloween
     }
 
     public enum VisitorSound

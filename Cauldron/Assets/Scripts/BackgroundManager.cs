@@ -27,7 +27,8 @@ namespace CauldronCodebase
 
         private void StartLocationMusic()
         {
-            soundManager.SetMusic(locationIndex == 0 ? Music.Location1 : Music.Location2, true);
+            Music music = (Music)(locationIndex + 1);
+            soundManager.SetMusic(music, true);
         }
     }
 }

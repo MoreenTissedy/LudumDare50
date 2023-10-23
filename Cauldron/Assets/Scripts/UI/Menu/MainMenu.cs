@@ -24,7 +24,8 @@ namespace CauldronCodebase
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
-        [Inject] private SoundManager soundManager; 
+        [Inject] private SoundManager soundManager;
+        [Inject] private LocalizationTool localizationTool;
 
         private void Start()
         {
@@ -55,8 +56,10 @@ namespace CauldronCodebase
 
         public void ResetGameData()
         {
+            var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
             dataPersistenceManager.NewGame();
+            PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
             Debug.LogWarning("All data cleared!");
         }

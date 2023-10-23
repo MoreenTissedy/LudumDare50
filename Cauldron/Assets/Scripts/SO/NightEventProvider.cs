@@ -64,6 +64,10 @@ namespace CauldronCodebase
                     validEvents.Add(randomNightEvent);
                 }
             }
+            if (validEvents.Count == 0)
+            {
+                return null;
+            }
             var result = validEvents[Random.Range(0, validEvents.Count)];
             if (result.repeat)
             {
@@ -116,7 +120,11 @@ namespace CauldronCodebase
             }
             if (returnEvents.Count <= _EVENT_COUNT_FOR_RANDOM_EVENT_)
             {
-                returnEvents.Add(GetRandomEvent(game));
+                var random = GetRandomEvent(game);
+                if (random != null)
+                {
+                    returnEvents.Add(random);
+                }
             }
 
             storyEvents.Clear();

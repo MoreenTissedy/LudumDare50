@@ -50,16 +50,16 @@ namespace CauldronCodebase
             //for playtests
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                ResetGameData();
+                ResetGameData(false);
             }
         }
 
-        public void ResetGameData()
+        public void ResetGameData(bool saveLanguage = true)
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
             dataPersistenceManager.NewGame();
-            PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
+            if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
             Debug.LogWarning("All data cleared!");
         }

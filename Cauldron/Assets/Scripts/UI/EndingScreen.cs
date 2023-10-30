@@ -4,7 +4,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 using Spine.Unity;
 
 namespace CauldronCodebase
@@ -13,7 +12,7 @@ namespace CauldronCodebase
     {
         private const float _ENDING_SCREEN_FADE_DURATION_ = 0.2f;
         
-        [Inject]
+        [SerializeField]
         private EndingsProvider endings;
 
         [SerializeField] private SkeletonGraphic map;
@@ -125,7 +124,7 @@ namespace CauldronCodebase
             };
             foreach (var button in buttons)
             {
-                await UniTask.DelayFrame(5);
+                await UniTask.DelayFrame(3);
                 button.Hide();
             }
         }

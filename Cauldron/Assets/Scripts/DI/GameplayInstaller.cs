@@ -1,8 +1,6 @@
 using CauldronCodebase.GameStates;
-using EasyLoc;
 using Save;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -26,7 +24,6 @@ namespace CauldronCodebase
         [SerializeField] private CatTipsValidator catTipsValidator;
 
         [Header("UI")]
-        [SerializeField] private EndingScreen endingScreen;
         [SerializeField] private GameFXManager fxManager;
         [SerializeField] private NightPanel nightPanel;
         [SerializeField] private CatTipsView catTipsView;
@@ -55,7 +52,6 @@ namespace CauldronCodebase
 
         private void BindUI()
         {
-            Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
             Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();

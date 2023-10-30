@@ -11,7 +11,7 @@ namespace CauldronCodebase
            // "Backgrounds/Swamp",
             "Backgrounds/Field"
         };
-        public const string EndingScreen = "EndingScreen";
+        public const string EndingScreen = "EndingPanel";
 
         public static readonly Dictionary<Ending, string> EndingCartoons = new Dictionary<Ending, string>()
         {

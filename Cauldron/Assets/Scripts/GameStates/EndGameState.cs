@@ -7,16 +7,14 @@ namespace CauldronCodebase.GameStates
 {
     public class EndGameState : BaseGameState
     {
-        private EndingScreen _endingScreen;
+        private EndingScreen endingScreen;
         private DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
         private string currentEnding;
 
-        public EndGameState(EndingScreen endingScreen,
-                            DataPersistenceManager persistenceManager,
+        public EndGameState(DataPersistenceManager persistenceManager,
                             GameFXManager fxManager)
         {
-            _endingScreen = endingScreen;
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
         }
@@ -32,24 +30,27 @@ namespace CauldronCodebase.GameStates
 
         private async UniTaskVoid ShowEffectAndEnding()
         {
-            await gameFXManager.ShowEndGame(currentEnding);
-            _endingScreen.Open(currentEnding);
-            _endingScreen.OnClose += ReloadGame;
+            var fx = gameFXManager.ShowEndGame(currentEnding);
+            var loading = Resources.LoadAsync<EndingScreen>(ResourceIdents.EndingScreen);
+            await UniTask.WhenAll(fx, loading.ToUniTask());
+            endingScreen = Object.Instantiate(loading.asset) as EndingScreen;
+            endingScreen.Open(currentEnding);
+            endingScreen.OnClose += ReloadGame;
         }
 
         public override void Exit()
         {
             gameFXManager.Clear();
-            if (_endingScreen.isActiveAndEnabled)
+            if (endingScreen != null && endingScreen.isActiveAndEnabled)
             {
-                _endingScreen.Close();
+                endingScreen.Close();
             }
         }
 
         private void ReloadGame()
         {
             Debug.Log("reload scene");
-            _endingScreen.OnClose -= ReloadGame;
+            endingScreen.OnClose -= ReloadGame;
             dataPersistenceManager.NewGame();
             SceneManager.LoadScene(1);
         }

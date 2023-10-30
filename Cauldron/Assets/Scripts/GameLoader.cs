@@ -52,6 +52,7 @@ namespace CauldronCodebase
         {
             if (SceneManager.GetSceneByBuildIndex(0).isLoaded)
                 return;
+            Resources.UnloadUnusedAssets();
             Time.timeScale = 0;
             SceneManager.LoadScene(0, LoadSceneMode.Additive);
             GamePaused?.Invoke(true);

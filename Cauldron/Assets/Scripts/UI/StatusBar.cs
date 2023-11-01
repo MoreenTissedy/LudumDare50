@@ -9,9 +9,9 @@ namespace CauldronCodebase
     public class StatusBar : MonoBehaviour
     {
         public RectTransform mask;
-        public GameObject effect;
+        public ParticleFadeController effect;
         public RectTransform maskTemp;
-        public GameObject effectTemp;
+        public ParticleFadeController effectTemp;
         public float gradualReduce = 3f;
         public float effectDelay = 1.5f;
         public RectTransform symbol;
@@ -36,9 +36,7 @@ namespace CauldronCodebase
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
            gameDataHandler.StatusChanged += UpdateValue;
-           
-           effect.SetActive(false);
-           effectTemp.SetActive(false);
+
            signCritical.SetActive(false);
         }
 
@@ -58,22 +56,30 @@ namespace CauldronCodebase
             {
                 return;
             }
+
             bool statusIncrease = currentValue < current;
             currentValue = current;
             var newSize = CalculateMaskSize(current);
             if (animate)
             {
-                var animations = DOTween.Sequence();
+                if (DOTween.IsTweening(this))
+                {
+                    DOTween.Kill(this);
+                    effectTemp.Hide();
+                    effect.Hide();
+                }
+                
+                var animations = DOTween.Sequence(this);
                 RectTransform firstMask = statusIncrease ? maskTemp : mask;
-                GameObject theEffect = statusIncrease ? effectTemp : effect;
+                var theEffect = statusIncrease ? effectTemp : effect;
                 RectTransform secondMask = statusIncrease ? mask : maskTemp;
                 GrowSymbol();
                 animations
-                    .AppendCallback(() => theEffect.SetActive(true))
+                    .AppendCallback(() => theEffect.Show().Forget())
                     .Append(firstMask.DOSizeDelta(newSize, gradualReduce))
                     .AppendInterval(effectDelay)
-                    .AppendCallback(() => theEffect.SetActive(false))
-                    .Append(secondMask.DOSizeDelta(newSize, gradualReduce));
+                    .Append(secondMask.DOSizeDelta(newSize, gradualReduce))
+                    .AppendCallback(() => theEffect.Hide());
             }
             else
             {

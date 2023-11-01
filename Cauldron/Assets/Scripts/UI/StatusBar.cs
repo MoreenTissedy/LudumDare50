@@ -78,8 +78,8 @@ namespace CauldronCodebase
                     .AppendCallback(() => theEffect.Show().Forget())
                     .Append(firstMask.DOSizeDelta(newSize, gradualReduce))
                     .AppendInterval(effectDelay)
-                    .Append(secondMask.DOSizeDelta(newSize, gradualReduce))
-                    .AppendCallback(() => theEffect.Hide());
+                    .AppendCallback(() => theEffect.Hide())
+                    .Append(secondMask.DOSizeDelta(newSize, gradualReduce));
             }
             else
             {

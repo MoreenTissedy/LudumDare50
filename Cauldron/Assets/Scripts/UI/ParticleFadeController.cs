@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ParticleFadeController : MonoBehaviour

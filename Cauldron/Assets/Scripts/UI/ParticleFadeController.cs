@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class ParticleFadeController : MonoBehaviour
@@ -12,7 +13,8 @@ public class ParticleFadeController : MonoBehaviour
         particles = GetComponentsInChildren<ParticleSystem>();
     }
     
-    public async UniTaskVoid Show()
+    [Button]
+    public async UniTask Show()
     {
         if (isShown) return;
         isShown = true;
@@ -32,7 +34,15 @@ public class ParticleFadeController : MonoBehaviour
             particleColorOverLifetime.enabled = false;
         }
     }
+
+    [Button]
+    public async UniTaskVoid Blink()
+    {
+        await Show();
+        Hide();
+    }
     
+    [Button]
     public void Hide()
     {
         if (!isShown) return;

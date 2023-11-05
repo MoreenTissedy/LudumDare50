@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
@@ -80,7 +81,15 @@ namespace CauldronCodebase
                 RectTransform secondMask = statusIncrease ? mask : maskTemp;
                 GrowSymbol();
                 animations
-                    .AppendCallback(() => theEffect.Show().Forget())
+                    .AppendCallback(() =>
+                    {
+                        if(current < settings.statusBars.Total)
+                            theEffect.Show().Forget();
+                        else
+                        {
+                            theEffect.Blink().Forget();
+                        }
+                    })
                     .Append(firstMask.DOSizeDelta(newSize, gradualReduce))
                     .AppendInterval(effectDelay)
                     .AppendCallback(() => theEffect.Hide())

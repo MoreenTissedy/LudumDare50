@@ -18,10 +18,10 @@ namespace Editor
 
             // Calculate rects
             var potionRect = new Rect(position.x, position.y, 150, position.height/2);
-            var influenceCoef = new Rect(position.x + 170, position.y, position.width - 170, position.height/2.5f);
-            var bonusEvent = new Rect(position.x, position.y + position.height/2f, position.width/2.2f, position.height/2.5f);
-            var bonusCard = new Rect(position.x + position.width/2f, position.y + position.height/2, position.width/2.2f, position.height/2.5f);
-
+            var influenceCoef = new Rect(position.x + position.width/2, position.y, position.width/2, position.height);
+            var bonusEvent = new Rect(position.x, position.y + position.height * 1.2f, position.width /2.1f, position.height);
+            var bonusCard = new Rect(position.x + position.width /2, position.y + position.height * 1.2f, position.width/2, position.height);
+            
             
             EditorGUILayout.BeginHorizontal();
             float coefValue = property.FindPropertyRelative("influenceCoef").floatValue;

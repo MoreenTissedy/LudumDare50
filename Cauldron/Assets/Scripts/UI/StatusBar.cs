@@ -9,6 +9,8 @@ namespace CauldronCodebase
     public class StatusBar : MonoBehaviour
     {
         public RectTransform mask;
+        public float maskTailPercent = 6f;
+        public bool keepTailEmpty;
         public ParticleFadeController effect;
         public RectTransform maskTemp;
         public ParticleFadeController effectTemp;
@@ -28,6 +30,8 @@ namespace CauldronCodebase
         private MainSettings settings;
         private int currentValue = Int32.MinValue;
 
+        private float gameMaskLength;
+
         [Inject]
         private void Construct(MainSettings mainSettings, GameDataHandler dataHandler)
         { 
@@ -35,6 +39,7 @@ namespace CauldronCodebase
            settings = mainSettings;
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
+           gameMaskLength = initialDimension - initialDimension * maskTailPercent / 100;
            gameDataHandler.StatusChanged += UpdateValue;
 
            signCritical.SetActive(false);
@@ -92,7 +97,16 @@ namespace CauldronCodebase
         {
             float ratio = (float) current / settings.statusBars.Total;
             ratio = Mathf.Clamp(ratio, 0, 1);
-            ratio *= initialDimension;
+            
+            if (keepTailEmpty && ratio < 1)
+            {
+                ratio *= gameMaskLength;
+            }
+            else
+            {
+                ratio *= initialDimension;
+            }
+            
             Vector2 newSize;
             if (vertical)
             {

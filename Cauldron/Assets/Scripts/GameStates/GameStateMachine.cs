@@ -17,7 +17,9 @@ namespace CauldronCodebase.GameStates
             EndGame
         }
 
-        [HideInInspector] public GamePhase currentGamePhase = GamePhase.VisitorWaiting;
+        
+        [SerializeField] private Transform uiOverlayRoot;
+        public GamePhase currentGamePhase = GamePhase.VisitorWaiting;
 
         private readonly Dictionary<GamePhase, BaseGameState> gameStates = new Dictionary<GamePhase, BaseGameState>();
 
@@ -42,6 +44,7 @@ namespace CauldronCodebase.GameStates
             gameStates.Add(GamePhase.Visitor, factory.CreateVisitorState());
             gameStates.Add(GamePhase.Night, factory.CreateNightState());
             gameStates.Add(GamePhase.EndGame, factory.CreateEndGameState());
+            
             
             dataPersistenceManager = persistenceManager;
             this.gameData = gameData;
@@ -95,7 +98,7 @@ namespace CauldronCodebase.GameStates
         public void SwitchToEnding(string tag)
         {
             var night = gameStates[GamePhase.EndGame] as EndGameState;
-            night?.SetEnding(tag);
+            night?.SetEnding(tag, uiOverlayRoot);
             gameData.RememberRound();
             SwitchState(GamePhase.EndGame);
         }

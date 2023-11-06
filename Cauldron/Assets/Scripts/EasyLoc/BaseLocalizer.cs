@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Annotations;
 using NaughtyAttributes;
-#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
-#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace EasyLoc
 {
-    public class UiLocalizer : MonoBehaviour
+    public abstract class BaseLocalizer: MonoBehaviour
     {
         public TextAsset UI;
         public List<MonoBehaviour> localizationUnits;
-
-        [Inject] private LocalizationTool localizationTool;
-
-        private void Awake()
+        
+        [Inject] protected LocalizationTool localizationTool;
+        
+        private void Start()
         {
             ImportUI(localizationTool.GetSavedLanguage());
             localizationTool.OnLanguageChanged += ImportUI;
@@ -30,12 +28,14 @@ namespace EasyLoc
             localizationTool.OnLanguageChanged -= ImportUI;
         }
 
-#if UNITY_EDITOR
+        protected abstract MonoBehaviour[] GetLocalizationObjects();
+        
+        #if UNITY_EDITOR
         [Button("Collect UI")] [UsedImplicitly]
         void CollectFieldsWithAttribute()
         {
             localizationUnits = new List<MonoBehaviour>(10);
-            MonoBehaviour[] sceneActive = GameObject.FindObjectsOfType<MonoBehaviour>(true);
+            MonoBehaviour[] sceneActive = GetLocalizationObjects();
             
             foreach (MonoBehaviour mono in sceneActive)
             {

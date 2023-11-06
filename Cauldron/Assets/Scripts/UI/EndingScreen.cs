@@ -42,7 +42,6 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            gameObject.SetActive(false);
             for (var i = 0; i < buttons.Length; i++)
             {
                 buttons[i].OnClick += OnEndingClick;

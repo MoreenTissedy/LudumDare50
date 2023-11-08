@@ -13,35 +13,55 @@ MonoBehaviour:
   m_Name: Strength_Bandit_EscapeFromPrison
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: -1
+  addToDeckOnRound: -1
   requiredStoryTag: 
-  villager: {fileID: 11400000, guid: 35e3642a71df6264fa9da44285ca8c3a, type: 2}
+  villager: {fileID: 11400000, guid: eec84c15e6c2e3944be1ed07bdb19009, type: 2}
   text: "My boys got rounded up trying to pull it off with the tax collector! They\u2019re
     now rotting in jail! Help us tear everything apart and get them out.\r"
   hidden: 0
-  quest: 0
-  primaryInfluence: 1
-  secondaryInfluence: 2
-  primaryCoef: 0
-  secondaryCoef: 0
+  quest: 1
+  primaryInfluence: 2
+  secondaryInfluence: 1
+  primaryCoef: 1
+  secondaryCoef: 0.5
   resultsByPotion:
   - potion: 2
     influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 31a2a300b386ea04f940a4f62026bff8, type: 2}
     bonusCard: {fileID: 0}
   - potion: 6
-    influenceCoef: 0.5
+    influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 31a2a300b386ea04f940a4f62026bff8, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 3
-    influenceCoef: -0.5
-    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
+  - potion: 11
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 31a2a300b386ea04f940a4f62026bff8, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 13
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 31a2a300b386ea04f940a4f62026bff8, type: 2}
     bonusCard: {fileID: 0}
   - potion: 4
     influenceCoef: -1
     bonusEvent: {fileID: 11400000, guid: 2296b4495d5956346aee328b4a6752a4, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 8
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 31a2a300b386ea04f940a4f62026bff8, type: 2}
+  - potion: 3
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 15
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 14
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 10
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 19
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 05043cb5a373aea49a57e74473135331, type: 2}
     bonusCard: {fileID: 0}

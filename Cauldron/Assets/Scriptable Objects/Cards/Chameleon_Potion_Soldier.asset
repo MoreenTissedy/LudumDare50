@@ -13,19 +13,31 @@ MonoBehaviour:
   m_Name: Chameleon_Potion_Soldier
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: -1
+  addToDeckOnRound: -1
   requiredStoryTag: 
   villager: {fileID: 11400000, guid: f5bbd271ef2934c4db8f1c277604d395, type: 2}
   text: "We have an order to hunt the bandits in the forest. They are getting too
     bold these days. Got anything useful?\r"
   hidden: 0
-  quest: 0
+  quest: 1
   primaryInfluence: 3
   secondaryInfluence: 1
   primaryCoef: 1
   secondaryCoef: 0.5
   resultsByPotion:
   - potion: 2
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 2060e166e94a77d48a0ddfc6c8c4f6e8, type: 2}
+  - potion: 18
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 2060e166e94a77d48a0ddfc6c8c4f6e8, type: 2}
+  - potion: 16
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 11400000, guid: 2060e166e94a77d48a0ddfc6c8c4f6e8, type: 2}
+  - potion: 5
     influenceCoef: 1
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 11400000, guid: 2060e166e94a77d48a0ddfc6c8c4f6e8, type: 2}

@@ -13,8 +13,9 @@ namespace CauldronCodebase
         };
         public const string EndingScreen = "EndingPanel";
 
-        public static readonly Dictionary<Ending, string> EndingCartoons = new Dictionary<Ending, string>()
+        public static readonly Dictionary<string, string> EndingCartoons = new Dictionary<string, string>()
         {
+            {EndingsProvider.ENOUGH_MONEY, "Endings/Coven"}
         };
     }
 }

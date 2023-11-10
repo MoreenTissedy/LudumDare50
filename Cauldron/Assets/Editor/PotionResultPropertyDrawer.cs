@@ -19,9 +19,9 @@ namespace Editor
             // Calculate rects
             var potionRect = new Rect(position.x, position.y, 150, position.height/2);
             var influenceCoef = new Rect(position.x + position.width/2, position.y, position.width/2, position.height);
-            var bonusEvent = new Rect(position.x, position.y + position.height * 1.2f, position.width /2.1f, position.height);
-            var bonusCard = new Rect(position.x + position.width /2, position.y + position.height * 1.2f, position.width/2, position.height);
-            
+            var bonusEvent = new Rect(position.x + 50, position.y + position.height * 1.2f, position.width /2 - 30, position.height);
+            var bonusCard = new Rect(position.x + position.width /2 + 30, position.y + position.height * 1.2f, position.width/2 - 30, position.height);
+            var buttonRect = new Rect(position.x, position.y + position.height * 1.2f, 40, position.height);
             
             EditorGUILayout.BeginHorizontal();
             float coefValue = property.FindPropertyRelative("influenceCoef").floatValue;
@@ -41,6 +41,11 @@ namespace Editor
             EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.BeginHorizontal();
+            if (GUI.Button(buttonRect, "X"))
+            {
+                property.FindPropertyRelative("bonusEvent").objectReferenceValue = null;
+                property.FindPropertyRelative("bonusCard").objectReferenceValue = null;
+            }
             EditorGUI.PropertyField(bonusEvent, property.FindPropertyRelative("bonusEvent"), GUIContent.none);
             EditorGUI.PropertyField(bonusCard, property.FindPropertyRelative("bonusCard"), GUIContent.none);
             EditorGUILayout.EndHorizontal();

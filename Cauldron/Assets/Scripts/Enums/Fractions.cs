@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 
 namespace CauldronCodebase
 {
@@ -72,6 +73,15 @@ namespace CauldronCodebase
                 return;
             }
             data[(int) fraction - 1].Status += shift;
+        }
+        
+        public int GetStatus(Fractions fraction)
+        {
+            if (fraction is Fractions.None)
+            {
+                return 0;
+            }
+            return data[(int) fraction - 1].Status;
         }
 
         public override string ToString()

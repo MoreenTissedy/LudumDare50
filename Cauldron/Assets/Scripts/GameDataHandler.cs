@@ -42,7 +42,10 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
+        
         public FractionStatus fractionStatus;
+        public bool fractionEventTriggered;   //TODO: save
+        
         public EncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 

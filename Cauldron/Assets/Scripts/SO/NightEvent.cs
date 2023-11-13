@@ -19,7 +19,11 @@ namespace CauldronCodebase
         public string storyTag;
         [Header("Only for conditionals")]
         public bool repeat;
-
+        
+        public virtual void OnResolve()
+        {
+        }
+        
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

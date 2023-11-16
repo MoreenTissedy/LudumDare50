@@ -9,6 +9,7 @@ namespace CauldronCodebase
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private MainSettings settings;
 
         [ContextMenu("Unlock all recipes")]
         public void UnlockAllRecipes()
@@ -21,6 +22,13 @@ namespace CauldronCodebase
                 }
                 recipeBook.RecordRecipe(recipe);
             }
+        }
+        
+        [ContextMenu("Reset fame and fear")]
+        public void ResetStatuses()
+        {
+            gameDataHandler.Fame = settings.statusBars.InitialValue;
+            gameDataHandler.Fear = settings.statusBars.InitialValue;
         }
 
         private void Update()

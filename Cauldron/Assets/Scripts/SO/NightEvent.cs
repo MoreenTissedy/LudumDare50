@@ -47,7 +47,7 @@ namespace CauldronCodebase
                 {
                     if (requiredColumns[0] >= data.Length)
                         return false;
-                    flavourText = data[requiredColumns[0]].Replace(">", "\n");
+                    flavourText = data[requiredColumns[0]].Replace("<br>", "\n");
                     return true;
                 }
             }

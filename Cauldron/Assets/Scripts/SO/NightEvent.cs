@@ -10,7 +10,7 @@ namespace CauldronCodebase
     public class NightEvent : LocalizableSO
     {
         public string title;
-        [TextArea(8,8)]
+        [TextArea(10,15)]
         public string flavourText;
         public Sprite picture;
         public float moneyCoef, fearCoef, fameCoef;

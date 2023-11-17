@@ -1,5 +1,4 @@
-﻿using Save;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -29,7 +28,6 @@ namespace CauldronCodebase.GameStates
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
             this.visitorManager = visitorManager;
-            this.visitorManager.VisitorLeft += VisitorLeft;
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
@@ -56,13 +54,20 @@ namespace CauldronCodebase.GameStates
                      
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
+            visitorManager.VisitorLeft += OnVisitorLeft;
         }
-        
+
         public override void Exit()
         {
             gameDataHandler.cardsDrawnToday++;
             cauldron.PotionAccepted -= EndEncounter;
+            visitorManager.VisitorLeft -= OnVisitorLeft;
             visitorManager.Exit();           
+        }
+
+        private void OnVisitorLeft()
+        {
+            EndEncounter(Potions.Placebo);
         }
 
         private void EndEncounter(Potions potion)
@@ -85,11 +90,6 @@ namespace CauldronCodebase.GameStates
                 soundManager.Play(Sounds.PotionFailure);
                 visitorManager.PlayReaction(false);
             }
-        }
-
-        private void VisitorLeft()
-        {
-            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -32,7 +33,7 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
-
+        private Coroutine doubleClickCoroutine;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -96,6 +97,40 @@ namespace CauldronCodebase
                     .SetEase(Ease.InOutSine);
             }
             OpenTooltipWithDelay().Forget();
+            
+            doubleClickCoroutine = StartCoroutine(ObserveDoubleClick());
+        }
+
+        private IEnumerator ObserveDoubleClick()
+        {
+            if (cauldron.Mix.Contains(ingredient))
+                yield break;
+            
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+            yield return null;
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+            StartCoroutine(TrowInCauldron());
+        }
+
+        private IEnumerator TrowInCauldron()
+        {
+            const float timeMoveDoubleClick = 0.3f;
+
+            dragging = true;
+            image.transform.DOKill(true);
+            dragTrail?.SetActive(true);
+            ingredientParticle?.SetActive(true);
+            transform.DOMove(cauldron.transform.position, timeMoveDoubleClick);
+
+            yield return new WaitForSeconds(timeMoveDoubleClick);
+            
+            cauldron.AddToMix(ingredient);
+            dragging = false;
+            dragTrail?.SetActive(false);
+            ingredientParticle?.SetActive(false);
+            transform.position = initialPosition;
+            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         private async UniTask OpenTooltipWithDelay()
@@ -115,6 +150,9 @@ namespace CauldronCodebase
             
             image.transform.DOKill();
             image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
+            
+            if(doubleClickCoroutine != null)
+                StopCoroutine(doubleClickCoroutine);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

@@ -84,6 +84,7 @@ namespace CauldronCodebase.GameStates
         {
             nightEvent.OnResolve();
             eventResolver.ApplyModifiers(nightEvent);
+            eventResolver.ApplyStoryTag(nightEvent);
             eventResolver.ApplyFractionShift(nightEvent.fractionData);
             var priorityEvent = eventResolver.AddBonusCards(nightEvent);
             if (priorityEvent)

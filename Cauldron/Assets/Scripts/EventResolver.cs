@@ -19,13 +19,22 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, nightEvent);
             game.Fear += CalculateModifier(Statustype.Fear, nightEvent);
             game.Money += CalculateModifier(Statustype.Money, nightEvent);
+        }
+
+        public void ApplyStoryTag(NightEvent nightEvent)
+        {
             string storyTag = nightEvent.storyTag;
             if (storyTag.StartsWith("-"))
             {
-                game.storyTags.Remove(storyTag);
+                game.storyTags.Remove(storyTag.TrimStart('-'));
             }
             else if (!string.IsNullOrEmpty(storyTag))
             {
+                if (storyTag.StartsWith("*"))
+                {
+                    storyTag = storyTag.TrimStart('*');
+                    StoryTagHelper.SaveMilestone(storyTag);
+                }
                 game.AddTag(storyTag);
                 Debug.Log($"Add story tag: {storyTag}");
             }

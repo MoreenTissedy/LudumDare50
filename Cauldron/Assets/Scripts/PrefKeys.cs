@@ -10,5 +10,6 @@
         public const string ResolutionSettings = "ResolutionSettings";
         public const string FullscreenModeSettings = "SetFullscreenSettings";
         public const string LanguageKey = "LanguageSettings";
+        public const string Milestones = "Milestones";
     }
 }

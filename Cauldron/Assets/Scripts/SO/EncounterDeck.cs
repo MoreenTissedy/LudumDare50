@@ -101,9 +101,9 @@ namespace CauldronCodebase
             string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.UniqueCards);
             if (!string.IsNullOrEmpty(rememberedCardsJson))
             {
-                var wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
+                var wrapper = JsonUtility.FromJson<StringListWrapper>(rememberedCardsJson);
                 rememberedCards.Clear();
-                rememberedCards.AddRange(wrapper.encounters);
+                rememberedCards.AddRange(wrapper.list);
             }
             else
             {
@@ -255,7 +255,7 @@ namespace CauldronCodebase
         void SaveCurrentCardAsUnique()
         {
             rememberedCards.Add(currentCard.name);
-            EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
+            StringListWrapper wrapper = new StringListWrapper { list = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
             PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
             Debug.Log("unique cards: "+json);

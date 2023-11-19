@@ -1,7 +1,37 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace CauldronCodebase
 {
     public static class StoryTagHelper
     {
+        public static void SaveMilestone(string tag)
+        {
+            StringListWrapper tags;
+            if (PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+                tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+            }
+            else
+            {
+                tags = new StringListWrapper();
+            }
+            tags.list.Add(tag);
+            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+        }
+
+        public static List<string> GetMilestones()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+                return JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
+            }
+            return new List<string>();
+        }
+        
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
         {
             return Check(card.requiredStoryTag, gameDataHandler);

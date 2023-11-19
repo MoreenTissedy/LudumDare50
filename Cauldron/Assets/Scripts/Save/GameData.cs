@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
@@ -65,7 +66,7 @@ namespace Save
             CurrentEncounter = null;
             CurrentVillager = null;
 
-            StoryTags = new List<string>(5);
+            StoryTags = StoryTagHelper.GetMilestones().ToList();
             
             PotionsTotalOnRun = new List<string>();
             WrongPotionsCountOnRun = 0;

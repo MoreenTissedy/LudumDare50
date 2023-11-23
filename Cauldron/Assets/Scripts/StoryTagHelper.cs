@@ -66,5 +66,15 @@ namespace CauldronCodebase
 
             return valid;
         }
+
+        public static bool CovenSavingsEnabled(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("know about coven") && !CovenFeatureUnlocked(gameDataHandler);
+        }
+
+        public static bool CovenFeatureUnlocked(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("coven member");
+        }
     }
 }

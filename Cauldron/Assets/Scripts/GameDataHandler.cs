@@ -4,6 +4,7 @@ using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -88,6 +89,30 @@ namespace CauldronCodebase
             {
                 currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+        }
+
+        public bool ChangeStatusRequest(Statustype type, bool up)
+        {
+            if (Money >= statusSettings.CovenCost)
+            {
+                money -= statusSettings.CovenCost;
+            }
+            else
+            {
+                return false;
+            }
+            int multiplier = up ? 1 : -1;
+            if (type == Statustype.Fame)
+            {
+                Fame += Random.Range(statusSettings.CovenMin, statusSettings.CovenMax) * multiplier;
+                return true;
+            }
+            if (type == Statustype.Fear)
+            {
+                Fear += Random.Range(statusSettings.CovenMin, statusSettings.CovenMax) * multiplier;
+                return true;
+            }
+            return false;
         }
 
         public void AddTag(string tag)

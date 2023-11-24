@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Threading;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -10,7 +10,7 @@ using Zenject;
 namespace CauldronCodebase
 {
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
-        IBeginDragHandler, IDragHandler, IEndDragHandler
+        IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         public Ingredients ingredient;
         public float rotateAngle = 10f;
@@ -33,7 +33,7 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
-        private Coroutine doubleClickCoroutine;
+        private Vector3[] pathDoubleClickAnimation;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -82,6 +82,14 @@ namespace CauldronCodebase
             {
                 ChangeText();
             }
+            
+            pathDoubleClickAnimation = new Vector3[]
+            {
+                new Vector3(transform.position.x, transform.position.y + 1, transform.position.z),
+                new Vector3(transform.position.x, transform.position.y - 2, transform.position.z),
+                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 5, cauldron.transform.position.z),
+                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 1, cauldron.transform.position.z),
+            };
 
             initialPosition = transform.position;
             ingredientParticle?.SetActive(false);
@@ -97,40 +105,6 @@ namespace CauldronCodebase
                     .SetEase(Ease.InOutSine);
             }
             OpenTooltipWithDelay().Forget();
-            
-            doubleClickCoroutine = StartCoroutine(ObserveDoubleClick());
-        }
-
-        private IEnumerator ObserveDoubleClick()
-        {
-            if (cauldron.Mix.Contains(ingredient))
-                yield break;
-            
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-            yield return null;
-            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
-
-            StartCoroutine(TrowInCauldron());
-        }
-
-        private IEnumerator TrowInCauldron()
-        {
-            const float timeMoveDoubleClick = 0.3f;
-
-            dragging = true;
-            image.transform.DOKill(true);
-            dragTrail?.SetActive(true);
-            ingredientParticle?.SetActive(true);
-            transform.DOMove(cauldron.transform.position, timeMoveDoubleClick);
-
-            yield return new WaitForSeconds(timeMoveDoubleClick);
-            
-            cauldron.AddToMix(ingredient);
-            dragging = false;
-            dragTrail?.SetActive(false);
-            ingredientParticle?.SetActive(false);
-            transform.position = initialPosition;
-            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         private async UniTask OpenTooltipWithDelay()
@@ -150,29 +124,42 @@ namespace CauldronCodebase
             
             image.transform.DOKill();
             image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
-            
-            if(doubleClickCoroutine != null)
-                StopCoroutine(doubleClickCoroutine);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.clickCount >= 2) 
+                TrowInCauldron();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (cauldron.Mix.Contains(ingredient))
                 return;
+            EnableDrag();
+            cauldron.MouseEnterCauldronZone += OverCauldron;
+        }
+
+        private void OverCauldron()
+        {
+            ReturnIngredient();
+            cauldron.MouseEnterCauldronZone -= OverCauldron;
+        }
+
+        private void EnableDrag()
+        {
             dragging = true;
             image.transform.DOKill(true);
-            cauldron.MouseEnterCauldronZone += OverCauldron;
             dragTrail?.SetActive(true);
             ingredientParticle?.SetActive(false);
         }
 
-        void OverCauldron()
+        private void ReturnIngredient()
         {
             cauldron.AddToMix(ingredient);
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
-            cauldron.MouseEnterCauldronZone -= OverCauldron;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
@@ -223,6 +210,19 @@ namespace CauldronCodebase
                 ingredientParticle?.SetActive(state);
                 isHighlighted = state;
             }
+        }
+
+        private async void TrowInCauldron()
+        {
+            if (cauldron.Mix.Contains(ingredient))
+                 return;
+            
+            const float timeMoveDoubleClick = 1.3f;
+
+            EnableDrag();
+            transform.DOPath(pathDoubleClickAnimation, timeMoveDoubleClick, PathType.CatmullRom);
+            await Task.Delay(1300);
+            ReturnIngredient();
         }
     }
 }

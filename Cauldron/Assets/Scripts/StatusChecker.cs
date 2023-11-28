@@ -41,12 +41,6 @@ namespace CauldronCodebase
                 return EndingsProvider.HIGH_FEAR;
             }
 
-            if (gameDataHandler.Money >= settings.statusBars.MoneyTotal)
-            {
-                return EndingsProvider.ENOUGH_MONEY;
-
-            }
-
             if (gameDataHandler.Fame <= 0)
             {
                 return EndingsProvider.LOW_FAME;

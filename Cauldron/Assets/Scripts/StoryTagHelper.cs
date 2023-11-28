@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -30,6 +31,18 @@ namespace CauldronCodebase
                 return JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
             }
             return new List<string>();
+        }
+        
+        public static void RemoveMilestone(string tag)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                return;
+            }
+            var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+            var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+            tags.list.Remove(tag);
+            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
         }
         
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
@@ -69,12 +82,12 @@ namespace CauldronCodebase
 
         public static bool CovenSavingsEnabled(GameDataHandler gameDataHandler)
         {
-            return gameDataHandler.storyTags.Contains("know about coven") && !CovenFeatureUnlocked(gameDataHandler);
+            return gameDataHandler.storyTags.Contains("circle money") && !CovenFeatureUnlocked(gameDataHandler);
         }
 
         public static bool CovenFeatureUnlocked(GameDataHandler gameDataHandler)
         {
-            return gameDataHandler.storyTags.Contains("coven member");
+            return gameDataHandler.storyTags.Contains("circle");
         }
     }
 }

@@ -26,6 +26,11 @@ namespace CauldronCodebase
             string storyTag = nightEvent.storyTag;
             if (storyTag.StartsWith("-"))
             {
+                if (storyTag.StartsWith("*"))
+                {
+                    storyTag = storyTag.TrimStart('*');
+                    StoryTagHelper.RemoveMilestone(storyTag);
+                }
                 game.storyTags.Remove(storyTag.TrimStart('-'));
             }
             else if (!string.IsNullOrEmpty(storyTag))

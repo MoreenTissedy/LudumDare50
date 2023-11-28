@@ -50,7 +50,7 @@ namespace CauldronCodebase
         public EncounterDeck currentDeck;
         public NightEventProvider currentEvents;
 
-        private MainSettings.StatusBars statusSettings;
+        public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
 
         private DataPersistenceManager dataPersistenceManager;

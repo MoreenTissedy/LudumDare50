@@ -207,7 +207,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || card.villager.name == EncounterIdents.WITCH_MEMORY)
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
             {
                 return false;
             }

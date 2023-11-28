@@ -67,16 +67,18 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                if (tag.StartsWith("!"))
+                if (trim.StartsWith("!"))
                 {
+                    Debug.LogError("!"+trim);
                     valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
                 }
                 else
                 {
+                    Debug.LogError(trim);
                     valid = valid && gameDataHandler.storyTags.Contains(trim);
                 }
             }
-
+            Debug.LogError("check tags: "+valid);
             return valid;
         }
 

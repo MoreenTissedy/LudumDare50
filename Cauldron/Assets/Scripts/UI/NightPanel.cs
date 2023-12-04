@@ -13,11 +13,8 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class NightPanel : Book, IPointerClickHandler
+    public class NightPanel : Book
     {
-        private MainSettings settings;
-        private GameStateMachine gameStateMachine;
-
         public NightPanelCard eventCard;
         public TMP_Text flavour;
         public TMP_Text money;
@@ -33,6 +30,9 @@ namespace CauldronCodebase
         [Header("DEBUG")]
         public NightEvent[] content;
 
+        [Header("Coven features")] 
+        public GameObject covenBlock;
+        
         [Header("Interval between incoming cards in sec")] 
         public float enterTimeInterval = 1f;
 
@@ -69,12 +69,11 @@ namespace CauldronCodebase
         }
 
         [Inject]
-        private void Construct(MainSettings settings, GameStateMachine stateMachine, GameDataHandler gameDataHandler)
+        private void Construct(MainSettings settings, GameDataHandler gameDataHandler)
         {
-            this.settings = settings;
-            this.gameStateMachine = stateMachine;
-
             resolver = new EventResolver(settings, gameDataHandler);
+            bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
+            covenBlock.SetActive(covenFeatureUnlocked);
         }
 
         private void ShowDefault()
@@ -250,14 +249,6 @@ namespace CauldronCodebase
                 }
 
                 CloseBook();
-            }
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (clickable)
-            {
-                OnNextCard();
             }
         }
     }

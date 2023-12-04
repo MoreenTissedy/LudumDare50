@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using EasyLoc;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Zenject;
 using TMPro;
 using Random = UnityEngine.Random;
@@ -16,7 +14,8 @@ namespace CauldronCodebase
 {
     public class NightPanel : Book
     {
-        public NightPanelCard eventCard;
+        [SerializeField] private NightPanelCard eventCard;
+        [SerializeField] private RectTransform cardRoot;
         public TMP_Text flavour;
         public TMP_Text money;
         public TMP_Text fear;
@@ -227,7 +226,7 @@ namespace CauldronCodebase
             else
             {
                 //copy nightPanelCard gameobject
-                newCard = Instantiate(eventCard.gameObject, newCardPosition, Quaternion.identity, mainPanel).
+                newCard = Instantiate(eventCard.gameObject, newCardPosition, Quaternion.identity, cardRoot).
                     GetComponent<NightPanelCard>();
             }
             return newCard;

@@ -45,6 +45,7 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.initialPosition = initialPosition;
             imagesToFade = GetComponentsInChildren<Image>();
+            transform.SetAsLastSibling();
         }
 
         public void Enter(Vector3 point, float zRotation)
@@ -55,10 +56,9 @@ namespace CauldronCodebase
             {
                 image.color = Color.white;
             }
-            transform.DOLocalMove(point, enterTime).
-                From(new Vector3(offscreenLeft, 0, 0)).
-                SetEase(enterMotion).
-                OnComplete(() => InPlace?.Invoke(this));
+
+            transform.DOLocalMove(point, enterTime).From(new Vector3(offscreenLeft, 0, 0)).SetEase(enterMotion)
+                .OnComplete(() => InPlace?.Invoke(this));
             transform.DORotate(new Vector3(0, 0, zRotation), enterTime).
                 From(new Vector3(0, 0, enterRotation));
         }

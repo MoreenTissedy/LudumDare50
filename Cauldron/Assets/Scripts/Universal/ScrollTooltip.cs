@@ -57,7 +57,6 @@ namespace Universal
 
         public void Open()
         {
-            
             OpenAnimation();
         }
 

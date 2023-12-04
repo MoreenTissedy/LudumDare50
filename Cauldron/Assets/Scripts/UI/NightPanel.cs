@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -28,10 +29,12 @@ namespace CauldronCodebase
         public string defaultNightText3 = "Дует ветер, гонит тучки.";
 
         [Header("DEBUG")]
-        public NightEvent[] content;
+        public List<NightEvent> content;
 
         [Header("Coven features")] 
         public GameObject covenBlock;
+        public CovenPopupButton covenButton;
+        public GameObject covenPopup;
         
         [Header("Interval between incoming cards in sec")] 
         public float enterTimeInterval = 1f;
@@ -47,8 +50,14 @@ namespace CauldronCodebase
         private int eventCardSiblingIndex;
         private bool firstCardDealt;
 
+        private GameDataHandler gameDataHandler;
         private EventResolver resolver;
         private bool clickable;
+        
+        Vector2 lastPosition;
+        Vector2 lastPositionDifference;
+        float lastAngle;
+        float lastAngleDifference;
 
         public event Action<NightEvent> EventClicked;
 
@@ -63,7 +72,6 @@ namespace CauldronCodebase
             activeCards = new List<NightPanelCard>(3);
             cardInitialPos = eventCard.GetComponent<RectTransform>().anchoredPosition;
             newCardPosition = eventCard.transform.position;
-            eventCardSiblingIndex = eventCard.transform.GetSiblingIndex();
             eventCard.gameObject.SetActive(false);
             base.Awake();
         }
@@ -72,10 +80,30 @@ namespace CauldronCodebase
         private void Construct(MainSettings settings, GameDataHandler gameDataHandler)
         {
             resolver = new EventResolver(settings, gameDataHandler);
-            bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
-            covenBlock.SetActive(covenFeatureUnlocked);
+            this.gameDataHandler = gameDataHandler;
         }
 
+        private void OnEnable()
+        {
+            bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
+            covenBlock.SetActive(covenFeatureUnlocked);
+            covenPopup.SetActive(false);
+            if (covenFeatureUnlocked)
+            {
+                covenButton.OnClick += CovenButtonOnOnClick;
+            }
+        }
+
+        private void OnDisable()
+        {
+            covenButton.OnClick -= CovenButtonOnOnClick;
+        }
+
+        private void CovenButtonOnOnClick()
+        {
+            covenPopup.SetActive(!covenPopup.activeSelf);
+        }
+        
         private void ShowDefault()
         {
             string text = String.Empty;
@@ -102,7 +130,7 @@ namespace CauldronCodebase
 
         public void OpenBookWithEvents(NightEvent[] events)
         {
-            content = events;
+            content = events.ToList();
             InitTotalPages();
             currentPage = 0;
             firstCardDealt = false;
@@ -118,28 +146,33 @@ namespace CauldronCodebase
                 cardPool.AddRange(activeCards);
                 activeCards.Clear();
             }
-            Vector2 newPosition = cardInitialPos;
-            Vector2 posDifference = positionDiff;
-            float newAngle = firstCardAngle;
-            float angleDifference = angleDiff;
+            lastPosition = cardInitialPos;
+            lastPositionDifference = positionDiff;
+            lastAngle = firstCardAngle;
+            lastAngleDifference = angleDiff;
             foreach (var nightEvent in content)
             {
                 yield return new WaitForSeconds(enterTimeInterval);
-                NightPanelCard card = GetCard();
-                card.Init(nightEvent.picture, cardInitialPos, SoundManager);
-                card.Enter(newPosition, newAngle);
-                foreach (var activeCard in activeCards)
-                {
-                    activeCard.Punch();
-                }
-                newPosition += posDifference;
-                newAngle += angleDifference;
-                posDifference *= positionReductionCoef;
-                angleDifference *= angleReductionCoef;
-                card.InPlace += AddActiveCard;
+                DealEventCard(nightEvent);
             }
-            yield return new WaitForSeconds(enterTimeInterval);
+            yield return new WaitForSeconds(enterTimeInterval * 2);
             clickable = true;
+        }
+
+        private void DealEventCard(NightEvent nightEvent)
+        {
+            NightPanelCard card = GetCard();
+            card.Init(nightEvent.picture, cardInitialPos, SoundManager);
+            card.Enter(lastPosition, lastAngle);
+            foreach (var activeCard in activeCards)
+            {
+                activeCard.Punch();
+            }
+            lastPosition += lastPositionDifference;
+            lastAngle += lastAngleDifference;
+            lastPositionDifference *= positionReductionCoef;
+            lastAngleDifference *= angleReductionCoef;
+            card.InPlace += AddActiveCard;
         }
 
         void AddActiveCard(NightPanelCard card)
@@ -152,6 +185,18 @@ namespace CauldronCodebase
             }
             activeCards.Add(card);
             //FanCards();
+        }
+
+        public async void AddCovenEvent(NightEvent nightEvent)
+        {
+            clickable = false;
+            covenPopup.SetActive(false);
+            content.Add(nightEvent);
+            DealEventCard(nightEvent);
+            await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
+            FanCards();
+            await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
+            clickable = true;
         }
 
         void FanCards()
@@ -184,7 +229,6 @@ namespace CauldronCodebase
                 //copy nightPanelCard gameobject
                 newCard = Instantiate(eventCard.gameObject, newCardPosition, Quaternion.identity, mainPanel).
                     GetComponent<NightPanelCard>();
-                newCard.transform.SetSiblingIndex(eventCardSiblingIndex);
             }
             return newCard;
         }
@@ -200,7 +244,7 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            totalPages = content.Length;
+            totalPages = content.Count;
         }
 
         protected override void UpdatePage()
@@ -225,7 +269,7 @@ namespace CauldronCodebase
 
         public async void OnNextCard()
         {
-            if (content.Length == 0)
+            if (content.Count == 0)
             {
                 CloseBook();
             }

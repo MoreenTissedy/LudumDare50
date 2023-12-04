@@ -91,9 +91,14 @@ namespace CauldronCodebase
             }
         }
 
+        public bool IsEnoughMoney()
+        {
+            return Money >= statusSettings.CovenCost;
+        }
+
         public bool ChangeStatusRequest(Statustype type, bool up)
         {
-            if (Money >= statusSettings.CovenCost)
+            if (IsEnoughMoney())
             {
                 money -= statusSettings.CovenCost;
             }

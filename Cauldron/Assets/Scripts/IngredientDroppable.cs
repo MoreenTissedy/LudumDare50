@@ -25,6 +25,7 @@ namespace CauldronCodebase
 
         [SerializeField] GameObject ingredientParticle;
         [SerializeField] private GameObject dragTrail;
+        [SerializeField] private bool useDoubleClick;
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
@@ -94,6 +95,7 @@ namespace CauldronCodebase
             initialPosition = transform.position;
             ingredientParticle?.SetActive(false);
             dragTrail?.SetActive(false);
+            useDoubleClick = true;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -214,6 +216,9 @@ namespace CauldronCodebase
 
         private async void TrowInCauldron()
         {
+            if(!useDoubleClick)
+                return;
+            
             if (cauldron.Mix.Contains(ingredient))
                  return;
             

@@ -192,6 +192,7 @@ namespace CauldronCodebase
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
             FanCards();
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
+            totalPages++;
             clickable = true;
         }
 

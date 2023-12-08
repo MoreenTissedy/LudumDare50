@@ -35,7 +35,8 @@ namespace CauldronCodebase
         [Button("Unlock coven & get rich")]
         public void UnlockCoven()
         {
-            gameDataHandler.AddTag("*coven");
+            StoryTagHelper.SaveMilestone("circle");
+            gameDataHandler.AddTag("circle");
             gameDataHandler.Money += 1000;
         }
 

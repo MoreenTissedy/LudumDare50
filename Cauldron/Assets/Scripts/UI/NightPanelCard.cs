@@ -45,7 +45,7 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.initialPosition = initialPosition;
             imagesToFade = GetComponentsInChildren<Image>();
-            transform.SetAsLastSibling();
+            transform.SetAsFirstSibling();
         }
 
         public void Enter(Vector3 point, float zRotation)

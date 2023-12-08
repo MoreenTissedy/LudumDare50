@@ -7,7 +7,7 @@ namespace CauldronCodebase
     {
         public override bool Valid(GameDataHandler game)
         {
-            return game.Money >= game.statusSettings.MoneyTotal;
+            return game.Money >= game.statusSettings.MoneyTotal && StoryTagHelper.CovenSavingsEnabled(game);
         }
     }
 }

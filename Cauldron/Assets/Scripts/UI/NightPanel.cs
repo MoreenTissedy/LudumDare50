@@ -82,27 +82,11 @@ namespace CauldronCodebase
             this.gameDataHandler = gameDataHandler;
         }
 
-        private void OnEnable()
-        {
-            bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
-            covenBlock.SetActive(covenFeatureUnlocked);
-            covenPopup.SetActive(false);
-            if (covenFeatureUnlocked)
-            {
-                covenButton.OnClick += CovenButtonOnOnClick;
-            }
-        }
-
-        private void OnDisable()
-        {
-            covenButton.OnClick -= CovenButtonOnOnClick;
-        }
-
         private void CovenButtonOnOnClick()
         {
             covenPopup.SetActive(!covenPopup.activeSelf);
         }
-        
+
         private void ShowDefault()
         {
             string text = String.Empty;
@@ -133,8 +117,21 @@ namespace CauldronCodebase
             InitTotalPages();
             currentPage = 0;
             firstCardDealt = false;
+            UnlockCircleFeature();
             base.OpenBook();
             StartCoroutine(DealCards());
+        }
+
+        private void UnlockCircleFeature()
+        {
+            bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
+            Debug.LogError("coven "+covenFeatureUnlocked);
+            covenBlock.SetActive(covenFeatureUnlocked);
+            covenPopup.SetActive(false);
+            if (covenFeatureUnlocked)
+            {
+                covenButton.OnClick += CovenButtonOnOnClick;
+            }
         }
 
         IEnumerator DealCards()
@@ -293,6 +290,12 @@ namespace CauldronCodebase
 
                 CloseBook();
             }
+        }
+
+        public override void CloseBook()
+        {
+            covenButton.OnClick -= CovenButtonOnOnClick;
+            base.CloseBook();
         }
     }
 }

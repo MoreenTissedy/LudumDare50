@@ -1,5 +1,5 @@
+using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -34,7 +34,7 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
-        private Vector3[] pathDoubleClickAnimation;
+        private Vector3[] cubicBezierPath;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -83,15 +83,14 @@ namespace CauldronCodebase
             {
                 ChangeText();
             }
-            
-            pathDoubleClickAnimation = new Vector3[]
-            {
-                new Vector3(transform.position.x, transform.position.y + 1, transform.position.z),
-                new Vector3(transform.position.x, transform.position.y - 2, transform.position.z),
-                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 5, cauldron.transform.position.z),
-                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 1, cauldron.transform.position.z),
-            };
 
+            cubicBezierPath = new Vector3[]
+            {
+                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 1, cauldron.transform.position.z),
+                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 5, cauldron.transform.position.z),
+                cauldron.transform.position,
+            };
+            
             initialPosition = transform.position;
             ingredientParticle?.SetActive(false);
             dragTrail?.SetActive(false);
@@ -131,7 +130,7 @@ namespace CauldronCodebase
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.clickCount >= 2) 
-                TrowInCauldron();
+                ThrowInCauldron();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -214,7 +213,7 @@ namespace CauldronCodebase
             }
         }
 
-        private async void TrowInCauldron()
+        private async UniTaskVoid ThrowInCauldron()
         {
             if(!useDoubleClick)
                 return;
@@ -222,11 +221,11 @@ namespace CauldronCodebase
             if (cauldron.Mix.Contains(ingredient))
                  return;
             
-            const float timeMoveDoubleClick = 1.3f;
+            const float timeMoveDoubleClick = 0.5f;
 
             EnableDrag();
-            transform.DOPath(pathDoubleClickAnimation, timeMoveDoubleClick, PathType.CatmullRom);
-            await Task.Delay(1300);
+            transform.DOPath(cubicBezierPath, timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
+            await UniTask.Delay(TimeSpan.FromSeconds(timeMoveDoubleClick));
             ReturnIngredient();
         }
     }

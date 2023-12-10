@@ -24,6 +24,7 @@ namespace CauldronCodebase
         public void ApplyStoryTag(NightEvent nightEvent)
         {
             string storyTag = nightEvent.storyTag;
+            storyTag = storyTag.TrimStart('^');
             if (storyTag.StartsWith("-"))
             {
                 if (storyTag.StartsWith("*"))
@@ -41,7 +42,6 @@ namespace CauldronCodebase
                     StoryTagHelper.SaveMilestone(storyTag);
                 }
                 game.AddTag(storyTag);
-                Debug.Log($"Add story tag: {storyTag}");
             }
         }
 

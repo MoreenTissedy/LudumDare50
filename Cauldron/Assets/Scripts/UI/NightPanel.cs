@@ -125,7 +125,6 @@ namespace CauldronCodebase
         private void UnlockCircleFeature()
         {
             bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
-            Debug.LogError("coven "+covenFeatureUnlocked);
             covenBlock.SetActive(covenFeatureUnlocked);
             covenPopup.SetActive(false);
             if (covenFeatureUnlocked)

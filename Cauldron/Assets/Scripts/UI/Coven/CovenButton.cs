@@ -1,9 +1,11 @@
+using System;
 using UnityEngine.EventSystems;
 using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
+    [Obsolete]
     public class CovenButton : GrowOnMouseEnter
     {
         public Statustype type;
@@ -23,7 +25,7 @@ namespace CauldronCodebase
         public override void OnPointerClick(PointerEventData eventData)
         {
             base.OnPointerClick(eventData);
-            gameDataHandler.ChangeStatusRequest(type, up);
+            //gameDataHandler.ChangeStatusRequest(type, up);
         }
     }
 }

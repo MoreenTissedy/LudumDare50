@@ -91,33 +91,14 @@ namespace CauldronCodebase
             }
         }
 
-        public bool IsEnoughMoney()
+        public bool IsEnoughMoneyForRumours()
         {
             return Money >= statusSettings.CovenCost;
         }
 
-        public bool ChangeStatusRequest(Statustype type, bool up)
+        public void BuyRumour()
         {
-            if (IsEnoughMoney())
-            {
-                money -= statusSettings.CovenCost;
-            }
-            else
-            {
-                return false;
-            }
-            int multiplier = up ? 1 : -1;
-            if (type == Statustype.Fame)
-            {
-                Fame += Random.Range(statusSettings.CovenMin, statusSettings.CovenMax) * multiplier;
-                return true;
-            }
-            if (type == Statustype.Fear)
-            {
-                Fear += Random.Range(statusSettings.CovenMin, statusSettings.CovenMax) * multiplier;
-                return true;
-            }
-            return false;
+            money -= statusSettings.CovenCost;
         }
 
         public void AddTag(string tag)
@@ -310,7 +291,6 @@ namespace CauldronCodebase
         {
             //refaaactor me
             if(data is null) return;
-
             status = data.Status;
             if (newGame)
             {

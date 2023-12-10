@@ -43,11 +43,9 @@ namespace CauldronCodebase
         public class StatusBars
         {
             public int Total = 80;
-            public int MoneyTotal = 200;
             public int InitialValue = 40;
+            public int CovenMoneyFee = 200;
             public int CovenCost = 50;
-            public int CovenMin = 15;
-            public int CovenMax = 25;
             [Tooltip("Percent distance from a bar end")]
             public float InitialThreshold = 30;
             [SerializeField] private float thresholdDecrement = 10;

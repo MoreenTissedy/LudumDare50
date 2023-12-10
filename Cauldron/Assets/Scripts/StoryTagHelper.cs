@@ -19,8 +19,11 @@ namespace CauldronCodebase
             {
                 tags = new StringListWrapper();
             }
-            tags.list.Add(tag);
-            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+            if (!tags.list.Contains(tag))
+            {
+                tags.list.Add(tag);
+                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+            }
         }
 
         public static List<string> GetMilestones()
@@ -82,6 +85,11 @@ namespace CauldronCodebase
         public static bool CovenSavingsEnabled(GameDataHandler gameDataHandler)
         {
             return gameDataHandler.storyTags.Contains("circle money") && !CovenFeatureUnlocked(gameDataHandler);
+        }
+        
+        public static bool CovenQuestEnabled(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("circle quest") && !CovenSavingsEnabled(gameDataHandler);
         }
 
         public static bool CovenFeatureUnlocked(GameDataHandler gameDataHandler)

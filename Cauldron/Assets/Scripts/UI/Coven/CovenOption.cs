@@ -9,7 +9,7 @@ namespace CauldronCodebase
         public CovenNightEventProvider covenNightEventProvider;
         public Statustype status = Statustype.Fear;
         public bool high;
-        public CanvasGroup fader;
+        public GameObject blackout;
         private GameDataHandler gameDataHandler;
         private NightPanel nightPanel;
         private bool interactable;
@@ -23,8 +23,8 @@ namespace CauldronCodebase
 
         private void OnEnable()
         {
-            fader.alpha = gameDataHandler.IsEnoughMoney() ? 1 : 0.3f;
-            interactable = gameDataHandler.IsEnoughMoney();
+            blackout.SetActive(!gameDataHandler.IsEnoughMoneyForRumours());
+            interactable = gameDataHandler.IsEnoughMoneyForRumours();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -33,6 +33,7 @@ namespace CauldronCodebase
             {
                 return;
             }
+            gameDataHandler.BuyRumour();
             nightPanel.AddCovenEvent(covenNightEventProvider.GetRandom(status, high));
         }
     }

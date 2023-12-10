@@ -29,7 +29,7 @@ namespace CauldronCodebase
         {
             if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
             {
-                text.text = $"{gameDataHandler.Money} / {settings.statusBars.MoneyTotal}";
+                text.text = $"{gameDataHandler.Money} / {settings.statusBars.CovenMoneyFee}";
             }
             else
             {

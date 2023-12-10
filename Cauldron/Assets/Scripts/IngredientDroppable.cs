@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
@@ -34,7 +35,6 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
-        private Vector3[] cubicBezierPath;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -72,29 +72,22 @@ namespace CauldronCodebase
             DisableHighlight();
         }
 
-        private void OnDestroy()
-        {
-            ingredientManager.RemoveIngredient(this);
-        }
-
         private void Start()
         {
             if (tooltip != null)
             {
                 ChangeText();
             }
-
-            cubicBezierPath = new Vector3[]
-            {
-                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 1, cauldron.transform.position.z),
-                new Vector3(cauldron.transform.position.x, cauldron.transform.position.y + 5, cauldron.transform.position.z),
-                cauldron.transform.position,
-            };
             
             initialPosition = transform.position;
             ingredientParticle?.SetActive(false);
             dragTrail?.SetActive(false);
             useDoubleClick = true;
+        }
+
+        private void OnDestroy()
+        {
+            ingredientManager.RemoveIngredient(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -129,39 +122,26 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.clickCount >= 2) 
-                ThrowInCauldron();
+            if (eventData.clickCount >= 2)
+            {
+                ThrowInCauldron().Forget();
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (cauldron.Mix.Contains(ingredient))
                 return;
-            EnableDrag();
+            SetMovementVisuals();
             cauldron.MouseEnterCauldronZone += OverCauldron;
         }
 
-        private void OverCauldron()
-        {
-            ReturnIngredient();
-            cauldron.MouseEnterCauldronZone -= OverCauldron;
-        }
-
-        private void EnableDrag()
+        private void SetMovementVisuals()
         {
             dragging = true;
             image.transform.DOKill(true);
             dragTrail?.SetActive(true);
             ingredientParticle?.SetActive(false);
-        }
-
-        private void ReturnIngredient()
-        {
-            cauldron.AddToMix(ingredient);
-            dragging = false;
-            dragTrail?.SetActive(false);
-            transform.position = initialPosition;
-            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -170,6 +150,21 @@ namespace CauldronCodebase
                 return;
             transform.position =
                 Camera.main.ScreenToWorldPoint((Vector3)eventData.position + Vector3.forward * Camera.main.nearClipPlane);
+        }
+
+        private void OverCauldron()
+        {
+            AddToMixAndResetVisuals();
+            cauldron.MouseEnterCauldronZone -= OverCauldron;
+        }
+
+        private void AddToMixAndResetVisuals()
+        {
+            cauldron.AddToMix(ingredient);
+            dragging = false;
+            dragTrail?.SetActive(false);
+            transform.position = initialPosition;
+            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -223,10 +218,31 @@ namespace CauldronCodebase
             
             const float timeMoveDoubleClick = 0.5f;
 
-            EnableDrag();
-            transform.DOPath(cubicBezierPath, timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
+            SetMovementVisuals();
+            transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
             await UniTask.Delay(TimeSpan.FromSeconds(timeMoveDoubleClick));
-            ReturnIngredient();
+            AddToMixAndResetVisuals();
+        }
+
+        private Vector3[] GetRandomBezierPath()
+        {
+            Vector3 cauldronPosition = cauldron.transform.position;
+            Vector3 targetPosition = cauldronPosition + Vector3.up;
+            
+            Vector3 randomDirection = Random.insideUnitCircle.normalized;
+            float desiredXDirection = Mathf.Sign(cauldronPosition.x - transform.position.x);
+            if (Mathf.Sign(randomDirection.x) != desiredXDirection)
+            {
+                randomDirection.x *= -1;
+            }
+            randomDirection *= Random.Range(1f, 3f);
+            randomDirection += transform.position;
+            return new[]
+            {
+                targetPosition,
+                randomDirection,
+                targetPosition + Vector3.up * 5, 
+            };
         }
     }
 }

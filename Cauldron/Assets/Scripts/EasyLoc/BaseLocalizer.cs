@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using JetBrains.Annotations;
 using NaughtyAttributes;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
+
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
 
 namespace EasyLoc
 {

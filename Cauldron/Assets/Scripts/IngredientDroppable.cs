@@ -160,11 +160,19 @@ namespace CauldronCodebase
 
         private void AddToMixAndResetVisuals()
         {
-            cauldron.AddToMix(ingredient);
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+
+            try
+            {
+                cauldron.AddToMix(ingredient);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData)

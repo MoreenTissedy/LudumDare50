@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 namespace CauldronCodebase
@@ -74,6 +76,24 @@ public class TooltipManager
                 ingredient.ChangeHighlight(false);
                 Highlighted = false;
             }
+        }
+    }
+
+    public async UniTaskVoid SendSelectRecipe(Recipe recipe)
+    {
+        potionIngredients = recipe.RecipeIngredients;
+        const float delay = 0.3f;
+
+        foreach(var i in potionIngredients)
+        {
+            if(cauldron.Mix.Contains(i)) continue;
+
+            if (dict.TryGetValue(i, out var temp))
+            {
+                temp.ThrowInCauldron().Forget();
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(delay));
         }
     }
 }

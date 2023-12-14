@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Save;
 using UnityEngine;
@@ -398,7 +399,7 @@ namespace CauldronCodebase
             attemptsDisplay.SetActive(false);
             ingredientsDisplay.SetActive(false);
         }
-        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
+        public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             if (cauldron.Mix.Count != 0)
             {
@@ -415,6 +416,12 @@ namespace CauldronCodebase
             CloseBook();
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
+            int eightyPercent = (int)(allMagicalRecipes.Count * 0.8);
+            if(unlockedRecipes.Count(recipes => recipes.magical) < eightyPercent)
+                return;
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(OpenCloseAnimationTime));
+            tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
         }
 
         private void TryHighlightIncorrectRecipe()

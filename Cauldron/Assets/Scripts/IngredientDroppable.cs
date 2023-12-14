@@ -216,7 +216,7 @@ namespace CauldronCodebase
             }
         }
 
-        private async UniTaskVoid ThrowInCauldron()
+        public async UniTaskVoid ThrowInCauldron()
         {
             if(!useDoubleClick)
                 return;

@@ -10,6 +10,7 @@ namespace CauldronCodebase
         public Statustype status = Statustype.Fear;
         public bool high;
         public GameObject blackout;
+        public GameObject callToAction;
         private GameDataHandler gameDataHandler;
         private NightPanel nightPanel;
         private bool interactable;
@@ -24,6 +25,7 @@ namespace CauldronCodebase
         private void OnEnable()
         {
             blackout.SetActive(!gameDataHandler.IsEnoughMoneyForRumours());
+            callToAction.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
             interactable = gameDataHandler.IsEnoughMoneyForRumours();
         }
 

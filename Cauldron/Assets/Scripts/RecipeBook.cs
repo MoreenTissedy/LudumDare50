@@ -416,8 +416,8 @@ namespace CauldronCodebase
             CloseBook();
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
-            int eightyPercent = (int)(allMagicalRecipes.Count * 0.8);
-            if(unlockedRecipes.Count(recipes => recipes.magical) < eightyPercent)
+            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * 0.8);
+            if(PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
                 return;
             
             await UniTask.Delay(TimeSpan.FromSeconds(OpenCloseAnimationTime));

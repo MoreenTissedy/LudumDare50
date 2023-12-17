@@ -30,6 +30,9 @@ namespace CauldronCodebase
         [Header("Toggle Fullscreen")] 
         [SerializeField] private Toggle toggleFullscreen;
 
+        [Header("Toggle AutoCooking")] 
+        [SerializeField] private Toggle autoCooking;
+
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
 
@@ -50,6 +53,7 @@ namespace CauldronCodebase
 
         [Inject] private LocalizationTool locTool;
         private bool fullscreenMode;
+        private bool autoCookingMode;
         
         #if UNITY_EDITOR
         private void OnValidate()
@@ -68,6 +72,7 @@ namespace CauldronCodebase
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
+            autoCooking.onValueChanged.AddListener(x => ChangeAutoCooking(x));
             openResetButton.OnClick += OpenResetDialogue;
             closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
@@ -92,6 +97,7 @@ namespace CauldronCodebase
         private void LoadResolution()
         {
             LoadFullscreenMode();
+            LoadAutoCookingMode();
             LoadResolutionDropdown();
             if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
             {
@@ -114,6 +120,16 @@ namespace CauldronCodebase
         {
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
+        }
+
+        public void OpenAutoCookingMode()
+        {
+            autoCooking.gameObject.SetActive(true);
+        }
+
+        public void CloseAutoCooking()
+        {
+            autoCooking.gameObject.SetActive(false);
         }
 
         private void OpenResetDialogue()
@@ -171,12 +187,27 @@ namespace CauldronCodebase
             Screen.fullScreen = fullscreenMode;
         }
 
+        private void ChangeAutoCooking(bool set)
+        {
+            autoCookingMode = set;
+            PlayerPrefs.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
+        }
+
         private void LoadFullscreenMode()
         {
             if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
             {
                 fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
                 toggleFullscreen.isOn = fullscreenMode;
+            }
+        }
+
+        private void LoadAutoCookingMode()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
+            {
+                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
+                autoCooking.isOn = autoCookingMode;
             }
         }
 

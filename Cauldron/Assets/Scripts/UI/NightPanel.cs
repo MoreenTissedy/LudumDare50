@@ -185,7 +185,7 @@ namespace CauldronCodebase
         public async void AddCovenEvent(NightEvent nightEvent)
         {
             clickable = false;
-            covenPopup.SetActive(false);
+            covenBlock.SetActive(false);
             content.Add(nightEvent);
             DealEventCard(nightEvent);
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));

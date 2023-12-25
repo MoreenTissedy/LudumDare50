@@ -13,7 +13,7 @@ namespace CauldronCodebase
     {
         //TODO: move to settings
         private const int _EVENT_COOLDOWN_ = 5;
-        private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 1;
+        private const int _EVENT_COUNT_FOR_RANDOM_EVENT_ = 2;
 
         [Serializable]
         public class CooldownEvent

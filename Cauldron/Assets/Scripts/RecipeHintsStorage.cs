@@ -98,7 +98,7 @@ namespace CauldronCodebase
             tags.list.Add($"{hint.recipe}:{level}");
             string value = JsonUtility.ToJson(tags);
             Debug.Log("recipe hint saved: "+value);
-            PlayerPrefs.SetString(PrefKeys.Milestones, value);
+            PlayerPrefs.SetString(PrefKeys.RecipeHints, value);
         }
 
         private static List<string> GetHints()

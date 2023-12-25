@@ -342,14 +342,7 @@ namespace CauldronCodebase
                 return;
             }
             List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
-            if (loadRecipes.Count < 20)
-            {
-                deck.AddFirst(introCards[3]);
-            }
-            else
-            {
-                deck.AddFirst(introCards[2]);
-            }
+            deck.AddFirst(loadRecipes.Count < 20 ? introCards[3] : introCards[2]);
         }
 
         public void SaveData(ref GameData data)

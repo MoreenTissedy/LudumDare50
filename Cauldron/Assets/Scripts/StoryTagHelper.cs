@@ -89,7 +89,7 @@ namespace CauldronCodebase
         
         public static bool CovenQuestEnabled(GameDataHandler gameDataHandler)
         {
-            return gameDataHandler.storyTags.Contains("circle quest") && !CovenSavingsEnabled(gameDataHandler);
+            return gameDataHandler.storyTags.Contains("circle quest") && !CovenSavingsEnabled(gameDataHandler) && !CovenFeatureUnlocked(gameDataHandler);
         }
 
         public static bool CovenFeatureUnlocked(GameDataHandler gameDataHandler)

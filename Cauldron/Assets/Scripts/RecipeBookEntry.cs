@@ -89,7 +89,10 @@ namespace CauldronCodebase
             ingredient1.Clear();
             ingredient2.Clear();
             ingredient3.Clear();
-            recipeHintBlock?.SetActive(false);
+            if (recipeHintBlock)
+            {
+                recipeHintBlock.SetActive(false);
+            }
         }
 
         private void DisplayRecipeHint(Potions potion)

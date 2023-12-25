@@ -71,6 +71,7 @@ namespace CauldronCodebase.GameStates
             for (var index = 0; index < events.Count; index++)
             {
                 string tag = events[index].storyTag;
+                tag = tag.Split(',')[0];
                 if (tag.StartsWith("^"))
                 {
                     storyEnding = tag.TrimStart('^').TrimStart('*').Trim();

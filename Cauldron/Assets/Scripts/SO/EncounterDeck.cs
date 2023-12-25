@@ -207,7 +207,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || card.villager.name == EncounterIdents.WITCH_MEMORY)
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
             {
                 return false;
             }
@@ -226,10 +226,6 @@ namespace CauldronCodebase
 
         public Encounter GetTopCard()
         {
-            if (deck.Count == 0)
-            {
-                return null;
-            }
             if (loadedCard != null)
             {
                 currentCard = loadedCard;
@@ -237,9 +233,7 @@ namespace CauldronCodebase
             }
             else
             {
-                var topCard = deck.First();
-                deck.RemoveFirst();
-                currentCard = topCard;
+                currentCard = GetTopCardInternal();
             }
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
@@ -250,6 +244,22 @@ namespace CauldronCodebase
             }
 
             return currentCard;
+        }
+
+        private Encounter GetTopCardInternal()
+        {
+            Encounter topCard;
+            do
+            {
+                if (deck.Count == 0)
+                {
+                    DealCards(1);
+                }
+                topCard = deck.First();
+                deck.RemoveFirst();
+            } 
+            while (!StoryTagHelper.Check(topCard, gameDataHandler));
+            return topCard;
         }
 
         void SaveCurrentCardAsUnique()
@@ -306,25 +316,39 @@ namespace CauldronCodebase
         {
             int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             InitCardPool(round);
-            //if not first time
-            if (round != 0)
-            {
-                DealCards(2);
-                List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
-                if (loadRecipes.Count < 20)
-                {
-                    deck.AddFirst(introCards[3]);
-                }
-                else
-                {
-                    deck.AddFirst(introCards[2]);
-                }
-            }
-            else
+            if (round == 0)
             {
                 DealCards(1);
                 deck.AddFirst(introCards[0]);
                 deck.AddLast(introCards[1]);
+                return;
+            }
+            DealCards(2);
+            gameDataHandler.storyTags = StoryTagHelper.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            {
+                deck.AddFirst(introCards[6]);
+                PlayerPrefs.SetInt(PrefKeys.CovenIntroShown, 1);
+                return;
+            }
+            if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[5]);
+                return;
+            }
+            if (StoryTagHelper.CovenQuestEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[4]);
+                return;
+            }
+            List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+            if (loadRecipes.Count < 20)
+            {
+                deck.AddFirst(introCards[3]);
+            }
+            else
+            {
+                deck.AddFirst(introCards[2]);
             }
         }
 

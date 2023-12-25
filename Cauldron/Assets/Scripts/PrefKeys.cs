@@ -11,5 +11,6 @@
         public const string FullscreenModeSettings = "SetFullscreenSettings";
         public const string LanguageKey = "LanguageSettings";
         public const string Milestones = "Milestones";
+        public const string CovenIntroShown = "CovenIntro";
     }
 }

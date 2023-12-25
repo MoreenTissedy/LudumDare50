@@ -13,6 +13,7 @@ namespace CauldronCodebase
     {
         [FormerlySerializedAs("addToDeckOnDay")] public int addToDeckOnRound = -1;
         public string requiredStoryTag;
+        public RecipeHintConfig recipeHintConfig;
 
         [Serializable]
         public class PotionResult

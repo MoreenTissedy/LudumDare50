@@ -45,6 +45,11 @@ namespace CauldronCodebase
             }
         }
 
+        public void ApplyRecipeHint(RecipeHintConfig config)
+        {
+            settings.recipeHintsStorage.SaveHint(config);
+        }
+
         public void ApplyFractionShift(FractionData shift)
         {
             game.fractionStatus.ChangeStatus(shift.Fraction, shift.Status);

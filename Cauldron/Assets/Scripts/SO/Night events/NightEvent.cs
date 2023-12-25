@@ -17,6 +17,7 @@ namespace CauldronCodebase
         public Encounter[] bonusCards;
         public FractionData fractionData;
         public string storyTag;
+        public RecipeHintConfig recipeHint;
         [Header("Only for conditionals")]
         public bool repeat;
         

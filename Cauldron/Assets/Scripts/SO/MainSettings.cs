@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,6 +10,8 @@ namespace CauldronCodebase
         public Gameplay gameplay;
         public StatusBars statusBars;
         public CatTips catTips;
+        [Expandable]
+        public RecipeHintsStorage recipeHintsStorage;
         
         [Serializable]
         public class Gameplay

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
-using Zenject;
-using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {

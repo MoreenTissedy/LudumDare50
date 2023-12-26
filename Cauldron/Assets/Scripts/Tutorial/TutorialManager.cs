@@ -12,6 +12,7 @@ using Zenject;
 public class TutorialManager : MonoBehaviour
 {
     private const string BOOK_OPENED_KEY = "TUTORIAL_BOOK_OPENED";
+    private const string BOOK_AUTOCOOKING_KEY = "TUTORIAL_BOOK_OPENED";
     private const string VISITOR_KEY = "TUTORIAL_VISITOR";
     private const string SCALE_CHANGE_KEY = "TUTORIAL_CHANGE_SCALE";
     private const string POTION_DENIED_KEY = "TUTORIAL_POTION_DENIED";
@@ -22,6 +23,7 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string VisitorTutorialText;
     [Localize] [TextArea (5, 10)] public string ScaleTutorialText;
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
+    [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     
@@ -43,6 +45,7 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         recipeBook.OnOpenBook += ViewBookTutorial;
+        recipeBook.OnOpenAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;
@@ -56,6 +59,17 @@ public class TutorialManager : MonoBehaviour
         {
             PlayerPrefs.SetInt(BOOK_OPENED_KEY, 1);
             tooltipPrefab.Open(BookTutorialText).Forget();
+        }
+    }
+
+    private void ViewAutoCookingTutorial()
+    {
+        recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
+        
+        if (PlayerPrefs.GetInt(BOOK_AUTOCOOKING_KEY, 0) == 0)
+        {
+            PlayerPrefs.SetInt(BOOK_AUTOCOOKING_KEY, 1);
+            tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
         }
     }
 

@@ -47,16 +47,10 @@ namespace CauldronCodebase
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
 
-        private const string DescriptionTutorialAutoCooking =
-            "Поздравляем, вы открыли достаточно много рецептов." +
-            " Хотите включить автоматическую варку?" +
-            " Вы всегда сможете включить и отключить ее в окне настроек.";
-
-        public static bool IsOpenAutoCookingMode;
-        
         public event Action<Recipe> OnSelectRecipe;
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
+        public event Action OnOpenAutoCooking;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -152,8 +146,8 @@ namespace CauldronCodebase
             if (unlockedRecipes.Count < eightyPercent && PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
                 return;
 
-            IsOpenAutoCookingMode = true;
-            autoCookingTutorial.Open(DescriptionTutorialAutoCooking).Forget();
+            PlayerPrefs.SetInt(PrefKeys.IsOpenAutoCooking, 1);
+            OnOpenAutoCooking?.Invoke();
         }
 
         public void ChangeMode(Mode newMode)

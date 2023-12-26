@@ -192,12 +192,6 @@ namespace CauldronCodebase
 
         private void LoadAutoCookingMode()
         {
-            if (RecipeBook.IsOpenAutoCookingMode)
-            {
-                if(PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) != 1)
-                    PlayerPrefs.SetInt(PrefKeys.IsOpenAutoCooking, 1);
-            }
-
             if (PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
                 OpenAutoCooking();
 

@@ -194,6 +194,8 @@ namespace CauldronCodebase
         {
             if (PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
                 OpenAutoCooking();
+            else
+                CloseAutoCooking();
 
             if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
             {
@@ -239,5 +241,8 @@ namespace CauldronCodebase
         
         private void OpenAutoCooking() => 
             autoCookingObject.gameObject.SetActive(true);
+
+        private void CloseAutoCooking() => 
+            autoCookingObject.gameObject.SetActive(false);
     }
 }

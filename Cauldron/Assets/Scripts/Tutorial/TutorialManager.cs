@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using CauldronCodebase;
+﻿using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Universal;
 using Zenject;
 
@@ -26,6 +25,8 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
 
     [SerializeField] private Encounter targetTutorialVisitor;
+    [SerializeField] private Button rejectButton;
+    [SerializeField] private Button acceptButton;
     
     private RecipeBook recipeBook;
     private GameDataHandler gameDataHandler;
@@ -69,7 +70,11 @@ public class TutorialManager : MonoBehaviour
         if (PlayerPrefs.GetInt(BOOK_AUTOCOOKING_KEY, 0) == 0)
         {
             PlayerPrefs.SetInt(BOOK_AUTOCOOKING_KEY, 1);
+            acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
+            rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
             tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
+            acceptButton.gameObject.SetActive(true);
+            rejectButton.gameObject.SetActive(true);
         }
     }
 
@@ -106,5 +111,25 @@ public class TutorialManager : MonoBehaviour
             PlayerPrefs.SetInt(POTION_DENIED_KEY, 1);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
+    }
+    
+    private void AcceptAutoCookingClickButton()
+    {
+        PlayerPrefs.SetInt(PrefKeys.AutoCooking, 1);
+        DisableButtonAutoCooking();
+    }
+
+    private void RejectAutoCookingClickButton()
+    {
+        PlayerPrefs.SetInt(PrefKeys.AutoCooking, 0);
+        DisableButtonAutoCooking();
+    }
+
+    private void DisableButtonAutoCooking()
+    {
+        acceptButton.onClick.RemoveListener(AcceptAutoCookingClickButton);
+        rejectButton.onClick.RemoveListener(RejectAutoCookingClickButton);
+        acceptButton.gameObject.SetActive(false);
+        rejectButton.gameObject.SetActive(false);
     }
 }

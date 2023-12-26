@@ -32,6 +32,7 @@ namespace CauldronCodebase
 
         [Header("Toggle AutoCooking")] 
         [SerializeField] private Toggle autoCooking;
+        [SerializeField] private GameObject autoCookingObject;
 
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
@@ -43,13 +44,10 @@ namespace CauldronCodebase
 
         [Header("Other")]
         [SerializeField] private AnimatedButton closeSettingsButton;
-        
-        
+
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;
         [Inject] private FadeController fadeController;
-        
-
 
         [Inject] private LocalizationTool locTool;
         private bool fullscreenMode;
@@ -120,16 +118,6 @@ namespace CauldronCodebase
         {
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
-        }
-
-        public void OpenAutoCookingMode()
-        {
-            autoCooking.gameObject.SetActive(true);
-        }
-
-        public void CloseAutoCooking()
-        {
-            autoCooking.gameObject.SetActive(false);
         }
 
         private void OpenResetDialogue()
@@ -204,6 +192,15 @@ namespace CauldronCodebase
 
         private void LoadAutoCookingMode()
         {
+            if (RecipeBook.IsOpenAutoCookingMode)
+            {
+                if(PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) != 1)
+                    PlayerPrefs.SetInt(PrefKeys.IsOpenAutoCooking, 1);
+            }
+
+            if (PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
+                OpenAutoCooking();
+
             if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
             {
                 autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
@@ -245,5 +242,8 @@ namespace CauldronCodebase
             mainMenu.ResetGameData();
             CloseResetDialogue();
         }
+        
+        private void OpenAutoCooking() => 
+            autoCookingObject.gameObject.SetActive(true);
     }
 }

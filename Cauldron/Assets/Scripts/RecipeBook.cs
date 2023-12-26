@@ -6,6 +6,7 @@ using DG.Tweening;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -28,14 +29,16 @@ namespace CauldronCodebase
         [SerializeField] private Transform attemptsSideBookmark;
         [SerializeField] private Transform ingredientsSideBookmark;
         
+        [Header("AutoCooking")] 
+        [SerializeField] private ScrollTooltip autoCookingTutorial;
         
-        [Header("Recipe Book")] 
-        
+        [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
         [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
+
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
@@ -43,6 +46,14 @@ namespace CauldronCodebase
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
+
+        private const string DescriptionTutorialAutoCooking =
+            "Поздравляем, вы открыли достаточно много рецептов." +
+            " Хотите включить автоматическую варку?" +
+            " Вы всегда сможете включить и отключить ее в окне настроек.";
+
+        public static bool IsOpenAutoCookingMode;
+        
         public event Action<Recipe> OnSelectRecipe;
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
@@ -136,6 +147,13 @@ namespace CauldronCodebase
             unlockedRecipes.Add(recipe);
             LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
+            
+            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * 0.8);
+            if (unlockedRecipes.Count < eightyPercent && PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
+                return;
+
+            IsOpenAutoCookingMode = true;
+            autoCookingTutorial.Open(DescriptionTutorialAutoCooking).Forget();
         }
 
         public void ChangeMode(Mode newMode)

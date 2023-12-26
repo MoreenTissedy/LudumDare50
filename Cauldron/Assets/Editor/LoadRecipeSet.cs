@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Editor
 {
-    [CustomEditor(typeof(RecipeProvider))]
+    //[CustomEditor(typeof(RecipeProvider))]
     public class LoadRecipeSet : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
@@ -14,7 +14,7 @@ namespace Editor
             {
                 LoadRecipes();
             }
-            base.OnInspectorGUI();
+            DrawDefaultInspector();
         }
 
         void LoadRecipes()

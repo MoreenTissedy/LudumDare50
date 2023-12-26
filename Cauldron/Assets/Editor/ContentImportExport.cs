@@ -16,6 +16,19 @@ namespace Editor
         private static string eventFolder = "[Syomalod] Events";
         private static string CSVpath4events = "/Editor/NewEvents.csv";
 
+        [MenuItem("Utilities/Find event by tag")]
+        public static void FindEventByTag()
+        {
+            const string tag = "bishop success";
+            foreach (var nightEvent in ScriptableObjectHelper.LoadAllAssets<NightEvent>())
+            {
+                if (nightEvent.storyTag.Split(',').Any(x => x.Contains(tag)))
+                {
+                    Debug.LogError(nightEvent.name);
+                }
+            }
+        }
+
         [MenuItem("Utilities/Import events")]
         public static void ImportEvents()
         {

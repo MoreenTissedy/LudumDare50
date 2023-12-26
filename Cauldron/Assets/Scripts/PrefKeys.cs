@@ -13,5 +13,7 @@
         public const string IsOpenAutoCooking = "IsOpenAutoCooking";
         public const string LanguageKey = "LanguageSettings";
         public const string Milestones = "Milestones";
+        public const string RecipeHints = "RecipeHints";
+        public const string CovenIntroShown = "CovenIntro";
     }
 }

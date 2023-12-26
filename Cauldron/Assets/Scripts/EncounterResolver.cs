@@ -21,6 +21,9 @@ namespace CauldronCodebase
         public bool EndEncounter(Potions potion)
         {
             Encounter encounter = game.currentCard;
+            
+            settings.recipeHintsStorage.SaveHint(encounter.recipeHintConfig);
+            
             //compare distinct potion
             foreach (var filter in encounter.resultsByPotion)
             {

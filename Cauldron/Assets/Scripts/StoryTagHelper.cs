@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -18,8 +19,11 @@ namespace CauldronCodebase
             {
                 tags = new StringListWrapper();
             }
-            tags.list.Add(tag);
-            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+            if (!tags.list.Contains(tag))
+            {
+                tags.list.Add(tag);
+                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+            }
         }
 
         public static List<string> GetMilestones()
@@ -30,6 +34,18 @@ namespace CauldronCodebase
                 return JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
             }
             return new List<string>();
+        }
+        
+        public static void RemoveMilestone(string tag)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                return;
+            }
+            var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+            var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+            tags.list.Remove(tag);
+            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
         }
         
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
@@ -54,7 +70,7 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                if (tag.StartsWith("!"))
+                if (trim.StartsWith("!"))
                 {
                     valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
                 }
@@ -63,8 +79,22 @@ namespace CauldronCodebase
                     valid = valid && gameDataHandler.storyTags.Contains(trim);
                 }
             }
-
             return valid;
+        }
+
+        public static bool CovenSavingsEnabled(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("circle money") && !CovenFeatureUnlocked(gameDataHandler);
+        }
+        
+        public static bool CovenQuestEnabled(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("circle quest") && !CovenSavingsEnabled(gameDataHandler) && !CovenFeatureUnlocked(gameDataHandler);
+        }
+
+        public static bool CovenFeatureUnlocked(GameDataHandler gameDataHandler)
+        {
+            return gameDataHandler.storyTags.Contains("circle");
         }
     }
 }

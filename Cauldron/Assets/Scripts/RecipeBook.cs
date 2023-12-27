@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Save;
@@ -28,10 +29,7 @@ namespace CauldronCodebase
         [SerializeField] private Transform foodSideBookmark;
         [SerializeField] private Transform attemptsSideBookmark;
         [SerializeField] private Transform ingredientsSideBookmark;
-        
-        [Header("AutoCooking")] 
-        [SerializeField] private ScrollTooltip autoCookingTutorial;
-        
+
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
         [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
@@ -46,6 +44,8 @@ namespace CauldronCodebase
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
+
+        private const float TargetPercentEnoughRecipesUnlocked = 0.8f;
 
         public event Action<Recipe> OnSelectRecipe;
         public event Action OnSelectIncorrectRecipe;
@@ -142,11 +142,13 @@ namespace CauldronCodebase
             LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
             
-            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * 0.8);
-            if (unlockedRecipes.Count < eightyPercent && PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
+            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
                 return;
+            }
 
-            PlayerPrefs.SetInt(PrefKeys.IsOpenAutoCooking, 1);
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
             OnOpenAutoCooking?.Invoke();
         }
 
@@ -428,9 +430,11 @@ namespace CauldronCodebase
             CloseBook();
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
-            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * 0.8);
-            if(PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
+
+            if (PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
+            {
                 return;
+            }
             
             await UniTask.Delay(TimeSpan.FromSeconds(OpenCloseAnimationTime));
             tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();

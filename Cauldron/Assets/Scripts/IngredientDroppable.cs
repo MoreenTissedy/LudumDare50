@@ -169,9 +169,9 @@ namespace CauldronCodebase
             {
                 cauldron.AddToMix(ingredient);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"Error while adding ingredient to mix: {exception.Message}");
             }
         }
 

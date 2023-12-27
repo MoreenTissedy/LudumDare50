@@ -65,6 +65,7 @@ namespace CauldronCodebase
             LoadVolumeValues();
             LoadResolution();
             LoadLanguage();
+            LoadAutoCookingMode();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
@@ -95,7 +96,6 @@ namespace CauldronCodebase
         private void LoadResolution()
         {
             LoadFullscreenMode();
-            LoadAutoCookingMode();
             LoadResolutionDropdown();
             if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
             {
@@ -190,20 +190,6 @@ namespace CauldronCodebase
             }
         }
 
-        private void LoadAutoCookingMode()
-        {
-            if (PlayerPrefs.GetInt(PrefKeys.IsOpenAutoCooking) == 1) 
-                OpenAutoCooking();
-            else
-                CloseAutoCooking();
-
-            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
-            {
-                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
-                autoCooking.isOn = autoCookingMode;
-            }
-        }
-
         private void UpdateSliderLabel(string vca, float value)
         {
             string labelValue = Mathf.RoundToInt(value * 100) + "%";
@@ -239,10 +225,32 @@ namespace CauldronCodebase
             CloseResetDialogue();
         }
         
-        private void OpenAutoCooking() => 
-            autoCookingObject.gameObject.SetActive(true);
+        private void LoadAutoCookingMode()
+        {
+            if (PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
+                OpenAutoCooking();
+            }
+            else
+            {
+                CloseAutoCooking();
+            }
 
-        private void CloseAutoCooking() => 
+            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
+            {
+                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
+                autoCooking.isOn = autoCookingMode;
+            }
+        }
+        
+        private void OpenAutoCooking()
+        {
+            autoCookingObject.gameObject.SetActive(true);
+        }
+
+        private void CloseAutoCooking()
+        {
             autoCookingObject.gameObject.SetActive(false);
+        }
     }
 }

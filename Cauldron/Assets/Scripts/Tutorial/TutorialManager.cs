@@ -10,12 +10,6 @@ using Zenject;
 
 public class TutorialManager : MonoBehaviour
 {
-    private const string BOOK_OPENED_KEY = "TUTORIAL_BOOK_OPENED";
-    private const string BOOK_AUTOCOOKING_KEY = "TUTORIAL_BOOK_OPENED";
-    private const string VISITOR_KEY = "TUTORIAL_VISITOR";
-    private const string SCALE_CHANGE_KEY = "TUTORIAL_CHANGE_SCALE";
-    private const string POTION_DENIED_KEY = "TUTORIAL_POTION_DENIED";
-
     [SerializeField] private ScrollTooltip tooltipPrefab;
 
     [Localize] [TextArea (5, 10)] public string BookTutorialText;
@@ -56,9 +50,9 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewBookTutorial;
         
-        if (PlayerPrefs.GetInt(BOOK_OPENED_KEY, 0) == 0)
+        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 0) == 0)
         {
-            PlayerPrefs.SetInt(BOOK_OPENED_KEY, 1);
+            PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 1);
             tooltipPrefab.Open(BookTutorialText).Forget();
         }
     }
@@ -67,15 +61,12 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
         
-        if (PlayerPrefs.GetInt(BOOK_AUTOCOOKING_KEY, 0) == 0)
-        {
-            PlayerPrefs.SetInt(BOOK_AUTOCOOKING_KEY, 1);
-            acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
-            rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
-            tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
-            acceptButton.gameObject.SetActive(true);
-            rejectButton.gameObject.SetActive(true);
-        }
+        PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_AUTOCOOKING_KEY, 1);
+        acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
+        rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
+        tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
+        acceptButton.gameObject.SetActive(true);
+        rejectButton.gameObject.SetActive(true);
     }
 
     private void ViewVisitorTutorial(Potions potion)
@@ -83,9 +74,9 @@ public class TutorialManager : MonoBehaviour
         if (gameDataHandler.currentCard == targetTutorialVisitor)
         {
             cauldron.PotionAccepted -= ViewVisitorTutorial;
-            if (PlayerPrefs.GetInt(VISITOR_KEY, 0) == 0)
+            if (PlayerPrefs.GetInt(PrefKeys.Tutorial.VISITOR_KEY, 0) == 0)
             {
-                PlayerPrefs.SetInt(VISITOR_KEY, 1);
+                PlayerPrefs.SetInt(PrefKeys.Tutorial.VISITOR_KEY, 1);
                 tooltipPrefab.Open(VisitorTutorialText).Forget();
             }
         }
@@ -94,9 +85,9 @@ public class TutorialManager : MonoBehaviour
     private void ViewScaleChangeTutorial()
     {
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
-        if (PlayerPrefs.GetInt(SCALE_CHANGE_KEY, 0) == 0)
+        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 0) == 0)
         {
-            PlayerPrefs.SetInt(SCALE_CHANGE_KEY, 1);
+            PlayerPrefs.SetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 1);
             tooltipPrefab.Open(ScaleTutorialText).Forget();
         }
     }
@@ -106,9 +97,9 @@ public class TutorialManager : MonoBehaviour
         if(stateMachine.currentGamePhase == GameStateMachine.GamePhase.Night) return;
         
         cauldron.PotionDeclined -= ViewPotionDeniedTutorial;
-        if (PlayerPrefs.GetInt(POTION_DENIED_KEY, 0) == 0)
+        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 0) == 0)
         {
-            PlayerPrefs.SetInt(POTION_DENIED_KEY, 1);
+            PlayerPrefs.SetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 1);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
     }

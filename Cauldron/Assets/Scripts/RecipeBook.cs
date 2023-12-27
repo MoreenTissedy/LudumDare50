@@ -50,7 +50,7 @@ namespace CauldronCodebase
         public event Action<Recipe> OnSelectRecipe;
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
-        public event Action OnOpenAutoCooking;
+        public event Action OnUnlockAutoCooking;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -149,7 +149,13 @@ namespace CauldronCodebase
             }
 
             PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
-            OnOpenAutoCooking?.Invoke();
+            OnUnlockAutoCooking?.Invoke();
+        }
+
+        public void CheatUnlockAutoCooking()
+        {
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            OnUnlockAutoCooking?.Invoke();
         }
 
         public void ChangeMode(Mode newMode)

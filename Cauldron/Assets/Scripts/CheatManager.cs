@@ -39,6 +39,12 @@ namespace CauldronCodebase
             gameDataHandler.AddTag("circle");
             gameDataHandler.Money += 1000;
         }
+       
+        [Button("Enable auto cooking")]
+        public void AutoCooking()
+        {
+            recipeBook.CheatUnlockAutoCooking();
+        }
 
         private void Update()
         {

@@ -40,7 +40,7 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         recipeBook.OnOpenBook += ViewBookTutorial;
-        recipeBook.OnOpenAutoCooking += ViewAutoCookingTutorial;
+        recipeBook.OnUnlockAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;

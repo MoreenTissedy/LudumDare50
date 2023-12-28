@@ -11,6 +11,7 @@ public class TooltipManager
     private List<Ingredients> potionIngredients = new List<Ingredients>();
     private Recipe currentRecipe;
     private Dictionary<Ingredients, IngredientDroppable> dict;
+    private bool isUseAutoCookingProcess;
 
     [Inject] private Cauldron cauldron;
 
@@ -81,8 +82,21 @@ public class TooltipManager
 
     public async UniTaskVoid SendSelectRecipe(Recipe recipe)
     {
-        potionIngredients = recipe.RecipeIngredients;
         const float delay = 0.3f;
+        const float openCloseAnimationTime = 0.6f;
+
+        if (!isUseAutoCookingProcess)
+        {
+            isUseAutoCookingProcess = true;
+        }
+        else
+        {
+            return;
+        }
+
+        await UniTask.Delay(TimeSpan.FromSeconds(openCloseAnimationTime));
+        
+        potionIngredients = recipe.RecipeIngredients;
 
         foreach(var i in potionIngredients)
         {
@@ -95,6 +109,8 @@ public class TooltipManager
 
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
         }
+        
+        isUseAutoCookingProcess = false;
     }
 }
 }

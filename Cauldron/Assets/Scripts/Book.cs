@@ -23,7 +23,6 @@ namespace CauldronCodebase
         protected int totalPages = 3;
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
-        protected float OpenCloseAnimationTime => openCloseAnimationTime;
 
         public bool IsOpen { get; private set; }
 

@@ -442,7 +442,6 @@ namespace CauldronCodebase
                 return;
             }
             
-            await UniTask.Delay(TimeSpan.FromSeconds(OpenCloseAnimationTime));
             tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
         }
 

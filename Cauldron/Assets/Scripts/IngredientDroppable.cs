@@ -160,11 +160,19 @@ namespace CauldronCodebase
 
         private void AddToMixAndResetVisuals()
         {
-            cauldron.AddToMix(ingredient);
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
             transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+
+            try
+            {
+                cauldron.AddToMix(ingredient);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Error while adding ingredient to mix: {exception.Message}");
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -208,7 +216,7 @@ namespace CauldronCodebase
             }
         }
 
-        private async UniTaskVoid ThrowInCauldron()
+        public async UniTaskVoid ThrowInCauldron()
         {
             if(!useDoubleClick)
                 return;

@@ -30,6 +30,10 @@ namespace CauldronCodebase
         [Header("Toggle Fullscreen")] 
         [SerializeField] private Toggle toggleFullscreen;
 
+        [Header("Toggle AutoCooking")] 
+        [SerializeField] private Toggle autoCooking;
+        [SerializeField] private GameObject autoCookingObject;
+
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
 
@@ -40,16 +44,14 @@ namespace CauldronCodebase
 
         [Header("Other")]
         [SerializeField] private AnimatedButton closeSettingsButton;
-        
-        
+
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;
         [Inject] private FadeController fadeController;
-        
-
 
         [Inject] private LocalizationTool locTool;
         private bool fullscreenMode;
+        private bool autoCookingMode;
         
         #if UNITY_EDITOR
         private void OnValidate()
@@ -63,11 +65,13 @@ namespace CauldronCodebase
             LoadVolumeValues();
             LoadResolution();
             LoadLanguage();
+            LoadAutoCookingMode();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
+            autoCooking.onValueChanged.AddListener(x => ChangeAutoCooking(x));
             openResetButton.OnClick += OpenResetDialogue;
             closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
@@ -171,6 +175,12 @@ namespace CauldronCodebase
             Screen.fullScreen = fullscreenMode;
         }
 
+        private void ChangeAutoCooking(bool set)
+        {
+            autoCookingMode = set;
+            PlayerPrefs.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
+        }
+
         private void LoadFullscreenMode()
         {
             if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
@@ -213,6 +223,34 @@ namespace CauldronCodebase
         {
             mainMenu.ResetGameData();
             CloseResetDialogue();
+        }
+        
+        private void LoadAutoCookingMode()
+        {
+            if (PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
+                OpenAutoCooking();
+            }
+            else
+            {
+                CloseAutoCooking();
+            }
+
+            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
+            {
+                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
+                autoCooking.isOn = autoCookingMode;
+            }
+        }
+        
+        private void OpenAutoCooking()
+        {
+            autoCookingObject.gameObject.SetActive(true);
+        }
+
+        private void CloseAutoCooking()
+        {
+            autoCookingObject.gameObject.SetActive(false);
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Universal;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -16,8 +17,10 @@ namespace CauldronCodebase
             switch (status)
             {
                 case Statustype.Fear:
+                    LoggerTool.TheOne.Log("COVEN: fear "+(high ? "up" : "down"));
                     return high ? GetRandom(HighFear) : GetRandom(LowFear);
                 case Statustype.Fame:
+                    LoggerTool.TheOne.Log("COVEN: fame "+(high ? "up" : "down"));
                     return high ? GetRandom(HighFame) : GetRandom(LowFame);
             }
             Debug.LogError("Trying to get a coven night card with wrong status type: "+status);

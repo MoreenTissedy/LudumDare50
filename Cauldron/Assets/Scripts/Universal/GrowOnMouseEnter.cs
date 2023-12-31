@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
@@ -17,24 +16,23 @@ namespace Universal
         private void Awake()
         {
             transf = GetComponent<RectTransform>();
-            initialScale = transf.sizeDelta;
+            initialScale = transf.localScale;
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            
-            transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed);
+            transf.DOScale((initialScale * sizeCoef), sizeSpeed).SetUpdate(true);
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
-            transf.DOSizeDelta((initialScale), sizeSpeed);
+            transf.DOScale((initialScale), sizeSpeed).SetUpdate(true);
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
             transf.DOKill();
-            transf.sizeDelta = initialScale;
+            transf.localScale = initialScale;
         }
     }
 }

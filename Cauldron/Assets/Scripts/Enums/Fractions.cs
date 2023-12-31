@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Universal;
+using NaughtyAttributes;
 
 namespace CauldronCodebase
 {
@@ -75,6 +76,15 @@ namespace CauldronCodebase
             }
             data[(int) fraction - 1].Status += shift;
             LoggerTool.TheOne.Log(ToString());
+        }
+        
+        public int GetStatus(Fractions fraction)
+        {
+            if (fraction is Fractions.None)
+            {
+                return 0;
+            }
+            return data[(int) fraction - 1].Status;
         }
 
         public override string ToString()

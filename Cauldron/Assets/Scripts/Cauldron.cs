@@ -65,8 +65,6 @@ namespace CauldronCodebase
 
         public void AddToMix(Ingredients ingredient)
         {
-            splash.Play();
-            soundManager.Play(Sounds.Splash);
             Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
@@ -74,6 +72,11 @@ namespace CauldronCodebase
             if (mix.Count == 3)
             {
                 Brew();
+            }
+            else
+            {
+                splash.Play();
+                soundManager.Play(Sounds.Splash);
             }
         }
         

@@ -1,8 +1,6 @@
 using CauldronCodebase.GameStates;
-using EasyLoc;
 using Save;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -26,19 +24,13 @@ namespace CauldronCodebase
         [SerializeField] private CatTipsValidator catTipsValidator;
 
         [Header("UI")]
-        [SerializeField] private EndingScreen endingScreen;
-
         [SerializeField] private GameFXManager fxManager;
-
         [SerializeField] private NightPanel nightPanel;
-        
-        [SerializeField] private Tutorial tutorial;
         [SerializeField] private CatTipsView catTipsView;
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
-        [Inject] private LocalizationTool localization;
 
         public override void InstallBindings()
         {
@@ -60,10 +52,8 @@ namespace CauldronCodebase
 
         private void BindUI()
         {
-            Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
-            Container.Bind<Tutorial>().FromInstance(tutorial).AsSingle();
             Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
         }
 
@@ -87,7 +77,6 @@ namespace CauldronCodebase
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
             endings.Init();
-            localization.LoadSavedLanguage();
         }
     }
 }

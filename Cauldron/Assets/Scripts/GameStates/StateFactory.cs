@@ -12,7 +12,6 @@ namespace CauldronCodebase.GameStates
         Cauldron cauldron;
         NightEventProvider nightEvents;
         NightPanel nightPanel;
-        EndingScreen endingScreen;
         GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
@@ -30,7 +29,6 @@ namespace CauldronCodebase.GameStates
                             Cauldron cauldron,
                             NightEventProvider nightEvents,
                             NightPanel nightPanel,
-                            EndingScreen endingScreen,
                             RecipeBook recipeBook,
 
                             GameDataHandler gameDataHandler,
@@ -47,7 +45,6 @@ namespace CauldronCodebase.GameStates
             this.cauldron = cauldron;
             this.nightEvents = nightEvents;
             this.nightPanel = nightPanel;
-            this.endingScreen = endingScreen;
             this.gameDataHandler = gameDataHandler;
             this.gameStateMachine = gameStateMachine;
             this.recipeBook = recipeBook;
@@ -79,7 +76,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, dataPersistenceManager, gameFXManager);
+            return new EndGameState(dataPersistenceManager, gameFXManager);
         }
 
     }

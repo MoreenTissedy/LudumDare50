@@ -101,9 +101,9 @@ namespace CauldronCodebase
             string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.UniqueCards);
             if (!string.IsNullOrEmpty(rememberedCardsJson))
             {
-                var wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
+                var wrapper = JsonUtility.FromJson<StringListWrapper>(rememberedCardsJson);
                 rememberedCards.Clear();
-                rememberedCards.AddRange(wrapper.encounters);
+                rememberedCards.AddRange(wrapper.list);
             }
             else
             {
@@ -193,7 +193,6 @@ namespace CauldronCodebase
                 cardPool.AddRange(pool.cards);
             }
             lastExtendedRoundNumber++;
-            Debug.LogWarning("card pool extended");
         }
 
         public void AddToPool(Encounter card)
@@ -227,10 +226,6 @@ namespace CauldronCodebase
 
         public Encounter GetTopCard()
         {
-            if (deck.Count == 0)
-            {
-                return null;
-            }
             if (loadedCard != null)
             {
                 currentCard = loadedCard;
@@ -238,9 +233,7 @@ namespace CauldronCodebase
             }
             else
             {
-                var topCard = deck.First();
-                deck.RemoveFirst();
-                currentCard = topCard;
+                currentCard = GetTopCardInternal();
             }
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
@@ -253,10 +246,26 @@ namespace CauldronCodebase
             return currentCard;
         }
 
+        private Encounter GetTopCardInternal()
+        {
+            Encounter topCard;
+            do
+            {
+                if (deck.Count == 0)
+                {
+                    DealCards(1);
+                }
+                topCard = deck.First();
+                deck.RemoveFirst();
+            } 
+            while (!StoryTagHelper.Check(topCard, gameDataHandler));
+            return topCard;
+        }
+
         void SaveCurrentCardAsUnique()
         {
             rememberedCards.Add(currentCard.name);
-            EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
+            StringListWrapper wrapper = new StringListWrapper { list = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
             PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
             Debug.Log("unique cards: "+json);
@@ -285,6 +294,8 @@ namespace CauldronCodebase
                         }
                     }
 
+                    lastExtendedRoundNumber = data.LastExtendedPoolNumber;
+
                     if (data.CurrentDeck != null)
                     {
                         List<Encounter> currentDeck = new List<Encounter>();
@@ -305,31 +316,40 @@ namespace CauldronCodebase
         {
             int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             InitCardPool(round);
-            //if not first time
-            if (round != 0)
-            {
-                DealCards(2);
-                List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
-                if (loadRecipes.Count < 20)
-                {
-                    deck.AddFirst(introCards[3]);
-                }
-                else
-                {
-                    deck.AddFirst(introCards[2]);
-                }
-            }
-            else
+            if (round == 0)
             {
                 DealCards(1);
                 deck.AddFirst(introCards[0]);
                 deck.AddLast(introCards[1]);
+                return;
             }
+            DealCards(2);
+            gameDataHandler.storyTags = StoryTagHelper.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            {
+                deck.AddFirst(introCards[6]);
+                PlayerPrefs.SetInt(PrefKeys.CovenIntroShown, 1);
+                return;
+            }
+            if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[5]);
+                return;
+            }
+            if (StoryTagHelper.CovenQuestEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[4]);
+                return;
+            }
+            List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
+            deck.AddFirst(loadRecipes.Count < 20 ? introCards[3] : introCards[2]);
         }
 
         public void SaveData(ref GameData data)
         {
             if (data == null) return;
+            data.LastExtendedPoolNumber = lastExtendedRoundNumber;
+            
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -26,15 +29,14 @@ namespace CauldronCodebase
         [SerializeField] private Transform foodSideBookmark;
         [SerializeField] private Transform attemptsSideBookmark;
         [SerializeField] private Transform ingredientsSideBookmark;
-        
-        
-        [Header("Recipe Book")] 
-        
-        [SerializeField] protected RecipeBookEntry[] recipeEntries;
-        [SerializeField] protected RecipeBookEntry[] foodEntries;
+
+        [Header("Recipe Book")]
+        [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
         [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
+
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
@@ -42,8 +44,13 @@ namespace CauldronCodebase
         public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
+
+        private const float TargetPercentEnoughRecipesUnlocked = 0.8f;
+
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
+        public event Action OnUnlockAutoCooking;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -64,8 +71,8 @@ namespace CauldronCodebase
         void FindEntries()
         {
             attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
-            foodEntries = foodDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeEntryMagical>();
+            foodEntries = foodDisplay.GetComponentsInChildren<RecipeEntryCommon>();
         }
         [Inject]
         private void Construct(DataPersistenceManager dataPersistenceManager,
@@ -134,6 +141,21 @@ namespace CauldronCodebase
             unlockedRecipes.Add(recipe);
             LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
+            
+            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
+                return;
+            }
+
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            OnUnlockAutoCooking?.Invoke();
+        }
+
+        public void CheatUnlockAutoCooking()
+        {
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            OnUnlockAutoCooking?.Invoke();
         }
 
         public void ChangeMode(Mode newMode)
@@ -273,7 +295,7 @@ namespace CauldronCodebase
         {
             void DisplaySet(List<Recipe> set)
             {
-                RecipeBookEntry[] entries = new RecipeBookEntry[] { };
+                RecipeBookEntryHolder[] entries = { };
                 switch (currentMode)
                 {
                     case Mode.Magical:
@@ -299,11 +321,11 @@ namespace CauldronCodebase
                     {
                         if(unlockedRecipes.Contains(set[num]))
                         {
-                            entries[i].Display(set[num]);
+                            entries[i].SetUnlocked(set[num]);
                         }
                         else
                         {
-                            entries[i].DisplayLocked(set[num]);
+                            entries[i].SetLocked(set[num]);
                         }
                     }
                     else
@@ -369,8 +391,6 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.gameObject.SetActive(true);
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
-                
-                //ingredientsEntries[i].RebuildLayout();
             }
         }
 
@@ -399,7 +419,7 @@ namespace CauldronCodebase
             attemptsDisplay.SetActive(false);
             ingredientsDisplay.SetActive(false);
         }
-        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
+        public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             if (cauldron.Mix.Count != 0)
             {
@@ -416,10 +436,18 @@ namespace CauldronCodebase
             CloseBook();
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
+
+            if (PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
+            {
+                return;
+            }
+            
+            tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
         }
 
         private void TryHighlightIncorrectRecipe()
         {
+            OnSelectIncorrectRecipe?.Invoke();
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
 

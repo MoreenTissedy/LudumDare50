@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Save
 
         public List<string> CardPool; // EncounterDeck
         public List<string> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
+        public int LastExtendedPoolNumber;
 
         public List<string> PriorityCards; //PriorityLaneProvider
         
@@ -64,7 +66,7 @@ namespace Save
             CurrentEncounter = null;
             CurrentVillager = null;
 
-            StoryTags = new List<string>(5);
+            StoryTags = StoryTagHelper.GetMilestones().ToList();
             
             PotionsTotalOnRun = new List<string>();
             WrongPotionsCountOnRun = 0;

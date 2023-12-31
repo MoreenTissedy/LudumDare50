@@ -38,7 +38,12 @@ namespace CauldronCodebase
             locTool.OnLanguageChanged += ReloadVisitorText;
         }
 
-        private void ReloadVisitorText()
+        private void OnDestroy()
+        {
+            locTool.OnLanguageChanged -= ReloadVisitorText;
+        }
+
+        private void ReloadVisitorText(Language lang)
         {
             if (currentEncounter != null)
             {
@@ -83,10 +88,9 @@ namespace CauldronCodebase
 
             iconObjects[0]?.Display(card.primaryInfluence, card.hidden);
             iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
-            if (card.quest)
+            if (card.fraction != Fractions.None)
             {
                 iconObjects[2]?.DisplayItem(card.villager);
-                text.fontStyle = FontStyles.Italic;
             }
             else
             {

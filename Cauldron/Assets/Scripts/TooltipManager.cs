@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 namespace CauldronCodebase
@@ -9,6 +11,7 @@ public class TooltipManager
     private List<Ingredients> potionIngredients = new List<Ingredients>();
     private Recipe currentRecipe;
     private Dictionary<Ingredients, IngredientDroppable> dict;
+    private bool isUseAutoCookingProcess;
 
     [Inject] private Cauldron cauldron;
 
@@ -75,6 +78,39 @@ public class TooltipManager
                 Highlighted = false;
             }
         }
+    }
+
+    public async UniTaskVoid SendSelectRecipe(Recipe recipe)
+    {
+        const float delay = 0.3f;
+        const float openCloseAnimationTime = 0.6f;
+
+        if (!isUseAutoCookingProcess)
+        {
+            isUseAutoCookingProcess = true;
+        }
+        else
+        {
+            return;
+        }
+
+        await UniTask.Delay(TimeSpan.FromSeconds(openCloseAnimationTime));
+        
+        potionIngredients = recipe.RecipeIngredients;
+
+        foreach(var i in potionIngredients)
+        {
+            if(cauldron.Mix.Contains(i)) continue;
+
+            if (dict.TryGetValue(i, out var temp))
+            {
+                temp.ThrowInCauldron().Forget();
+            }
+
+            await UniTask.Delay(TimeSpan.FromSeconds(delay));
+        }
+        
+        isUseAutoCookingProcess = false;
     }
 }
 }

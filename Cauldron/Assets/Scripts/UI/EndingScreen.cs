@@ -15,7 +15,7 @@ namespace CauldronCodebase
     {
         private const float _ENDING_SCREEN_FADE_DURATION_ = 0.2f;
         
-        [Inject]
+        [SerializeField]
         private EndingsProvider endings;
 
         [SerializeField] private SkeletonGraphic map;
@@ -45,7 +45,6 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            gameObject.SetActive(false);
             for (var i = 0; i < buttons.Length; i++)
             {
                 buttons[i].OnClick += OnEndingClick;
@@ -128,7 +127,7 @@ namespace CauldronCodebase
             };
             foreach (var button in buttons)
             {
-                await UniTask.DelayFrame(5);
+                await UniTask.DelayFrame(3);
                 button.Hide();
             }
         }

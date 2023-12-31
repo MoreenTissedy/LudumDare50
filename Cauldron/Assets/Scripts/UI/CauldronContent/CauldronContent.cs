@@ -1,4 +1,5 @@
 ﻿using System;
+using CauldronCodebase.GameStates;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
@@ -13,6 +14,7 @@ namespace CauldronCodebase
         [SerializeField] private RectTransform contentTransform;
 
         [Inject] private Cauldron cauldron;
+        [Inject] private VisitorManager visitorManager;
         [Inject] private IngredientsData ingredientsData;
 
         private void Start()
@@ -22,9 +24,19 @@ namespace CauldronCodebase
             cauldron.IngredientAdded += ShowContent;
             cauldron.PotionBrewed += HideContent;
         }
-        
+
+        private void OnDestroy()
+        {
+            cauldron.IngredientAdded -= ShowContent;
+            cauldron.PotionBrewed -= HideContent;
+        }
+
         private void ShowContent(Ingredients ingredient)
         {
+            if (visitorManager.CurrentVillager is null)
+            {
+                return;
+            }
             if (Math.Abs(contentTransform.anchoredPosition.y - shownPosition) > 0.1)
             {
                 contentTransform.DOAnchorPosY(shownPosition, panelShowSpeed);

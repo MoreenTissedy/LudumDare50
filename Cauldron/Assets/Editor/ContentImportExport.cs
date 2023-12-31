@@ -166,7 +166,7 @@ namespace Editor
                 card.text = data[3];
 
                 // 4. Starred — ставим +, если нужно пометить запрос для игрока звездочкой (обозначив сильное влияние на сюжет или получение предмета).
-                card.quest = data[4].Contains('+');
+                //card.quest = data[4].Contains('+');
                 // 5. Hidden — ставим +, если нужно скрыть для игрока влияние на статы Primary и Secondary, заменив их значком вопроса.
                 card.hidden = data[5].Contains('+');
                 // 6. Primary — стат, который меняется в результате запроса (Money, Fear, Fame, None).

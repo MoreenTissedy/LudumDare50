@@ -30,7 +30,8 @@ namespace CauldronCodebase
         [TextArea(5, 10)]
         public string text;
 
-        public bool hidden = false, quest = false;
+        public bool hidden = false;
+        public Fractions fraction;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
         [ReorderableList]

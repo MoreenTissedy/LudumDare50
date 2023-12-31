@@ -17,7 +17,7 @@ namespace CauldronCodebase
                 return;
             }
             base.OnPointerClick(eventData);
-            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
+            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>()).Forget();
         }
 
         public override void OnPointerEnter(PointerEventData eventData)

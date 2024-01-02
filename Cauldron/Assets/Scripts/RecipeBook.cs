@@ -40,8 +40,8 @@ namespace CauldronCodebase
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
+        [SerializeField] private ExperimentController experimentController;
         public List<Recipe> LockedRecipes { get; private set; }
-        public List<WrongPotion> wrongPotions;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
 
@@ -116,19 +116,6 @@ namespace CauldronCodebase
             }
 
             LockedRecipes = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
-        }
-
-        public void RecordAttempt(WrongPotion mix)
-        {
-            if (wrongPotions is null)
-            {
-                wrongPotions = new List<WrongPotion>(10);
-            }
-
-            if (!wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(mix.IngredientsList.Contains)))
-            {
-                wrongPotions.Add(mix);
-            }
         }
 
         public bool IsRecipeInBook(Recipe recipe)
@@ -280,7 +267,7 @@ namespace CauldronCodebase
                     totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     break;
                 case Mode.Attempts:
-                    if (wrongPotions != null) totalPages = Mathf.CeilToInt((float) wrongPotions.Count / attemptEntries.Length);
+                    if (experimentController.wrongPotions != null) totalPages = Mathf.CeilToInt((float) experimentController.wrongPotions.Count / attemptEntries.Length);
                     else totalPages = 1;
                     break;
                 case Mode.Ingredients:
@@ -396,14 +383,14 @@ namespace CauldronCodebase
 
         private void DisplayAttempts()
         {
-            if (wrongPotions is null || wrongPotions.Count == 0)
+            if (experimentController.wrongPotions is null || experimentController.wrongPotions.Count == 0)
                 return;
             for (int i = 0; i < attemptEntries.Length; i++)
             {
                 int num = currentPage * recipeEntries.Length + i;
-                if (num < wrongPotions.Count)
+                if (num < experimentController.wrongPotions.Count)
                 {
-                    attemptEntries[i].Display(wrongPotions[num].IngredientsList.ToArray());
+                    attemptEntries[i].Display(experimentController.wrongPotions[num].IngredientsList.ToArray());
                 }
                 else
                 {
@@ -460,7 +447,7 @@ namespace CauldronCodebase
             }
 
             //Check attempts
-            if(wrongPotions.Count != 0 && wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
+            if(experimentController.wrongPotions.Count != 0 && experimentController.wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
             {
                 return true;
             }
@@ -470,8 +457,8 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            wrongPotions = data.AttemptsRecipes;
-            foreach (var potion in wrongPotions)
+            experimentController.wrongPotions = data.AttemptsRecipes;
+            foreach (var potion in experimentController.wrongPotions)
             {
                 potion.RestoreIngredients();
             }
@@ -480,7 +467,7 @@ namespace CauldronCodebase
 
         public void SaveData(ref GameData data)
         {
-            data.AttemptsRecipes = wrongPotions;
+            data.AttemptsRecipes = experimentController.wrongPotions;
         }
     }
 }

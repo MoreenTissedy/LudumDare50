@@ -30,10 +30,11 @@ namespace CauldronCodebase
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
         private GameDataHandler game;
+        private ExperimentController experimentController;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game)
+            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game, ExperimentController experimentController)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
@@ -41,6 +42,7 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
             this.game = game;
+            this.experimentController = experimentController;
         }
 
         private void Awake()
@@ -117,7 +119,7 @@ namespace CauldronCodebase
                 }
             }
 
-            recipeBook.RecordAttempt(new WrongPotion(mix));
+            experimentController.RecordAttempt(new WrongPotion(mix));
             game.wrongExperiments++;
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);

@@ -13,23 +13,30 @@ MonoBehaviour:
   m_Name: mary.3
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: -1
+  addToDeckOnRound: -1
   requiredStoryTag: 
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: 6104b68a9fe2ee94bb930fb57d331dbd, type: 2}
   text: "Just passing by. Do you need any help? Around the house? Maybe I could help
     you with some\u2026 mixing? Let's mix something crazy!"
   hidden: 0
   quest: 0
-  primaryInfluence: 2
+  primaryInfluence: 3
   secondaryInfluence: 0
   primaryCoef: 0.5
   secondaryCoef: 0
   resultsByPotion:
-  - potion: 104
+  - potion: 100
     influenceCoef: 1
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 11400000, guid: eef29ef9c105b1d42810f1f371153e0f, type: 2}
-  - potion: 100
+  - potion: 99
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 55
     influenceCoef: -1
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}

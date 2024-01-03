@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
@@ -48,7 +47,8 @@ namespace CauldronCodebase
         
         public EncounterDeck currentDeck;
 
-        private MainSettings.StatusBars statusSettings;
+        public MainSettings.StatusBars statusSettings;
+        private MainSettings.Gameplay gameplaySettings;
 
         public event Action StatusChanged;
 
@@ -81,6 +81,16 @@ namespace CauldronCodebase
             {
                 currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             }
+        }
+
+        public bool IsEnoughMoneyForRumours()
+        {
+            return Money >= statusSettings.CovenCost;
+        }
+
+        public void BuyRumour()
+        {
+            money -= statusSettings.CovenCost;
         }
 
         public void AddTag(string tag)
@@ -127,8 +137,8 @@ namespace CauldronCodebase
             if (type == Statustype.Money && num < 0)
                 return statValue;
             statValue += num;
-            if (statValue > ((type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total))
-                statValue = (type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total;
+            if (statValue > ((type == Statustype.Money) ? 5000 : statusSettings.Total))
+                statValue = (type == Statustype.Money) ? 5000 : statusSettings.Total;
             else if (statValue < 0)
                 statValue = 0;
             switch (type)
@@ -272,7 +282,6 @@ namespace CauldronCodebase
         {
             //refaaactor me
             if(data is null) return;
-
             status = data.Status;
             if (newGame)
             {

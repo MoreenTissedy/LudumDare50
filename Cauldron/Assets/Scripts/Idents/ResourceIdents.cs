@@ -8,7 +8,7 @@ namespace CauldronCodebase
         {
             "Backgrounds/Basic",
             "Backgrounds/Forest",
-           // "Backgrounds/Swamp",
+            "Backgrounds/Swamp",
             "Backgrounds/Field"
         };
         public const string EndingScreen = "EndingPanel";

@@ -13,6 +13,7 @@ namespace CauldronCodebase
         [Localize] public string fearHint = "Если вы поможете или навредите, изменится шкала страха.";
         [Localize] public string moneyHint = "Этот персонаж даст вам денег, если вы поможете ему.";
         [Localize] public string fameHint = "Если вы поможете или навредите, изменится шкала славы.";
+        [Localize] public string fractionHint = "Ваше решение будет замечено и оценено по достоинству.";
         
         public Image icon;
         public Sprite fame, fear, money, question, item;
@@ -20,10 +21,12 @@ namespace CauldronCodebase
 
         private bool hintEnabled;
 
-        //TODO: special hints?
         public void DisplayItem(Villager villager)
         {
-            Display(Statustype.None);
+            hintEnabled = false;
+            gameObject.SetActive(true);
+            icon.sprite = item;
+            hint.SetText(fractionHint).ContinueWith(() => hintEnabled = true);
         }
         
         public void Display(Statustype type, bool hidden = false)

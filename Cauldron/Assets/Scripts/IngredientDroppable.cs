@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -5,11 +6,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
-        IBeginDragHandler, IDragHandler, IEndDragHandler
+        IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         public Ingredients ingredient;
         public float rotateAngle = 10f;
@@ -24,6 +26,7 @@ namespace CauldronCodebase
 
         [SerializeField] GameObject ingredientParticle;
         [SerializeField] private GameObject dragTrail;
+        [SerializeField] private bool useDoubleClick;
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
@@ -32,7 +35,6 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
-
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -70,21 +72,22 @@ namespace CauldronCodebase
             DisableHighlight();
         }
 
-        private void OnDestroy()
-        {
-            ingredientManager.RemoveIngredient(this);
-        }
-
         private void Start()
         {
             if (tooltip != null)
             {
                 ChangeText();
             }
-
+            
             initialPosition = transform.position;
             ingredientParticle?.SetActive(false);
             dragTrail?.SetActive(false);
+            useDoubleClick = true;
+        }
+
+        private void OnDestroy()
+        {
+            ingredientManager.RemoveIngredient(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -117,25 +120,28 @@ namespace CauldronCodebase
             image.transform.DORotate(new Vector3(0, 0, initialRotation), rotateSpeed);
         }
 
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.clickCount >= 2)
+            {
+                ThrowInCauldron().Forget();
+            }
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (cauldron.Mix.Contains(ingredient))
                 return;
-            dragging = true;
-            image.transform.DOKill(true);
+            SetMovementVisuals();
             cauldron.MouseEnterCauldronZone += OverCauldron;
-            dragTrail?.SetActive(true);
-            ingredientParticle?.SetActive(false);
         }
 
-        void OverCauldron()
+        private void SetMovementVisuals()
         {
-            cauldron.AddToMix(ingredient);
-            dragging = false;
-            dragTrail?.SetActive(false);
-            transform.position = initialPosition;
-            cauldron.MouseEnterCauldronZone -= OverCauldron;
-            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+            dragging = true;
+            image.transform.DOKill(true);
+            dragTrail?.SetActive(true);
+            ingredientParticle?.SetActive(false);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -144,6 +150,29 @@ namespace CauldronCodebase
                 return;
             transform.position =
                 Camera.main.ScreenToWorldPoint((Vector3)eventData.position + Vector3.forward * Camera.main.nearClipPlane);
+        }
+
+        private void OverCauldron()
+        {
+            AddToMixAndResetVisuals();
+            cauldron.MouseEnterCauldronZone -= OverCauldron;
+        }
+
+        private void AddToMixAndResetVisuals()
+        {
+            dragging = false;
+            dragTrail?.SetActive(false);
+            transform.position = initialPosition;
+            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+
+            try
+            {
+                cauldron.AddToMix(ingredient);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"Error while adding ingredient to mix: {exception.Message}");
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -185,6 +214,43 @@ namespace CauldronCodebase
                 ingredientParticle?.SetActive(state);
                 isHighlighted = state;
             }
+        }
+
+        public async UniTaskVoid ThrowInCauldron()
+        {
+            if(!useDoubleClick)
+                return;
+            
+            if (cauldron.Mix.Contains(ingredient))
+                 return;
+            
+            const float timeMoveDoubleClick = 0.5f;
+
+            SetMovementVisuals();
+            transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
+            await UniTask.Delay(TimeSpan.FromSeconds(timeMoveDoubleClick));
+            AddToMixAndResetVisuals();
+        }
+
+        private Vector3[] GetRandomBezierPath()
+        {
+            Vector3 cauldronPosition = cauldron.transform.position;
+            Vector3 targetPosition = cauldronPosition + Vector3.up;
+            
+            Vector3 randomDirection = Random.insideUnitCircle.normalized;
+            float desiredXDirection = Mathf.Sign(cauldronPosition.x - transform.position.x);
+            if (Mathf.Sign(randomDirection.x) != desiredXDirection)
+            {
+                randomDirection.x *= -1;
+            }
+            randomDirection *= Random.Range(1f, 3f);
+            randomDirection += transform.position;
+            return new[]
+            {
+                targetPosition,
+                randomDirection,
+                targetPosition + Vector3.up * 5, 
+            };
         }
     }
 }

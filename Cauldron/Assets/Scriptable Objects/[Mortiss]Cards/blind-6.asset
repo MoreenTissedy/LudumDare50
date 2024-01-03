@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
   addToDeckOnRound: -1
-  requiredStoryTag: 
+  requiredStoryTag: '!circle quest'
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: 620e966e0f713f44cae2c796557a2f7d, type: 2}
-  text: I may be blind but my blind eyes see what others cannot. You should stick
-    with food and drinks if you know what's good for you.
+  text: I may be blind but I sense another practitioner of the craft well enough.
+    You gained attention of The circle. But first, a puzzle! Mix one that makes you
+    mad, one that brings you grief and one that helps you see.
   hidden: 1
   quest: 0
   primaryInfluence: 3
   secondaryInfluence: 0
-  primaryCoef: 2
+  primaryCoef: 1
   secondaryCoef: 0
   resultsByPotion:
   - potion: 104
@@ -36,4 +40,8 @@ MonoBehaviour:
   - potion: 102
     influenceCoef: -1
     bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 60
+    influenceCoef: 0
+    bonusEvent: {fileID: 11400000, guid: 686bdaa08a2857943b61642c49a654f3, type: 2}
     bonusCard: {fileID: 0}

@@ -72,10 +72,10 @@ namespace CauldronCodebase.GameStates
             for (var index = 0; index < events.Count; index++)
             {
                 string tag = events[index].storyTag;
+                tag = tag.Split(',')[0];
                 if (tag.StartsWith("^"))
                 {
-                    storyEnding = tag.TrimStart('^').Trim();
-                    events.RemoveAt(index);
+                    storyEnding = tag.TrimStart('^').TrimStart('*').Trim();
                     break;
                 }
             }
@@ -84,8 +84,10 @@ namespace CauldronCodebase.GameStates
         private void NightPanelOnEventClicked(NightEvent nightEvent)
         {
             nightEvent.OnResolve();
+            eventResolver.ApplyStoryTag(nightEvent);
             eventResolver.ApplyModifiers(nightEvent);
             eventResolver.ApplyFractionShift(nightEvent.fractionData);
+            eventResolver.ApplyRecipeHint(nightEvent.recipeHint);
             var priorityEvent = eventResolver.AddBonusCards(nightEvent);
             if (priorityEvent)
             {

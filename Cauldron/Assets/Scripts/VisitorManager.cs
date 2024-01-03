@@ -145,6 +145,7 @@ namespace CauldronCodebase
         {
             ignoreSavedAttempts = newGame;
             gameData = data;
+            attemptsLeft = data.AttemptsLeft;
         }
 
         public void SaveData(ref GameData data)

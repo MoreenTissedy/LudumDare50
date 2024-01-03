@@ -11,17 +11,13 @@ namespace Save
         [SerializeField] private string fileName;
         
         private GameData gameData;
-
-        public GameData GameSaveData => gameData;
-        //TODO: Create global stat
         
-        [SerializeField] private List<IDataPersistence> iDataPersistenceObj;
+        private List<IDataPersistence> iDataPersistenceObj;
         private FileDataHandler fileDataHandler;
 
         private MainSettings settings;
 
-        private bool newGame = false;
-        public bool IsNewGame => newGame;
+        public bool IsNewGame { get; private set; }
 
         [Inject]
         private void Construct(MainSettings mainSettings)
@@ -35,7 +31,7 @@ namespace Save
             if (CheckForGameSave())
             {
                 gameData = fileDataHandler.Load();
-                newGame = false;
+                IsNewGame = false;
             }
             else
             {
@@ -47,7 +43,7 @@ namespace Save
         {
             fileDataHandler.Delete();
             gameData = new GameData(settings.statusBars.InitialValue);
-            newGame = true;
+            IsNewGame = true;
         }
 
         public void SaveGame()
@@ -83,7 +79,7 @@ namespace Save
             if(iDataPersistenceObj == null) return;
             foreach (var dataPersistenceObj in iDataPersistenceObj)
             {
-                dataPersistenceObj.LoadData(gameData, newGame);
+                dataPersistenceObj.LoadData(gameData, IsNewGame);
             }
         }
     }

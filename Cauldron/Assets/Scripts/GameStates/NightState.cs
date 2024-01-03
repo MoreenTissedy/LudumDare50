@@ -51,6 +51,7 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
+            gameDataHandler.SetCurrentCard(null);
             EnterWithFX();
         }
 

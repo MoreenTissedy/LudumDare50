@@ -16,13 +16,15 @@ namespace Save
         private FileDataHandler fileDataHandler;
 
         private MainSettings settings;
+        private SODictionary soDictionary;
 
         public bool IsNewGame { get; private set; }
 
         [Inject]
-        private void Construct(MainSettings mainSettings)
+        private void Construct(MainSettings mainSettings, SODictionary dictionary)
         {
             settings = mainSettings;
+            soDictionary = dictionary;
             fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         }
 
@@ -31,6 +33,7 @@ namespace Save
             if (CheckForGameSave())
             {
                 gameData = fileDataHandler.Load();
+                gameData.ValidateSave(soDictionary);
                 IsNewGame = false;
             }
             else

@@ -20,6 +20,7 @@ namespace Save
         public List<string> PriorityCards; //PriorityLaneProvider
         
         // NightEventProvider
+        public string[] JoinedNightEvents = Array.Empty<string>();
         public string[] CurrentStoryEvents;
         public string[] CurrentRandomEvents;
         public string[] CurrentConditionals;

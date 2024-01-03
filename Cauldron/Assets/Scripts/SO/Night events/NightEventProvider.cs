@@ -42,6 +42,9 @@ namespace CauldronCodebase
         public List<RandomNightEvent> inGameRandoms;
         public List<CooldownEvent> eventsOnCooldown;
         private SODictionary soDictionary;
+        private DataPersistenceManager dataPersistenceManager;
+
+        private List<NightEvent> joinedEvents;
 
         public void Init(DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
         {
@@ -51,6 +54,7 @@ namespace CauldronCodebase
             inGameRandoms = new List<RandomNightEvent>(randomEvents.Count);
             inGameRandoms.AddRange(randomEvents);
             soDictionary = dictionary;
+            this.dataPersistenceManager = dataPersistenceManager;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -107,10 +111,14 @@ namespace CauldronCodebase
         {
             if (!PlayerPrefs.HasKey("FirstNight"))
             {
-                PlayerPrefs.SetInt("FirstNight", 1);
-                return new NightEvent[] {intro};
+                return new[] {intro};
             }
 
+            if (joinedEvents.Count != 0)
+            {
+                return joinedEvents.ToArray();
+            }
+            
             List<NightEvent> returnEvents = new List<NightEvent>(storyEvents.Count + 1);
             returnEvents.AddRange(storyEvents);
             NightEvent conditionalEvent = GetConditionalEvent(game);
@@ -129,7 +137,14 @@ namespace CauldronCodebase
 
             storyEvents.Clear();
             CheckEventCooldown();
-            return returnEvents.ToArray();
+            joinedEvents = returnEvents;
+            dataPersistenceManager.SaveGame();
+            return joinedEvents.ToArray();
+        }
+
+        public void ClearJoinedEvents()
+        {
+            joinedEvents.Clear();
         }
 
         private void CheckEventCooldown()
@@ -164,6 +179,10 @@ namespace CauldronCodebase
             {
                 return;
             }
+            if(data.JoinedNightEvents != null)
+                joinedEvents = data.JoinedNightEvents.
+                    Select(x => (NightEvent)soDictionary.AllScriptableObjects[x]).
+                    ToList();
             storyEvents = data.CurrentStoryEvents.
                 Select(x => (NightEvent) soDictionary.AllScriptableObjects[x]).
                 ToList();
@@ -188,6 +207,7 @@ namespace CauldronCodebase
             {
                 return;
             }
+            data.JoinedNightEvents = joinedEvents.Select(x => x.name).ToArray();
             data.CurrentStoryEvents = storyEvents.Select(x => x.name).ToArray();
             data.CurrentConditionals = inGameConditionals.Select(x => x.name).ToArray();
             data.CurrentRandomEvents = inGameRandoms.Select(x => x.name).ToArray();

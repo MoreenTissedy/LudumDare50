@@ -142,9 +142,15 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
+            if (!PlayerPrefs.HasKey("FirstNight"))
+            {
+                PlayerPrefs.SetInt("FirstNight", 1);
+            }
+            
             storyEnding = string.Empty;
             storyCards.Clear();
             gameFXManager.Clear();
+            nightEvents.ClearJoinedEvents();
             nightPanel.OnClose -= NightPanelOnOnClose;
             nightPanel.EventClicked -= NightPanelOnEventClicked;
             if (nightPanel.IsOpen)

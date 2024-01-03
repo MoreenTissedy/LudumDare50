@@ -40,7 +40,8 @@ namespace CauldronCodebase
             step = rectWidth/(settings.gameplay.cardsPerDay+3);
             
             int startSteps = 2 + gameDataHandler.cardsDrawnToday;
-            ShiftBarOnLoad(startSteps);
+            ShiftBarOnLoad(gameStateMachine.currentGamePhase == GameStateMachine.GamePhase.Night ? 
+                            startSteps + 1 : startSteps);
 
             gameStateMachine.OnChangeState += OnNewDay;
             gameStateMachine.OnChangeState += OnNewVisitor;

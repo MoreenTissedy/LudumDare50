@@ -59,6 +59,7 @@ namespace CauldronCodebase.GameStates
         public async void RunStateMachine()
         {
             dataPersistenceManager.LoadDataPersistenceObj();
+            currentGamePhase = gameData.gamePhase;
             currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {

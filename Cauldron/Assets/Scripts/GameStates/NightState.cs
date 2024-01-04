@@ -142,11 +142,6 @@ namespace CauldronCodebase.GameStates
 
         public override void Exit()
         {
-            if (!PlayerPrefs.HasKey("FirstNight"))
-            {
-                PlayerPrefs.SetInt("FirstNight", 1);
-            }
-            
             storyEnding = string.Empty;
             storyCards.Clear();
             gameFXManager.Clear();

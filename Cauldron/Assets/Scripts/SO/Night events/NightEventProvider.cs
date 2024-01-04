@@ -109,7 +109,8 @@ namespace CauldronCodebase
 
         public NightEvent[] GetEvents(GameDataHandler game)
         {
-            if (!PlayerPrefs.HasKey("FirstNight"))
+            if (PlayerPrefs.GetInt(PrefKeys.CurrentRound) == 0 && 
+                game.currentDay == 0)
             {
                 return new[] {intro};
             }

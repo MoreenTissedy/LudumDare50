@@ -4,27 +4,27 @@ using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Save
 {
     [Serializable]
     public class GameData
     {
-        public List<WrongPotion> AttemptsRecipes;
+        public List<WrongPotion> AttemptsRecipes = new List<WrongPotion>();
         public int AttemptsLeft; // VisitorManager
 
-        public List<string> CardPool; // EncounterDeck
-        public List<string> CurrentDeck; // EncounterDeck: Don't forget convert LinkedList
+        public List<string> CardPool = new List<string>(); // EncounterDeck
+        public List<string> CurrentDeck = new List<string>(); // EncounterDeck: Don't forget convert LinkedList
         public int LastExtendedPoolNumber;
 
-        public List<string> PriorityCards; //PriorityLaneProvider
+        public List<string> PriorityCards = new List<string>(); //PriorityLaneProvider
         
         // NightEventProvider
-        public string[] CurrentStoryEvents;
-        public string[] CurrentRandomEvents;
-        public string[] CurrentConditionals;
-        public string[] CooldownEvents;
+        public List<string> JoinedNightEvents = new List<string>();
+        public List<string> CurrentStoryEvents = new List<string>();
+        public List<string> CurrentRandomEvents = new List<string>();
+        public List<string> CurrentConditionals = new List<string>();
+        public List<string> CooldownEvents = new List<string>();
         public int[] CooldownDays;
         
         public int Fear, Fame, Money; // GameDataHandler
@@ -34,10 +34,10 @@ namespace Save
         public string CurrentEncounter;  // GameDataHandler
         public string CurrentVillager;
 
-        public List<string> StoryTags;  // GameDataHandler
+        public List<string> StoryTags ;  // GameDataHandler
         public int[] FractionData;
         
-        public List<string> PotionsTotalOnRun;  //GameDataHandler
+        public List<string> PotionsTotalOnRun = new List<string>();  //GameDataHandler
         public int WrongPotionsCountOnRun;  //GameDataHandler
 
         public PotionsBrewedInADay CurrentDayPotions;  //GameDataHandler
@@ -50,11 +50,7 @@ namespace Save
 
         public GameData(int initialValue)
         {
-            AttemptsRecipes = new List<WrongPotion>(10);
             AttemptsLeft = 3;
-
-            CardPool = new List<string>(15);
-            CurrentDeck = new List<string>();
             
             Fear = initialValue;
             Fame = initialValue;
@@ -67,20 +63,36 @@ namespace Save
             CurrentVillager = null;
 
             StoryTags = StoryTagHelper.GetMilestones().ToList();
-            
-            PotionsTotalOnRun = new List<string>();
+
             WrongPotionsCountOnRun = 0;
 
             CurrentDayPotions = new PotionsBrewedInADay();
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
+        }
 
-            DarkStrangerCame = false;
-            WitchCame = false;
-            InquisitorCame = false;
-            
-            Debug.Log("GameData has been created");
+        public void ValidateSave(SODictionary soDictionary)
+        {
+            ValidateList(CardPool, soDictionary);
+            ValidateList(CurrentDeck, soDictionary);
+            ValidateList(PriorityCards, soDictionary);
+            ValidateList(JoinedNightEvents, soDictionary);
+            ValidateList(CurrentStoryEvents, soDictionary);
+            ValidateList(CurrentRandomEvents, soDictionary);
+            ValidateList(CurrentConditionals, soDictionary);
+            ValidateList(CooldownEvents, soDictionary);
+        }
+
+        private void ValidateList(IList<string> targetList, SODictionary soDictionary)
+        {
+            for (int i = 0; i < targetList.Count; i++)
+            {
+                if (soDictionary.AllScriptableObjects.ContainsKey(targetList[i])) continue;
+                
+                Debug.LogWarning($"{targetList[i]} not found in dictionary");
+                targetList.Remove(targetList[i]);
+            }
         }
     }
 }

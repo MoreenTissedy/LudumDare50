@@ -51,6 +51,7 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
+            gameDataHandler.SetCurrentCard(null);
             EnterWithFX();
         }
 
@@ -144,6 +145,7 @@ namespace CauldronCodebase.GameStates
             storyEnding = string.Empty;
             storyCards.Clear();
             gameFXManager.Clear();
+            nightEvents.ClearJoinedEvents();
             nightPanel.OnClose -= NightPanelOnOnClose;
             nightPanel.EventClicked -= NightPanelOnEventClicked;
             if (nightPanel.IsOpen)

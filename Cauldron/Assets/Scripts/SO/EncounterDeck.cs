@@ -274,7 +274,14 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            loadedCard = gameDataHandler.currentCard;
+            if (string.IsNullOrEmpty(data.CurrentEncounter))
+            {
+                loadedCard = null;
+            }
+            else
+            {
+                loadedCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
+            }
 
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
@@ -290,7 +297,14 @@ namespace CauldronCodebase
                     {
                         foreach (var key in data.CardPool)
                         {
-                            cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                            if (soDictionary.AllScriptableObjects.TryGetValue(key, out var card))
+                            {
+                                cardPool.Add((Encounter)card);
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"The card {key} was not found in the dictionary");
+                            }
                         }
                     }
 
@@ -301,11 +315,17 @@ namespace CauldronCodebase
                         List<Encounter> currentDeck = new List<Encounter>();
                         foreach (var key in data.CurrentDeck)
                         {
-                            currentDeck.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                            if (soDictionary.AllScriptableObjects.TryGetValue(key, out var card))
+                            {
+                                currentDeck.Add((Encounter)card);
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"The card {key} was not found in the dictionary");
+                            }
                         }
 
                         deck = new LinkedList<Encounter>(currentDeck);
-                        Debug.Log("New deck");
                     }
 
                     break;

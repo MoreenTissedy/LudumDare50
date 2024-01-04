@@ -46,14 +46,11 @@ namespace CauldronCodebase
         public bool fractionEventTriggered;   //TODO: save
         
         public EncounterDeck currentDeck;
-        public NightEventProvider currentEvents;
 
         public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
 
-        private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
-        public event Action<Encounter> OnNewCard; 
 
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
@@ -64,18 +61,15 @@ namespace CauldronCodebase
 
         private SODictionary soDictionary;
         
-        public void Init(MainSettings settings, EncounterDeck deck, NightEventProvider events, DataPersistenceManager dataManager, SODictionary dictionary)
+        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager, SODictionary dictionary)
         {
             soDictionary = dictionary;
-
-            dataPersistenceManager = dataManager;
+            
             dataManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
-            gameplaySettings = settings.gameplay;
             
             currentDeck = deck;
-            currentEvents = events;
 
             fractionStatus = new FractionStatus();
             
@@ -166,7 +160,6 @@ namespace CauldronCodebase
         public void SetCurrentCard(Encounter card)
         {
             currentCard = card;
-            OnNewCard?.Invoke(currentCard);
         }
 
         public int Add(Statustype type, int value)
@@ -344,11 +337,15 @@ namespace CauldronCodebase
             data.Phase = gamePhase;
             data.FractionData = fractionStatus.Save();
 
-            if (currentCard != null)
+            if (currentCard == null)
+            {
+                data.CurrentEncounter = string.Empty;
+            }
+            else
             {
                 data.CurrentEncounter = currentCard.name;
             }
-            
+
             data.PotionsTotalOnRun.Clear();
             foreach (var potion in potionsTotal)
             {

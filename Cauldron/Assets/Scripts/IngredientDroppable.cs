@@ -227,8 +227,7 @@ namespace CauldronCodebase
             const float timeMoveDoubleClick = 0.5f;
 
             SetMovementVisuals();
-            transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
-            await UniTask.Delay(TimeSpan.FromSeconds(timeMoveDoubleClick));
+            await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
             AddToMixAndResetVisuals();
         }
 

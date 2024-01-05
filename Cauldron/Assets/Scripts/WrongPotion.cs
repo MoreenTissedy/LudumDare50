@@ -27,5 +27,18 @@ namespace CauldronCodebase
                 IngredientsList.Add((Ingredients)Enum.Parse(typeof(Ingredients), ingredient));
             }
         }
+        
+        public bool SearchIngredient(Ingredients ingredients)
+        {
+            foreach (Ingredients type in IngredientsList)
+            {
+                if (type == ingredients)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EasyLoc;
 using TMPro;
 using UnityEngine;

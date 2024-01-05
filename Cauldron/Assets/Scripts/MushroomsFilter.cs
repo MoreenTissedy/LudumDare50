@@ -1,4 +1,5 @@
 ﻿using System;
+using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,15 @@ public class MushroomsFilter : MonoBehaviour
     [SerializeField] private FilterButton agaricusButton;
     [SerializeField] private Image gauge;
 
+    public IngredientsData.Ingredient AmanitaIngredient => amanitaButton.Ingredient;
+    public IngredientsData.Ingredient ToadstoolIngredient => toadstoolButton.Ingredient;
+    public IngredientsData.Ingredient AgaricusIngredient => agaricusButton.Ingredient;
+    public bool IsEnableAmanita => amanitaButton.IsEnable;
+    public bool IsEnableToadstool => toadstoolButton.IsEnable;
+    public bool IsEnableAgaricus => agaricusButton.IsEnable;
     public bool IsShow { get; private set; }
     public event Action SwitchFilter;
+    public event Action Show;
 
     private void Awake()
     {
@@ -21,11 +29,22 @@ public class MushroomsFilter : MonoBehaviour
     private void OnEnable()
     {
         mushroomsTypeButton.onClick.AddListener(EnableButtons);
+        amanitaButton.SwitchFilter += OnSwitchFilter;
+        toadstoolButton.SwitchFilter += OnSwitchFilter;
+        agaricusButton.SwitchFilter += OnSwitchFilter;
     }
 
     private void OnDisable()
     {
         mushroomsTypeButton.onClick.RemoveListener(EnableButtons);
+        amanitaButton.SwitchFilter -= OnSwitchFilter;
+        toadstoolButton.SwitchFilter -= OnSwitchFilter;
+        agaricusButton.SwitchFilter -= OnSwitchFilter;
+    }
+
+    private void OnSwitchFilter()
+    {
+        Show?.Invoke();
     }
 
     public void DisableButton()

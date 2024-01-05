@@ -10,7 +10,7 @@ public class PlantsFilter : MonoBehaviour
     [SerializeField] private Image gauge;
     
     public bool IsShow { get; private set; }
-    public event Action SwitchFilter;
+    public event Action AddedFilter;
     
     private void Awake()
     {
@@ -36,7 +36,7 @@ public class PlantsFilter : MonoBehaviour
 
     private void EnableButtons()
     {
-        SwitchFilter?.Invoke();
+        AddedFilter?.Invoke();
         leaf1Button.gameObject.SetActive(true);
         leaf2Button.gameObject.SetActive(true);
         IsShow = true;

@@ -11,26 +11,60 @@ public class ExperimentController : MonoBehaviour
     [SerializeField] private RootsFilter rootsFilter;
     [SerializeField] private MushroomsFilter mushroomsFilter;
     [SerializeField] private PlantsFilter plantsFilter;
-    
+
+    public List<AttemptEntry> attemptEntries;
     public List<WrongPotion> wrongPotions;
 
     private void OnEnable()
     {
-        animalsFilter.SwitchFilter += UpdateFilter;
-        rootsFilter.SwitchFilter += UpdateFilter;
-        mushroomsFilter.SwitchFilter += UpdateFilter;
-        plantsFilter.SwitchFilter += UpdateFilter;
+        animalsFilter.SwitchFilter += UpdateButtonFilter;
+        rootsFilter.SwitchFilter += UpdateButtonFilter;
+        mushroomsFilter.SwitchFilter += UpdateButtonFilter;
+        mushroomsFilter.Show += UpdateFilter;
+        plantsFilter.AddedFilter += UpdateButtonFilter;
     }
 
     private void OnDisable()
     {
-        animalsFilter.SwitchFilter -= UpdateFilter;
-        rootsFilter.SwitchFilter -= UpdateFilter;
-        mushroomsFilter.SwitchFilter -= UpdateFilter;
-        plantsFilter.SwitchFilter -= UpdateFilter;
+        animalsFilter.SwitchFilter -= UpdateButtonFilter;
+        rootsFilter.SwitchFilter -= UpdateButtonFilter;
+        mushroomsFilter.SwitchFilter -= UpdateButtonFilter;
+        mushroomsFilter.Show -= UpdateFilter;
+        plantsFilter.AddedFilter -= UpdateButtonFilter;
+    }
+
+    private void UpdateList(IngredientsData.Ingredient filterIngredient)
+    {
+        int counter = 0;
+        
+        for (int i = 0; i < wrongPotions.Count; i++)
+        {
+            if (wrongPotions[i].SearchIngredient(filterIngredient.type) && counter < attemptEntries.Count)
+            {
+                attemptEntries[i].Display(wrongPotions[counter].IngredientsList.ToArray());
+                attemptEntries[counter].Display(wrongPotions[i].IngredientsList.ToArray());
+                counter++;
+            }
+        }
     }
 
     private void UpdateFilter()
+    {
+        if (mushroomsFilter.IsEnableAgaricus)
+        {
+            UpdateList(mushroomsFilter.AgaricusIngredient);
+        }
+        else if (mushroomsFilter.IsEnableToadstool)
+        {
+            UpdateList(mushroomsFilter.ToadstoolIngredient);
+        }
+        else if (mushroomsFilter.IsEnableAmanita)
+        { 
+            UpdateList(mushroomsFilter.AmanitaIngredient);
+        }
+    }
+
+    private void UpdateButtonFilter()
     {
         if(plantsFilter.IsShow)
             plantsFilter.DisableButton();

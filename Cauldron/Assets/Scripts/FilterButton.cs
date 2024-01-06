@@ -13,7 +13,7 @@ public class FilterButton : MonoBehaviour
     public IngredientsData.Ingredient Ingredient { get; private set; }
     public bool IsEnable { get; private set; }
 
-    public event Action SwitchFilter;
+    public event Action<IngredientsData.Ingredient> SwitchFilter;
 
     private void OnEnable()
     {
@@ -33,7 +33,7 @@ public class FilterButton : MonoBehaviour
             IngredientsData.Ingredient ingredient = ingredientsData.Get(ingredientsName);
             Ingredient = ingredient;
             IsEnable = true;
-            SwitchFilter?.Invoke();
+            SwitchFilter?.Invoke(Ingredient);
         }
         else
         {

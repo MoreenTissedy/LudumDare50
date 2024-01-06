@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase;
 using UnityEngine;
-using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class ExperimentController : MonoBehaviour
 {
@@ -14,6 +14,8 @@ public class ExperimentController : MonoBehaviour
 
     public List<AttemptEntry> attemptEntries;
     public List<WrongPotion> wrongPotions;
+
+    private bool isFindWrongRecipe;
 
     private void OnEnable()
     {
@@ -35,33 +37,68 @@ public class ExperimentController : MonoBehaviour
 
     private void UpdateList(IngredientsData.Ingredient filterIngredient)
     {
-        int counter = 0;
-        
-        for (int i = 0; i < wrongPotions.Count; i++)
+        foreach (AttemptEntry attempt in attemptEntries)
         {
-            if (wrongPotions[i].SearchIngredient(filterIngredient.type) && counter < attemptEntries.Count)
+            Ingredients[] recipe = CreateRecipe(filterIngredient);
+            WrongPotion potion = null;
+
+            foreach (WrongPotion wrongPotion in wrongPotions) 
             {
-                attemptEntries[i].Display(wrongPotions[counter].IngredientsList.ToArray());
-                attemptEntries[counter].Display(wrongPotions[i].IngredientsList.ToArray());
-                counter++;
+                bool ingredient = wrongPotion.SearchRecipe(recipe[0], recipe[1], recipe[2]);
+                
+                if (ingredient) 
+                {
+                    isFindWrongRecipe = true;
+                    potion = wrongPotion;
+                    break;
+                }
+            }
+
+            if (isFindWrongRecipe && potion != null)
+            {
+                attempt.DisplayFailure(potion.IngredientsList.ToArray());
+            }
+            else
+            {
+                attempt.DisplayNotTried(recipe);
+                isFindWrongRecipe = false;
             }
         }
     }
 
-    private void UpdateFilter()
+    private Ingredients[] CreateRecipe(IngredientsData.Ingredient filterIngredient)
     {
-        if (mushroomsFilter.IsEnableAgaricus)
-        {
-            UpdateList(mushroomsFilter.AgaricusIngredient);
-        }
-        else if (mushroomsFilter.IsEnableToadstool)
-        {
-            UpdateList(mushroomsFilter.ToadstoolIngredient);
-        }
-        else if (mushroomsFilter.IsEnableAmanita)
-        { 
-            UpdateList(mushroomsFilter.AmanitaIngredient);
-        }
+        Ingredients targetType = filterIngredient.type;
+        Ingredients targetType1 = RandomIngredient(targetType);
+        Ingredients targetType2 = RandomIngredient(targetType, targetType1);
+        Ingredients[] recipe = { targetType, targetType1, targetType2 };
+
+        return recipe;
+    }
+
+    private Ingredients RandomIngredient(Ingredients targetType, Ingredients targetType1)
+    {
+        List<Ingredients> ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
+            .Where(ingredient => ingredient != targetType && ingredient != targetType1).ToList();
+        
+        int randomIndex = Random.Range(0, ingredientsList.Count);
+        
+        return ingredientsList[randomIndex];
+    }
+
+    private Ingredients RandomIngredient(Ingredients targetType)
+    {
+        List<Ingredients> ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
+            .Where(ingredient => ingredient != targetType).ToList();
+        
+        int randomIndex = Random.Range(0, ingredientsList.Count);
+        
+        return ingredientsList[randomIndex];
+    }
+
+    private void UpdateFilter(IngredientsData.Ingredient ingredient)
+    {
+        UpdateList(ingredient);
     }
 
     private void UpdateButtonFilter()

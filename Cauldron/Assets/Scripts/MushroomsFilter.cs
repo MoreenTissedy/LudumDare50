@@ -19,7 +19,7 @@ public class MushroomsFilter : MonoBehaviour
     public bool IsEnableAgaricus => agaricusButton.IsEnable;
     public bool IsShow { get; private set; }
     public event Action SwitchFilter;
-    public event Action Show;
+    public event Action<IngredientsData.Ingredient> Show;
 
     private void Awake()
     {
@@ -42,9 +42,9 @@ public class MushroomsFilter : MonoBehaviour
         agaricusButton.SwitchFilter -= OnSwitchFilter;
     }
 
-    private void OnSwitchFilter()
+    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
     {
-        Show?.Invoke();
+        Show?.Invoke(ingredient);
     }
 
     public void DisableButton()

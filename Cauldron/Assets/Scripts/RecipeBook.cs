@@ -390,7 +390,7 @@ namespace CauldronCodebase
                 int num = currentPage * recipeEntries.Length + i;
                 if (num < experimentController.wrongPotions.Count)
                 {
-                    attemptEntries[i].Display(experimentController.wrongPotions[num].IngredientsList.ToArray());
+                    attemptEntries[i].DisplayFailure(experimentController.wrongPotions[num].IngredientsList.ToArray());
                 }
                 else
                 {

@@ -24,7 +24,7 @@ namespace CauldronCodebase
             Clear();
         }
 
-        public void Display(Ingredients[] attempt)
+        public void DisplayFailure(Ingredients[] attempt)
         {
             if (attempt.Length != 3)
             {
@@ -35,7 +35,24 @@ namespace CauldronCodebase
             ingredient2Image.sprite = data.Get(attempt[1]).image;
             ingredient3Image.sprite = data.Get(attempt[2]).image;
             titleText.text = failure;
+            unknownResultImage.gameObject.SetActive(false);
             negativeResultImage.gameObject.SetActive(true);
+            gameObject.SetActive(true);
+        }
+
+        public void DisplayNotTried(Ingredients[] attempt)
+        {
+            if (attempt.Length != 3)
+            {
+                return;
+            }
+            
+            ingredient1Image.sprite = data.Get(attempt[0]).image;
+            ingredient2Image.sprite = data.Get(attempt[1]).image;
+            ingredient3Image.sprite = data.Get(attempt[2]).image;
+            titleText.text = notTried;
+            negativeResultImage.gameObject.SetActive(false);
+            unknownResultImage.gameObject.SetActive(true);
             gameObject.SetActive(true);
         }
 

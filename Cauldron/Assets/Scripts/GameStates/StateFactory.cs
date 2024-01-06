@@ -65,7 +65,7 @@ namespace CauldronCodebase.GameStates
 
         public VisitorWaitingState CreateVisitorWaitingState()
         {
-            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine, gameFXManager);
+            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine);
         }
 
         public NightState CreateNightState()

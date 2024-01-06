@@ -45,16 +45,12 @@ namespace CauldronCodebase.GameStates
                 cardDeck.AddToDeck(priorityCard, true);
             }
             Encounter currentCard = cardDeck.GetTopCard();
+            if(currentCard is null) return;
+            
             gameDataHandler.SetCurrentCard(currentCard);
-
-            if (gameDataHandler.currentCard is null)
-            {
-                Debug.LogError("Run out of cards!");
-                return;
-            }
+                     
             LoggerTool.TheOne.Log(currentCard.name+" | "+currentCard.text);
             LoggerTool.TheOne.StartTimer();
-            
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
             visitorManager.VisitorLeft += OnVisitorLeft;

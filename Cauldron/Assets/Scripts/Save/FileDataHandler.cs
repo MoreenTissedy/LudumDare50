@@ -8,14 +8,10 @@ namespace Save
     {
         public const string PrefSaveKey = "SaveExists";
         
-        private string dataDirPath;
-        private string dataFileName;
-        private string fullPath;
+        private readonly string fullPath;
 
         public FileDataHandler(string dataDirPath, string dataFileName)
         {
-            this.dataDirPath = dataDirPath;
-            this.dataFileName = dataFileName;
             fullPath = Path.Combine(dataDirPath, dataFileName);
         }
 

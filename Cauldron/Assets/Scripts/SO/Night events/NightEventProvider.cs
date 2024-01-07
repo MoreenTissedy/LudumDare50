@@ -208,7 +208,9 @@ namespace CauldronCodebase
             {
                 return;
             }
-            data.JoinedNightEvents = joinedEvents.Select(x => x.name).ToList();
+            if(joinedEvents != null)
+                data.JoinedNightEvents = joinedEvents.Select(x => x.name).ToList();
+            
             data.CurrentStoryEvents = storyEvents.Select(x => x.name).ToList();
             data.CurrentConditionals = inGameConditionals.Select(x => x.name).ToList();
             data.CurrentRandomEvents = inGameRandoms.Select(x => x.name).ToList();

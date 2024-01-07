@@ -31,12 +31,13 @@ namespace CauldronCodebase
                 storyTag = storyTag.TrimStart('^');
                 if (storyTag.StartsWith("-"))
                 {
+                    storyTag = storyTag.TrimStart('-');
                     if (storyTag.StartsWith("*"))
                     {
                         storyTag = storyTag.TrimStart('*');
                         StoryTagHelper.RemoveMilestone(storyTag);
                     }
-                    game.storyTags.Remove(storyTag.TrimStart('-'));
+                    game.storyTags.Remove(storyTag);
                 }
                 else if (!string.IsNullOrEmpty(storyTag))
                 {

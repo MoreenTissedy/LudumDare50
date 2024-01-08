@@ -63,7 +63,6 @@ public class AnimalsFilter : MonoBehaviour
 
     public void ClearFilter(IngredientsData.Ingredient lastIngredient)
     {
-        
         gauge.gameObject.SetActive(false);
         batButton.DisableFilter();
         ratButton.DisableFilter();

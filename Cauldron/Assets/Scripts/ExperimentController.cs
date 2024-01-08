@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 
 public class ExperimentController : MonoBehaviour
 {
+    [SerializeField] private RecipeBook recipeBook;
     [SerializeField] private AnimalsFilter animalsFilter;
     [SerializeField] private RootsFilter rootsFilter;
     [SerializeField] private MushroomsFilter mushroomsFilter;
@@ -15,11 +16,14 @@ public class ExperimentController : MonoBehaviour
     public List<AttemptEntry> attemptEntries;
     public List<WrongPotion> wrongPotions;
 
+    private const int MaxFilterSelection = 2;
+    private const int FirstFilter = 1;
+    private const int SecondFilter = 2;
+
     private IngredientsData.Ingredient firstIngredient;
     private IngredientsData.Ingredient secondIngredient;
     private bool isFindWrongRecipe;
     private int countFilter;
-    private const int MaxFilter = 2;
 
     private void OnEnable()
     {
@@ -49,10 +53,10 @@ public class ExperimentController : MonoBehaviour
     {
         switch (countFilter)
         {
-            case 1:
+            case FirstFilter:
                 firstIngredient = filterIngredient;
                 break;
-            case 2:
+            case SecondFilter:
                 secondIngredient = filterIngredient;
                 break;
         }
@@ -60,7 +64,8 @@ public class ExperimentController : MonoBehaviour
         foreach (AttemptEntry attempt in attemptEntries)
         {
             Ingredients[] recipe = CreateRecipe(firstIngredient, secondIngredient);
-            WrongPotion potion = null;
+            WrongPotion potionWrong = null;
+            Recipe potionRecipe = null;
 
             foreach (WrongPotion wrongPotion in wrongPotions) 
             {
@@ -69,14 +74,40 @@ public class ExperimentController : MonoBehaviour
                 if (ingredient) 
                 {
                     isFindWrongRecipe = true;
-                    potion = wrongPotion;
+                    potionWrong = wrongPotion;
+                    break;
+                }
+            }
+            
+            foreach (Recipe herbalRecipes in recipeBook.allHerbalRecipes)
+            {
+                bool ingredient = herbalRecipes.SearchRecipe(recipe[0], recipe[1], recipe[2]);
+                
+                if (ingredient) 
+                {
+                    potionRecipe = herbalRecipes;
                     break;
                 }
             }
 
-            if (isFindWrongRecipe && potion != null)
+            foreach (Recipe magicalRecipe in recipeBook.allMagicalRecipes)
             {
-                attempt.DisplayFailure(potion.IngredientsList.ToArray());
+                bool ingredient = magicalRecipe.SearchRecipe(recipe[0], recipe[1], recipe[2]);
+                
+                if (ingredient) 
+                {
+                    potionRecipe = magicalRecipe;
+                    break;
+                }
+            }
+
+            if (!recipeBook.LockedRecipes.Contains(potionRecipe) && potionRecipe != null)
+            {
+                attempt.DisplayPotion(recipe, potionRecipe);
+            }
+            else if (isFindWrongRecipe && potionWrong != null)
+            {
+                attempt.DisplayFailure(recipe);
             }
             else
             {
@@ -120,7 +151,7 @@ public class ExperimentController : MonoBehaviour
     {
         countFilter++;
         
-        if (countFilter > MaxFilter)
+        if (countFilter > MaxFilterSelection)
         {
             countFilter = 0;
             plantsFilter.ClearFilter(ingredient);

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,25 +24,30 @@ namespace CauldronCodebase
 
         public void ApplyStoryTag(NightEvent nightEvent)
         {
-            string storyTag = nightEvent.storyTag;
-            storyTag = storyTag.TrimStart('^');
-            if (storyTag.StartsWith("-"))
+            string[] storyTags = nightEvent.storyTag.Split(',').Select(x => x.Trim()).ToArray();
+            foreach (string tag in storyTags)
             {
-                if (storyTag.StartsWith("*"))
+                string storyTag = tag;
+                storyTag = storyTag.TrimStart('^');
+                if (storyTag.StartsWith("-"))
                 {
-                    storyTag = storyTag.TrimStart('*');
-                    StoryTagHelper.RemoveMilestone(storyTag);
+                    storyTag = storyTag.TrimStart('-');
+                    if (storyTag.StartsWith("*"))
+                    {
+                        storyTag = storyTag.TrimStart('*');
+                        StoryTagHelper.RemoveMilestone(storyTag);
+                    }
+                    game.storyTags.Remove(storyTag);
                 }
-                game.storyTags.Remove(storyTag.TrimStart('-'));
-            }
-            else if (!string.IsNullOrEmpty(storyTag))
-            {
-                if (storyTag.StartsWith("*"))
+                else if (!string.IsNullOrEmpty(storyTag))
                 {
-                    storyTag = storyTag.TrimStart('*');
-                    StoryTagHelper.SaveMilestone(storyTag);
+                    if (storyTag.StartsWith("*"))
+                    {
+                        storyTag = storyTag.TrimStart('*');
+                        StoryTagHelper.SaveMilestone(storyTag);
+                    }
+                    game.AddTag(storyTag);
                 }
-                game.AddTag(storyTag);
             }
         }
 

@@ -15,6 +15,8 @@ public class ExperimentController : MonoBehaviour
     public List<AttemptEntry> attemptEntries;
     public List<WrongPotion> wrongPotions;
 
+    private IngredientsData.Ingredient firstIngredient;
+    private IngredientsData.Ingredient secondIngredient;
     private bool isFindWrongRecipe;
     private int countFilter;
     private const int MaxFilter = 2;
@@ -45,9 +47,19 @@ public class ExperimentController : MonoBehaviour
 
     private void UpdateList(IngredientsData.Ingredient filterIngredient)
     {
+        switch (countFilter)
+        {
+            case 1:
+                firstIngredient = filterIngredient;
+                break;
+            case 2:
+                secondIngredient = filterIngredient;
+                break;
+        }
+
         foreach (AttemptEntry attempt in attemptEntries)
         {
-            Ingredients[] recipe = CreateRecipe(filterIngredient);
+            Ingredients[] recipe = CreateRecipe(firstIngredient, secondIngredient);
             WrongPotion potion = null;
 
             foreach (WrongPotion wrongPotion in wrongPotions) 
@@ -74,10 +86,10 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
-    private Ingredients[] CreateRecipe(IngredientsData.Ingredient filterIngredient)
+    private Ingredients[] CreateRecipe(IngredientsData.Ingredient filterIngredient, IngredientsData.Ingredient filterIngredient1 = null)
     {
         Ingredients targetType = filterIngredient.type;
-        Ingredients targetType1 = RandomIngredient(targetType);
+        Ingredients targetType1 = filterIngredient1?.type ?? RandomIngredient(targetType);
         Ingredients targetType2 = RandomIngredient(targetType, targetType1);
         Ingredients[] recipe = { targetType, targetType1, targetType2 };
 
@@ -115,6 +127,7 @@ public class ExperimentController : MonoBehaviour
             animalsFilter.ClearFilter(ingredient);
             rootsFilter.ClearFilter(ingredient);
             mushroomsFilter.ClearFilter(ingredient);
+            secondIngredient = null;
         }
 
         UpdateList(ingredient);

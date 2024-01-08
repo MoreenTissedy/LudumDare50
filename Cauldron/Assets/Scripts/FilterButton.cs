@@ -25,7 +25,7 @@ public class FilterButton : MonoBehaviour
         button.onClick.RemoveListener(EnableDisableFilter);
     }
 
-    private void EnableDisableFilter()
+    public void EnableDisableFilter()
     {
         if (!IsEnable)
         {
@@ -37,8 +37,13 @@ public class FilterButton : MonoBehaviour
         }
         else
         {
-            yellowBackground.gameObject.SetActive(false);
-            IsEnable = false;
+            DisableFilter();
         }
+    }
+
+    public void DisableFilter()
+    {
+        yellowBackground.gameObject.SetActive(false);
+        IsEnable = false;
     }
 }

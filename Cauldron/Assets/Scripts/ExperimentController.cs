@@ -16,23 +16,31 @@ public class ExperimentController : MonoBehaviour
     public List<WrongPotion> wrongPotions;
 
     private bool isFindWrongRecipe;
+    private int countFilter;
+    private const int MaxFilter = 2;
 
     private void OnEnable()
     {
-        animalsFilter.SwitchFilter += UpdateButtonFilter;
-        rootsFilter.SwitchFilter += UpdateButtonFilter;
-        mushroomsFilter.SwitchFilter += UpdateButtonFilter;
-        mushroomsFilter.Show += UpdateFilter;
+        animalsFilter.AddedFilter += UpdateButtonFilter;
+        rootsFilter.AddedFilter += UpdateButtonFilter;
+        mushroomsFilter.AddedFilter += UpdateButtonFilter;
         plantsFilter.AddedFilter += UpdateButtonFilter;
+        animalsFilter.Show += UpdateFilter;
+        rootsFilter.Show += UpdateFilter;
+        mushroomsFilter.Show += UpdateFilter;
+        plantsFilter.Show += UpdateFilter;
     }
 
     private void OnDisable()
     {
-        animalsFilter.SwitchFilter -= UpdateButtonFilter;
-        rootsFilter.SwitchFilter -= UpdateButtonFilter;
-        mushroomsFilter.SwitchFilter -= UpdateButtonFilter;
-        mushroomsFilter.Show -= UpdateFilter;
+        animalsFilter.AddedFilter -= UpdateButtonFilter;
+        rootsFilter.AddedFilter -= UpdateButtonFilter;
+        mushroomsFilter.AddedFilter -= UpdateButtonFilter;
         plantsFilter.AddedFilter -= UpdateButtonFilter;
+        animalsFilter.Show -= UpdateFilter;
+        rootsFilter.Show -= UpdateFilter;
+        mushroomsFilter.Show -= UpdateFilter;
+        plantsFilter.Show -= UpdateFilter;
     }
 
     private void UpdateList(IngredientsData.Ingredient filterIngredient)
@@ -98,19 +106,41 @@ public class ExperimentController : MonoBehaviour
 
     private void UpdateFilter(IngredientsData.Ingredient ingredient)
     {
+        countFilter++;
+        
+        if (countFilter > MaxFilter)
+        {
+            countFilter = 0;
+            plantsFilter.ClearFilter(ingredient);
+            animalsFilter.ClearFilter(ingredient);
+            rootsFilter.ClearFilter(ingredient);
+            mushroomsFilter.ClearFilter(ingredient);
+        }
+
         UpdateList(ingredient);
     }
 
     private void UpdateButtonFilter()
     {
-        if(plantsFilter.IsShow)
+        if (plantsFilter.IsShow)
+        {
             plantsFilter.DisableButton();
-        if(animalsFilter.IsShow)
+        }
+        
+        if (animalsFilter.IsShow)
+        {
             animalsFilter.DisableButton();
-        if(rootsFilter.IsShow)
+        }
+        
+        if (rootsFilter.IsShow)
+        {
             rootsFilter.DisableButton();
-        if(mushroomsFilter.IsShow)
+        }
+        
+        if (mushroomsFilter.IsShow)
+        {
             mushroomsFilter.DisableButton();
+        }
     }
 
     public void RecordAttempt(WrongPotion mix)

@@ -1,4 +1,5 @@
 ﻿using System;
+using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,8 @@ public class RootsFilter : MonoBehaviour
 
     public bool IsShow { get; private set; }
     
-    public event Action SwitchFilter;
+    public event Action AddedFilter;
+    public event Action<IngredientsData.Ingredient> Show;
 
     private void Awake()
     {
@@ -21,11 +23,15 @@ public class RootsFilter : MonoBehaviour
     private void OnEnable()
     {
         rootTypeButton.onClick.AddListener(EnableButtons);
+        root1Button.SwitchFilter += OnSwitchFilter;
+        root2Button.SwitchFilter += OnSwitchFilter;
     }
 
     private void OnDisable()
     {
         rootTypeButton.onClick.RemoveListener(EnableButtons);
+        root1Button.SwitchFilter -= OnSwitchFilter;
+        root2Button.SwitchFilter -= OnSwitchFilter;
     }
 
     public void DisableButton()
@@ -37,9 +43,33 @@ public class RootsFilter : MonoBehaviour
 
     private void EnableButtons()
     {
-        SwitchFilter?.Invoke();
+        AddedFilter?.Invoke();
         root1Button.gameObject.SetActive(true);
         root2Button.gameObject.SetActive(true);
         IsShow = true;
+    }
+
+    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
+    {
+        Show?.Invoke(ingredient);
+        gauge.gameObject.SetActive(true);
+    }
+
+    public void ClearFilter(IngredientsData.Ingredient lastIngredient)
+    {
+        gauge.gameObject.SetActive(false);
+        root1Button.DisableFilter();
+        root2Button.DisableFilter();
+        
+        if (root1Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            root1Button.EnableDisableFilter();
+        }
+        else if (root2Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            root2Button.EnableDisableFilter();
+        }
     }
 }

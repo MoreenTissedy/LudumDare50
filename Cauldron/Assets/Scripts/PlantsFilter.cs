@@ -11,6 +11,7 @@ public class PlantsFilter : MonoBehaviour
     [SerializeField] private Image gauge;
     
     public bool IsShow { get; private set; }
+    
     public event Action AddedFilter;
     public event Action<IngredientsData.Ingredient> Show;
     
@@ -33,6 +34,24 @@ public class PlantsFilter : MonoBehaviour
         leaf2Button.SwitchFilter -= OnSwitchFilter;
     }
 
+    public void ClearFilter(IngredientsData.Ingredient lastIngredient)
+    {
+        gauge.gameObject.SetActive(false);
+        leaf1Button.DisableFilter();
+        leaf2Button.DisableFilter();
+        
+        if (leaf1Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            leaf1Button.EnableDisableFilter();
+        }
+        else if (leaf2Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            leaf2Button.EnableDisableFilter();
+        }
+    }
+
     public void DisableButton()
     {
         leaf1Button.gameObject.SetActive(false);
@@ -52,23 +71,5 @@ public class PlantsFilter : MonoBehaviour
     {
         Show?.Invoke(ingredient);
         gauge.gameObject.SetActive(true);
-    }
-
-    public void ClearFilter(IngredientsData.Ingredient lastIngredient)
-    {
-        gauge.gameObject.SetActive(false);
-        leaf1Button.DisableFilter();
-        leaf2Button.DisableFilter();
-        
-        if (leaf1Button.Ingredient == lastIngredient)
-        {
-            gauge.gameObject.SetActive(true);
-            leaf1Button.EnableDisableFilter();
-        }
-        else if (leaf2Button.Ingredient == lastIngredient)
-        {
-            gauge.gameObject.SetActive(true);
-            leaf2Button.EnableDisableFilter();
-        }
     }
 }

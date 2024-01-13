@@ -34,6 +34,24 @@ public class RootsFilter : MonoBehaviour
         root2Button.SwitchFilter -= OnSwitchFilter;
     }
 
+    public void ClearFilter(IngredientsData.Ingredient lastIngredient)
+    {
+        gauge.gameObject.SetActive(false);
+        root1Button.DisableFilter();
+        root2Button.DisableFilter();
+        
+        if (root1Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            root1Button.EnableDisableFilter();
+        }
+        else if (root2Button.Ingredient == lastIngredient)
+        {
+            gauge.gameObject.SetActive(true);
+            root2Button.EnableDisableFilter();
+        }
+    }
+
     public void DisableButton()
     {
         root1Button.gameObject.SetActive(false);
@@ -53,23 +71,5 @@ public class RootsFilter : MonoBehaviour
     {
         Show?.Invoke(ingredient);
         gauge.gameObject.SetActive(true);
-    }
-
-    public void ClearFilter(IngredientsData.Ingredient lastIngredient)
-    {
-        gauge.gameObject.SetActive(false);
-        root1Button.DisableFilter();
-        root2Button.DisableFilter();
-        
-        if (root1Button.Ingredient == lastIngredient)
-        {
-            gauge.gameObject.SetActive(true);
-            root1Button.EnableDisableFilter();
-        }
-        else if (root2Button.Ingredient == lastIngredient)
-        {
-            gauge.gameObject.SetActive(true);
-            root2Button.EnableDisableFilter();
-        }
     }
 }

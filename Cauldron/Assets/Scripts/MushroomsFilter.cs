@@ -12,6 +12,7 @@ public class MushroomsFilter : MonoBehaviour
     [SerializeField] private Image gauge;
     
     public bool IsShow { get; private set; }
+    
     public event Action AddedFilter;
     public event Action<IngredientsData.Ingredient> Show;
 
@@ -36,29 +37,6 @@ public class MushroomsFilter : MonoBehaviour
         agaricusButton.SwitchFilter -= OnSwitchFilter;
     }
 
-    public void DisableButton()
-    {
-        amanitaButton.gameObject.SetActive(false);
-        toadstoolButton.gameObject.SetActive(false);
-        agaricusButton.gameObject.SetActive(false);
-        IsShow = false;
-    }
-
-    private void EnableButtons()
-    {
-        AddedFilter?.Invoke();
-        amanitaButton.gameObject.SetActive(true);
-        toadstoolButton.gameObject.SetActive(true);
-        agaricusButton.gameObject.SetActive(true);
-        IsShow = true;
-    }
-
-    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
-    {
-        Show?.Invoke(ingredient);
-        gauge.gameObject.SetActive(true);
-    }
-
     public void ClearFilter(IngredientsData.Ingredient lastIngredient)
     {
         gauge.gameObject.SetActive(false);
@@ -81,5 +59,28 @@ public class MushroomsFilter : MonoBehaviour
             gauge.gameObject.SetActive(true);
             agaricusButton.EnableDisableFilter();
         }
+    }
+
+    public void DisableButton()
+    {
+        amanitaButton.gameObject.SetActive(false);
+        toadstoolButton.gameObject.SetActive(false);
+        agaricusButton.gameObject.SetActive(false);
+        IsShow = false;
+    }
+
+    private void EnableButtons()
+    {
+        AddedFilter?.Invoke();
+        amanitaButton.gameObject.SetActive(true);
+        toadstoolButton.gameObject.SetActive(true);
+        agaricusButton.gameObject.SetActive(true);
+        IsShow = true;
+    }
+
+    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
+    {
+        Show?.Invoke(ingredient);
+        gauge.gameObject.SetActive(true);
     }
 }

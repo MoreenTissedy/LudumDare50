@@ -38,29 +38,6 @@ public class AnimalsFilter : MonoBehaviour
         ratButton.SwitchFilter -= OnSwitchFilter;
     }
 
-    public void DisableButton()
-    {
-        batButton.gameObject.SetActive(false);
-        ratButton.gameObject.SetActive(false);
-        snakeButton.gameObject.SetActive(false);
-        IsShow = false;
-    }
-
-    private void EnableButtons()
-    {
-        AddedFilter?.Invoke();
-        batButton.gameObject.SetActive(true);
-        ratButton.gameObject.SetActive(true);
-        snakeButton.gameObject.SetActive(true);
-        IsShow = true;
-    }
-
-    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
-    {
-        Show?.Invoke(ingredient);
-        gauge.gameObject.SetActive(true);
-    }
-
     public void ClearFilter(IngredientsData.Ingredient lastIngredient)
     {
         gauge.gameObject.SetActive(false);
@@ -83,5 +60,28 @@ public class AnimalsFilter : MonoBehaviour
             gauge.gameObject.SetActive(true);
             snakeButton.EnableDisableFilter();
         }
+    }
+
+    public void DisableButton()
+    {
+        batButton.gameObject.SetActive(false);
+        ratButton.gameObject.SetActive(false);
+        snakeButton.gameObject.SetActive(false);
+        IsShow = false;
+    }
+
+    private void EnableButtons()
+    {
+        AddedFilter?.Invoke();
+        batButton.gameObject.SetActive(true);
+        ratButton.gameObject.SetActive(true);
+        snakeButton.gameObject.SetActive(true);
+        IsShow = true;
+    }
+
+    private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
+    {
+        Show?.Invoke(ingredient);
+        gauge.gameObject.SetActive(true);
     }
 }

@@ -33,7 +33,6 @@ namespace CauldronCodebase
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
         [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
-        [SerializeField] protected AttemptEntry[] attemptEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
 
@@ -70,7 +69,6 @@ namespace CauldronCodebase
         [ContextMenu("Find Entries")]
         void FindEntries()
         {
-            attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
             recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeEntryMagical>();
             foodEntries = foodDisplay.GetComponentsInChildren<RecipeEntryCommon>();
         }
@@ -267,8 +265,7 @@ namespace CauldronCodebase
                     totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     break;
                 case Mode.Attempts:
-                    if (experimentController.wrongPotions != null) totalPages = Mathf.CeilToInt((float) experimentController.wrongPotions.Count / attemptEntries.Length);
-                    else totalPages = 1;
+                    totalPages = experimentController.MaxTotalPages;
                     break;
                 case Mode.Ingredients:
                     totalPages = Mathf.CeilToInt((float)ingredientsData.book.Length / ingredientsEntries.Length);
@@ -383,24 +380,12 @@ namespace CauldronCodebase
 
         private void DisplayAttempts()
         {
-            if (experimentController.wrongPotions is null || experimentController.wrongPotions.Count == 0)
-                return;
-            for (int i = 0; i < attemptEntries.Length; i++)
-            {
-                int num = currentPage * recipeEntries.Length + i;
-                if (num < experimentController.wrongPotions.Count)
-                {
-                    attemptEntries[i].DisplayFailure(experimentController.wrongPotions[num].IngredientsList.ToArray());
-                }
-                else
-                {
-                    attemptEntries[i].Clear();
-                }
-            }
+            experimentController.FillAttemptEntries();
         }
 
         private void CloseAllPages()
         {
+            experimentController.ResetPages();
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);
             attemptsDisplay.SetActive(false);

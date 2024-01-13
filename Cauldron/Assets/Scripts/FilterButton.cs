@@ -11,7 +11,7 @@ public class FilterButton : MonoBehaviour
     [SerializeField] private IngredientsData ingredientsData;
 
     public IngredientsData.Ingredient Ingredient { get; private set; }
-    public bool IsEnable { get; private set; }
+    private bool IsEnable { get; set; }
 
     public event Action<IngredientsData.Ingredient> SwitchFilter;
 

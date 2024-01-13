@@ -7,7 +7,7 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class AttemptEntry: MonoBehaviour
+    public class AttemptEntry : MonoBehaviour
     {
         [Inject]
         private IngredientsData data;

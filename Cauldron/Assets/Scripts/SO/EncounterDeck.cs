@@ -160,6 +160,11 @@ namespace CauldronCodebase
             }
             for (int i = 0; i < num; i++)
             {
+                if (cardPool.Count < 1)
+                {
+                    break;
+                }
+
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
@@ -172,7 +177,6 @@ namespace CauldronCodebase
                         break;
                     }
                 }
-
                 if (!cardFound)
                 {
                     Debug.LogWarning("No suitable card found in pool");

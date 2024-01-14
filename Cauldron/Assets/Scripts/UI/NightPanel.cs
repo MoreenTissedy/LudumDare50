@@ -281,20 +281,15 @@ namespace CauldronCodebase
                 await UniTask.Delay(TimeSpan.FromSeconds(1));
                 clickable = true;
             }
-            else
-            {
-                foreach (var nightPanelCard in activeCards)
-                {
-                    nightPanelCard.Hide();
-                }
-
-                CloseBook();
-            }
         }
 
         public override void CloseBook()
         {
             covenButton.OnClick -= CovenButtonOnOnClick;
+            foreach (var nightPanelCard in activeCards)
+            {
+                nightPanelCard.Hide();
+            }
             base.CloseBook();
         }
     }

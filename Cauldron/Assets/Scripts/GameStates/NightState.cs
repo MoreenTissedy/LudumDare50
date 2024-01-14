@@ -64,7 +64,6 @@ namespace CauldronCodebase.GameStates
             var events = nightEvents.GetEvents(gameDataHandler).ToList();
             CheckStoryEnding(events);
             nightPanel.OpenBookWithEvents(events.ToArray());
-            nightPanel.OnClose += NightPanelOnOnClose;
             nightPanel.EventClicked += NightPanelOnEventClicked;
         }
 
@@ -94,20 +93,28 @@ namespace CauldronCodebase.GameStates
             {
                 storyCards.Add(priorityEvent);
             }
+            if (nightPanel.CurrentPage + 1 >= nightPanel.TotalPages)
+            {
+                OnAllEventsResolved();
+            }
         }
 
-        private async void NightPanelOnOnClose()
+        private async void OnAllEventsResolved()
         {
             if (IsGameEnd()) return;
             UpdateDeck();
             if (cardDeck.NotEnoughCards)
             {
                 storyEnding = "moving";
-                nightPanel.AddEventAsLast(nightEvents.movingEnding).Forget();
-                return;
+                await nightPanel.AddEventAsLast(nightEvents.movingEnding);
+                nightPanel.NextPage();
             }
-            await gameFXManager.ShowSunrise();
-            stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
+            else
+            {
+                nightPanel.CloseBook();
+                await gameFXManager.ShowSunrise();
+                stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
+            }
         }
 
         private void UpdateDeck()
@@ -153,7 +160,6 @@ namespace CauldronCodebase.GameStates
             storyCards.Clear();
             gameFXManager.Clear();
             nightEvents.ClearJoinedEvents();
-            nightPanel.OnClose -= NightPanelOnOnClose;
             nightPanel.EventClicked -= NightPanelOnEventClicked;
             if (nightPanel.IsOpen)
             {

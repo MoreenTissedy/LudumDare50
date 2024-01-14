@@ -71,13 +71,13 @@ public class RootsFilter : MonoBehaviour
     {
         if (root1Button.IsEnable || root2Button.IsEnable)
         {
-            Show?.Invoke(ingredient);
             gauge.gameObject.SetActive(true);
         }
         else
         {
             gauge.gameObject.SetActive(false);
-            Show?.Invoke(ingredient);
         }
+        
+        Show?.Invoke(ingredient);
     }
 }

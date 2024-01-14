@@ -71,13 +71,13 @@ public class PlantsFilter : MonoBehaviour
     {
         if (leaf1Button.IsEnable || leaf2Button.IsEnable)
         {
-            Show?.Invoke(ingredient);
             gauge.gameObject.SetActive(true);
         }
         else
         {
             gauge.gameObject.SetActive(false);
-            Show?.Invoke(ingredient);
         }
+        
+        Show?.Invoke(ingredient);
     }
 }

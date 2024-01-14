@@ -83,13 +83,13 @@ public class AnimalsFilter : MonoBehaviour
     {
         if (batButton.IsEnable || batButton.IsEnable || snakeButton.IsEnable)
         {
-            Show?.Invoke(ingredient);
             gauge.gameObject.SetActive(true);
         }
         else
         {
             gauge.gameObject.SetActive(false);
-            Show?.Invoke(ingredient);
         }
+        
+        Show?.Invoke(ingredient);
     }
 }

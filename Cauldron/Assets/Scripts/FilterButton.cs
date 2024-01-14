@@ -33,13 +33,13 @@ public class FilterButton : MonoBehaviour
             IngredientsData.Ingredient ingredient = ingredientsData.Get(ingredientsName);
             Ingredient = ingredient;
             IsEnable = true;
-            SwitchFilter?.Invoke(Ingredient);
         }
         else
         {
             DisableFilter();
-            SwitchFilter?.Invoke(Ingredient);
         }
+        
+        SwitchFilter?.Invoke(Ingredient);
     }
 
     public void DisableFilter()

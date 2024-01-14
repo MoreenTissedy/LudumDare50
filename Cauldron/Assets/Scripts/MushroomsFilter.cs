@@ -82,13 +82,13 @@ public class MushroomsFilter : MonoBehaviour
     {
         if (agaricusButton.IsEnable || amanitaButton.IsEnable || toadstoolButton.IsEnable)
         {
-            Show?.Invoke(ingredient);
             gauge.gameObject.SetActive(true);
         }
         else
         {
             gauge.gameObject.SetActive(false);
-            Show?.Invoke(ingredient);
         }
+        
+        Show?.Invoke(ingredient);
     }
 }

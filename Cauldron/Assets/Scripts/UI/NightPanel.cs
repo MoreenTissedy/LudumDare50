@@ -187,11 +187,11 @@ namespace CauldronCodebase
             clickable = false;
             covenBlock.SetActive(false);
             content.Add(nightEvent);
+            totalPages++;
             DealEventCard(nightEvent);
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
             FanCards();
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
-            totalPages++;
             clickable = true;
         }
 

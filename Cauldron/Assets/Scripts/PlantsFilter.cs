@@ -69,7 +69,15 @@ public class PlantsFilter : MonoBehaviour
 
     private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
     {
-        Show?.Invoke(ingredient);
-        gauge.gameObject.SetActive(true);
+        if (leaf1Button.IsEnable || leaf2Button.IsEnable)
+        {
+            Show?.Invoke(ingredient);
+            gauge.gameObject.SetActive(true);
+        }
+        else
+        {
+            gauge.gameObject.SetActive(false);
+            Show?.Invoke(ingredient);
+        }
     }
 }

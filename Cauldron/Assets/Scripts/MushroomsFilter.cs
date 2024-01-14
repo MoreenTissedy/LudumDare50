@@ -80,7 +80,15 @@ public class MushroomsFilter : MonoBehaviour
 
     private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
     {
-        Show?.Invoke(ingredient);
-        gauge.gameObject.SetActive(true);
+        if (agaricusButton.IsEnable || amanitaButton.IsEnable || toadstoolButton.IsEnable)
+        {
+            Show?.Invoke(ingredient);
+            gauge.gameObject.SetActive(true);
+        }
+        else
+        {
+            gauge.gameObject.SetActive(false);
+            Show?.Invoke(ingredient);
+        }
     }
 }

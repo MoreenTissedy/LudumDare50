@@ -13,7 +13,7 @@ public class AnimalsFilter : MonoBehaviour
     [SerializeField] private Image gauge;
 
     public bool IsShow { get; private set; }
-    
+
     public event Action AddedFilter;
     public event Action<IngredientsData.Ingredient> Show;
 
@@ -44,7 +44,7 @@ public class AnimalsFilter : MonoBehaviour
         batButton.DisableFilter();
         ratButton.DisableFilter();
         snakeButton.DisableFilter();
-        
+
         if (batButton.Ingredient == lastIngredient)
         {
             gauge.gameObject.SetActive(true);
@@ -81,7 +81,15 @@ public class AnimalsFilter : MonoBehaviour
 
     private void OnSwitchFilter(IngredientsData.Ingredient ingredient)
     {
-        Show?.Invoke(ingredient);
-        gauge.gameObject.SetActive(true);
+        if (batButton.IsEnable || batButton.IsEnable || snakeButton.IsEnable)
+        {
+            Show?.Invoke(ingredient);
+            gauge.gameObject.SetActive(true);
+        }
+        else
+        {
+            gauge.gameObject.SetActive(false);
+            Show?.Invoke(ingredient);
+        }
     }
 }

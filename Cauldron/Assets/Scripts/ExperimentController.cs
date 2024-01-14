@@ -214,7 +214,17 @@ public class ExperimentController : MonoBehaviour
 
     private void OnUpdateFilter(IngredientsData.Ingredient ingredient)
     {
-        countFilter++;
+        if (ingredient != maiIngredient)
+        {
+            countFilter++;
+        }
+        else
+        {
+            if (countFilter > 0)
+            {
+                countFilter--;
+            }
+        }
         
         switch (countFilter)
         {
@@ -223,7 +233,7 @@ public class ExperimentController : MonoBehaviour
                 maiIngredient = ingredient;
                 break;
             case SecondFilter:
-                spareIngredient = ingredient != maiIngredient ? ingredient : spareIngredient;
+                spareIngredient = ingredient;
                 break;
         }
         

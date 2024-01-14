@@ -34,6 +34,7 @@ namespace CauldronCodebase
         }
 
         public NightEvent intro;
+        public NightEvent movingEnding;
         public List<ConditionalEvent> conditionalEvents;
         public List<RandomNightEvent> randomEvents;
         [Header("Readonly")]

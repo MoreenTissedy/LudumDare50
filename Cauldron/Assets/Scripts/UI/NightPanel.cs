@@ -182,10 +182,10 @@ namespace CauldronCodebase
             //FanCards();
         }
 
-        public async void AddCovenEvent(NightEvent nightEvent)
+        public async UniTask AddEventAsLast(NightEvent nightEvent)
         {
-            clickable = false;
             covenBlock.SetActive(false);
+            clickable = false;
             content.Add(nightEvent);
             totalPages++;
             DealEventCard(nightEvent);

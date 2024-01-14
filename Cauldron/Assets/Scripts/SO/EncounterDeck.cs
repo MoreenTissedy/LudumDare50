@@ -46,6 +46,8 @@ namespace CauldronCodebase
         private MainSettings mainSettings;
         private int lastExtendedRoundNumber;
 
+        public bool NotEnoughCards => deck.Count < mainSettings.gameplay.targetDeckCount;
+
         private void OnValidate()
         {
             for (var index = 0; index < cardPoolsByRound.Length; index++)

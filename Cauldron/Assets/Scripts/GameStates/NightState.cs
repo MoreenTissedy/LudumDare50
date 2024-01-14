@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -99,6 +100,12 @@ namespace CauldronCodebase.GameStates
         {
             if (IsGameEnd()) return;
             UpdateDeck();
+            if (cardDeck.NotEnoughCards)
+            {
+                storyEnding = "moving";
+                nightPanel.AddEventAsLast(nightEvents.movingEnding).Forget();
+                return;
+            }
             await gameFXManager.ShowSunrise();
             stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
         }

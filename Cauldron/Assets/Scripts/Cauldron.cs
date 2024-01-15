@@ -87,7 +87,7 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
-            soundManager.Play(Sounds.PotionReady);
+            //soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
             {

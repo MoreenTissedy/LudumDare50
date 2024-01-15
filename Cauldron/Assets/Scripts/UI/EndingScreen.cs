@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -32,6 +33,8 @@ namespace CauldronCodebase
         private bool active;
 
         private bool final;
+
+        [Inject] private SoundManager soundManager;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -73,6 +76,7 @@ namespace CauldronCodebase
             gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
             active = true;
+            soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
         }
 
@@ -116,13 +120,15 @@ namespace CauldronCodebase
             }
             active = false;
             closeButton.gameObject.SetActive(false);
+            soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {
                 gameObject.SetActive(false);
                 OnClose?.Invoke();
             };
-            foreach (var button in buttons)
+            for (var index = buttons.Length-1; index >=0; index--)
             {
+                var button = buttons[index];
                 await UniTask.DelayFrame(3);
                 button.Hide();
             }

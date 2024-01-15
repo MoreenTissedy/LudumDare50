@@ -36,6 +36,7 @@ namespace CauldronCodebase
             canvasGroup.alpha = 0;
             background.SetActive(unlocked);
             effect.SetActive(false);
+            soundManager.Play(Sounds.EndingButtonAppear);
             await canvasGroup.DOFade(1, _FADE_IN_DURATION_);
             active = unlocked;
         }

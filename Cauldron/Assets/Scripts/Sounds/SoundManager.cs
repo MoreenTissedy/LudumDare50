@@ -31,7 +31,9 @@ namespace CauldronCodebase
         EndDay,
         GameEnd,
         EndingUnlock,
-        SpecialEndingUnlock
+        SpecialEndingUnlock,
+        EndingPanelFold,
+        EndingButtonAppear
     }
 
     public enum Music

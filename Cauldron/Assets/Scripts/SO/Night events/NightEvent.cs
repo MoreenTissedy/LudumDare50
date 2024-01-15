@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 {
@@ -20,6 +19,7 @@ namespace CauldronCodebase
         public RecipeHintConfig recipeHint;
         [Header("Only for conditionals")]
         public bool repeat;
+        public string achievement;
         
         public virtual void OnResolve()
         {
@@ -68,6 +68,4 @@ namespace CauldronCodebase
             file.Close();
         }
     }
-    
-    
 }

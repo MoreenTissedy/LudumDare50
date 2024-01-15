@@ -36,7 +36,10 @@ namespace CauldronCodebase
             {"bishop-reject", "neutrality"},
             {"ixbt final", "rainbow drakkar"},
             {"ixbt-guard-success", "vampire slayer"},
-            {"tavern.wake", "bard"}
+            {"tavern.wake", "bard"},
+            {"TaxCollectorFoundDead", "death and taxes"},
+            {"СowPerformingCancel", "cow"},
+            {"scarecrow-knight-drunk", "scarecrows"}
         };
     }
 

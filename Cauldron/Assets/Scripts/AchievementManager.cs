@@ -12,6 +12,7 @@ namespace CauldronCodebase
         public const string MAGIC_ALL = "magic recipes";
         public const string FOOD_ALL = "food recipes";
         public const string EXPERIMENTS_ALL = "experiments";
+        public const string VISITORS_ALL = "all visitors";
     }
 
     public class AchievementManager : IAchievementManager

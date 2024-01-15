@@ -154,16 +154,16 @@ namespace CauldronCodebase
 
         private void OverCauldron()
         {
-            AddToMixAndResetVisuals();
+            AddToMixAndResetVisuals().Forget();
             cauldron.MouseEnterCauldronZone -= OverCauldron;
         }
 
-        private void AddToMixAndResetVisuals()
+        private async UniTaskVoid AddToMixAndResetVisuals()
         {
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
-            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
+            await transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
 
             try
             {
@@ -228,7 +228,7 @@ namespace CauldronCodebase
 
             SetMovementVisuals();
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
-            AddToMixAndResetVisuals();
+            AddToMixAndResetVisuals().Forget();
         }
 
         private Vector3[] GetRandomBezierPath()

@@ -40,6 +40,7 @@ namespace CauldronCodebase
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
         [SerializeField] private ExperimentController experimentController;
+        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
         public List<Recipe> LockedRecipes { get; private set; }
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
@@ -442,7 +443,7 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            experimentController.wrongPotions = data.AttemptsRecipes;
+            experimentController.wrongPotions = wrongRecipeProvider.LoadWrongRecipe();
             foreach (var potion in experimentController.wrongPotions)
             {
                 potion.RestoreIngredients();
@@ -452,7 +453,8 @@ namespace CauldronCodebase
 
         public void SaveData(ref GameData data)
         {
-            data.AttemptsRecipes = experimentController.wrongPotions;
+            wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
+            wrongRecipeProvider.SaveWrongRecipe();
         }
     }
 }

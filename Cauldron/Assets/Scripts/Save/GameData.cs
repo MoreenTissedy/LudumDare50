@@ -10,7 +10,6 @@ namespace Save
     [Serializable]
     public class GameData
     {
-        public List<WrongPotion> AttemptsRecipes = new List<WrongPotion>();
         public int AttemptsLeft; // VisitorManager
 
         public List<string> CardPool = new List<string>(); // EncounterDeck

@@ -15,6 +15,7 @@ namespace CauldronCodebase.GameStates
         private readonly GameStateMachine stateMachine;
 
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievements;
         private readonly EventResolver eventResolver;
         private readonly List<Encounter> storyCards;
         private readonly RecipeBook recipeBook;
@@ -28,9 +29,10 @@ namespace CauldronCodebase.GameStates
                           EncounterDeck cardDeck,
                           NightPanel nightPanel,
                           GameStateMachine stateMachine,
-                          RecipeBook book,
+                          RecipeBook recipeBook,
                           GameFXManager gameFXManager,
-                          StatusChecker statusChecker)
+                          StatusChecker statusChecker, 
+                          IAchievementManager achievements)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -39,8 +41,9 @@ namespace CauldronCodebase.GameStates
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
             this.gameFXManager = gameFXManager;
-            recipeBook = book;
+            this.recipeBook = recipeBook;
             this.statusChecker = statusChecker;
+            this.achievements = achievements;
 
             eventResolver = new EventResolver(settings, gameDataHandler);
             storyCards = new List<Encounter>(2);
@@ -84,6 +87,7 @@ namespace CauldronCodebase.GameStates
         private void NightPanelOnEventClicked(NightEvent nightEvent)
         {
             nightEvent.OnResolve();
+            achievements.TryUnlock(nightEvent);
             eventResolver.ApplyStoryTag(nightEvent);
             eventResolver.ApplyModifiers(nightEvent);
             eventResolver.ApplyFractionShift(nightEvent.fractionData);

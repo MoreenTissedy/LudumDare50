@@ -19,6 +19,7 @@ namespace CauldronCodebase.GameStates
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievementManager;
 
         private readonly SoundManager soundManager;
 
@@ -36,7 +37,8 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine gameStateMachine,
                             SoundManager soundManager,
                             GameFXManager fxManager, 
-                            StatusChecker statusChecker)
+                            StatusChecker statusChecker, 
+                            IAchievementManager achievementManager)
 
         {
             this.deck = deck;
@@ -54,6 +56,7 @@ namespace CauldronCodebase.GameStates
             this.soundManager = soundManager;
             gameFXManager = fxManager;
             this.statusChecker = statusChecker;
+            this.achievementManager = achievementManager;
         }
 
         public VisitorState CreateVisitorState()
@@ -71,7 +74,7 @@ namespace CauldronCodebase.GameStates
         public NightState CreateNightState()
         {
             return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
-                gameStateMachine, recipeBook, gameFXManager, statusChecker);
+                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager);
         }
 
         public EndGameState CreateEndGameState()

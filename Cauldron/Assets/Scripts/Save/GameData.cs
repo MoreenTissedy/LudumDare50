@@ -32,10 +32,10 @@ namespace Save
         public int CardDrawnToday; // GameDataHandler
 
         public string CurrentEncounter;  // GameDataHandler
-        public string CurrentVillager;
 
         public List<string> StoryTags ;  // GameDataHandler
         public int[] FractionData;
+        public bool FractionEventTriggered;
         
         public List<string> PotionsTotalOnRun = new List<string>();  //GameDataHandler
         public int WrongPotionsCountOnRun;  //GameDataHandler
@@ -60,7 +60,6 @@ namespace Save
             Phase = GameStateMachine.GamePhase.Visitor;
 
             CurrentEncounter = null;
-            CurrentVillager = null;
 
             StoryTags = StoryTagHelper.GetMilestones().ToList();
 

@@ -43,7 +43,7 @@ namespace CauldronCodebase
         public List<string> storyTags;
         
         public FractionStatus fractionStatus;
-        public bool fractionEventTriggered;   //TODO: save
+        public bool fractionEventTriggered;
         
         public EncounterDeck currentDeck;
 
@@ -301,6 +301,7 @@ namespace CauldronCodebase
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
             fractionStatus.Load(data.FractionData);
+            fractionEventTriggered = data.FractionEventTriggered;
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -336,6 +337,7 @@ namespace CauldronCodebase
             data.StoryTags = storyTags;
             data.Phase = gamePhase;
             data.FractionData = fractionStatus.Save();
+            data.FractionEventTriggered = fractionEventTriggered;
 
             if (currentCard == null)
             {

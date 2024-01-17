@@ -94,10 +94,28 @@ public class ExperimentController : MonoBehaviour
 
     private void CreateRecipes()
     {
-        List<Ingredients> ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+        List<Ingredients> ingredientsList;
+        
+        if (maiIngredient != null && spareIngredient != null)
+        {
+            ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
+                .Where(ingredient => ingredient != maiIngredient.type && ingredient != spareIngredient.type).ToList();
+        }
+        else
+        {
+            ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+        }
         
         for (int i = 0; i < attemptEntries.Count; i++)
         {
+            if (ingredientsList.Count <= 0)
+            {
+                spareIngredient = null;
+                
+                ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
+                    .Where(ingredient => ingredient != maiIngredient.type).ToList();
+            }
+            
             currentRecipes.Add(CreateRecipe(ingredientsList, maiIngredient, spareIngredient));
             
             WrongPotion potionWrong = TryFindWrongRecipe(currentPage * attemptEntries.Count + i);
@@ -140,11 +158,20 @@ public class ExperimentController : MonoBehaviour
 
     private Ingredients RandomIngredient(List<Ingredients> ingredientsList, Ingredients? firstTargetType = null, Ingredients? secondTargetType = null)
     {
-        ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
-            .Where(ingredient => ingredient != firstTargetType && ingredient != secondTargetType).ToList();
-        
         int randomIndex = Random.Range(0, ingredientsList.Count);
-        
+
+        for (int i = 0; i < ingredientsList.Count; i++)
+        {
+            if (ingredientsList[randomIndex] == firstTargetType || ingredientsList[randomIndex] == secondTargetType)
+            {
+                randomIndex = i;
+            }
+            else
+            {
+                break;
+            }
+        }
+
         return ingredientsList[randomIndex];
     }
 

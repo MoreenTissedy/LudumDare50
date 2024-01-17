@@ -97,15 +97,6 @@ namespace CauldronCodebase
         {
             LoadFullscreenMode();
             LoadResolutionDropdown();
-            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
-            {
-                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
-                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
-            }
-            else
-            {   //Default screen resolution
-                Screen.SetResolution(1920, 1080, true);
-            }
         }
 
         public void Open()
@@ -140,7 +131,7 @@ namespace CauldronCodebase
 
             foreach (var res in resolutions)
             {
-                options.Add(res.width + " x " + res.height);
+                options.Add(res.width + " x " + res.height + " - " + res.refreshRate+" Hz");
                 if (res.width == Screen.width && res.height == Screen.height)
                 {
                     setResolutionIndex = currentResolutionIndex;
@@ -187,6 +178,10 @@ namespace CauldronCodebase
             {
                 fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
                 toggleFullscreen.isOn = fullscreenMode;
+            }
+            else
+            {
+                fullscreenMode = true;
             }
         }
 

@@ -146,7 +146,7 @@ namespace CauldronCodebase
 
         public void ClearJoinedEvents()
         {
-            joinedEvents.Clear();
+            joinedEvents?.Clear();
         }
 
         private void CheckEventCooldown()

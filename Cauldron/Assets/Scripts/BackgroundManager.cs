@@ -1,3 +1,4 @@
+using System;
 using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
@@ -25,7 +26,12 @@ namespace CauldronCodebase
 
         private void StartLocationMusic()
         {
-            soundManager.SetMusic(locationIndex == 0 ? Music.Location1 : Music.Location2, true);
+            string music = $"Location{locationIndex + 1}";
+            if (!Enum.TryParse(music, out Music locationMusic))
+            {
+                locationMusic = Music.Location1;
+            }
+            soundManager.SetMusic(locationMusic, true);
         }
     }
 }

@@ -38,7 +38,14 @@ namespace CauldronCodebase
             {"bishop-reject", "neutrality"},
             {"ixbt final", "rainbow drakkar"},
             {"ixbt-guard-success", "vampire slayer"},
-            {"tavern.wake", "bard"}
+            {"tavern.wake", "bard"},
+            {"TaxCollectorFoundDead", "death and taxes"},
+            {"СowPerformingCancel", "cow"},
+            {"scarecrow-knight-drunk", "scarecrows"},
+            {"old_knight_event.2","knight"},
+            {"moonshine-stealing-fairies-caught","pixies"},
+            {"Doctor_4_Rejuvenation","doctor"},
+            {"mary.91","Mary"},
         };
     }
 

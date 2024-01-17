@@ -31,14 +31,18 @@ namespace CauldronCodebase
         EndDay,
         GameEnd,
         EndingUnlock,
-        SpecialEndingUnlock
+        SpecialEndingUnlock,
+        EndingPanelFold,
+        EndingButtonAppear
     }
 
     public enum Music
     {
         Menu,
         Location1,
-        Location2
+        Location2,
+        Location3,
+        Location4
     }
 
     public enum VisitorSound

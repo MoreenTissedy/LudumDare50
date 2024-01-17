@@ -57,6 +57,11 @@ namespace CauldronCodebase.CatTips
                 return;
             }
 
+            if (randomRecipe is null)
+            {
+                return;
+            }
+
             var randomIngredient = randomRecipe.Except(cauldron.Mix).ToArray()[0];
             tooltipShown = catTipsValidator.ShowTips(CatTipsGenerator.CreateTipsWithIngredient(
                 catTipsProvider.RandomLastIngredient,

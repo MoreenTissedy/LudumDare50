@@ -94,9 +94,11 @@ public class ExperimentController : MonoBehaviour
 
     private void CreateRecipes()
     {
+        List<Ingredients> ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
+        
         for (int i = 0; i < attemptEntries.Count; i++)
         {
-            currentRecipes.Add(CreateRecipe(maiIngredient, spareIngredient));
+            currentRecipes.Add(CreateRecipe(ingredientsList, maiIngredient, spareIngredient));
             
             WrongPotion potionWrong = TryFindWrongRecipe(currentPage * attemptEntries.Count + i);
             Recipe potionRecipe = TryFindHerbalRecipe(currentPage * attemptEntries.Count + i);
@@ -122,17 +124,23 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
-    private Ingredients[] CreateRecipe(IngredientsData.Ingredient filterIngredient = null, IngredientsData.Ingredient filterIngredient1 = null)
+    private Ingredients[] CreateRecipe(List<Ingredients> ingredientsList, IngredientsData.Ingredient filterIngredient = null, IngredientsData.Ingredient filterIngredient1 = null)
     {
-        Ingredients targetType = filterIngredient?.type ?? RandomIngredient();
-        Ingredients targetType1 = filterIngredient1?.type ?? RandomIngredient(targetType);
-        Ingredients targetType2 = RandomIngredient(targetType, targetType1);
+        Ingredients targetType = filterIngredient?.type ?? RandomIngredient(ingredientsList);
+        Ingredients targetType1 = filterIngredient1?.type ?? RandomIngredient(ingredientsList, targetType);
+        Ingredients targetType2 = RandomIngredient(ingredientsList, targetType, targetType1);
+
+        if (filterIngredient != null && filterIngredient1 != null)
+        {
+            ingredientsList.Remove(targetType2);
+        }
+        
         return new[] { targetType, targetType1, targetType2 };
     }
 
-    private Ingredients RandomIngredient(Ingredients? firstTargetType = null, Ingredients? secondTargetType = null)
+    private Ingredients RandomIngredient(List<Ingredients> ingredientsList, Ingredients? firstTargetType = null, Ingredients? secondTargetType = null)
     {
-        List<Ingredients> ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
+        ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>()
             .Where(ingredient => ingredient != firstTargetType && ingredient != secondTargetType).ToList();
         
         int randomIndex = Random.Range(0, ingredientsList.Count);

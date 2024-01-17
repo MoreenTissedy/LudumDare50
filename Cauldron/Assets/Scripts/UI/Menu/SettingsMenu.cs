@@ -140,7 +140,7 @@ namespace CauldronCodebase
 
             foreach (var res in resolutions)
             {
-                options.Add(res.width + " x " + res.height);
+                options.Add(res.width + " x " + res.height + " - " + res.refreshRate+" Hz");
                 if (res.width == Screen.width && res.height == Screen.height)
                 {
                     setResolutionIndex = currentResolutionIndex;

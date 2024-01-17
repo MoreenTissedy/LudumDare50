@@ -69,7 +69,7 @@ namespace CauldronCodebase
             Resolution chosenResolution = new Resolution();
             foreach (var resolution in sortedResolutions)
             {
-                var aspect = resolution.height / resolution.width;
+                var aspect = (float)resolution.height / resolution.width;
                 if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
                 {
                     chosenResolution = resolution;

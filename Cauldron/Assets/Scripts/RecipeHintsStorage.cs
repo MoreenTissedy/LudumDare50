@@ -4,6 +4,11 @@ using System.Linq;
 using EasyLoc;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using System.IO;
+using UnityEditor;
+#endif
+
 namespace CauldronCodebase
 {
     [Serializable]
@@ -25,7 +30,7 @@ namespace CauldronCodebase
     }
     
     [CreateAssetMenu()]
-    public class RecipeHintsStorage: ScriptableObject //LocalizableSO
+    public class RecipeHintsStorage: LocalizableSO
     {
         [SerializeField] private RecipeHint[] hints;
 
@@ -125,7 +130,7 @@ namespace CauldronCodebase
             return foundIndex;
         }
 
-        /*public override bool Localize(Language language)
+        public override bool Localize(Language language)
         {
             if (localizationCSV == null)
                 return false;
@@ -165,6 +170,30 @@ namespace CauldronCodebase
             }
 
             return true;
-        }*/
+        }
+        
+#if UNITY_EDITOR
+        [ContextMenu("Export recipe hints")]
+        public void ExportTips()
+        {
+            string path = "/Localize/RecipeHints.csv";
+            var file = File.CreateText(Application.dataPath+path);
+            file.WriteLine("id;_RU;_EN");
+            foreach (var hint in hints)
+            {
+                Debug.Log($"exporting {hint.recipe}...");
+                file.WriteLine($"{hint.recipe}.hint1;{hint.hint1}");
+                file.WriteLine($"{hint.recipe}.hint2;{hint.hint2}");
+            }
+
+            file.Close();
+            Debug.Log("Done! File saved at " + path);
+            if (!localizationCSV)
+            {
+                localizationCSV = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets" + path);
+                EditorUtility.SetDirty(this);
+            }
+        }
+#endif
     }
 }

@@ -40,7 +40,9 @@ namespace CauldronCodebase
     {
         Menu,
         Location1,
-        Location2
+        Location2,
+        Location3,
+        Location4
     }
 
     public enum VisitorSound

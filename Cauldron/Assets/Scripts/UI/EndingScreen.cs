@@ -28,11 +28,13 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
+        [SerializeField] private Transform root;
 
         public event Action OnClose;
         private bool active;
 
         private bool final;
+        private GameObject currentCartoon;
 
         [Inject] private SoundManager soundManager;
 
@@ -55,15 +57,26 @@ namespace CauldronCodebase
         private async void OnEndingClick(string tag)
         {
             Ending ending = endings.Get(tag);
+            await LoadEndingCartoon(tag);
+            //picture.sprite = ending.image;
             screen.SetActive(true);
             screenFader.alpha = 0;
             screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
             description.text = ending.text;
-            picture.sprite = ending.image;
             await UniTask.Delay(TimeSpan.FromSeconds(2));
             await UniTask.WaitUntil(() => Input.anyKey);
             screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() => screen.SetActive(false));
+        }
+
+        private async UniTask LoadEndingCartoon(string tag)
+        {
+            if (currentCartoon)
+            {
+                Destroy(currentCartoon);
+            }
+            GameObject asset = await Resources.LoadAsync<GameObject>(ResourceIdents.EndingCartoons[tag]) as GameObject;
+            currentCartoon = Instantiate(asset, root);
         }
 
         public void Open(string endingTag = "none")

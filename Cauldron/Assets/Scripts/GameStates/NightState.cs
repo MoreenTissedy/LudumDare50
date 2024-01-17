@@ -109,7 +109,7 @@ namespace CauldronCodebase.GameStates
             UpdateDeck();
             if (cardDeck.NotEnoughCards)
             {
-                storyEnding = "moving";
+                storyEnding = EndingsProvider.END_DECK;
                 await nightPanel.AddEventAsLast(nightEvents.movingEnding);
                 nightPanel.NextPage();
             }

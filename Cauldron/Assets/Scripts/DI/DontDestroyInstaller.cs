@@ -1,3 +1,4 @@
+using System.Linq;
 using EasyLoc;
 using Save;
 using UnityEngine;
@@ -49,8 +50,34 @@ namespace CauldronCodebase
             }
             else
             {
-                Screen.SetResolution(1920, 1080, fullscreenMode);
+                var chosenResolution = GetOptimalResolution(1080f / 1920);
+                if (chosenResolution.height == 0)
+                {
+                    Screen.SetResolution(1920, 1080, fullscreenMode);
+                }
+                else
+                {
+                    Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
+                }
             }
+        }
+
+        private static Resolution GetOptimalResolution(float aspectRatio)
+        {
+            var resolutions = Screen.resolutions;
+            var sortedResolutions = resolutions.OrderByDescending(x => x.height);
+            Resolution chosenResolution = new Resolution();
+            foreach (var resolution in sortedResolutions)
+            {
+                var aspect = resolution.height / resolution.width;
+                if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
+                {
+                    chosenResolution = resolution;
+                    break;
+                }
+            }
+
+            return chosenResolution;
         }
     }
 }

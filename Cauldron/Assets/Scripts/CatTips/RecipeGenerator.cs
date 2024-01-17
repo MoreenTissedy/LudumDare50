@@ -76,7 +76,14 @@ namespace CauldronCodebase
                 }
             }
 
-            return potentialRecipes[UnityEngine.Random.Range(0, potentialRecipes.Count)].RecipeIngredients.ToArray();
+            if (potentialRecipes.Count > 0)
+            {
+                return potentialRecipes[UnityEngine.Random.Range(0, potentialRecipes.Count)].RecipeIngredients.ToArray();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private static Ingredients[] GenerateIngredients()

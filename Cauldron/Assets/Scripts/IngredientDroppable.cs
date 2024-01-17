@@ -154,25 +154,17 @@ namespace CauldronCodebase
 
         private void OverCauldron()
         {
-            AddToMixAndResetVisuals().Forget();
+            AddToMixAndResetVisuals();
             cauldron.MouseEnterCauldronZone -= OverCauldron;
         }
 
-        private async UniTaskVoid AddToMixAndResetVisuals()
+        private void AddToMixAndResetVisuals()
         {
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
-            await transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
-
-            try
-            {
-                cauldron.AddToMix(ingredient);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine($"Error while adding ingredient to mix: {exception.Message}");
-            }
+            transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
+            cauldron.AddToMix(ingredient);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -228,7 +220,7 @@ namespace CauldronCodebase
 
             SetMovementVisuals();
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
-            AddToMixAndResetVisuals().Forget();
+            AddToMixAndResetVisuals();
         }
 
         private Vector3[] GetRandomBezierPath()

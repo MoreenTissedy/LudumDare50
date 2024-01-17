@@ -179,6 +179,10 @@ namespace CauldronCodebase
                 fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
                 toggleFullscreen.isOn = fullscreenMode;
             }
+            else
+            {
+                fullscreenMode = true;
+            }
         }
 
         private void UpdateSliderLabel(string vca, float value)

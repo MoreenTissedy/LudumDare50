@@ -29,6 +29,28 @@ namespace CauldronCodebase
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
+            
+            SetInitialResolution();
+        }
+
+        private static void SetInitialResolution()
+        {
+            bool fullscreenMode = true;
+            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
+            {
+                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
+            }
+
+            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
+            {
+                var resolutions = Screen.resolutions;
+                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
+                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+            }
+            else
+            {
+                Screen.SetResolution(1920, 1080, fullscreenMode);
+            }
         }
     }
 }

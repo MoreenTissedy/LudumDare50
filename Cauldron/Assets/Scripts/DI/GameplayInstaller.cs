@@ -77,6 +77,7 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
+            Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
             gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);

@@ -55,6 +55,7 @@ namespace CauldronCodebase
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
+        private IAchievementManager achievements;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -77,9 +78,10 @@ namespace CauldronCodebase
         private void Construct(DataPersistenceManager dataPersistenceManager,
                                 TooltipManager tooltipManager,
                                 RecipeProvider recipeProvider,
-                                Cauldron cauldron)
+                                Cauldron cauldron, IAchievementManager achievements)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
+            this.achievements = achievements;
             this.tooltipManager = tooltipManager;
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
@@ -127,6 +129,21 @@ namespace CauldronCodebase
             unlockedRecipes.Add(recipe);
             LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
+
+            if (recipe.magical)
+            {
+                if (unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count)
+                {
+                    achievements.TryUnlock(AchievIdents.MAGIC_ALL);
+                }
+            }
+            else
+            {
+                if (unlockedRecipes.Count(x => !x.magical) == allHerbalRecipes.Count)
+                {
+                    achievements.TryUnlock(AchievIdents.FOOD_ALL);
+                }
+            }
             
             int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
             if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)

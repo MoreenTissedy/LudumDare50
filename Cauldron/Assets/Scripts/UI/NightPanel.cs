@@ -182,16 +182,16 @@ namespace CauldronCodebase
             //FanCards();
         }
 
-        public async void AddCovenEvent(NightEvent nightEvent)
+        public async UniTask AddEventAsLast(NightEvent nightEvent)
         {
-            clickable = false;
             covenBlock.SetActive(false);
+            clickable = false;
             content.Add(nightEvent);
+            totalPages++;
             DealEventCard(nightEvent);
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
             FanCards();
             await UniTask.Delay(TimeSpan.FromSeconds(enterTimeInterval));
-            totalPages++;
             clickable = true;
         }
 
@@ -281,20 +281,15 @@ namespace CauldronCodebase
                 await UniTask.Delay(TimeSpan.FromSeconds(1));
                 clickable = true;
             }
-            else
-            {
-                foreach (var nightPanelCard in activeCards)
-                {
-                    nightPanelCard.Hide();
-                }
-
-                CloseBook();
-            }
         }
 
         public override void CloseBook()
         {
             covenButton.OnClick -= CovenButtonOnOnClick;
+            foreach (var nightPanelCard in activeCards)
+            {
+                nightPanelCard.Hide();
+            }
             base.CloseBook();
         }
     }

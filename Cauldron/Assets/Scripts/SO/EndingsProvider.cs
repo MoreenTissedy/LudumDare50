@@ -18,14 +18,17 @@ namespace CauldronCodebase
         public Ending[] endings;
 
         private List<string> unlocked;
-        public Dictionary<string, Ending> Endings;
+        private Dictionary<string, Ending> endingDict;
+        private IAchievementManager achievements;
 
-        public void Init()
+        public void Init(IAchievementManager achievements)
         {
-            Endings = new Dictionary<string, Ending>(12);
+            this.achievements = achievements;
+            
+            endingDict = new Dictionary<string, Ending>(12);
             foreach (var ending in endings)
             {
-                Endings.Add(ending.tag, ending);
+                endingDict.Add(ending.tag, ending);
             }
 
             if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
@@ -50,7 +53,7 @@ namespace CauldronCodebase
 
         public bool Unlocked(Ending ending)
         {
-            foreach (var keyValuePair in Endings)
+            foreach (var keyValuePair in endingDict)
             {
                 if (keyValuePair.Value == ending)
                 {
@@ -62,12 +65,13 @@ namespace CauldronCodebase
         
         public Ending Get(string tag)
         {
-            return Endings[tag];
+            return endingDict[tag];
         }
 
         public void Unlock(string tag)
         {
             unlocked.Add(tag);
+            achievements.TryUnlock(tag);
             PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
         }
 

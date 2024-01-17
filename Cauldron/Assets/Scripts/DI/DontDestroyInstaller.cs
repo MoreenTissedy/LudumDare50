@@ -1,3 +1,4 @@
+using System.Linq;
 using EasyLoc;
 using Save;
 using UnityEngine;
@@ -29,6 +30,54 @@ namespace CauldronCodebase
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
+            
+            SetInitialResolution();
+        }
+
+        private static void SetInitialResolution()
+        {
+            bool fullscreenMode = true;
+            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
+            {
+                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
+            }
+
+            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
+            {
+                var resolutions = Screen.resolutions;
+                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
+                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+            }
+            else
+            {
+                var chosenResolution = GetOptimalResolution(1080f / 1920);
+                if (chosenResolution.height == 0)
+                {
+                    Screen.SetResolution(1920, 1080, fullscreenMode);
+                }
+                else
+                {
+                    Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
+                }
+            }
+        }
+
+        private static Resolution GetOptimalResolution(float aspectRatio)
+        {
+            var resolutions = Screen.resolutions;
+            var sortedResolutions = resolutions.OrderByDescending(x => x.height);
+            Resolution chosenResolution = new Resolution();
+            foreach (var resolution in sortedResolutions)
+            {
+                var aspect = (float)resolution.height / resolution.width;
+                if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
+                {
+                    chosenResolution = resolution;
+                    break;
+                }
+            }
+
+            return chosenResolution;
         }
     }
 }

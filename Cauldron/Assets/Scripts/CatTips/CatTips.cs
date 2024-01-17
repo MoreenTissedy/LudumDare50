@@ -17,8 +17,8 @@ public static class CatTipsGenerator
 
     public static CatTips CreateTips(CatTipsTextSO firstTips, CatTipsTextSO secondTips)
     {
-        return new CatTips(firstTips.TextList[Random.Range(0, firstTips.TextList.Count)] + " " + 
-                           secondTips.TextList[Random.Range(0, secondTips.TextList.Count)]);
+        return new CatTips(firstTips.TextList[Random.Range(0, firstTips.TextList.Count)].Trim('\r') + " " + 
+                           secondTips.TextList[Random.Range(0, secondTips.TextList.Count)].Trim('\r'));
     }
 
     public static CatTips CreateTipsWithIngredient(CatTipsTextSO tips, IngredientsData.Ingredient ingredient)

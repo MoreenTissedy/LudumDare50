@@ -34,6 +34,7 @@ namespace CauldronCodebase
         }
 
         public NightEvent intro;
+        public NightEvent movingEnding;
         public List<ConditionalEvent> conditionalEvents;
         public List<RandomNightEvent> randomEvents;
         [Header("Readonly")]
@@ -145,7 +146,7 @@ namespace CauldronCodebase
 
         public void ClearJoinedEvents()
         {
-            joinedEvents.Clear();
+            joinedEvents?.Clear();
         }
 
         private void CheckEventCooldown()

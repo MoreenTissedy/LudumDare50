@@ -1,9 +1,21 @@
+using System;
+using System.Linq;
+using CauldronCodebase.GameStates;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
+    [Serializable]
+    public struct WitchSkinSet
+    {
+        public string LastUnlockedEnding;
+        [SpineSkin()] public string WitchSkin;
+    }
+    
     [RequireComponent(typeof(SkeletonAnimation))]
     public class Witch : MonoBehaviour, IPointerClickHandler
     {
@@ -15,14 +27,65 @@ namespace CauldronCodebase
         public string hide;
         [SpineAnimation]
         public string unhide;
+
+        [SpineAnimation()] public string angry;
+
+        [SerializeField] private WitchSkinSet[] skinSets;
+
+        [Inject] private Cauldron cauldron;
+        [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private GameStateMachine gameStateMachine;
         
         public bool Hidden { get; private set; }
 
         
         private void Awake()
         {
-            //Respond to Brew, Nightfall, NewDay events
             anim = GetComponent<SkeletonAnimation>();
+        }
+
+        private void Start()
+        {
+            SetWitchSkin();
+            cauldron.PotionBrewed += CauldronOnPotionBrewed;
+            gameStateMachine.OnChangeState += OnDayNightChange;
+        }
+
+        private void OnDayNightChange(GameStateMachine.GamePhase phase)
+        {
+            if (phase != GameStateMachine.GamePhase.Night && Hidden)
+            {
+                anim.AnimationState.SetAnimation(1, unhide, false);
+                anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);
+                Hidden = false;
+            }
+            else if (phase == GameStateMachine.GamePhase.Night)
+            {
+                anim.AnimationState.SetAnimation(1, hide, false);
+                Hidden = true;
+            }
+        }
+
+        private void SetWitchSkin()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            {
+                string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
+                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Length - 1]);
+                if (!string.IsNullOrWhiteSpace(skinSet.WitchSkin))
+                {
+                    anim.Skeleton.SetSkin(skinSet.WitchSkin);
+                }
+            }
+        }
+
+        private void CauldronOnPotionBrewed(Potions potion)
+        {
+            if (potion == Potions.Placebo && gameDataHandler.wrongExperiments > 3)
+            {
+                anim.AnimationState.SetAnimation(1, angry, false);
+                anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);
+            }
         }
 
         public void Activate()
@@ -41,25 +104,12 @@ namespace CauldronCodebase
             anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);
         }
 
-        public void Hide()
-        {
-            anim.AnimationState.SetAnimation(1, hide, false);
-            Hidden = true;
-        }
-
-        public void Wake()
-        {
-            anim.AnimationState.SetAnimation(1, unhide, false);
-            Hidden = false;
-            anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);
-        }
-
         public void OnPointerClick(PointerEventData eventData)
         {
             Fly();
         }
 
-        public void Fly()
+        private void Fly()
         {
             anim.AnimationState.SetAnimation(1, active3, false);
             anim.AnimationState.AddEmptyAnimation(1, 0.2f, 0);

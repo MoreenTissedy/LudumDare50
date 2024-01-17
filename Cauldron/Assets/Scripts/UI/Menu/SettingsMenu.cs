@@ -97,15 +97,6 @@ namespace CauldronCodebase
         {
             LoadFullscreenMode();
             LoadResolutionDropdown();
-            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
-            {
-                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
-                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
-            }
-            else
-            {   //Default screen resolution
-                Screen.SetResolution(1920, 1080, true);
-            }
         }
 
         public void Open()

@@ -77,12 +77,32 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
-            Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
+            SetInitialResolution();
             gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
             endings.Init(achievementManager);
+        }
+
+        private static void SetInitialResolution()
+        {
+            bool fullscreenMode = true;
+            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
+            {
+                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
+            }
+
+            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
+            {
+                var resolutions = Screen.resolutions;
+                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
+                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+            }
+            else
+            {
+                Screen.SetResolution(1920, 1080, fullscreenMode);
+            }
         }
     }
 }

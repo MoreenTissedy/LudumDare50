@@ -116,7 +116,7 @@ namespace CauldronCodebase
                 return new[] {intro};
             }
 
-            if (joinedEvents.Count != 0)
+            if (joinedEvents != null && joinedEvents.Count != 0)
             {
                 return joinedEvents.ToArray();
             }

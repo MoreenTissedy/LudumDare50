@@ -2,10 +2,11 @@
 using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 
 public class RootsFilter : MonoBehaviour
 {
-    [SerializeField] private Button rootTypeButton;
+    [SerializeField] private AnimatedButton rootTypeButton;
     [SerializeField] private FilterButton root1Button;
     [SerializeField] private FilterButton root2Button;
     [SerializeField] private Image gauge;
@@ -22,14 +23,14 @@ public class RootsFilter : MonoBehaviour
     
     private void OnEnable()
     {
-        rootTypeButton.onClick.AddListener(EnableButtons);
+        rootTypeButton.OnClick += EnableButtons;
         root1Button.SwitchFilter += OnSwitchFilter;
         root2Button.SwitchFilter += OnSwitchFilter;
     }
 
     private void OnDisable()
     {
-        rootTypeButton.onClick.RemoveListener(EnableButtons);
+        rootTypeButton.OnClick -= EnableButtons;
         root1Button.SwitchFilter -= OnSwitchFilter;
         root2Button.SwitchFilter -= OnSwitchFilter;
     }

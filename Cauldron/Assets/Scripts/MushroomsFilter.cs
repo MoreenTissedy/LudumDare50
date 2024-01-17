@@ -2,10 +2,11 @@
 using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 
 public class MushroomsFilter : MonoBehaviour
 {
-    [SerializeField] private Button mushroomsTypeButton;
+    [SerializeField] private AnimatedButton mushroomsTypeButton;
     [SerializeField] private FilterButton amanitaButton;
     [SerializeField] private FilterButton toadstoolButton;
     [SerializeField] private FilterButton agaricusButton;
@@ -23,7 +24,7 @@ public class MushroomsFilter : MonoBehaviour
     
     private void OnEnable()
     {
-        mushroomsTypeButton.onClick.AddListener(EnableButtons);
+        mushroomsTypeButton.OnClick += EnableButtons;
         amanitaButton.SwitchFilter += OnSwitchFilter;
         toadstoolButton.SwitchFilter += OnSwitchFilter;
         agaricusButton.SwitchFilter += OnSwitchFilter;
@@ -31,7 +32,7 @@ public class MushroomsFilter : MonoBehaviour
 
     private void OnDisable()
     {
-        mushroomsTypeButton.onClick.RemoveListener(EnableButtons);
+        mushroomsTypeButton.OnClick -= EnableButtons;
         amanitaButton.SwitchFilter -= OnSwitchFilter;
         toadstoolButton.SwitchFilter -= OnSwitchFilter;
         agaricusButton.SwitchFilter -= OnSwitchFilter;

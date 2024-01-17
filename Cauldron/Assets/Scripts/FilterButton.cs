@@ -2,11 +2,12 @@
 using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 
 public class FilterButton : MonoBehaviour
 {
     [SerializeField] private Ingredients ingredientsName;
-    [SerializeField] private Button button;
+    [SerializeField] private AnimatedButton button;
     [SerializeField] private Image yellowBackground;
     [SerializeField] private IngredientsData ingredientsData;
 
@@ -17,12 +18,12 @@ public class FilterButton : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onClick.AddListener(EnableDisableFilter);
+        button.OnClick += EnableDisableFilter;
     }
 
     private void OnDisable()
     {
-        button.onClick.RemoveListener(EnableDisableFilter);
+        button.OnClick -= EnableDisableFilter;
     }
 
     public void EnableDisableFilter()

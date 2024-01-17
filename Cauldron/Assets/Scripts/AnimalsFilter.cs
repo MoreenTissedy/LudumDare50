@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 
 public class AnimalsFilter : MonoBehaviour
 {
-    [SerializeField] private Button animalsTypeButton;
+    [SerializeField] private AnimatedButton animalsTypeButton;
     [SerializeField] private FilterButton batButton;
     [SerializeField] private FilterButton snakeButton;
     [SerializeField] private FilterButton ratButton;
@@ -24,7 +24,7 @@ public class AnimalsFilter : MonoBehaviour
 
     private void OnEnable()
     {
-        animalsTypeButton.onClick.AddListener(EnableButtons);
+        animalsTypeButton.OnClick += EnableButtons;
         batButton.SwitchFilter += OnSwitchFilter;
         snakeButton.SwitchFilter += OnSwitchFilter;
         ratButton.SwitchFilter += OnSwitchFilter;
@@ -32,7 +32,7 @@ public class AnimalsFilter : MonoBehaviour
 
     private void OnDisable()
     {
-        animalsTypeButton.onClick.RemoveListener(EnableButtons);
+        animalsTypeButton.OnClick -= EnableButtons;
         batButton.SwitchFilter -= OnSwitchFilter;
         snakeButton.SwitchFilter -= OnSwitchFilter;
         ratButton.SwitchFilter -= OnSwitchFilter;

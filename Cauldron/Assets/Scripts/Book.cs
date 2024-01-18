@@ -104,6 +104,7 @@ namespace CauldronCodebase
         
         public virtual void NextPage()
         {
+            Debug.LogError("next page!");
             if (!bookObject.enabled) return;
             if (currentPage + 1 >= totalPages) return;
             currentPage++;
@@ -125,7 +126,7 @@ namespace CauldronCodebase
         public void OpenPage(int i)
         {
             if (i < 0 || i >= totalPages) return;
-            if (i == currentPage) return;
+            //if (i == currentPage) return;
             if (i < currentPage)
             {
                 SoundManager.PlayBook(sounds, BookSound.Left);  

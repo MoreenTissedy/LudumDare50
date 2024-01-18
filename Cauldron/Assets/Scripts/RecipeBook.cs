@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
-using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -42,6 +40,7 @@ namespace CauldronCodebase
         [SerializeField] private ExperimentController experimentController;
         [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
         public List<Recipe> LockedRecipes { get; private set; }
+        public List<Recipe> UnlockedRecipes => unlockedRecipes;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
 
@@ -90,6 +89,11 @@ namespace CauldronCodebase
         private void Start()
         {
             LoadRecipes();
+            experimentController.OnContentChanged += () =>
+            {
+                InitTotalPages();
+                OpenPage(0);
+            };
         }
 
         public override void OpenBook()
@@ -163,7 +167,6 @@ namespace CauldronCodebase
 
         public void ChangeMode(Mode newMode)
         {
-
             switch (newMode)
             {
                 case Mode.Magical:
@@ -190,7 +193,6 @@ namespace CauldronCodebase
             InitTotalPages();
             UpdatePage();
             UpdateBookButtons();
-            
         }
 
         private void ChangeBookmarksOrder(Mode newMode)
@@ -273,17 +275,20 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            SortPotions();
             switch (currentMode)
             {
                 case Mode.Magical:
+                    
+                    SortPotions();
                     totalPages = Mathf.CeilToInt((float)allMagicalRecipes.Count / recipeEntries.Length);
                     break;
                 case Mode.Herbal:
+                    
+                    SortPotions();
                     totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     break;
                 case Mode.Attempts:
-                    totalPages = experimentController.MaxTotalPages;
+                    totalPages = experimentController.TotalPages;
                     break;
                 case Mode.Ingredients:
                     totalPages = Mathf.CeilToInt((float)ingredientsData.book.Length / ingredientsEntries.Length);
@@ -346,7 +351,7 @@ namespace CauldronCodebase
                     DisplaySet(allHerbalRecipes);
                     break;
                 case Mode.Attempts:
-                    DisplayAttempts();
+                    experimentController.UpdateTab(currentPage);
                     break;
                 case Mode.Ingredients:
                     DisplayIngredients();
@@ -354,8 +359,9 @@ namespace CauldronCodebase
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            nextPageNum.text = (currentPage *2+2).ToString();
-            prevPageNum.text = (currentPage*2+1).ToString();
+
+            nextPageNum.text = (currentPage * 2 + 2).ToString();
+            prevPageNum.text = (currentPage * 2 + 1).ToString();
         }
 
         private void DisplayIngredients()
@@ -396,19 +402,14 @@ namespace CauldronCodebase
             }
         }
 
-        private void DisplayAttempts()
-        {
-            experimentController.FillAttemptEntries();
-        }
-
         private void CloseAllPages()
         {
-            experimentController.ResetPages();
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);
             attemptsDisplay.SetActive(false);
             ingredientsDisplay.SetActive(false);
         }
+        
         public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             if (cauldron.Mix.Count != 0)
@@ -465,7 +466,7 @@ namespace CauldronCodebase
             {
                 potion.RestoreIngredients();
             }
-            
+            experimentController.GenerateData();
         }
 
         public void SaveData(ref GameData data)

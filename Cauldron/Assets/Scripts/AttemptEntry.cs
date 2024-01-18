@@ -16,6 +16,7 @@ namespace CauldronCodebase
         [SerializeField] private Image negativeResultImage;
         [SerializeField] private Image unknownResultImage;
         [SerializeField] private Image potionResultImage;
+        [SerializeField] private Material lockedMaterial;
         [SerializeField] private TextMeshProUGUI titleText;
         [Localize] public string failure;
         [Localize] public string notTried;
@@ -39,6 +40,7 @@ namespace CauldronCodebase
             negativeResultImage.gameObject.SetActive(true);
             potionResultImage.gameObject.SetActive(false);
             unknownResultImage.gameObject.SetActive(false);
+            SetLockedMaterial(true);
             gameObject.SetActive(true);
         }
        
@@ -57,6 +59,7 @@ namespace CauldronCodebase
             potionResultImage.gameObject.SetActive(true);
             negativeResultImage.gameObject.SetActive(false);
             unknownResultImage.gameObject.SetActive(false);
+            SetLockedMaterial(true);
             gameObject.SetActive(true);
         }
 
@@ -66,7 +69,6 @@ namespace CauldronCodebase
             {
                 return;
             }
-            
             ingredient1Image.sprite = data.Get(attempt[0]).image;
             ingredient2Image.sprite = data.Get(attempt[1]).image;
             ingredient3Image.sprite = data.Get(attempt[2]).image;
@@ -74,6 +76,7 @@ namespace CauldronCodebase
             negativeResultImage.gameObject.SetActive(false);
             potionResultImage.gameObject.SetActive(false);
             unknownResultImage.gameObject.SetActive(true);
+            SetLockedMaterial(false);
             gameObject.SetActive(true);
         }
 
@@ -82,6 +85,13 @@ namespace CauldronCodebase
             gameObject.SetActive(false);
             negativeResultImage.gameObject.SetActive(false);
             unknownResultImage.gameObject.SetActive(false);
+        }
+
+        private void SetLockedMaterial(bool on)
+        {
+            ingredient1Image.material = on ? lockedMaterial : null;
+            ingredient2Image.material = on ? lockedMaterial : null;
+            ingredient3Image.material = on ? lockedMaterial : null;
         }
     }
 }

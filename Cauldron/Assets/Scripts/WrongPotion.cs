@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CauldronCodebase
 {
@@ -26,6 +27,31 @@ namespace CauldronCodebase
             {
                 IngredientsList.Add((Ingredients)Enum.Parse(typeof(Ingredients), ingredient));
             }
+        }
+        
+        public bool SearchIngredient(Ingredients ingredients)
+        {
+            foreach (Ingredients type in IngredientsList)
+            {
+                if (type == ingredients)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool SearchRecipe(Ingredients ingredients, Ingredients ingredients1, Ingredients ingredients2)
+        {
+            foreach (Ingredients type in IngredientsList)
+            {
+                if (type != ingredients && type != ingredients1 && type != ingredients2)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -17,6 +17,7 @@ namespace CauldronCodebase
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
+        [SerializeField] private ExperimentController experimentController;
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
@@ -67,6 +68,7 @@ namespace CauldronCodebase
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
+            Container.Bind<ExperimentController>().FromInstance(experimentController).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();

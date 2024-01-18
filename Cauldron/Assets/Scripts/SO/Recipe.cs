@@ -48,5 +48,32 @@ namespace CauldronCodebase
 
             return false;
         }
+        
+        public bool SearchRecipe(Ingredients ingredients, Ingredients ingredients1, Ingredients ingredients2)
+        {
+            bool isFullRecipe = false;
+            
+            foreach (Ingredients type in RecipeIngredients)
+            {
+                if (type == ingredients)
+                {
+                    isFullRecipe = true;
+                }
+                else if (type == ingredients1)
+                {
+                    isFullRecipe = true;
+                }
+                else if (type == ingredients2)
+                {
+                    isFullRecipe = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return isFullRecipe;
+        }
     }
 }

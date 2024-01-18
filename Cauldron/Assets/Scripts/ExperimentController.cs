@@ -9,10 +9,10 @@ using Random = UnityEngine.Random;
 public class ExperimentController : MonoBehaviour
 {
     [SerializeField] private RecipeBook recipeBook;
-    [SerializeField] private AnimalsFilter animalsFilter;
-    [SerializeField] private RootsFilter rootsFilter;
-    [SerializeField] private MushroomsFilter mushroomsFilter;
-    [SerializeField] private PlantsFilter plantsFilter;
+    [SerializeField] private IngredientTypeFilter animalsFilter;
+    [SerializeField] private IngredientTypeFilter rootsFilter;
+    [SerializeField] private IngredientTypeFilter mushroomsFilter;
+    [SerializeField] private IngredientTypeFilter plantsFilter;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button prevPage;
 

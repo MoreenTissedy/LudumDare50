@@ -169,7 +169,8 @@ namespace CauldronCodebase
                 for (int j = 0; j< 10; j++)
                 {
                     int randomIndex = Random.Range(0, cardPool.Count);
-                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler))
+                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler) 
+                        && deck.Count(card => card.villager == cardPool[randomIndex].villager) == 0)
                     {
                         deck.AddLast(cardPool[randomIndex]);
                         cardPool.RemoveAt(randomIndex);

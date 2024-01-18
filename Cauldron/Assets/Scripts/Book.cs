@@ -104,7 +104,6 @@ namespace CauldronCodebase
         
         public virtual void NextPage()
         {
-            Debug.LogError("next page!");
             if (!bookObject.enabled) return;
             if (currentPage + 1 >= totalPages) return;
             currentPage++;

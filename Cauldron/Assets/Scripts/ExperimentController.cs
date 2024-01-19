@@ -29,7 +29,20 @@ public class IngredientSet: IEquatable<IngredientSet>, IComparable<IngredientSet
 
     public int CompareTo(IngredientSet other)
     {
-        return SetType.CompareTo(other.SetType);
+        int typeComparison = SetType.CompareTo(other.SetType);
+        if (typeComparison != 0)
+        {
+            return typeComparison;
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            var ingredientComparison = Ingredients[i].CompareTo(other.Ingredients[i]);
+            if (ingredientComparison != 0)
+            {
+                return ingredientComparison;
+            }
+        }
+        return 0;
     }
 }
 
@@ -54,13 +67,7 @@ public class ExperimentController : MonoBehaviour
     public List<WrongPotion> wrongPotions;
 
     private const int MaxFilterSelection = 2;
-    private const int ZeroFilter = 0;
-    private const int FirstFilter = 1;
-    private const int SecondFilter = 2;
-    
-    private IngredientsData.Ingredient mainIngredient;
-    private IngredientsData.Ingredient secondIngredient;
-    private int countFilter;
+    private readonly List<IngredientsData.Ingredient> selectionFilter = new List<IngredientsData.Ingredient>();
 
     private int totalPages = 120;
     public int TotalPages => totalPages;
@@ -142,36 +149,28 @@ public class ExperimentController : MonoBehaviour
         var ingredientsList = Enum.GetValues(typeof(Ingredients)).Cast<Ingredients>().ToList();
         for (int i = 0; i < ingredientsList.Count; i++)
         {
-            if (mainIngredient != null && secondIngredient != null)
+            if (selectionFilter.Count == 2)
             {
-                if ((ingredientsList[i] == mainIngredient.type) || (ingredientsList[i] == secondIngredient.type))
+                if ((ingredientsList[i] == selectionFilter[0].type) || (ingredientsList[i] == selectionFilter[1].type))
                 {
                     continue;
                 }
-                AddIngredientSet(mainIngredient.type, secondIngredient.type, ingredientsList[i]);
+                AddIngredientSet(selectionFilter[0].type, selectionFilter[1].type, ingredientsList[i]);
                 continue;
             }
-            for (int j = 0; j < ingredientsList.Count; j++)
+            for (int j = i + 1; j < ingredientsList.Count; j++)
             {
-                if (j == i)
+                if (selectionFilter.Count == 1)
                 {
-                    continue;
-                }
-                if (mainIngredient != null)
-                {
-                    if ((ingredientsList[i] == mainIngredient.type) || (ingredientsList[j] == mainIngredient.type))
+                    if ((ingredientsList[i] == selectionFilter[0].type) || (ingredientsList[j] == selectionFilter[0].type))
                     {
                         continue;
                     }
-                    AddIngredientSet(mainIngredient.type, ingredientsList[i], ingredientsList[j]);
+                    AddIngredientSet(selectionFilter[0].type, ingredientsList[i], ingredientsList[j]);
                     continue;
                 }
-                for (int k = 0; k < ingredientsList.Count; k++)
+                for (int k = j + 1; k < ingredientsList.Count; k++)
                 {
-                    if (k == i || k == j)
-                    {
-                        continue;
-                    }
                     AddIngredientSet(ingredientsList[i], ingredientsList[j], ingredientsList[k]);
                 }
             }
@@ -186,13 +185,6 @@ public class ExperimentController : MonoBehaviour
         {
             Ingredients = new[] {i1, i2, i3}
         };
-        foreach (var currentRecipe in currentRecipes)
-        {
-            if (currentRecipe.Equals(ingredientSet))
-            {
-                return;
-            }
-        }
         if (TryFindWrongRecipe(ingredientSet.Ingredients, out _))
         {
             ingredientSet.SetType = IngredientSetType.Failure;
@@ -241,37 +233,21 @@ public class ExperimentController : MonoBehaviour
 
     private void OnUpdateFilter(IngredientsData.Ingredient ingredient)
     {
-        if (ingredient != mainIngredient)
+        if (selectionFilter.Contains(ingredient))
         {
-            countFilter++;
+            selectionFilter.Remove(ingredient);
         }
         else
         {
-            if (countFilter > 0)
+            if (selectionFilter.Count == MaxFilterSelection)
             {
-                countFilter--;
+                selectionFilter.Clear();
+                plantsFilter.ClearFilter(ingredient);
+                animalsFilter.ClearFilter(ingredient);
+                rootsFilter.ClearFilter(ingredient);
+                mushroomsFilter.ClearFilter(ingredient);
             }
-        }
-        
-        switch (countFilter)
-        {
-            case ZeroFilter:
-            case FirstFilter:
-                mainIngredient = ingredient;
-                break;
-            case SecondFilter:
-                secondIngredient = ingredient;
-                break;
-        }
-        
-        if (countFilter > MaxFilterSelection)
-        {
-            countFilter = 0;
-            plantsFilter.ClearFilter(ingredient);
-            animalsFilter.ClearFilter(ingredient);
-            rootsFilter.ClearFilter(ingredient);
-            mushroomsFilter.ClearFilter(ingredient);
-            secondIngredient = null;
+            selectionFilter.Add(ingredient);
         }
 
         GenerateData();

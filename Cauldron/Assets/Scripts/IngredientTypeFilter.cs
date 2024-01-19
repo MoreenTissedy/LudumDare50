@@ -45,11 +45,14 @@ public class IngredientTypeFilter : MonoBehaviour
         gauge.gameObject.SetActive(false);
         foreach (var filterButton in buttons)
         {
-            filterButton.DisableFilter();
             if (filterButton.Ingredient == lastIngredient)
             {
-                gauge.gameObject.SetActive(filterButton.Ingredient == lastIngredient);
-                filterButton.EnableDisableFilter();
+                gauge.gameObject.SetActive(true);
+                filterButton.EnableFilter();
+            }
+            else
+            {
+                filterButton.DisableFilter();
             }
         }
     }

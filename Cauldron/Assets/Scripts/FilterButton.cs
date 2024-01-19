@@ -18,29 +18,33 @@ public class FilterButton : MonoBehaviour
 
     private void OnEnable()
     {
-        button.OnClick += EnableDisableFilter;
+        button.OnClick += ToggleFilter;
     }
 
     private void OnDisable()
     {
-        button.OnClick -= EnableDisableFilter;
+        button.OnClick -= ToggleFilter;
     }
 
-    public void EnableDisableFilter()
+    private void ToggleFilter()
     {
         if (!IsEnable)
         {
-            yellowBackground.gameObject.SetActive(true);
-            IngredientsData.Ingredient ingredient = ingredientsData.Get(ingredientsName);
-            Ingredient = ingredient;
-            IsEnable = true;
+            EnableFilter();
         }
         else
         {
             DisableFilter();
         }
-        
         SwitchFilter?.Invoke(Ingredient);
+    }
+
+    public void EnableFilter()
+    {
+        yellowBackground.gameObject.SetActive(true);
+        IngredientsData.Ingredient ingredient = ingredientsData.Get(ingredientsName);
+        Ingredient = ingredient;
+        IsEnable = true;
     }
 
     public void DisableFilter()

@@ -16,10 +16,10 @@ namespace CauldronCodebase
         public Encounter[] bonusCards;
         public FractionData fractionData;
         public string storyTag;
+        public string requiredTag;
         public RecipeHintConfig recipeHint;
         [Header("Only for conditionals")]
         public bool repeat;
-        public string achievement;
         
         public virtual void OnResolve()
         {

@@ -76,7 +76,7 @@ namespace CauldronCodebase
                         game.currentDeck.AddToPool(potionResult.bonusCard);
                     }
                 }
-                if (potionResult.bonusEvent != null)
+                if (potionResult.bonusEvent != null && StoryTagHelper.Check(potionResult.bonusEvent.requiredTag, game))
                 {
                     nightEvents.storyEvents.Add(potionResult.bonusEvent);
                 }

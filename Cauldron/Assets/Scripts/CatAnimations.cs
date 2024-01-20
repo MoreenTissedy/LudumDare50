@@ -100,7 +100,8 @@ namespace CauldronCodebase
         
         private void DropAnimation()
         {
-            var closestWaypoint = catPath.FindClosestWaypoint(transform.position.x, true).position;
+            bool rightWay = transform.position.x < startPosition.x;
+            var closestWaypoint = catPath.FindClosestWaypoint(transform.position.x, rightWay).position;
             
             var moveDirection = (closestWaypoint - transform.position).normalized;
             if (Vector2.Dot(Vector2.left, moveDirection) < 0)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CatPath : MonoBehaviour
@@ -7,9 +8,22 @@ public class CatPath : MonoBehaviour
 
     public Vector3[] GetPath(Transform catTransform, bool toStartSpot)
     {
-        var path = new List<Vector3>();
+        var path = new List<Vector3> 
+        {
+            catTransform.position
+        };
 
-        var secondWayPoint = FindClosestWaypoint(catTransform.position.x, toStartSpot);
+        bool secondPointRightSide;
+        if (toStartSpot)
+        {
+            secondPointRightSide = catTransform.position.x < wayPoints.First().position.x;
+        }
+        else
+        {
+            secondPointRightSide = catTransform.position.x < wayPoints.Last().position.x;
+        }
+        
+        var secondWayPoint = FindClosestWaypoint(catTransform.position.x, secondPointRightSide);
 
         int index = wayPoints.IndexOf(secondWayPoint);
 

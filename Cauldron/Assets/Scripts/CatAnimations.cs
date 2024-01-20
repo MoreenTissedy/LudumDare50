@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using DG.Tweening;
 using Spine;
@@ -6,7 +5,6 @@ using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -49,7 +47,6 @@ namespace CauldronCodebase
         private Tween dropTween;
         
         private Coroutine randomAction;
-        private Coroutine catLanding;
 
         [Inject] private SoundManager soundManager;
         [Inject] private Cauldron cauldron;
@@ -155,8 +152,6 @@ namespace CauldronCodebase
         {
             if(randomAction != null)
                 StopCoroutine(randomAction);
-            if(catLanding != null)
-                StopCoroutine(catLanding);
             
             dropTween?.Kill();
             moveTween?.Kill();

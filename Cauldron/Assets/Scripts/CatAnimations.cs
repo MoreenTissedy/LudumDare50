@@ -1,9 +1,11 @@
 using System.Collections;
 using DG.Tweening;
+using Spine;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Zenject;
 using Random = UnityEngine.Random;
 
@@ -14,6 +16,7 @@ namespace CauldronCodebase
         [SerializeField] private SkeletonAnimation catSkeleton;
         [FormerlySerializedAs("idleAnimations")] [SpineAnimation] public string[] randomActions;
         [SpineAnimation] public string strokeAnimation;
+        [SerializeField] private float strokeAnimationSpeedMultiplier;
         [SpineAnimation] public string dragAnimation;
         [SpineAnimation] public string moveAnimation;
         [SpineAnimation] public string idleAnimation = "idle";
@@ -32,9 +35,8 @@ namespace CauldronCodebase
         [SerializeField] private CatPath catPath;
         [SerializeField] private float movementSpeed;
         [SerializeField] private float catDropSpeed;
-        private Vector3 startPosition;
-        private float strokeAnimationDuration;
 
+        private Collider2D col;
 
         private Tween moveTween;
         private Tween dropTween;
@@ -46,12 +48,35 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            startPosition = transform.position;
-            strokeAnimationDuration = catSkeleton.skeleton.Data.FindAnimation(strokeAnimation).Duration;
+            col = GetComponent<Collider2D>();
             
             randomAction = StartCoroutine(RandomActionsRoutine());
         }
 
+        public void SetInteractable(bool interact)
+        {
+            col.enabled = interact;
+        }
+        
+        public void Move(bool toStartSpot)
+        {
+            StopAllCoroutines();
+            
+            var path = catPath.GetPath(transform, toStartSpot);
+            
+            catSkeleton.AnimationState.SetAnimation(0, moveAnimation, true);
+
+            moveTween = transform.DOPath(path, movementSpeed, PathType.CatmullRom)
+                .SetSpeedBased(true)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    catSkeleton.skeleton.ScaleX = toStartSpot ? 1 : -1;
+                    catSkeleton.AnimationState.SetAnimation(0, idleAnimation, true);
+                    randomAction = StartCoroutine(RandomActionsRoutine());
+                });
+        }
+        
         private void DropAnimation()
         {
             var closestWaypoint = catPath.FindClosestWaypoint(transform.position.x, true).position;
@@ -69,33 +94,19 @@ namespace CauldronCodebase
             dropTween = transform.DOMoveY(closestWaypoint.y, catDropSpeed)
                                 .SetSpeedBased(true)
                                 .SetEase(Ease.InSine)
-                                .OnComplete(() => catLanding = StartCoroutine(CatLanding()));
+                                .OnComplete(CatLanding);
         }
-
-        private IEnumerator CatLanding()
+        
+        private void CatLanding()
         {
-            catSkeleton.AnimationState.SetAnimation(0, strokeAnimation, false);
-
-            yield return new WaitForSeconds(strokeAnimationDuration);
+            TrackEntry strokeEntry = catSkeleton.AnimationState.SetAnimation(0, strokeAnimation, false);
+            catSkeleton.timeScale = strokeAnimationSpeedMultiplier;
             
-            Move(true);
-        }
-
-        private void Move(bool toStartSpot)
-        {
-            var path = catPath.GetPath(transform, toStartSpot);
-            
-            catSkeleton.AnimationState.SetAnimation(0, moveAnimation, true);
-
-            moveTween = transform.DOPath(path, movementSpeed, PathType.CatmullRom)
-                                .SetSpeedBased(true)
-                                .SetEase(Ease.Linear)
-                                .OnComplete(() =>
-                                {
-                                    catSkeleton.skeleton.ScaleX = 1;
-                                    catSkeleton.AnimationState.SetAnimation(0, idleAnimation, true);
-                                    randomAction = StartCoroutine(RandomActionsRoutine());
-                                });
+            strokeEntry.Complete += (_) =>
+            {
+                catSkeleton.timeScale = 1;
+                Move(true);
+            };
         }
 
         private IEnumerator RandomActionsRoutine()

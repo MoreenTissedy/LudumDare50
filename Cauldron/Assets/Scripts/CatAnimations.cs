@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using Spine;
@@ -20,6 +21,10 @@ namespace CauldronCodebase
         [SpineAnimation] public string dragAnimation;
         [SpineAnimation] public string moveAnimation;
         [SpineAnimation] public string idleAnimation = "idle";
+
+        [SpineAnimation] public string hideEffect;
+        [SpineAnimation] public string showEffect;
+        
         [Tooltip("Interval in minutes")]
         public float minIdleInterval = 0.5f;
         public float maxIdleInterval = 1f;
@@ -36,6 +41,8 @@ namespace CauldronCodebase
         [SerializeField] private float movementSpeed;
         [SerializeField] private float catDropSpeed;
 
+        private Vector3 startPosition;
+
         private Collider2D col;
 
         private Tween moveTween;
@@ -45,12 +52,26 @@ namespace CauldronCodebase
         private Coroutine catLanding;
 
         [Inject] private SoundManager soundManager;
+        [Inject] private Cauldron cauldron;
 
         private void Start()
         {
             col = GetComponent<Collider2D>();
+            startPosition = transform.position;
             
             randomAction = StartCoroutine(RandomActionsRoutine());
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (IsDragged) return;
+            
+            transform.DOKill();
+            cauldron.splash.Play();
+            
+            PlayAnimationOneShot(showEffect);
+            catSkeleton.skeleton.ScaleX = 1;
+            transform.position = startPosition;
         }
 
         public void SetInteractable(bool interact)

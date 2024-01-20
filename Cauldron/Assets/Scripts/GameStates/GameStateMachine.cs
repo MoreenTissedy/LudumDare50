@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Save;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace CauldronCodebase.GameStates
 
         public event Action<GamePhase> OnChangeState;
         public event Action OnGameStarted;
+        
+        private CancellationTokenSource cancellationTokenSource;
 
 
         [Inject]
@@ -53,10 +56,18 @@ namespace CauldronCodebase.GameStates
 
         private void Start()
         {
-            RunStateMachine();
+            cancellationTokenSource = new CancellationTokenSource();
+
+            RunStateMachine(cancellationTokenSource.Token);
         }
 
-        public async void RunStateMachine()
+        private void OnDestroy()
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+        }
+
+        public async void RunStateMachine(CancellationToken cancellationToken)
         {
             dataPersistenceManager.LoadDataPersistenceObj();
             currentGamePhase = gameData.gamePhase;
@@ -72,10 +83,10 @@ namespace CauldronCodebase.GameStates
             }
             else
             {
-                await UniTask.NextFrame(); //to avoid injection problems
+                await UniTask.NextFrame(cancellationToken); //to avoid injection problems
                 while (GameLoader.IsMenuOpen())
                 {
-                    await UniTask.NextFrame(); 
+                    await UniTask.NextFrame(cancellationToken); 
                 }
             }
             OnGameStarted?.Invoke();

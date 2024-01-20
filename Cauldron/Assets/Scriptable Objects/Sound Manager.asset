@@ -35,10 +35,14 @@ MonoBehaviour:
   - GameEnd
   - EndingUnlock
   - SpecialEndingUnlock
+  - EndingPanelFold
+  - EndingButtonAppear
   musicKeys:
   - Menu
   - Location1
   - Location2
+  - Location3
+  - Location4
   sounds:
   - Guid:
       Data1: -248018065
@@ -172,6 +176,18 @@ MonoBehaviour:
       Data3: 1913108927
       Data4: 585427627
     Path: event:/Game/ending_coven
+  - Guid:
+      Data1: 1652348379
+      Data2: 1288378387
+      Data3: 347446938
+      Data4: -449814235
+    Path: event:/UX/endings_map_paper
+  - Guid:
+      Data1: -1192150795
+      Data2: 1168490612
+      Data3: 2040268475
+      Data4: 1770204318
+    Path: event:/UX/endings_map_icons
   musics:
   - Guid:
       Data1: 150303394
@@ -191,6 +207,18 @@ MonoBehaviour:
       Data3: -786064255
       Data4: -904282465
     Path: event:/Location/Forest/bgm
+  - Guid:
+      Data1: 1500000885
+      Data2: 1302996778
+      Data3: 1256878239
+      Data4: -1985450465
+    Path: event:/Location/Swamp/bgm
+  - Guid:
+      Data1: 1550814974
+      Data2: 1259040789
+      Data3: 1530023829
+      Data4: -2139428808
+    Path: event:/Location/Pumpkin_music
   defaultVisitorSounds:
     Door:
       Guid:
@@ -384,8 +412,8 @@ MonoBehaviour:
       Data4: -489474731
     Path: event:/UX/potion_wrong
   - Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -949070972
+      Data2: 1233945169
+      Data3: -680635763
+      Data4: 1590538252
+    Path: event:/Game/nomagic_potion

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Universal;
 using Zenject;
 
@@ -21,13 +22,13 @@ namespace CauldronCodebase
         public void Open()
         {
             gameObject.SetActive(true);
-            fadeController.FadeIn(endAlpha: fadeInTargetAlpha);
+            fadeController.FadeIn(endAlpha: fadeInTargetAlpha).Forget();
         }
         
         public void Close()
         {
             gameObject.SetActive(false);
-            fadeController.FadeOut();
+            fadeController.FadeOut().Forget();
         }
         
     }

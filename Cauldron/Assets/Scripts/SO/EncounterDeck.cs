@@ -46,6 +46,8 @@ namespace CauldronCodebase
         private MainSettings mainSettings;
         private int lastExtendedRoundNumber;
 
+        public bool NotEnoughCards => deck.Count < mainSettings.gameplay.targetDeckCount;
+
         private void OnValidate()
         {
             for (var index = 0; index < cardPoolsByRound.Length; index++)
@@ -158,6 +160,11 @@ namespace CauldronCodebase
             }
             for (int i = 0; i < num; i++)
             {
+                if (cardPool.Count < 1)
+                {
+                    break;
+                }
+
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
@@ -170,7 +177,6 @@ namespace CauldronCodebase
                         break;
                     }
                 }
-
                 if (!cardFound)
                 {
                     Debug.LogWarning("No suitable card found in pool");

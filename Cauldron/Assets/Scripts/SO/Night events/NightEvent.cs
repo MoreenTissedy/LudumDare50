@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using EasyLoc;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 {
@@ -17,6 +16,7 @@ namespace CauldronCodebase
         public Encounter[] bonusCards;
         public FractionData fractionData;
         public string storyTag;
+        public string requiredTag;
         public RecipeHintConfig recipeHint;
         [Header("Only for conditionals")]
         public bool repeat;
@@ -68,6 +68,4 @@ namespace CauldronCodebase
             file.Close();
         }
     }
-    
-    
 }

@@ -8,12 +8,12 @@ namespace CauldronCodebase
     {
         [SerializeField] private Image fadeImage;
        
-        public async UniTask FadeIn(float startAlpha = 0f, float endAlpha = 1f, float duration = 1f)
+        public async UniTask FadeIn(float startAlpha = 0f, float endAlpha = 1f, float duration = 0.3f)
         {
             await Fade(startAlpha, endAlpha,  duration);
         }
 
-        public async UniTask FadeOut(float endAlpha = 0f, float duration = 1f)
+        public async UniTask FadeOut(float endAlpha = 0f, float duration = 0.3f)
         {
             await Fade(fadeImage.color.a, endAlpha, duration);
         }

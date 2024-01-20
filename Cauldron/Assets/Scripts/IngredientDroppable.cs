@@ -167,16 +167,8 @@ namespace CauldronCodebase
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
-            transform.DOScale(transform.localScale, rotateSpeed).From(Vector3.zero);
-
-            try
-            {
-                cauldron.AddToMix(ingredient);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine($"Error while adding ingredient to mix: {exception.Message}");
-            }
+            transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
+            cauldron.AddToMix(ingredient);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -231,8 +223,7 @@ namespace CauldronCodebase
             const float timeMoveDoubleClick = 0.5f;
 
             SetMovementVisuals();
-            transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash);
-            await UniTask.Delay(TimeSpan.FromSeconds(timeMoveDoubleClick));
+            await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
             AddToMixAndResetVisuals();
         }
 

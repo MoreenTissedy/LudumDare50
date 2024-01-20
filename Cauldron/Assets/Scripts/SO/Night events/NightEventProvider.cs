@@ -34,6 +34,7 @@ namespace CauldronCodebase
         }
 
         public NightEvent intro;
+        public NightEvent movingEnding;
         public List<ConditionalEvent> conditionalEvents;
         public List<RandomNightEvent> randomEvents;
         [Header("Readonly")]
@@ -115,7 +116,7 @@ namespace CauldronCodebase
                 return new[] {intro};
             }
 
-            if (joinedEvents.Count != 0)
+            if (joinedEvents != null && joinedEvents.Count != 0)
             {
                 return joinedEvents.ToArray();
             }
@@ -145,7 +146,7 @@ namespace CauldronCodebase
 
         public void ClearJoinedEvents()
         {
-            joinedEvents.Clear();
+            joinedEvents?.Clear();
         }
 
         private void CheckEventCooldown()
@@ -208,7 +209,9 @@ namespace CauldronCodebase
             {
                 return;
             }
-            data.JoinedNightEvents = joinedEvents.Select(x => x.name).ToList();
+            if(joinedEvents != null)
+                data.JoinedNightEvents = joinedEvents.Select(x => x.name).ToList();
+            
             data.CurrentStoryEvents = storyEvents.Select(x => x.name).ToList();
             data.CurrentConditionals = inGameConditionals.Select(x => x.name).ToList();
             data.CurrentRandomEvents = inGameRandoms.Select(x => x.name).ToList();

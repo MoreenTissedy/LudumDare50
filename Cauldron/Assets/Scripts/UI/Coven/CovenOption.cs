@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -36,7 +37,7 @@ namespace CauldronCodebase
                 return;
             }
             gameDataHandler.BuyRumour();
-            nightPanel.AddCovenEvent(covenNightEventProvider.GetRandom(status, high));
+            nightPanel.AddEventAsLast(covenNightEventProvider.GetRandom(status, high)).Forget();
         }
     }
 }

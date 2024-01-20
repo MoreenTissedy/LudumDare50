@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -27,11 +28,15 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
+        [SerializeField] private Transform root;
 
         public event Action OnClose;
         private bool active;
 
         private bool final;
+        private GameObject currentCartoon;
+
+        [Inject] private SoundManager soundManager;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -52,15 +57,26 @@ namespace CauldronCodebase
         private async void OnEndingClick(string tag)
         {
             Ending ending = endings.Get(tag);
+            await LoadEndingCartoon(tag);
+            //picture.sprite = ending.image;
             screen.SetActive(true);
             screenFader.alpha = 0;
             screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
             description.text = ending.text;
-            picture.sprite = ending.image;
             await UniTask.Delay(TimeSpan.FromSeconds(2));
             await UniTask.WaitUntil(() => Input.anyKey);
             screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() => screen.SetActive(false));
+        }
+
+        private async UniTask LoadEndingCartoon(string tag)
+        {
+            if (currentCartoon)
+            {
+                Destroy(currentCartoon);
+            }
+            GameObject asset = await Resources.LoadAsync<GameObject>(ResourceIdents.EndingCartoons[tag]) as GameObject;
+            currentCartoon = Instantiate(asset, root);
         }
 
         public void Open(string endingTag = "none")
@@ -73,6 +89,7 @@ namespace CauldronCodebase
             gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
             active = true;
+            soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, startAnimation, false).Complete += (_) => OnComplete(endingTag);
         }
 
@@ -116,13 +133,15 @@ namespace CauldronCodebase
             }
             active = false;
             closeButton.gameObject.SetActive(false);
+            soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {
                 gameObject.SetActive(false);
                 OnClose?.Invoke();
             };
-            foreach (var button in buttons)
+            for (var index = buttons.Length-1; index >=0; index--)
             {
+                var button = buttons[index];
                 await UniTask.DelayFrame(3);
                 button.Hide();
             }

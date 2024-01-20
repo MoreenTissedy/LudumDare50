@@ -17,6 +17,7 @@ namespace CauldronCodebase
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
+        [SerializeField] private ExperimentController experimentController;
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
@@ -32,6 +33,8 @@ namespace CauldronCodebase
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
+
+        private IAchievementManager achievementManager;
 
         public override void InstallBindings()
         {
@@ -61,14 +64,18 @@ namespace CauldronCodebase
 
         private void BindGameplay()
         {
+            achievementManager = new AchievementManager();
+            
             Container.Bind<StatusChecker>().FromNew().AsSingle();
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
+            Container.Bind<ExperimentController>().FromInstance(experimentController).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
+            Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }
 
@@ -78,7 +85,8 @@ namespace CauldronCodebase
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
-            endings.Init();
+            endings.Init(achievementManager);
         }
+
     }
 }

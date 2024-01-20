@@ -14,18 +14,27 @@ namespace CauldronCodebase
         public const string LOW_FEAR = "low fear";
         public const string ENOUGH_MONEY = "circle";
         public const string FINAL = "Bobby";
+        public const string END_DECK = "moving";
+        public const string KING_GOOD = "king success";
+        public const string KING_BAD = "king failure";
+        public const string BISHOP_GOOD = "bishop success";
+        public const string BISHOP_BAD = "bishop failure";
+        public const string BANDIT = "bandit revolt";
         
         public Ending[] endings;
 
         private List<string> unlocked;
-        public Dictionary<string, Ending> Endings;
+        private Dictionary<string, Ending> endingDict;
+        private IAchievementManager achievements;
 
-        public void Init()
+        public void Init(IAchievementManager achievements)
         {
-            Endings = new Dictionary<string, Ending>(12);
+            this.achievements = achievements;
+            
+            endingDict = new Dictionary<string, Ending>(12);
             foreach (var ending in endings)
             {
-                Endings.Add(ending.tag, ending);
+                endingDict.Add(ending.tag, ending);
             }
 
             if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
@@ -50,7 +59,7 @@ namespace CauldronCodebase
 
         public bool Unlocked(Ending ending)
         {
-            foreach (var keyValuePair in Endings)
+            foreach (var keyValuePair in endingDict)
             {
                 if (keyValuePair.Value == ending)
                 {
@@ -62,12 +71,13 @@ namespace CauldronCodebase
         
         public Ending Get(string tag)
         {
-            return Endings[tag];
+            return endingDict[tag];
         }
 
         public void Unlock(string tag)
         {
             unlocked.Add(tag);
+            achievements.TryUnlock(tag);
             PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
         }
 

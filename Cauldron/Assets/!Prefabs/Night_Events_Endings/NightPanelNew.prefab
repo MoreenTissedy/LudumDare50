@@ -308,7 +308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 30}
+  m_AnchoredPosition: {x: 25, y: 117}
   m_SizeDelta: {x: 1100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2914712788396089597
@@ -320,9 +320,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 431163141934810002}
-  - component: {fileID: 514320991}
-  - component: {fileID: 4553820119428703781}
-  - component: {fileID: 4288784517167621323}
+  - component: {fileID: 1288064664147757270}
   m_Layer: 0
   m_Name: MoneyBlock
   m_TagString: Untagged
@@ -352,35 +350,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -266.89}
   m_SizeDelta: {x: 300, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &514320991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2914712788396089597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae730972568a494e8915e30dc74a63ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textField: {fileID: 3530119001824139782}
-  settings: {fileID: 11400000, guid: 7e9d60718430cf52ebb4e7b4aa946680, type: 2}
---- !u!114 &4553820119428703781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2914712788396089597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae730972568a494e8915e30dc74a63ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textField: {fileID: 3530119001824139782}
-  settings: {fileID: 11400000, guid: 7e9d60718430cf52ebb4e7b4aa946680, type: 2}
---- !u!114 &4288784517167621323
+--- !u!114 &1288064664147757270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2381,6 +2351,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+--- !u!224 &1813955422617824771 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 628590908776530928, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
+  m_PrefabInstance: {fileID: 1266992268903788019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4909869660230223486 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6176157681427983245, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
@@ -2392,11 +2367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd61ebacc1df497bb76d42c4f70eabe8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &1813955422617824771 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 628590908776530928, guid: 5b5c8ce8293ab834c8b71a55c1c32caf, type: 3}
-  m_PrefabInstance: {fileID: 1266992268903788019}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2227467489165207142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2474,7 +2444,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1054
+      value: 1036
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3096,7 +3066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 327
+      value: 321
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3407,7 +3377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 734
+      value: 688
       objectReference: {fileID: 0}
     - target: {fileID: 1323731248965200441, guid: 5ca3d15152271614fb43e82d100864b3, type: 3}
       propertyPath: m_AnchoredPosition.y

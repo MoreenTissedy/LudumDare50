@@ -13,6 +13,10 @@ namespace CauldronCodebase
 
         public override bool Valid(GameDataHandler game)
         {
+            if (!StoryTagHelper.Check(requiredTag, game))
+            {
+                return false;
+            }
             int count = 0;
             foreach (Potions potion in game.PotionsOnLastDays)
             {

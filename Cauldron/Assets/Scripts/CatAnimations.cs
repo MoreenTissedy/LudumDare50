@@ -62,7 +62,8 @@ namespace CauldronCodebase
             randomAction = StartCoroutine(RandomActionsRoutine());
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        // the method was chosen for correct behavior when the player released the cat directly inside the cauldron
+        private void OnTriggerStay2D(Collider2D other)
         {
             if (IsDragged) return;
             

@@ -8,7 +8,7 @@ namespace CauldronCodebase
 {
     public class VisitorManager : MonoBehaviour, IDataPersistence
     {
-        [SerializeField] private GameObject witchCat;
+        [SerializeField] private CatVisitor witchCat;
         
         [SerializeField] private VisitorTextBox visitorText;
         [SerializeField] private VisitorTimer visitorTimer;
@@ -98,24 +98,31 @@ namespace CauldronCodebase
             }
 
             currentVillager = villager;
-            soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
-            await UniTask.Delay(300);
-            soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
-            currentVisitor = Instantiate(villager.visitorPrefab, transform);
-            if (currentVisitor)
+            
+            // I couldn't think of a better way for regular visitors and the animated cat to work.
+            if (villager.name == EncounterIdents.CAT)
             {
+                currentVisitor = witchCat;
                 currentVisitor.Enter();
+                await UniTask.Delay((int)(witchCat.WalkingTime * 1000));
             }
+            else
+            {
+                soundManager.PlayVisitor(villager.sounds, VisitorSound.Door);
+                await UniTask.Delay(300);
+                soundManager.PlayVisitor(villager.sounds, VisitorSound.Enter);
+                currentVisitor = Instantiate(villager.visitorPrefab, transform);
+                
+                if (currentVisitor)
+                {
+                    currentVisitor.Enter();
+                }
+            }
+            
             soundManager.PlayVisitor(villager.sounds, VisitorSound.Speech);
 
             await UniTask.Delay(150);
             ShowText(card);
-
-            //if cat - disable cat, else - enable cat
-            if (witchCat != null)
-            {
-                witchCat.SetActive(villager.name != EncounterIdents.CAT);
-            }
         }
 
         public void Exit()

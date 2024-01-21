@@ -136,6 +136,7 @@ namespace CauldronCodebase
 
             if (recipe.magical)
             {
+                achievements.TryUnlock(AchievIdents.FIRST_UNLOCK);
                 if (unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count)
                 {
                     achievements.TryUnlock(AchievIdents.MAGIC_ALL);

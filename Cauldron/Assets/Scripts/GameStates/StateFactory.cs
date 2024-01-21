@@ -62,7 +62,7 @@ namespace CauldronCodebase.GameStates
         public VisitorState CreateVisitorState()
         {
             return new VisitorState(deck, settings, gameDataHandler, visitorManager, cauldron,
-                gameStateMachine, nightEvents, soundManager, statusChecker);
+                gameStateMachine, nightEvents, soundManager, statusChecker, achievementManager);
         }
 
 

@@ -14,6 +14,7 @@ namespace CauldronCodebase.GameStates
 
         private readonly EncounterResolver resolver;
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievementManager;
 
         public VisitorState(EncounterDeck deck,
                             MainSettings settings,
@@ -23,7 +24,8 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider, 
                             SoundManager soundManager,
-                            StatusChecker statusChecker)
+                            StatusChecker statusChecker, 
+                            IAchievementManager achievementManager)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
@@ -32,6 +34,7 @@ namespace CauldronCodebase.GameStates
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
             this.statusChecker = statusChecker;
+            this.achievementManager = achievementManager;
 
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
@@ -68,6 +71,10 @@ namespace CauldronCodebase.GameStates
 
         private void EndEncounter(Potions potion)
         {
+            if (!EncounterIdents.GetAllSpecialCharacters().Contains(gameDataHandler.currentCard.villager.name))
+            {
+                achievementManager.TryUnlock(AchievIdents.FIRST_POTION);
+            }
             SignalPotionSuccess(potion);
             gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);

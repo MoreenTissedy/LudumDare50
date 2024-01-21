@@ -11,6 +11,8 @@ namespace CauldronCodebase
 
     public static class AchievIdents
     {
+        public const string FIRST_POTION = "first potion";
+        public const string FIRST_UNLOCK = "first unlock";
         public const string MAGIC_ALL = "magic recipes";
         public const string FOOD_ALL = "food recipes";
         public const string EXPERIMENTS_ALL = "experiments";

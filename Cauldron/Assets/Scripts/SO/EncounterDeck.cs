@@ -169,10 +169,8 @@ namespace CauldronCodebase
                 for (int j = 0; j< 10; j++)
                 {
                     int randomIndex = Random.Range(0, cardPool.Count);
-                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler) 
-                        && deck.Count(card => card.villager == cardPool[randomIndex].villager) == 0)
+                    if (AddToDeck(cardPool[randomIndex]))
                     {
-                        deck.AddLast(cardPool[randomIndex]);
                         cardPool.RemoveAt(randomIndex);
                         cardFound = true;
                         break;
@@ -186,6 +184,11 @@ namespace CauldronCodebase
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
+        }
+
+        private bool CheckVisitorNotInDeck(Villager villager)
+        {
+            return deck.Count(card => card.villager == villager) == 0;
         }
 
         private void ExtendPool()
@@ -214,7 +217,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager))
             {
                 return false;
             }

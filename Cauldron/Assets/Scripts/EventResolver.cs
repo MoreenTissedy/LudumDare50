@@ -81,9 +81,15 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                if (!game.currentDeck.AddToDeck(nightEvent.bonusCards[i]))
+
+                var nightEventBonusCard = nightEvent.bonusCards[i];
+                if (game.currentDeck.AddToDeck(nightEventBonusCard))
                 {
-                    game.currentDeck.AddToPool(nightEvent.bonusCards[i]);
+                    continue;
+                }
+                if (!EncounterIdents.GetAllSpecialCharacters().Contains(nightEventBonusCard.villager.name))
+                {
+                    game.currentDeck.AddToPool(nightEventBonusCard);
                 }
             }
             return nightEvent.bonusCards[random];

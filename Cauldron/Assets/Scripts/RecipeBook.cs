@@ -137,7 +137,7 @@ namespace CauldronCodebase
             if (recipe.magical)
             {
                 achievements.TryUnlock(AchievIdents.FIRST_UNLOCK);
-                if (unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count)
+                if (AllMagicalRecipesUnlocked())
                 {
                     achievements.TryUnlock(AchievIdents.MAGIC_ALL);
                 }
@@ -158,6 +158,11 @@ namespace CauldronCodebase
 
             PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
             OnUnlockAutoCooking?.Invoke();
+        }
+
+        public bool AllMagicalRecipesUnlocked()
+        {
+            return unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count;
         }
 
         public void CheatUnlockAutoCooking()

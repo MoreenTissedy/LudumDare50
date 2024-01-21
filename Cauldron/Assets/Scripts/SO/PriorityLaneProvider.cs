@@ -13,17 +13,19 @@ namespace CauldronCodebase
         private EncounterDeck deck;
         private SODictionary dictionary;
         private GameDataHandler game;
+        private RecipeBook recipeBook;
 
         public List<Encounter> highFame;
         public List<Encounter> highFear;
         public List<Encounter> lowFame;
         public List<Encounter> lowFear;
 
-        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager, GameDataHandler game)
+        public void Init(EncounterDeck deck, SODictionary dictionary, DataPersistenceManager dataPersistenceManager, GameDataHandler game, RecipeBook recipeBook)
         {
             this.deck = deck;
             this.dictionary = dictionary;
             this.game = game;
+            this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
         }
 
@@ -64,13 +66,22 @@ namespace CauldronCodebase
             {
                 random = Random.Range(0, set.Count);
                 card = set[random];
-                if (StoryTagHelper.Check(card, game))
+                if (StoryTagHelper.Check(card, game) && CheckDevilValid(card, recipeBook))
                 {
                     set.RemoveAt(random);
                     return card;
                 }
             }
             return null;
+        }
+
+        public static bool CheckDevilValid(Encounter card, RecipeBook recipeBook)
+        {
+            if (card.villager.name != EncounterIdents.DARK_STRANGER)
+            {
+                return true;
+            }
+            return !recipeBook.AllMagicalRecipesUnlocked();
         }
         
         public List<Encounter> GetCardSet(string tag)

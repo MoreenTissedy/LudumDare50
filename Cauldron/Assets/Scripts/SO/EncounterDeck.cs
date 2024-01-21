@@ -44,6 +44,7 @@ namespace CauldronCodebase
         private SODictionary soDictionary;
         private Encounter loadedCard;
         private MainSettings mainSettings;
+        private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
         public bool NotEnoughCards => deck.Count < mainSettings.gameplay.targetDeckCount;
@@ -61,12 +62,13 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings, RecipeProvider recipes)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
             mainSettings = settings;
             recipeProvider = recipes;
+            this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
@@ -217,7 +219,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager))
+            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook))
             {
                 return false;
             }

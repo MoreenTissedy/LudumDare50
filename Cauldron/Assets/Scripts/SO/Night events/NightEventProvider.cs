@@ -23,7 +23,7 @@ namespace CauldronCodebase
 
             public CooldownEvent(ConditionalEvent conditionalEvent)
             {
-                Days = _EVENT_COOLDOWN_;
+                Days = conditionalEvent.cooldownDays;
                 Event = conditionalEvent;
             } 
             public CooldownEvent(ConditionalEvent conditionalEvent, int days)

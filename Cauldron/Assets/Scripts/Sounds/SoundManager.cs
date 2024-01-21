@@ -96,6 +96,7 @@ namespace CauldronCodebase
         public EventReference Conversation;
         public EventReference Attention;
         public EventReference Annoyed;
+        public EventReference Appear;
     }
 
     [CreateAssetMenu]
@@ -274,6 +275,9 @@ namespace CauldronCodebase
                     break;
                 case CatSound.Annoyed:
                     sound = catSounds.Annoyed;
+                    break;
+                case CatSound.Appear:
+                    sound = catSounds.Appear;
                     break;
             }
             RuntimeManager.PlayOneShot(sound);

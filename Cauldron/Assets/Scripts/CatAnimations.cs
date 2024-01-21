@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Text;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Spine;
 using Spine.Unity;
@@ -31,6 +34,7 @@ namespace CauldronCodebase
         [SerializeField] private Vector2 dragAnimationOffset;
         [SerializeField] private float dragThreshold;
         public bool IsDragged { get; private set; }
+        public bool IsInCauldron { get; private set; }
         private bool dragAnimated;
         private Vector2 startDragPosition;
 
@@ -64,17 +68,25 @@ namespace CauldronCodebase
         }
 
         // the method was chosen for correct behavior when the player released the cat directly inside the cauldron
-        private void OnTriggerStay2D(Collider2D other)
+        private async void OnTriggerStay2D(Collider2D other)
         {
-            if (IsDragged) return;
-            
+            if (IsDragged || IsInCauldron) return;
+
+            IsInCauldron = true;
             transform.DOKill();
             cauldron.splash.Play();
             soundManager.Play(Sounds.Splash);
+            gameObject.SetActive(false);
+            catSkeleton.AnimationState.SetEmptyAnimation(0, 0);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             
-            PlayAnimationOneShot(showEffect);
+            gameObject.SetActive(true);
+            soundManager.PlayCat(CatSound.Appear);
             catSkeleton.skeleton.ScaleX = 1;
             transform.position = startPosition;
+            PlayAnimationOneShot(showEffect);
+            IsInCauldron = false;
         }
 
         public void SetInteractable(bool interact)
@@ -183,7 +195,10 @@ namespace CauldronCodebase
             if(IsDragged) return;
             
             IsDragged = (startDragPosition - pos).magnitude > dragThreshold;
-            soundManager.PlayCat(CatSound.Annoyed);
+            if (IsDragged)
+            {
+                soundManager.PlayCat(CatSound.Annoyed);
+            }
         }
 
         private void EnableDragAnimation()

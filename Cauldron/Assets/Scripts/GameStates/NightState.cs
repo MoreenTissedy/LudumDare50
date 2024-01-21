@@ -65,22 +65,33 @@ namespace CauldronCodebase.GameStates
 
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler).ToList();
-            CheckStoryEnding(events);
+            CheckStoryEnding(in events);
             nightPanel.OpenBookWithEvents(events.ToArray());
             nightPanel.EventClicked += NightPanelOnEventClicked;
         }
 
-        private void CheckStoryEnding(List<NightEvent> events)
+        private void CheckStoryEnding(in List<NightEvent> events)
         {
+            List<NightEvent> extraEndingEvents = new List<NightEvent>();
             for (var index = 0; index < events.Count; index++)
             {
                 string tag = events[index].storyTag;
                 tag = tag.Split(',')[0];
                 if (tag.StartsWith("^"))
                 {
-                    storyEnding = tag.TrimStart('^').TrimStart('*').Trim();
-                    break;
+                    if (string.IsNullOrEmpty(storyEnding))
+                    {
+                        storyEnding = tag.TrimStart('^').TrimStart('*').Trim();
+                    }
+                    else
+                    {
+                        extraEndingEvents.Add(events[index]);
+                    }
                 }
+            }
+            foreach (var extraEndingEvent in extraEndingEvents)
+            {
+                events.Remove(extraEndingEvent);
             }
         }
 

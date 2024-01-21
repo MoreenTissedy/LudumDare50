@@ -138,19 +138,22 @@ MonoBehaviour:
   randomActions:
   - Game
   - Game2
-  - Hungry
   strokeAnimation: active1
-  strokeAnimationSpeedMultiplier: 1.3
+  strokeAnimationSpeedMultiplier: 2
   dragAnimation: Act
   moveAnimation: Step
   idleAnimation: idle
+  hideEffect: Idle_end
+  showEffect: Idle_start
   minIdleInterval: 0.5
   maxIdleInterval: 1
   dragAnimationOffset: {x: 0.35, y: -2.2}
   dragThreshold: 100
   catPath: {fileID: 0}
-  movementSpeed: 5
+  movementSpeed: 4.5
   catDropSpeed: 15
+  eatingAnimation: Hungry
+  eatingSlot: Snake
 --- !u!58 &8453831257243129724
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -161,7 +164,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.18, y: 0.95}

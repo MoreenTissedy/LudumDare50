@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [SerializeField] private SkeletonAnimation catSkeleton;
         [FormerlySerializedAs("idleAnimations")] [SpineAnimation] public string[] randomActions;
@@ -39,6 +39,10 @@ namespace CauldronCodebase
         [SerializeField] private float movementSpeed;
         [SerializeField] private float catDropSpeed;
 
+        [Header("Eating")] 
+        [SpineAnimation] public string eatingAnimation;
+        [SpineSlot()] public string eatingSlot;
+
         private Vector3 startPosition;
 
         private Collider2D col;
@@ -66,6 +70,7 @@ namespace CauldronCodebase
             
             transform.DOKill();
             cauldron.splash.Play();
+            soundManager.Play(Sounds.Splash);
             
             PlayAnimationOneShot(showEffect);
             catSkeleton.skeleton.ScaleX = 1;
@@ -120,6 +125,7 @@ namespace CauldronCodebase
         private void CatLanding()
         {
             TrackEntry strokeEntry = catSkeleton.AnimationState.SetAnimation(0, strokeAnimation, false);
+            soundManager.PlayCat(CatSound.Annoyed);
             catSkeleton.timeScale = strokeAnimationSpeedMultiplier;
             
             strokeEntry.Complete += (_) =>
@@ -177,6 +183,7 @@ namespace CauldronCodebase
             if(IsDragged) return;
             
             IsDragged = (startDragPosition - pos).magnitude > dragThreshold;
+            soundManager.PlayCat(CatSound.Annoyed);
         }
 
         private void EnableDragAnimation()
@@ -197,7 +204,7 @@ namespace CauldronCodebase
             }
             else
             {
-                soundManager.PlayCat(CatSound.Annoyed);
+                soundManager.PlayCat(CatSound.Purr);
                 PlayAnimationOneShot(strokeAnimation);
             }
         }
@@ -205,6 +212,13 @@ namespace CauldronCodebase
         private void PlayAnimationOneShot(string animation)
         {
             catSkeleton.AnimationState.SetAnimation(0, animation, false);
+            catSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0f);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            catSkeleton.Skeleton.SetAttachment(eatingSlot, "amanita1");
+            catSkeleton.AnimationState.SetAnimation(0, eatingAnimation, false);
             catSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0f);
         }
     }

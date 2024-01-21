@@ -58,7 +58,8 @@ namespace CauldronCodebase
         Purr,
         Conversation,
         Attention,
-        Annoyed
+        Annoyed,
+        Appear
     }
 
     public enum BookSound

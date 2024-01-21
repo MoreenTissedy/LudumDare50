@@ -76,8 +76,16 @@ namespace CauldronCodebase.GameStates
                 achievementManager.TryUnlock(AchievIdents.FIRST_POTION);
             }
             SignalPotionSuccess(potion);
-            gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
+            bool potionResultFound = resolver.EndEncounter(potion);
+            bool potionEffective = potionResultFound && potion!=Potions.Placebo && PotionHasStatusInfluence();
+            gameDataHandler.AddPotion(potion, !potionEffective);
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
+
+            bool PotionHasStatusInfluence()
+            {
+                return gameDataHandler.currentCard.resultsByPotion.First(x => x.potion == potion)
+                    .influenceCoef != 0;
+            }
         }
 
         private void SignalPotionSuccess(Potions potion)

@@ -31,6 +31,7 @@ namespace CauldronCodebase
         private Vector3 initialPosition;
         private bool dragging;
 
+        private CatAnimations catAnimations;
         private Cauldron cauldron;
         private TooltipManager ingredientManager;
         private float initialRotation;
@@ -53,8 +54,9 @@ namespace CauldronCodebase
         }
         
         [Inject]
-        public void Construct(Cauldron cauldron)
+        public void Construct(Cauldron cauldron, CatAnimations catAnimations)
         {
+            this.catAnimations = catAnimations;
             this.cauldron = cauldron;
             ingredientManager = cauldron.tooltipManager;
             ingredientManager.AddIngredient(this);
@@ -92,6 +94,8 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (catAnimations.IsDragged) return;
+            
             if (!cauldron.Mix.Contains(ingredient))
             {
                 image.gameObject.transform.DORotate(new Vector3(0, 0, initialRotation + rotateAngle), rotateSpeed)

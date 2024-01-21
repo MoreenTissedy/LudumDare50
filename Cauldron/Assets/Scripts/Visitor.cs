@@ -21,7 +21,7 @@ namespace CauldronCodebase
             rend.enabled = false;
         }
 
-        public void Enter()
+        public virtual void Enter()
         {
             if (!anim) anim = GetComponent<SkeletonAnimation>();
             if (!rend) rend = GetComponent<MeshRenderer>();

@@ -265,6 +265,10 @@ namespace CauldronCodebase
 
         public async void OnNextCard()
         {
+            if (!clickable)
+            {
+                return;
+            }
             if (content.Count == 0)
             {
                 CloseBook();

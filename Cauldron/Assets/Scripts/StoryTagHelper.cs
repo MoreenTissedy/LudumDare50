@@ -55,7 +55,7 @@ namespace CauldronCodebase
         
         public static bool Check(string tagLine, GameDataHandler gameDataHandler)
         {
-            if (string.IsNullOrWhiteSpace(tagLine.Trim()))
+            if (tagLine is null || string.IsNullOrWhiteSpace(tagLine.Trim()))
             {
                 return true;
             }

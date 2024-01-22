@@ -73,6 +73,7 @@ namespace CauldronCodebase.GameStates
         private void CheckStoryEnding(in List<NightEvent> events)
         {
             List<NightEvent> extraEndingEvents = new List<NightEvent>();
+            NightEvent endingEvent = null;
             for (var index = 0; index < events.Count; index++)
             {
                 string tag = events[index].storyTag;
@@ -81,6 +82,7 @@ namespace CauldronCodebase.GameStates
                 {
                     if (string.IsNullOrEmpty(storyEnding))
                     {
+                        endingEvent = events[index];
                         storyEnding = tag.TrimStart('^').TrimStart('*').Trim();
                     }
                     else
@@ -89,6 +91,13 @@ namespace CauldronCodebase.GameStates
                     }
                 }
             }
+
+            if (endingEvent != null)
+            {
+                events.Remove(endingEvent);
+                events.Add(endingEvent);
+            }
+            
             foreach (var extraEndingEvent in extraEndingEvents)
             {
                 events.Remove(extraEndingEvent);

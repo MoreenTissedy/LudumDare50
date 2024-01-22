@@ -11,7 +11,25 @@ namespace CauldronCodebase
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private MainSettings settings;
+        [Inject] private EndingsProvider endingsProvider;
 
+        [Button("Unlock all endings")]
+        public void UnlockAllEndings()
+        {
+            endingsProvider.Unlock(EndingsProvider.FINAL);
+            endingsProvider.Unlock(EndingsProvider.BANDIT);
+            endingsProvider.Unlock(EndingsProvider.END_DECK);
+            endingsProvider.Unlock(EndingsProvider.KING_BAD);
+            endingsProvider.Unlock(EndingsProvider.LOW_FAME);
+            endingsProvider.Unlock(EndingsProvider.LOW_FEAR);
+            endingsProvider.Unlock(EndingsProvider.HIGH_FAME);
+            endingsProvider.Unlock(EndingsProvider.HIGH_FEAR);
+            endingsProvider.Unlock(EndingsProvider.KING_GOOD);
+            endingsProvider.Unlock(EndingsProvider.BISHOP_BAD);
+            endingsProvider.Unlock(EndingsProvider.BISHOP_GOOD);
+            endingsProvider.Unlock(EndingsProvider.ENOUGH_MONEY);
+        }
+        
         [Button("Unlock all recipes")]
         public void UnlockAllRecipes()
         {

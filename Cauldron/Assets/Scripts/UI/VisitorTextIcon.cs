@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
 using TMPro;
@@ -16,16 +17,31 @@ namespace CauldronCodebase
         [Localize] public string fractionHint = "Ваше решение будет замечено и оценено по достоинству.";
         
         public Image icon;
-        public Sprite fame, fear, money, question, item;
+        public Sprite fame, fear, money, question, bishop, king, bandit;
         public ScrollTooltip hint;
 
         private bool hintEnabled;
 
-        public void DisplayItem(Villager villager)
+        public void DisplayFraction(Fractions fraction)
         {
+            if (fraction is Fractions.None)
+            {
+                return;
+            }
             hintEnabled = false;
             gameObject.SetActive(true);
-            icon.sprite = item;
+            switch (fraction)
+            {
+                case Fractions.King:
+                    icon.sprite = king;
+                    break;
+                case Fractions.Bishop:
+                    icon.sprite = bishop;
+                    break;
+                case Fractions.Rogue:
+                    icon.sprite = bandit;
+                    break;
+            }
             hint.SetText(fractionHint).ContinueWith(() => hintEnabled = true);
         }
         

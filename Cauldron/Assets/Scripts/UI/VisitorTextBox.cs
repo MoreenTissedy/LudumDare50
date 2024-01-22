@@ -90,7 +90,7 @@ namespace CauldronCodebase
             iconObjects[1]?.Display(card.secondaryInfluence, card.hidden);
             if (card.fraction != Fractions.None)
             {
-                iconObjects[2]?.DisplayItem(card.villager);
+                iconObjects[2]?.DisplayFraction(card.fraction);
             }
             else
             {

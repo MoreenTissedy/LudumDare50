@@ -2,7 +2,6 @@
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
@@ -17,6 +16,7 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string ScaleTutorialText;
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
+    [Localize] [TextArea(5, 10)] public string RecipeHintTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     [SerializeField] private Button rejectButton;
@@ -26,15 +26,17 @@ public class TutorialManager : MonoBehaviour
     private GameDataHandler gameDataHandler;
     private Cauldron cauldron;
     private GameStateMachine stateMachine;
+    private RecipeHintsStorage recipeHintsStorage;
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
-                            Cauldron witchCauldron, GameStateMachine gameStateMachine)
+                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings)
     {
         recipeBook = book;
         gameDataHandler = dataHandler;
         cauldron = witchCauldron;
         stateMachine = gameStateMachine;
+        recipeHintsStorage = settings.recipeHintsStorage;
     }
 
     private void Start()
@@ -44,6 +46,17 @@ public class TutorialManager : MonoBehaviour
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;
+        recipeHintsStorage.HintAdded += ViewRecipeHintTutorial;
+    }
+
+    private void ViewRecipeHintTutorial(RecipeHint hint)
+    {
+        recipeHintsStorage.HintAdded -= ViewRecipeHintTutorial;
+        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 0) == 0)
+        {
+            PlayerPrefs.SetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 1);
+            tooltipPrefab.Open(RecipeHintTutorialText).Forget();
+        }
     }
 
     private void ViewBookTutorial()

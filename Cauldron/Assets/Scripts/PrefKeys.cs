@@ -23,6 +23,7 @@
             public const string VISITOR_KEY = "TUTORIAL_VISITOR";
             public const string SCALE_CHANGE_KEY = "TUTORIAL_CHANGE_SCALE";
             public const string POTION_DENIED_KEY = "TUTORIAL_POTION_DENIED";
+            public const string RECIPE_HINT_ADDED = "TUTORIAL_RECIPE_HINTS";
         }
     }
 }

@@ -34,6 +34,8 @@ namespace CauldronCodebase
     {
         [SerializeField] private RecipeHint[] hints;
 
+        public event Action<RecipeHint> HintAdded;
+
         public bool TryGetHint(Potions recipe, out string hint)
         {
             var list = GetHints();
@@ -80,6 +82,7 @@ namespace CauldronCodebase
             }
             
             SaveHint(hint, config.level);
+            HintAdded?.Invoke(hint);
         }
 
         private static void SaveHint(RecipeHint hint, int level)

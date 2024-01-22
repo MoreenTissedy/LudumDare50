@@ -47,7 +47,7 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
-        public bool NotEnoughCards => deck.Count < mainSettings.gameplay.targetDeckCount;
+        public bool NotEnoughCards => deck.Count < mainSettings.gameplay.cardsPerDay;
 
         private void OnValidate()
         {

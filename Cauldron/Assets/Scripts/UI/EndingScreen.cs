@@ -16,6 +16,7 @@ namespace CauldronCodebase
         [SerializeField]
         private EndingsProvider endings;
 
+        [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
         [SerializeField] private Button closeButton; 
@@ -32,6 +33,8 @@ namespace CauldronCodebase
 
         public event Action OnClose;
         private bool active;
+
+        public bool IsOpened => active;
 
         private bool final;
         private GameObject currentCartoon;
@@ -79,13 +82,14 @@ namespace CauldronCodebase
             currentCartoon = Instantiate(asset, root);
         }
 
-        public void Open(string endingTag = "none")
+        public void Open(string endingTag = "none", bool noBackground = false)
         {
             if (active)
             {
                 return;
             }
             final = endingTag == EndingsProvider.FINAL;
+            background.SetActive(!noBackground);
             gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
             active = true;

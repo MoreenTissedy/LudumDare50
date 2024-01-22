@@ -6,6 +6,7 @@ using DG.Tweening;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -27,6 +28,12 @@ namespace CauldronCodebase
         [SerializeField] private Transform foodSideBookmark;
         [SerializeField] private Transform attemptsSideBookmark;
         [SerializeField] private Transform ingredientsSideBookmark;
+        
+        [Header("Ending map")] 
+        [SerializeField] private GameObject endingBookmarkBlock;
+        [SerializeField] private AnimatedButton endingBookmarkButton;
+        [SerializeField] private Transform endingRoot;
+        private EndingScreen endingScreen;
 
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
@@ -55,6 +62,7 @@ namespace CauldronCodebase
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
         private IAchievementManager achievements;
+        private EndingsProvider endingsProvider;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -77,23 +85,51 @@ namespace CauldronCodebase
         private void Construct(DataPersistenceManager dataPersistenceManager,
                                 TooltipManager tooltipManager,
                                 RecipeProvider recipeProvider,
-                                Cauldron cauldron, IAchievementManager achievements)
+                                Cauldron cauldron, 
+                                IAchievementManager achievements, 
+                                EndingsProvider endingsProvider)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
             this.tooltipManager = tooltipManager;
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
+            this.endingsProvider = endingsProvider;
         }
 
         private void Start()
         {
+            InitEndingsMap();
             LoadRecipes();
             experimentController.OnContentChanged += () =>
             {
                 InitTotalPages();
                 OpenPage(0);
             };
+        }
+
+        private void InitEndingsMap()
+        {
+            bool reachedFirstEnding = endingsProvider.GetUnlockedEndingsCount() > 0;
+            endingBookmarkBlock.SetActive(reachedFirstEnding);
+            if (reachedFirstEnding)
+            {
+                endingBookmarkButton.OnClick += OpenEndingMap;
+            }
+        }
+
+        private void OpenEndingMap()
+        {
+            if (!endingScreen)
+            {
+                var asset = Resources.Load<EndingScreen>(ResourceIdents.EndingScreen);
+                endingScreen = Instantiate(asset, endingRoot);
+            }
+            if (endingScreen == null)
+            {
+                return;
+            }
+            endingScreen.Open(noBackground: true);
         }
 
         public override void OpenBook()
@@ -479,6 +515,30 @@ namespace CauldronCodebase
         {
             wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
             wrongRecipeProvider.SaveWrongRecipe();
+        }
+
+        public override void CloseBook()
+        {
+            DisposeEndingScreen();
+            base.CloseBook();
+        }
+
+        private void DisposeEndingScreen()
+        {
+            if (!endingScreen)
+            {
+                return;
+            }
+            if (endingScreen.IsOpened)
+            {
+                endingScreen.Close();
+                endingScreen.OnClose += () => Destroy(endingScreen);
+            }
+            else
+            {
+                Destroy(endingScreen);
+            }
+            endingScreen = null;
         }
     }
 }

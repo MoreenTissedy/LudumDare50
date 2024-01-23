@@ -150,8 +150,8 @@ namespace CauldronCodebase
                 yield return new WaitForSeconds(enterTimeInterval);
                 DealEventCard(nightEvent);
             }
-            yield return new WaitForSeconds(enterTimeInterval * 2);
             clickable = true;
+            yield return new WaitForSeconds(enterTimeInterval * 2);
         }
 
         private void DealEventCard(NightEvent nightEvent)

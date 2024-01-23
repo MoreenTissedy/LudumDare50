@@ -59,21 +59,23 @@ namespace CauldronCodebase
 
         private async void OnEndingClick(string tag)
         {
+            //cartoons don't fade
+            
             Ending ending = endings.Get(tag);
             await LoadEndingCartoon(tag);
             //picture.sprite = ending.image;
             screen.SetActive(true);
-            screenFader.alpha = 0;
-            screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
+            //screenFader.alpha = 0;
+            //screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
             description.text = ending.text;
             await UniTask.Delay(TimeSpan.FromSeconds(2));
             await UniTask.WaitUntil(() => Input.anyKey);
-            screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
-            {
+            //screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
+            //{
                 screen.SetActive(false);
                 
-            });
+            //});
         }
 
         private async UniTask LoadEndingCartoon(string tag)
@@ -144,6 +146,7 @@ namespace CauldronCodebase
                 return;
             }
             active = false;
+            screen.SetActive(false);
             closeButton.gameObject.SetActive(false);
             soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>

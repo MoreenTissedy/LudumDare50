@@ -133,7 +133,10 @@ namespace CauldronCodebase
                 {
                     catSkeleton.skeleton.ScaleX = toStartSpot ? 1 : -1;
                     catSkeleton.AnimationState.SetAnimation(0, idleAnimation, true);
-                    randomAction = StartCoroutine(RandomActionsRoutine());
+                    if (randomActions.Length > 0)
+                    {
+                        randomAction = StartCoroutine(RandomActionsRoutine());
+                    }
                 });
         }
         

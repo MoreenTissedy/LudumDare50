@@ -119,7 +119,7 @@ namespace CauldronCodebase
                 }
                 button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
-            if (!endings.Unlocked(tag))
+            if (tag != "none" && !endings.Unlocked(tag))
             {
                 endings.Unlock(tag);
             }

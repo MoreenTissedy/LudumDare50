@@ -108,6 +108,7 @@ namespace CauldronCodebase
                 var wrapper = JsonUtility.FromJson<StringListWrapper>(rememberedCardsJson);
                 rememberedCards.Clear();
                 rememberedCards.AddRange(wrapper.list);
+                
             }
             else
             {
@@ -156,7 +157,8 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
-            if (cardPool.Count < num)
+            var validCards = cardPool.Where(x => !IsCardNotValid(x)).ToList();
+            if (validCards.Count < num)
             {
                 ExtendPool();
             }
@@ -219,7 +221,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook))
+            if (IsCardNotValid(card))
             {
                 return false;
             }
@@ -234,6 +236,11 @@ namespace CauldronCodebase
             }
             deckInfo = deck.ToArray();
             return true;
+        }
+
+        private bool IsCardNotValid(Encounter card)
+        {
+            return !StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
         }
 
         public Encounter GetTopCard()

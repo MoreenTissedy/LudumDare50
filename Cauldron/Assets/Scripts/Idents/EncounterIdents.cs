@@ -14,7 +14,7 @@ namespace CauldronCodebase
         
         public static HashSet<string> GetAllSpecialCharacters()
         {
-            return new HashSet<string> { INQUISITION, DARK_STRANGER, WITCH_MEMORY, CAT, BLINDMAN};
+            return new HashSet<string> { INQUISITION, DARK_STRANGER, WITCH_MEMORY, CAT, BLINDMAN };
         }
     }
 }

@@ -92,7 +92,7 @@ namespace CauldronCodebase
                     game.currentDeck.AddToPool(nightEventBonusCard);
                 }
             }
-            return nightEvent.bonusCards[random];
+            return random < 0 ? null : nightEvent.bonusCards[random];
         }
 
         private int GetRandomValidIndex(Encounter[] cards)

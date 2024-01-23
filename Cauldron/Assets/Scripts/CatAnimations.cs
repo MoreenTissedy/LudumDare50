@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -13,7 +15,7 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
         [SerializeField] private SkeletonAnimation catSkeleton;
         [FormerlySerializedAs("idleAnimations")] [SpineAnimation] public string[] randomActions;
@@ -47,6 +49,8 @@ namespace CauldronCodebase
         [SpineAnimation] public string eatingAnimation;
         [SpineSlot()] public string eatingSlot;
 
+        public event Action MouseOverCat;
+
         private Vector3 startPosition;
 
         private Collider2D col;
@@ -58,6 +62,23 @@ namespace CauldronCodebase
 
         [Inject] private SoundManager soundManager;
         [Inject] private Cauldron cauldron;
+        
+        // convert ingredient to eating slot name
+        private Dictionary<Ingredients, string> EatingSlots = new Dictionary<Ingredients, string>() 
+        {
+            { Ingredients.Snake, "Snake" },
+            { Ingredients.Root1, "root1" },
+            { Ingredients.Root2, "root2" },
+            { Ingredients.Leaf1, "leaf1" },
+            { Ingredients.Leaf2, "leaf2" },
+            { Ingredients.Agaricus, "agaricus" },
+            { Ingredients.Amanita, "amanita1" },
+            { Ingredients.Bat, "bat" },
+            { Ingredients.Rat, "rat" },
+            { Ingredients.Toadstool, "toadstool" },
+        };
+        
+        
 
         private void Start()
         {
@@ -230,11 +251,17 @@ namespace CauldronCodebase
             catSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0f);
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void SetEatingAnimation(Ingredients ingredient)
         {
-            catSkeleton.Skeleton.SetAttachment(eatingSlot, "amanita1");
+            if (!EatingSlots.TryGetValue(ingredient, out string slot)) return;
+            
+            catSkeleton.Skeleton.SetAttachment(eatingSlot, slot);
             catSkeleton.AnimationState.SetAnimation(0, eatingAnimation, false);
             catSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0f);
+        }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            MouseOverCat?.Invoke();
         }
     }
 }

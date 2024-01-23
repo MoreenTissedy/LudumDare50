@@ -239,7 +239,7 @@ namespace CauldronCodebase
             currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
-                Debug.LogError("wrong");
+                Debug.Log("wrong potion");
                 wrongPotionsCount++; // for global statistic
                 currentDayPotions.WrongPotions++;
             }

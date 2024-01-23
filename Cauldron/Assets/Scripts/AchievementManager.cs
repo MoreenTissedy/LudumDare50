@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Steamworks;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -55,6 +56,10 @@ namespace CauldronCodebase
     {
         public bool TryUnlock(string id)
         {
+            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
+            {
+                return false;
+            }
             var achievement = SteamUserStats.Achievements.First(x => x.Identifier == id);
             if (string.IsNullOrWhiteSpace(achievement.Name))
             {

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Steamworks;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -53,8 +55,20 @@ namespace CauldronCodebase
     {
         public bool TryUnlock(string id)
         {
-            Debug.LogError("try unlock "+id);
-            return true;
+            var achievement = SteamUserStats.Achievements.First(x => x.Identifier == id);
+            if (string.IsNullOrWhiteSpace(achievement.Name))
+            {
+                Debug.LogError($"Achievement {id} not found!");
+                return false;
+            } 
+            if (achievement.State == true)
+            {
+                return false;
+            }
+            bool unlocked = achievement.Trigger();
+            if (unlocked) Debug.LogError($"Achievement {id} unlocked!");
+            else Debug.LogError($"Achievement {id} failed to unlock!");
+            return unlocked;
         }
 
         public bool TryUnlock(NightEvent nightEvent)
@@ -63,8 +77,7 @@ namespace CauldronCodebase
             {
                 return false;
             }
-            Debug.LogError("try unlock "+tag);
-            return true;
+            return TryUnlock(tag);
         }
     }
 }

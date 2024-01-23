@@ -138,6 +138,7 @@ namespace CauldronCodebase
                 return;
             SetMovementVisuals();
             cauldron.MouseEnterCauldronZone += OverCauldron;
+            catAnimations.MouseOverCat += OverCat;
         }
 
         private void SetMovementVisuals()
@@ -162,15 +163,29 @@ namespace CauldronCodebase
             cauldron.MouseEnterCauldronZone -= OverCauldron;
         }
 
+
         private void AddToMixAndResetVisuals()
+        {
+            ReturnToStartSpot();
+            cauldron.AddToMix(ingredient);
+        }
+        
+        
+        private void OverCat()
+        {
+            ReturnToStartSpot();
+            catAnimations.SetEatingAnimation(ingredient);
+            catAnimations.MouseOverCat -= OverCat;
+        }
+
+        private void ReturnToStartSpot()
         {
             dragging = false;
             dragTrail?.SetActive(false);
             transform.position = initialPosition;
             transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
-            cauldron.AddToMix(ingredient);
         }
-
+        
         public void OnEndDrag(PointerEventData eventData)
         {
             if (!dragging)

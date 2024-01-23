@@ -261,6 +261,7 @@ namespace CauldronCodebase
             catSkeleton.Skeleton.SetAttachment(eatingSlot, slot);
             catSkeleton.AnimationState.SetAnimation(0, eatingAnimation, false);
             catSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0f);
+            soundManager.PlayCat(CatSound.Conversation);
         }
         public void OnPointerEnter(PointerEventData eventData)
         {

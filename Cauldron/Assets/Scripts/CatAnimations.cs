@@ -63,8 +63,11 @@ namespace CauldronCodebase
         {
             col = GetComponent<Collider2D>();
             startPosition = transform.position;
-            
-            randomAction = StartCoroutine(RandomActionsRoutine());
+
+            if (randomActions.Length > 0)
+            {
+                randomAction = StartCoroutine(RandomActionsRoutine());
+            }
         }
 
         // the method was chosen for correct behavior when the player released the cat directly inside the cauldron

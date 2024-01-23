@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 359662584371558805}
   - component: {fileID: 3622396259166898898}
   - component: {fileID: 7140423212488293689}
+  - component: {fileID: 1733953245583700065}
   m_Layer: 5
   m_Name: Sackcloth
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7089524393652766256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
@@ -79,7 +80,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -813304103
-  m_SortingLayer: 3
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &7140423212488293689
@@ -119,3 +120,17 @@ MonoBehaviour:
   _animationName: Full
   loop: 0
   timeScale: 1
+--- !u!114 &1733953245583700065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7089524393652766256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 058473ed8c6a4fd6909de045fc7fec80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  full: Full
+  idle: Full2

@@ -42,7 +42,8 @@ namespace CauldronCodebase
         Location1,
         Location2,
         Location3,
-        Location4
+        Location4,
+        Ending
     }
 
     public enum VisitorSound

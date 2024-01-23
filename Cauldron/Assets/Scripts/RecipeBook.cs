@@ -129,7 +129,7 @@ namespace CauldronCodebase
             {
                 return;
             }
-            endingScreen.Open(noBackground: true);
+            endingScreen.Open(inBook: true);
         }
 
         public override void OpenBook()

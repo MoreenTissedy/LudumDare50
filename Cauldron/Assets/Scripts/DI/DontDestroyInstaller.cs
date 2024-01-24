@@ -66,9 +66,10 @@ namespace CauldronCodebase
         {
             var resolutions = Screen.resolutions;
             var sortedResolutions = resolutions.OrderByDescending(x => x.height);
-            Resolution chosenResolution = new Resolution();
+            Resolution chosenResolution = Screen.currentResolution;
             foreach (var resolution in sortedResolutions)
             {
+                Debug.Log("checking resolution "+resolution.ToString()+"...");
                 var aspect = (float)resolution.height / resolution.width;
                 if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
                 {
@@ -76,7 +77,7 @@ namespace CauldronCodebase
                     break;
                 }
             }
-
+            Debug.Log("selected resolution "+chosenResolution.ToString());
             return chosenResolution;
         }
     }

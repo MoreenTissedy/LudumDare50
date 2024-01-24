@@ -47,7 +47,7 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
-        public bool NotEnoughCards => deck.Count(x => !IsCardNotValid(x)) < mainSettings.gameplay.cardsPerDay;
+        public bool NotEnoughCards => deck.Count(x => !IsCardNotValidInDeck(x)) < mainSettings.gameplay.cardsPerDay;
 
         private void OnValidate()
         {
@@ -153,7 +153,7 @@ namespace CauldronCodebase
         /// <param name="target">X - target number of cards in deck</param>
         public void DealCardsTo(int target)
         {
-            int validCardsInDeck = deck.Count(x => !IsCardNotValid(x));
+            int validCardsInDeck = deck.Count(x => !IsCardNotValidInDeck(x));
             Debug.Log("dealing cards to "+target+", cards found in deck: "+deck.Count+", valid "+validCardsInDeck);
             if (target - validCardsInDeck <= 0)
             {
@@ -164,13 +164,13 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
-            var validCards = cardPool.Where(x => !IsCardNotValid(x)).ToList();
+            var validCards = cardPool.Where(x => !IsCardNotValidInPool(x)).ToList();
             Debug.Log("valid cards found in pool: "+validCards.Count);
             if (validCards.Count < num)
             {
                 Debug.Log("extending");
                 ExtendPool();
-                if (cardPool.Count(x => !IsCardNotValid(x)) < num)
+                if (cardPool.Count(x => !IsCardNotValidInPool(x)) < num)
                 {
                     Debug.Log("extending again");
                     ExtendPool();
@@ -238,7 +238,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (IsCardNotValid(card))
+            if (IsCardNotValidInPool(card))
             {
                 return false;
             }
@@ -255,9 +255,14 @@ namespace CauldronCodebase
             return true;
         }
 
-        private bool IsCardNotValid(Encounter card)
+        private bool IsCardNotValidInPool(Encounter card)
         {
             return !StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
+        }
+        
+        private bool IsCardNotValidInDeck(Encounter card)
+        {
+            return !StoryTagHelper.Check(card, gameDataHandler) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
         }
 
         public Encounter GetTopCard()

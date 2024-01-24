@@ -9,19 +9,22 @@ namespace CauldronCodebase.GameStates
     {
         private readonly DataPersistenceManager dataPersistenceManager;
         private readonly GameFXManager gameFXManager;
-        
+        private readonly RecipeBook recipeBook;
+
         private string currentEnding;
         private Transform root;
         private EndingScreen endingScreen;
 
         public EndGameState(DataPersistenceManager persistenceManager,
-                            GameFXManager fxManager)
+                            GameFXManager fxManager, RecipeBook recipeBook)
         {
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
+            this.recipeBook = recipeBook;
         }
         public override void Enter()
         {
+            recipeBook.CloseBook();
             ShowEffectAndEnding().Forget();
         }
 

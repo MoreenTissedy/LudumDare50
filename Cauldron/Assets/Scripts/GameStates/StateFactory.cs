@@ -79,7 +79,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(dataPersistenceManager, gameFXManager);
+            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook);
         }
 
     }

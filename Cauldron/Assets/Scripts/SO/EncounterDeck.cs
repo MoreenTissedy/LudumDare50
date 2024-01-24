@@ -47,7 +47,7 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
-        public bool NotEnoughCards => deck.Count < mainSettings.gameplay.cardsPerDay;
+        public bool NotEnoughCards => deck.Count(x => !IsCardNotValid(x)) < mainSettings.gameplay.cardsPerDay;
 
         private void OnValidate()
         {
@@ -86,18 +86,23 @@ namespace CauldronCodebase
             {
                 if (pool.round <= round)
                 {
-                    if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
-                    {
-                        totalPool.AddRange(pool.cards);
-                    }
-                    else
-                    {
-                        totalPool.AddRange(pool.cards.Except(rememberedCards.
-                            Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
-                    }
+                    AddCardsFromPool(round, pool, in totalPool);
                 }
             }
             cardPool = Shuffle(totalPool);
+        }
+
+        private void AddCardsFromPool(int round, CardPoolByRound pool, in List<Encounter> totalPool)
+        {
+                if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
+                {
+                    totalPool.AddRange(pool.cards);
+                }
+                else
+                {
+                    totalPool.AddRange(pool.cards
+                        .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+                }
         }
 
         private void InitRememberedCards()
@@ -148,20 +153,30 @@ namespace CauldronCodebase
         /// <param name="target">X - target number of cards in deck</param>
         public void DealCardsTo(int target)
         {
-            if (target - deck.Count <= 0)
+            int validCardsInDeck = deck.Count(x => !IsCardNotValid(x));
+            Debug.Log("dealing cards to "+target+", cards found in deck: "+deck.Count+", valid "+validCardsInDeck);
+            if (target - validCardsInDeck <= 0)
             {
                 return;
             }
-            DealCards(target - deck.Count);
+            DealCards(target - validCardsInDeck);
         }
 
         private void DealCards(int num)
         {
             var validCards = cardPool.Where(x => !IsCardNotValid(x)).ToList();
+            Debug.Log("valid cards found in pool: "+validCards.Count);
             if (validCards.Count < num)
             {
+                Debug.Log("extending");
                 ExtendPool();
+                if (cardPool.Count(x => !IsCardNotValid(x)) < num)
+                {
+                    Debug.Log("extending again");
+                    ExtendPool();
+                }
             }
+            Debug.Log("cards total in pool: "+cardPool.Count);
             for (int i = 0; i < num; i++)
             {
                 if (cardPool.Count < 1)
@@ -182,7 +197,8 @@ namespace CauldronCodebase
                 }
                 if (!cardFound)
                 {
-                    Debug.LogWarning("No suitable card found in pool");
+                    ExtendPool();
+                    num++;
                 }
             }
 
@@ -204,6 +220,7 @@ namespace CauldronCodebase
             }
             foreach (var pool in nextPools)
             {
+                AddCardsFromPool(gameDataHandler.currentRound, pool, in cardPool);
                 cardPool.AddRange(pool.cards);
             }
             lastExtendedRoundNumber++;
@@ -262,6 +279,7 @@ namespace CauldronCodebase
                 SaveCurrentCardAsUnique();
             }
 
+            deckInfo = deck.ToArray();
             return currentCard;
         }
 

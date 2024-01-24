@@ -75,6 +75,7 @@ namespace CauldronCodebase
             {
                 case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
+                    PlayerPrefs.DeleteKey(PrefKeys.UniqueCards);
                     StartNewGame();
                     break;
 

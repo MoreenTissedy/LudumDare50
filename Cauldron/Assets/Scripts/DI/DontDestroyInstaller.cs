@@ -46,20 +46,14 @@ namespace CauldronCodebase
             {
                 var resolutions = Screen.resolutions;
                 int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
-                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
-            }
-            else
-            {
-                var chosenResolution = GetOptimalResolution(1080f / 1920);
-                if (chosenResolution.height == 0)
+                if (resolutions.Length > newResolution)
                 {
-                    Screen.SetResolution(1920, 1080, fullscreenMode);
-                }
-                else
-                {
-                    Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
+                    Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+                    return;
                 }
             }
+            var chosenResolution = GetOptimalResolution(1080f / 1920);
+            Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
         }
 
         private static Resolution GetOptimalResolution(float aspectRatio)
@@ -69,7 +63,6 @@ namespace CauldronCodebase
             Resolution chosenResolution = Screen.currentResolution;
             foreach (var resolution in sortedResolutions)
             {
-                Debug.Log("checking resolution "+resolution.ToString()+"...");
                 var aspect = (float)resolution.height / resolution.width;
                 if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
                 {
@@ -77,7 +70,6 @@ namespace CauldronCodebase
                     break;
                 }
             }
-            Debug.Log("selected resolution "+chosenResolution.ToString());
             return chosenResolution;
         }
     }

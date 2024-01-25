@@ -36,7 +36,7 @@ namespace CauldronCodebase
             {"jack-feast-success", "trick or treat"},
             {"Painter_3_Love", "art explosion"},
             {"FoolDied", "fool death"},
-            {"bastard-2-success", "chalice story"},
+            {"bastard-success", "chalice story"},
             {"king-reject", "neutrality"},
             {"bishop-reject", "neutrality"},
             {"ixbt final", "rainbow drakkar"},

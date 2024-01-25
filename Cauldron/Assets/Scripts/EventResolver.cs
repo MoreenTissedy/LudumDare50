@@ -75,16 +75,15 @@ namespace CauldronCodebase
                 return nightEvent.bonusCards[0];
             }
 
-            var random = GetRandomValidIndex(nightEvent.bonusCards);
-
+            Encounter priority = null;
             for (var i = 0; i < nightEvent.bonusCards.Length; i++)
             {
-                if (i == random)
+                var nightEventBonusCard = nightEvent.bonusCards[i];
+                if (priority is null && !deck.IsCardNotValidForDeck(nightEventBonusCard))
                 {
+                    priority = nightEventBonusCard;
                     continue;
                 }
-
-                var nightEventBonusCard = nightEvent.bonusCards[i];
                 if (game.currentDeck.AddToDeck(nightEventBonusCard))
                 {
                     continue;
@@ -94,7 +93,7 @@ namespace CauldronCodebase
                     game.currentDeck.AddToPool(nightEventBonusCard);
                 }
             }
-            return random < 0 ? null : nightEvent.bonusCards[random];
+            return priority;
         }
 
         private int GetRandomValidIndex(Encounter[] cards)

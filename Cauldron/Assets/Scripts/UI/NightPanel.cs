@@ -76,9 +76,9 @@ namespace CauldronCodebase
         }
 
         [Inject]
-        private void Construct(MainSettings settings, GameDataHandler gameDataHandler)
+        private void Construct(MainSettings settings, GameDataHandler gameDataHandler, EncounterDeck deck)
         {
-            resolver = new EventResolver(settings, gameDataHandler);
+            resolver = new EventResolver(settings, gameDataHandler, deck);
             this.gameDataHandler = gameDataHandler;
         }
 

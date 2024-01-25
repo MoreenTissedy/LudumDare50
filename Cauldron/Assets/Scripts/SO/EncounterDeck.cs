@@ -197,8 +197,10 @@ namespace CauldronCodebase
                 }
                 if (!cardFound)
                 {
-                    ExtendPool();
-                    num++;
+                    if (ExtendPool())
+                    {
+                        num++;
+                    }
                 }
             }
 
@@ -211,12 +213,12 @@ namespace CauldronCodebase
             return deck.Count(card => card.villager == villager) == 0;
         }
 
-        private void ExtendPool()
+        private bool ExtendPool()
         {
             var nextPools = cardPoolsByRound.Where(x => x.round == lastExtendedRoundNumber+1).ToArray();
             if (nextPools.Length == 0)
             {
-                return;
+                return false;
             }
             foreach (var pool in nextPools)
             {
@@ -224,6 +226,7 @@ namespace CauldronCodebase
                 cardPool.AddRange(pool.cards);
             }
             lastExtendedRoundNumber++;
+            return true;
         }
 
         public void AddToPool(Encounter card)
@@ -257,7 +260,14 @@ namespace CauldronCodebase
 
         private bool IsCardNotValidInPool(Encounter card)
         {
-            return !StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
+            var storyCheck = !StoryTagHelper.Check(card, gameDataHandler);
+            var contains = deck.Contains(card);
+            var visitor = !CheckVisitorNotInDeck(card.villager);
+            var devil = !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
+            return storyCheck 
+                   || contains 
+                   || visitor 
+                   || devil;
         }
         
         private bool IsCardNotValidInDeck(Encounter card)

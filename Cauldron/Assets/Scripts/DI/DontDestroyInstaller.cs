@@ -51,6 +51,7 @@ namespace CauldronCodebase
                     Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
                     return;
                 }
+                PlayerPrefs.DeleteKey(PrefKeys.ResolutionSettings);
             }
             var chosenResolution = GetOptimalResolution(1080f / 1920);
             Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);

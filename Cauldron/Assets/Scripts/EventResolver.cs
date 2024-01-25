@@ -8,10 +8,12 @@ namespace CauldronCodebase
     {
         private readonly GameDataHandler game;
         private readonly MainSettings settings;
+        private readonly EncounterDeck deck;
 
-        public EventResolver(MainSettings settings, GameDataHandler game)
+        public EventResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck)
         {
             this.game = game;
+            this.deck = deck;
             this.settings = settings;
         }
         
@@ -102,7 +104,7 @@ namespace CauldronCodebase
             for (int i = 0; i < 10; i++)
             {
                 random = Random.Range(0, cards.Length);
-                if (StoryTagHelper.Check(cards[random], game))
+                if (!deck.IsCardNotValidForDeck(cards[random]))
                 {
                     priority = cards[random];
                     break;

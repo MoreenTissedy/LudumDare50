@@ -164,13 +164,13 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
-            var validCards = cardPool.Where(x => !IsCardNotValidInPool(x)).ToList();
+            var validCards = cardPool.Where(x => !IsCardNotValidForDeck(x)).ToList();
             Debug.Log("valid cards found in pool: "+validCards.Count);
             if (validCards.Count < num)
             {
                 Debug.Log("extending");
                 ExtendPool();
-                if (cardPool.Count(x => !IsCardNotValidInPool(x)) < num)
+                if (cardPool.Count(x => !IsCardNotValidForDeck(x)) < num)
                 {
                     Debug.Log("extending again");
                     ExtendPool();
@@ -241,7 +241,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (IsCardNotValidInPool(card))
+            if (IsCardNotValidForDeck(card))
             {
                 return false;
             }
@@ -258,7 +258,7 @@ namespace CauldronCodebase
             return true;
         }
 
-        private bool IsCardNotValidInPool(Encounter card)
+        public bool IsCardNotValidForDeck(Encounter card)
         {
             var storyCheck = !StoryTagHelper.Check(card, gameDataHandler);
             var contains = deck.Contains(card);

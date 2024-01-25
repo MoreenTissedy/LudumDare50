@@ -45,7 +45,7 @@ namespace CauldronCodebase.GameStates
             this.statusChecker = statusChecker;
             this.achievements = achievements;
 
-            eventResolver = new EventResolver(settings, gameDataHandler);
+            eventResolver = new EventResolver(settings, gameDataHandler, cardDeck);
             storyCards = new List<Encounter>(2);
         }
         

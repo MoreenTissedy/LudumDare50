@@ -94,15 +94,15 @@ namespace CauldronCodebase
 
         private void AddCardsFromPool(int round, CardPoolByRound pool, in List<Encounter> totalPool)
         {
-                if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
-                {
-                    totalPool.AddRange(pool.cards);
-                }
-                else
-                {
-                    totalPool.AddRange(pool.cards
-                        .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
-                }
+            if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
+            {
+                totalPool.AddRange(pool.cards);
+            }
+            else
+            {
+                totalPool.AddRange(pool.cards
+                    .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+            }
         }
 
         private void InitRememberedCards()
@@ -223,7 +223,6 @@ namespace CauldronCodebase
             foreach (var pool in nextPools)
             {
                 AddCardsFromPool(gameDataHandler.currentRound, pool, in cardPool);
-                cardPool.AddRange(pool.cards);
             }
             lastExtendedRoundNumber++;
             return true;

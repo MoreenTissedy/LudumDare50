@@ -5,6 +5,7 @@ namespace CauldronCodebase
 {
     public class EndingCartoon: MonoBehaviour
     {
+        public bool cycleFirstAnim;
         private SkeletonAnimation anim;
         const string full = "Full";
         const string idle = "Full2";
@@ -16,7 +17,7 @@ namespace CauldronCodebase
             var idleAnimation = anim.SkeletonDataAsset.GetSkeletonData(false).FindAnimation(idle);
             if (fullAnimation!=null)
             {
-                anim.AnimationState.SetAnimation(0, fullAnimation, false);
+                anim.AnimationState.SetAnimation(0, fullAnimation, cycleFirstAnim);
             }
             if (idleAnimation!=null)
             {

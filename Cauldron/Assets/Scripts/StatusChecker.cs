@@ -7,17 +7,19 @@ namespace CauldronCodebase
     {
         private readonly GameDataHandler gameDataHandler;
         private readonly PriorityLaneProvider cardProvider;
+        private readonly EncounterDeck deck;
         private readonly MainSettings settings;
 
         private bool priorityCardSelected;
 
         [Inject]
         public StatusChecker(MainSettings settings,
-                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider, GameStateMachine gameStateMachine)
+                             GameDataHandler gameDataHandler, PriorityLaneProvider cardProvider, GameStateMachine gameStateMachine, EncounterDeck deck)
         {
             this.settings = settings;
             this.gameDataHandler = gameDataHandler;
             this.cardProvider = cardProvider;
+            this.deck = deck;
             gameStateMachine.OnChangeState += GameStateMachineOnChangeState;
         }
 
@@ -80,7 +82,7 @@ namespace CauldronCodebase
             if (CheckThreshold(type, checkHigh) && !priorityCardSelected)
             {
                 card = cardProvider.GetRandomCard(tag);
-                if (card != null)
+                if (!deck.IsCardNotValidForDeck(card))
                 {
                     priorityCardSelected = true;
                     return true;

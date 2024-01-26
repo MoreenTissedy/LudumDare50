@@ -112,10 +112,10 @@ namespace CauldronCodebase.GameStates
             eventResolver.ApplyModifiers(nightEvent);
             eventResolver.ApplyFractionShift(nightEvent.fractionData);
             eventResolver.ApplyRecipeHint(nightEvent.recipeHint);
-            var priorityEvent = eventResolver.AddBonusCards(nightEvent);
-            if (priorityEvent)
+            var priorityCard = eventResolver.AddBonusCards(nightEvent);
+            if (priorityCard)
             {
-                storyCards.Add(priorityEvent);
+                storyCards.Add(priorityCard);
             }
             if (nightPanel.CurrentPage + 1 >= nightPanel.TotalPages)
             {
@@ -126,8 +126,8 @@ namespace CauldronCodebase.GameStates
         private async void OnAllEventsResolved()
         {
             if (IsGameEnd()) return;
-            UpdateDeck();
-            if (cardDeck.NotEnoughCards)
+            AddStoryCardsToDeck();
+            if (!cardDeck.TryUpdateDeck())
             {
                 storyEnding = EndingsProvider.END_DECK;
                 await nightPanel.AddEventAsLast(nightEvents.movingEnding);
@@ -141,7 +141,7 @@ namespace CauldronCodebase.GameStates
             }
         }
 
-        private void UpdateDeck()
+        private void AddStoryCardsToDeck()
         {
             gameDataHandler.NextDay();
             
@@ -150,9 +150,6 @@ namespace CauldronCodebase.GameStates
             {
                 storyCards.Add(priorityCard);
             }
-            
-            cardDeck.DealCardsTo(settings.gameplay.targetDeckCount - storyCards.Count);
-            cardDeck.ShuffleDeck();
             for (var i = storyCards.Count-1; i >= 0; i--)
             {
                 var storyCard = storyCards[i];

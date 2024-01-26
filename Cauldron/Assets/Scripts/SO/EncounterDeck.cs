@@ -47,7 +47,16 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
-        public bool NotEnoughCards => deck.Count(x => !IsCardNotValidInDeck(x)) < mainSettings.gameplay.cardsPerDay;
+        public bool TryUpdateDeck()
+        {
+            var validDeckCount = deck.Count(x => !IsCardNotValidInDeck(x));
+            if (validDeckCount < mainSettings.gameplay.cardsPerDay)
+            {
+                DealCards(mainSettings.gameplay.cardsPerDay - validDeckCount);
+                return deck.Count(x => !IsCardNotValidInDeck(x)) >= mainSettings.gameplay.cardsPerDay;
+            }
+            return true;
+        }
 
         private void OnValidate()
         {
@@ -145,22 +154,7 @@ namespace CauldronCodebase
             }
             deck = newDeckList;
         }
-
-
-        /// <summary>
-        /// Add random cards from pool to deck until deck count reaches target.
-        /// </summary>
-        /// <param name="target">X - target number of cards in deck</param>
-        public void DealCardsTo(int target)
-        {
-            int validCardsInDeck = deck.Count(x => !IsCardNotValidInDeck(x));
-            Debug.Log("dealing cards to "+target+", cards found in deck: "+deck.Count+", valid "+validCardsInDeck);
-            if (target - validCardsInDeck <= 0)
-            {
-                return;
-            }
-            DealCards(target - validCardsInDeck);
-        }
+        
 
         private void DealCards(int num)
         {
@@ -259,14 +253,7 @@ namespace CauldronCodebase
 
         public bool IsCardNotValidForDeck(Encounter card)
         {
-            var storyCheck = !StoryTagHelper.Check(card, gameDataHandler);
-            var contains = deck.Contains(card);
-            var visitor = !CheckVisitorNotInDeck(card.villager);
-            var devil = !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
-            return storyCheck 
-                   || contains 
-                   || visitor 
-                   || devil;
+            return card is null || !StoryTagHelper.Check(card, gameDataHandler) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
         }
         
         private bool IsCardNotValidInDeck(Encounter card)

@@ -218,7 +218,6 @@ namespace CauldronCodebase
             {
                 newCard = cardPool[0];
                 cardPool.RemoveAt(0);
-                Debug.Log("card got from pool");
             }
             else
             {

@@ -201,17 +201,15 @@ namespace CauldronCodebase
 
         private void LoadSlidersValues()
         {
-            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 1f;
+            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
             UpdateSliderLabel("SFX", sounds.value);
-            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 1f;
+            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
             UpdateSliderLabel("Music", music.value);
         }
 
         private void LoadVolumeValues()
         {
             LoadSlidersValues();
-            RuntimeManager.GetVCA("vca:/Music").setVolume(music.value);
-            RuntimeManager.GetVCA("vca:/SFX").setVolume(sounds.value);
         }
 
         private void ResetGameData()

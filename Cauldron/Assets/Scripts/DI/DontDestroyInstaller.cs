@@ -1,5 +1,6 @@
 using System.Linq;
 using EasyLoc;
+using FMODUnity;
 using Save;
 using UnityEngine;
 using Zenject;
@@ -32,6 +33,7 @@ namespace CauldronCodebase
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
             
             SetInitialResolution();
+            SetSoundVolume();
         }
 
         private static void SetInitialResolution()
@@ -55,6 +57,14 @@ namespace CauldronCodebase
             }
             var chosenResolution = GetOptimalResolution(1080f / 1920);
             Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
+        }
+
+        private void SetSoundVolume()
+        {
+            var soundVolume = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
+            var musicVolume = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
+            RuntimeManager.GetVCA("vca:/Music").setVolume(musicVolume);
+            RuntimeManager.GetVCA("vca:/SFX").setVolume(soundVolume);
         }
 
         private static Resolution GetOptimalResolution(float aspectRatio)

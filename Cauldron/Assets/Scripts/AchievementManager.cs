@@ -39,7 +39,7 @@ namespace CauldronCodebase
             {"bastard-success", "chalice story"},
             {"king-reject", "neutrality"},
             {"bishop-reject", "neutrality"},
-            {"ixbt final", "rainbow drakkar"},
+            {"ixbt-final", "rainbow drakkar"},
             {"ixbt-guard-success", "vampire slayer"},
             {"tavern.wake", "bard"},
             {"TaxCollectorFoundDead", "death and taxes"},

@@ -1,4 +1,3 @@
-using System;
 using Spine.Unity;
 using UnityEngine;
 
@@ -7,30 +6,21 @@ namespace CauldronCodebase
     public class EndingCartoon: MonoBehaviour
     {
         private SkeletonAnimation anim;
-
-        [SpineAnimation]
-        public string full = "Full";
-
-        [SpineAnimation]
-        public string idle = "Full2";
+        const string full = "Full";
+        const string idle = "Full2";
 
         private void Start()
         {
             anim = GetComponent<SkeletonAnimation>();
-            try
+            var fullAnimation = anim.SkeletonDataAsset.GetSkeletonData(false).FindAnimation(full);
+            var idleAnimation = anim.SkeletonDataAsset.GetSkeletonData(false).FindAnimation(idle);
+            if (fullAnimation!=null)
             {
-                anim.AnimationState.SetAnimation(0, full, false);
+                anim.AnimationState.SetAnimation(0, fullAnimation, false);
             }
-            catch (Exception e)
+            if (idleAnimation!=null)
             {
-            }
-
-            try
-            {
-                anim.AnimationState.AddAnimation(0, idle, true, 0);
-            }
-            catch (Exception e)
-            {
+                anim.AnimationState.AddAnimation(0, idleAnimation, true, 0);
             }
         }
     }

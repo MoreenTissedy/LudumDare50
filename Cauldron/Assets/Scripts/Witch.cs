@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
+using ModestTree;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -106,7 +108,35 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Fly();
+            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            {
+                string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
+                List<string> unlockedSkins = new List<string>();
+                foreach (var set in skinSets)
+                {
+                    if (unlockedEndings.Contains(set.LastUnlockedEnding) && !unlockedSkins.Contains(set.WitchSkin))
+                    {
+                        unlockedSkins.Add(set.WitchSkin);
+                    }
+                }
+
+                if (unlockedSkins.Count == 0)
+                {
+                    Fly();
+                    return;
+                }
+                Debug.LogError(unlockedSkins.Count);
+                int currentSkinIndex = unlockedSkins.IndexOf(anim.Skeleton.Skin.Name);
+                string nextSkin = unlockedSkins[(currentSkinIndex + 1) % unlockedSkins.Count];
+                if (!string.IsNullOrWhiteSpace(nextSkin))
+                {
+                    anim.Skeleton.SetSkin(nextSkin);
+                }
+            }
+            else
+            {
+                Fly();
+            }
         }
 
         private void Fly()

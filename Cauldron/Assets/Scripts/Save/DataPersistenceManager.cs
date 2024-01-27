@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CauldronCodebase;
+using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
@@ -35,6 +36,11 @@ namespace Save
                 gameData = fileDataHandler.Load();
                 gameData.ValidateSave(soDictionary);
                 IsNewGame = false;
+                
+                if (gameData.Phase == GameStateMachine.GamePhase.EndGame)
+                {
+                    NewGame();
+                }
             }
             else
             {

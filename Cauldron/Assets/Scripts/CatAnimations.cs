@@ -37,6 +37,14 @@ namespace CauldronCodebase
         [SerializeField] private float dragThreshold;
         public bool IsDragged { get; private set; }
         public bool IsInCauldron { get; private set; }
+        public bool OnStartSpot
+        {
+            get
+            {
+                return startPosition == transform.position;
+            }
+        }
+
         private bool dragAnimated;
         private Vector2 startDragPosition;
 
@@ -83,8 +91,9 @@ namespace CauldronCodebase
         private void Start()
         {
             col = GetComponent<Collider2D>();
+            
             startPosition = transform.position;
-
+            
             if (randomActions.Length > 0)
             {
                 randomAction = StartCoroutine(RandomActionsRoutine());
@@ -131,6 +140,7 @@ namespace CauldronCodebase
                 .SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
+                    SetInteractable(true);
                     catSkeleton.skeleton.ScaleX = toStartSpot ? 1 : -1;
                     catSkeleton.AnimationState.SetAnimation(0, idleAnimation, true);
                     if (randomActions.Length > 0)
@@ -163,6 +173,8 @@ namespace CauldronCodebase
         
         private void CatLanding()
         {
+            SetInteractable(false);
+            
             TrackEntry strokeEntry = catSkeleton.AnimationState.SetAnimation(0, strokeAnimation, false);
             soundManager.PlayCat(CatSound.Annoyed);
             catSkeleton.timeScale = strokeAnimationSpeedMultiplier;

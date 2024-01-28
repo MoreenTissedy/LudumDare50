@@ -454,6 +454,8 @@ namespace CauldronCodebase
         
         public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
+            tooltipManager.DisableAllHighlights();
+            
             if (cauldron.Mix.Count != 0)
             {
                 foreach (var ingredient in cauldron.Mix)
@@ -482,6 +484,35 @@ namespace CauldronCodebase
             }
             
             tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
+        }
+
+        public async UniTaskVoid SwitchHighlight(List<Ingredients> ingredients)
+        {
+            tooltipManager.DisableAllHighlights();
+            
+            if (cauldron.Mix.Count != 0)
+            {
+                foreach (var ingredient in cauldron.Mix)
+                {
+                    if (ingredients.Contains(ingredient) == false)
+                    {
+                        TryHighlightIncorrectRecipe();
+                        return;
+                    }
+                }
+            }
+            
+            CloseBook();
+
+            if (cauldron.potionPopup.IsEnable)
+            {
+                return;
+            }
+
+            foreach (Ingredients ingredient in ingredients)
+            {
+                tooltipManager.ChangeOneIngredientHighlight(ingredient, true);
+            }
         }
 
         private void TryHighlightIncorrectRecipe()

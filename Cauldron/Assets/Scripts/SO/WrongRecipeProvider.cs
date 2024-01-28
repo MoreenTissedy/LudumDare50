@@ -11,6 +11,12 @@ namespace CauldronCodebase
         
         public List<WrongPotion> wrongPotions = new List<WrongPotion>();
 
+        public void ResetWrongRecipe()
+        {
+            wrongPotions.Clear();
+            SaveWrongRecipe();
+        }
+
         public void SaveWrongRecipe()
         {
             string saveData = JsonUtility.ToJson(this);

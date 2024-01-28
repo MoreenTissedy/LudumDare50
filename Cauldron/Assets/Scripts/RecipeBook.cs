@@ -467,6 +467,12 @@ namespace CauldronCodebase
             }
             
             CloseBook();
+
+            if (cauldron.potionPopup.IsShowPopup)
+            {
+                return;
+            }
+            
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
 

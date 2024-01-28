@@ -48,6 +48,11 @@ public class IngredientTypeFilter : MonoBehaviour
         }
     }
 
+    public void Enable()
+    {
+        EnableButtons();
+    }
+
     public void ClearFilter(IngredientsData.Ingredient lastIngredient)
     {
         gauge.gameObject.SetActive(false);

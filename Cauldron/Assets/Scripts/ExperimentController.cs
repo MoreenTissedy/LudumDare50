@@ -90,6 +90,11 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        filters?[0].Enable();
+    }
+
     public void RecordAttempt(WrongPotion mix)
     {
         if (wrongPotions is null)

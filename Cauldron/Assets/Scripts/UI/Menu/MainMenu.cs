@@ -19,6 +19,9 @@ namespace CauldronCodebase
         [SerializeField] private AnimatedButton authorsButton;
         [SerializeField] private AuthorsMenu authorsMenu;
 
+        [Header("WrongRecipeProvider")]
+        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
+
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
 
@@ -58,6 +61,7 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
+            wrongRecipeProvider.ResetWrongRecipe();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();

@@ -56,10 +56,7 @@ public enum IngredientSetType
 public class ExperimentController : MonoBehaviour
 {
     [SerializeField] private RecipeBook recipeBook;
-    [SerializeField] private IngredientTypeFilter animalsFilter;
-    [SerializeField] private IngredientTypeFilter rootsFilter;
-    [SerializeField] private IngredientTypeFilter mushroomsFilter;
-    [SerializeField] private IngredientTypeFilter plantsFilter;
+    [SerializeField] private IngredientTypeFilter[] filters;
 
     public List<IngredientSet> currentRecipes;
     [ReorderableList]
@@ -76,26 +73,21 @@ public class ExperimentController : MonoBehaviour
     private void OnEnable()
     {
         GenerateData();
-        animalsFilter.AddedFilter += OnUpdateButtonFilter;
-        rootsFilter.AddedFilter += OnUpdateButtonFilter;
-        mushroomsFilter.AddedFilter += OnUpdateButtonFilter;
-        plantsFilter.AddedFilter += OnUpdateButtonFilter;
-        animalsFilter.Show += OnUpdateFilter;
-        rootsFilter.Show += OnUpdateFilter;
-        mushroomsFilter.Show += OnUpdateFilter;
-        plantsFilter.Show += OnUpdateFilter;
+        
+        foreach (IngredientTypeFilter filter in filters)
+        {
+            filter.AddedFilter += OnUpdateButtonFilter;
+            filter.Show += OnUpdateFilter;
+        }
     }
 
     private void OnDisable()
     {
-        animalsFilter.AddedFilter -= OnUpdateButtonFilter;
-        rootsFilter.AddedFilter -= OnUpdateButtonFilter;
-        mushroomsFilter.AddedFilter -= OnUpdateButtonFilter;
-        plantsFilter.AddedFilter -= OnUpdateButtonFilter;
-        animalsFilter.Show -= OnUpdateFilter;
-        rootsFilter.Show -= OnUpdateFilter;
-        mushroomsFilter.Show -= OnUpdateFilter;
-        plantsFilter.Show -= OnUpdateFilter;
+        foreach (IngredientTypeFilter filter in filters)
+        {
+            filter.AddedFilter -= OnUpdateButtonFilter;
+            filter.Show -= OnUpdateFilter;
+        }
     }
 
     public void RecordAttempt(WrongPotion mix)
@@ -242,10 +234,11 @@ public class ExperimentController : MonoBehaviour
             if (selectionFilter.Count == MaxFilterSelection)
             {
                 selectionFilter.Clear();
-                plantsFilter.ClearFilter(ingredient);
-                animalsFilter.ClearFilter(ingredient);
-                rootsFilter.ClearFilter(ingredient);
-                mushroomsFilter.ClearFilter(ingredient);
+
+                foreach (IngredientTypeFilter filter in filters)
+                {
+                    filter.ClearFilter(ingredient);
+                }
             }
             selectionFilter.Add(ingredient);
         }
@@ -256,24 +249,12 @@ public class ExperimentController : MonoBehaviour
 
     private void OnUpdateButtonFilter()
     {
-        if (plantsFilter.IsShow)
+        foreach (IngredientTypeFilter filter in filters)
         {
-            plantsFilter.DisableButton();
-        }
-        
-        if (animalsFilter.IsShow)
-        {
-            animalsFilter.DisableButton();
-        }
-        
-        if (rootsFilter.IsShow)
-        {
-            rootsFilter.DisableButton();
-        }
-        
-        if (mushroomsFilter.IsShow)
-        {
-            mushroomsFilter.DisableButton();
+            if (filter.IsEnable)
+            {
+                filter.DisableButton();
+            }
         }
     }
 }

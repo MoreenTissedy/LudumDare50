@@ -468,7 +468,7 @@ namespace CauldronCodebase
             
             CloseBook();
 
-            if (cauldron.potionPopup.IsShowPopup)
+            if (cauldron.potionPopup.IsEnable)
             {
                 return;
             }

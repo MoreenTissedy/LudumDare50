@@ -1,24 +1,32 @@
 ﻿using System;
 using System.Linq;
 using CauldronCodebase;
+using Cysharp.Threading.Tasks;
+using EasyLoc;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
 
 public class IngredientTypeFilter : MonoBehaviour
 {
+    [Localize] public string title;
+
     [SerializeField] private AnimatedButton plantsTypeButton;
     [SerializeField] private FilterButton[] buttons;
     [SerializeField] private Image gauge;
     [SerializeField] private Image selection;
+
+    private ScrollTooltip scrollTooltip;
     
-    public bool IsShow { get; private set; }
+    public bool IsEnable { get; private set; }
     
     public event Action AddedFilter;
     public event Action<IngredientsData.Ingredient> Show;
     
     private void Awake()
     {
+        scrollTooltip = GetComponentInChildren<ScrollTooltip>();
+        scrollTooltip.SetText(title).Forget();
         DisableButton();
     }
 
@@ -63,7 +71,7 @@ public class IngredientTypeFilter : MonoBehaviour
         {
             filterButton.gameObject.SetActive(false);
         }
-        IsShow = false;
+        IsEnable = false;
         selection.gameObject.SetActive(false);
     }
 
@@ -74,7 +82,7 @@ public class IngredientTypeFilter : MonoBehaviour
         {
             filterButton.gameObject.SetActive(true);
         }
-        IsShow = true;
+        IsEnable = true;
         selection.gameObject.SetActive(true);
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Steamworks;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ namespace Universal
                 SteamClient.Init(2251010);
                 Debug.Log("Steam connected to "+SteamClient.Name);
                 LoggedIn = true;
+                ExportAchievements();
             }
             catch (Exception e)
             {
@@ -25,6 +27,18 @@ namespace Universal
         private void OnApplicationQuit()
         {
             SteamClient.Shutdown();
+        }
+
+        private void ExportAchievements()
+        {
+            var file = File.CreateText(Application.dataPath + "/Localize/Achievements_ru.csv");
+            file.WriteLine("id;name;description");
+            foreach (var a in SteamUserStats.Achievements)
+            {
+                a.Clear();
+                file.WriteLine(a.Identifier + ";" + a.Name + ";" + a.Description);
+            }
+            file.Close();
         }
     }
 }

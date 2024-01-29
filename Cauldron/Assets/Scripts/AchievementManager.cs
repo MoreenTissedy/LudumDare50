@@ -60,7 +60,7 @@ namespace CauldronCodebase
             {
                 return false;
             }
-            var achievement = SteamUserStats.Achievements.First(x => x.Identifier == id);
+            var achievement = SteamUserStats.Achievements.FirstOrDefault(x => x.Identifier == id);
             if (string.IsNullOrWhiteSpace(achievement.Name))
             {
                 Debug.LogError($"Achievement {id} not found!");

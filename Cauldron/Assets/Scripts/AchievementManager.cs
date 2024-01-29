@@ -56,9 +56,9 @@ namespace CauldronCodebase
     {
         public bool TryUnlock(string id)
         {
-            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
+            //if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
             {
-                return false;
+                //return false;
             }
             var achievement = SteamUserStats.Achievements.FirstOrDefault(x => x.Identifier == id);
             if (string.IsNullOrWhiteSpace(achievement.Name))

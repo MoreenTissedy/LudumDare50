@@ -6,12 +6,12 @@ namespace Universal
 {
     public class SteamConnector: MonoBehaviour
     {
-        public static bool LoggedIn;
+        public static bool LoggedIn = true;
         private void Awake()
         {
             try
             {
-                SteamClient.Init(2251010);
+                SteamClient.Init(2027434);
                 Debug.Log("Steam connected to "+SteamClient.Name);
                 LoggedIn = true;
             }

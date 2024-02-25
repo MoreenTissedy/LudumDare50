@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase.GameStates;
-using ModestTree;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -39,6 +38,8 @@ namespace CauldronCodebase
         [Inject] private GameStateMachine gameStateMachine;
         
         public bool Hidden { get; private set; }
+
+        private List<string> unlockedSkins;
 
         
         private void Awake()
@@ -108,35 +109,43 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            Fly();
+            
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
             {
-                string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
-                List<string> unlockedSkins = new List<string>();
-                foreach (var set in skinSets)
-                {
-                    if (unlockedEndings.Contains(set.LastUnlockedEnding) && !unlockedSkins.Contains(set.WitchSkin))
-                    {
-                        unlockedSkins.Add(set.WitchSkin);
-                    }
-                }
+                return;
+            }
 
-                if (unlockedSkins.Count == 0)
-                {
-                    Fly();
-                    return;
-                }
-                Debug.LogError(unlockedSkins.Count);
-                int currentSkinIndex = unlockedSkins.IndexOf(anim.Skeleton.Skin.Name);
-                string nextSkin = unlockedSkins[(currentSkinIndex + 1) % unlockedSkins.Count];
-                if (!string.IsNullOrWhiteSpace(nextSkin))
-                {
-                    anim.Skeleton.SetSkin(nextSkin);
-                }
-            }
-            else
+            if (unlockedSkins is null)
             {
-                Fly();
+                unlockedSkins = GetUnlockedSkins();
             }
+            if (unlockedSkins.Count == 0)
+            {
+                return;
+            }
+            
+            int currentSkinIndex = unlockedSkins.IndexOf(anim.Skeleton.Skin.Name);
+            string nextSkin = unlockedSkins[(currentSkinIndex + 1) % unlockedSkins.Count];
+            if (!string.IsNullOrWhiteSpace(nextSkin))
+            {
+                anim.Skeleton.SetSkin(nextSkin);
+            }
+        }
+
+        private List<string> GetUnlockedSkins()
+        {
+            string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
+            List<string> skinList = new List<string>() {"default"};
+            foreach (var set in skinSets)
+            {
+                if (unlockedEndings.Contains(set.LastUnlockedEnding) && !skinList.Contains(set.WitchSkin))
+                {
+                    skinList.Add(set.WitchSkin);
+                }
+            }
+
+            return skinList;
         }
 
         private void Fly()

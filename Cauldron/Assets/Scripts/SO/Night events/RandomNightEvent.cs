@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,6 +10,13 @@ namespace CauldronCodebase
         public int minDay;
         public int minRound;
         public string requiredStoryTag;
+        
+        public bool everyNRounds;
+        [ShowIf("everyNRounds")] 
+        public int N = 3;
+        [ShowIf("everyNRounds")] 
+        public int Nshift = 1;
+        
 
         public override bool Valid(GameDataHandler game)
         {
@@ -24,7 +32,16 @@ namespace CauldronCodebase
             {
                 return false;
             }
-            return true;
+            return IsValidRound(game.currentRound);
+        }
+
+        private bool IsValidRound(int round)
+        {
+            if (!everyNRounds)
+            {
+                return true;
+            }
+            return round % N == Nshift;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace CauldronCodebase
         
         [Inject] private SoundManager soundManager;
 
-        public bool IsShowPopup { get; private set; }
+        public bool IsEnable { get; private set; }
         
         public event Action OnAccept;
         public event Action OnDecline;
@@ -42,7 +42,7 @@ namespace CauldronCodebase
 
         public void Show(Recipe recipe, bool newPotion = false)
         {
-            IsShowPopup = true;
+            IsEnable = true;
             gameObject.SetActive(true);
             newPotionEffect.SetActive(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
@@ -94,7 +94,7 @@ namespace CauldronCodebase
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
 
-            IsShowPopup = false;
+            IsEnable = false;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CauldronCodebase;
+using EasyLoc;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -14,6 +15,11 @@ public enum IngredientSetType
 
 public class ExperimentController : MonoBehaviour
 {
+    [Localize] public string leafs;
+    [Localize] public string roots;
+    [Localize] public string mushrooms;
+    [Localize] public string animals;
+    
     [SerializeField] private RecipeBook recipeBook;
     [SerializeField] private IngredientTypeFilter[] filters;
 
@@ -29,8 +35,19 @@ public class ExperimentController : MonoBehaviour
     public int TotalPages => totalPages;
     public event Action OnContentChanged;
 
+    private void Start()
+    {
+        filters?[0].Enable();
+    }
+
     private void OnEnable()
     {
+        
+        filters[0].SetTooltip(leafs);
+        filters[1].SetTooltip(mushrooms);
+        filters[2].SetTooltip(roots);
+        filters[3].SetTooltip(animals);
+        
         GenerateData();
         
         foreach (IngredientTypeFilter filter in filters)
@@ -47,11 +64,6 @@ public class ExperimentController : MonoBehaviour
             filter.AddedFilter -= OnUpdateButtonFilter;
             filter.Show -= OnUpdateFilter;
         }
-    }
-
-    private void Start()
-    {
-        filters?[0].Enable();
     }
 
     public void RecordAttempt(WrongPotion mix)

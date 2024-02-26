@@ -9,8 +9,6 @@ using Universal;
 
 public class IngredientTypeFilter : MonoBehaviour
 {
-    [Localize] public string title;
-
     [SerializeField] private AnimatedButton plantsTypeButton;
     [SerializeField] private FilterButton[] buttons;
     [SerializeField] private Image gauge;
@@ -26,8 +24,12 @@ public class IngredientTypeFilter : MonoBehaviour
     private void Awake()
     {
         scrollTooltip = GetComponentInChildren<ScrollTooltip>();
-        scrollTooltip.SetText(title).Forget();
         DisableButton();
+    }
+
+    public UniTask SetTooltip(string title)
+    {
+        return scrollTooltip.SetText(title);
     }
 
     private void OnEnable()

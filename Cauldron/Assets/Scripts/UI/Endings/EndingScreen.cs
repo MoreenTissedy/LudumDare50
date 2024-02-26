@@ -1,6 +1,5 @@
 using System;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -125,7 +124,7 @@ namespace CauldronCodebase
             }
             if (buttonToUnlock != null)
             {
-                await UniTask.DelayFrame(15);
+                await UniTask.Delay(250);
                 buttonToUnlock.Unlock();
                 await UniTask.Delay(TimeSpan.FromSeconds(2));
                 OnEndingClick(tag);
@@ -157,7 +156,7 @@ namespace CauldronCodebase
             for (var index = buttons.Length-1; index >=0; index--)
             {
                 var button = buttons[index];
-                await UniTask.DelayFrame(3);
+                await UniTask.Delay(50);
                 button.Hide();
             }
         }

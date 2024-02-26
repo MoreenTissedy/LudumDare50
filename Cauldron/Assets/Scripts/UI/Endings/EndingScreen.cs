@@ -156,7 +156,6 @@ namespace CauldronCodebase
             for (var index = buttons.Length-1; index >=0; index--)
             {
                 var button = buttons[index];
-                await UniTask.Delay(50);
                 button.Hide();
             }
         }

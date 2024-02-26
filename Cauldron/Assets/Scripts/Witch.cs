@@ -136,7 +136,7 @@ namespace CauldronCodebase
         private List<string> GetUnlockedSkins()
         {
             string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
-            List<string> skinList = new List<string>() {"default"};
+            List<string> skinList = new List<string>() {"main"};
             foreach (var set in skinSets)
             {
                 if (unlockedEndings.Contains(set.LastUnlockedEnding) && !skinList.Contains(set.WitchSkin))

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using CauldronCodebase;
+using Cysharp.Threading.Tasks;
+using EasyLoc;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
@@ -11,15 +13,23 @@ public class IngredientTypeFilter : MonoBehaviour
     [SerializeField] private FilterButton[] buttons;
     [SerializeField] private Image gauge;
     [SerializeField] private Image selection;
+
+    private ScrollTooltip scrollTooltip;
     
-    public bool IsShow { get; private set; }
+    public bool IsEnable { get; private set; }
     
     public event Action AddedFilter;
     public event Action<IngredientsData.Ingredient> Show;
     
     private void Awake()
     {
+        scrollTooltip = GetComponentInChildren<ScrollTooltip>();
         DisableButton();
+    }
+
+    public UniTask SetTooltip(string title)
+    {
+        return scrollTooltip.SetText(title);
     }
 
     private void OnEnable()
@@ -38,6 +48,11 @@ public class IngredientTypeFilter : MonoBehaviour
         {
             filterButton.SwitchFilter -= OnSwitchFilter;
         }
+    }
+
+    public void Enable()
+    {
+        EnableButtons();
     }
 
     public void ClearFilter(IngredientsData.Ingredient lastIngredient)
@@ -63,7 +78,7 @@ public class IngredientTypeFilter : MonoBehaviour
         {
             filterButton.gameObject.SetActive(false);
         }
-        IsShow = false;
+        IsEnable = false;
         selection.gameObject.SetActive(false);
     }
 
@@ -74,7 +89,7 @@ public class IngredientTypeFilter : MonoBehaviour
         {
             filterButton.gameObject.SetActive(true);
         }
-        IsShow = true;
+        IsEnable = true;
         selection.gameObject.SetActive(true);
     }
 

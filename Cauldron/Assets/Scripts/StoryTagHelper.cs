@@ -30,22 +30,38 @@ namespace CauldronCodebase
         {
             if (PlayerPrefs.HasKey(PrefKeys.Milestones))
             {
+                RunCompatibilityUpdate();
+                
                 var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
-                return JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
+                var milestones = JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
+                return milestones;
             }
             return new List<string>();
         }
-        
-        public static void RemoveMilestone(string tag)
+
+        private static void RunCompatibilityUpdate()
+        {
+            if (RemoveMilestone("bishops sister cured"))
+            {
+                Debug.Log("[Compatibility] Removed 'bishops sister cured' milestone");
+            }
+        }
+
+        public static bool RemoveMilestone(string tag)
         {
             if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
             {
-                return;
+                return false;
             }
             var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
             var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
-            tags.list.Remove(tag);
-            PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+            if (tags.list.Remove(tag))
+            {
+                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+                return true;
+            }
+
+            return false;
         }
         
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)

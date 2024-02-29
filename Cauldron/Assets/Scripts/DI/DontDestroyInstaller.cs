@@ -50,7 +50,8 @@ namespace CauldronCodebase
                 int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
                 if (resolutions.Length > newResolution)
                 {
-                    Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
+                    Resolution savedResolution = resolutions[newResolution];
+                    Screen.SetResolution(savedResolution.width, savedResolution.height, fullscreenMode, savedResolution.refreshRate);
                     return;
                 }
                 PlayerPrefs.DeleteKey(PrefKeys.ResolutionSettings);

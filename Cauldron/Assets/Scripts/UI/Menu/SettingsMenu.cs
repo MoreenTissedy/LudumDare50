@@ -175,6 +175,8 @@ namespace CauldronCodebase
             fullscreenMode = set;
             PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
+            
+            cameraAdaptation.Rebuild();
         }
 
         private void ChangeAutoCooking(bool set)

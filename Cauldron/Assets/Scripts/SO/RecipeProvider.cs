@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NaughtyAttributes;
-using UnityEditor;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -13,20 +12,18 @@ namespace CauldronCodebase
         [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
-        
-        private const string _KEY_ = "Recipes";
-        
+
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
             string data = string.Join(",", set.Select(x => (int) x.potion));
-            PlayerPrefs.SetString(_KEY_, data);
+            PlayerPrefs.SetString(PrefKeys.UnlockedRecipes, data);
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (PlayerPrefs.HasKey(_KEY_))
+            if (PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
             {
-                string data = PlayerPrefs.GetString(_KEY_);
+                string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
                 foreach (var potion in data.Split(','))
                 {
                     if (string.IsNullOrWhiteSpace(potion))

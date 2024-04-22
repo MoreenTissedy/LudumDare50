@@ -36,7 +36,7 @@ namespace CauldronCodebase
             {
                 soundManager.SetMusic(Music.Menu, false);
             }
-            if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
+            if (!dataPersistenceManager.IsSaveFound())
             {
                 HideContinueButton();
             }
@@ -75,7 +75,7 @@ namespace CauldronCodebase
 
         private void NewGameClick()
         {
-            switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
+            switch (dataPersistenceManager.IsSaveFound())
             {
                 case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");

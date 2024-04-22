@@ -186,8 +186,13 @@ namespace CauldronCodebase
                 }
             }
             
-            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
-            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            TryUnlockAutoCooking();
+        }
+
+        private void TryUnlockAutoCooking()
+        {
+            int targetPercent = (int) ((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < targetPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
             {
                 return;
             }
@@ -551,7 +556,7 @@ namespace CauldronCodebase
         public void SaveData(ref GameData data)
         {
             wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
-            wrongRecipeProvider.SaveWrongRecipe();
+            wrongRecipeProvider.SaveWrongRecipes();
         }
 
         public override void CloseBook()

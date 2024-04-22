@@ -4,26 +4,25 @@ using UnityEngine;
 
 namespace Save
 {
-    public class FileDataHandler
+    public class FileDataHandler<T> where T: class
     {
-        public const string PrefSaveKey = "SaveExists";
-        
         private readonly string fullPath;
 
-        public FileDataHandler(string dataDirPath, string dataFileName)
+        public FileDataHandler(string dataFileName)
         {
+            string dataDirPath = Application.persistentDataPath;
             fullPath = Path.Combine(dataDirPath, dataFileName);
         }
 
-        public bool IsSaveValid()
+        public bool IsFileValid()
         {
             return File.Exists(fullPath);
         }
 
-        public GameData Load()
+        public T Load()
         {
-            GameData loadedData = null;
-            if (IsSaveValid())
+            T loadedData = null;
+            if (IsFileValid())
             {
                 try
                 {
@@ -37,7 +36,7 @@ namespace Save
                         }
                     }
 
-                    loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
+                    loadedData = JsonUtility.FromJson<T>(dataToLoad);
                     Debug.LogWarning($"Data loaded from {fullPath}");
                 }
                 catch (Exception e)
@@ -49,7 +48,7 @@ namespace Save
             return loadedData;
         }
 
-        public void Save(GameData data)
+        public void Save(T data)
         {
             try
             {
@@ -61,7 +60,6 @@ namespace Save
                     using (StreamWriter writer = new StreamWriter(stream))
                     {
                         writer.Write(dataToStore);
-                        PlayerPrefs.SetInt(PrefSaveKey, 1);
                     }
                 }
             }
@@ -74,7 +72,6 @@ namespace Save
         public void Delete()
         {
             File.Delete(fullPath);
-            PlayerPrefs.DeleteKey(PrefSaveKey);
         }
     }
 }

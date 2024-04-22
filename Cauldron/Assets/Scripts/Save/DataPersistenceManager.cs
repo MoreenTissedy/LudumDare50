@@ -14,7 +14,7 @@ namespace Save
         private GameData gameData;
         
         private List<IDataPersistence> iDataPersistenceObj;
-        private FileDataHandler fileDataHandler;
+        private FileDataHandler<GameData> fileDataHandler;
 
         private MainSettings settings;
         private SODictionary soDictionary;
@@ -26,12 +26,12 @@ namespace Save
         {
             settings = mainSettings;
             soDictionary = dictionary;
-            fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+            fileDataHandler = new FileDataHandler<GameData>(fileName);
         }
 
         private void Awake()
         {
-            if (CheckForGameSave())
+            if (IsSaveFound())
             {
                 gameData = fileDataHandler.Load();
                 gameData.ValidateSave(soDictionary);
@@ -78,9 +78,9 @@ namespace Save
             iDataPersistenceObj.Add(obj);
         }
 
-        private bool CheckForGameSave()
+        public bool IsSaveFound()
         {
-            return PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey) && fileDataHandler.IsSaveValid();
+            return fileDataHandler.IsFileValid();
         }
 
         public void LoadDataPersistenceObj()

@@ -7,7 +7,7 @@
         public const string UnlockedEndings = "Endings";
         public const string MusicValueSettings = "MusicValue";
         public const string SoundsValueSettings = "SoundsValue";
-        public const string ResolutionSettings = "ResolutionSettings";
+        public const string ResolutionSettings = "NewResolutionSetting";
         public const string FullscreenModeSettings = "SetFullscreenSettings";
         public const string AutoCooking = "AutoCooking";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";

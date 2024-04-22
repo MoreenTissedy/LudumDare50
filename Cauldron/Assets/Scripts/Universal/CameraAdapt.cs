@@ -13,14 +13,14 @@ namespace Universal
         private Camera cameraComponent;
         private float initialSize;
 
-        private void Awake()
+        public void Rebuild()
         {
-            cameraComponent = GetComponent<Camera>();
-            initialSize = cameraComponent.orthographicSize; 
-            Rebuild();
-        }
-        private void Rebuild()
-        {
+            if (!cameraComponent)
+            {
+                cameraComponent = GetComponent<Camera>();
+                initialSize = cameraComponent.orthographicSize;
+            }
+
             float proportions = ((float)Screen.width / Screen.height);
             float propBase = minWidth*1f / minHeight;
             if (proportions < propBase)

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,10 +8,12 @@ namespace CauldronCodebase
     {
         private readonly GameDataHandler game;
         private readonly MainSettings settings;
+        private readonly EncounterDeck deck;
 
-        public EventResolver(MainSettings settings, GameDataHandler game)
+        public EventResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck)
         {
             this.game = game;
+            this.deck = deck;
             this.settings = settings;
         }
         
@@ -19,16 +22,40 @@ namespace CauldronCodebase
             game.Fame += CalculateModifier(Statustype.Fame, nightEvent);
             game.Fear += CalculateModifier(Statustype.Fear, nightEvent);
             game.Money += CalculateModifier(Statustype.Money, nightEvent);
-            string storyTag = nightEvent.storyTag;
-            if (storyTag.StartsWith("-"))
+        }
+
+        public void ApplyStoryTag(NightEvent nightEvent)
+        {
+            string[] storyTags = nightEvent.storyTag.Split(',').Select(x => x.Trim()).ToArray();
+            foreach (string tag in storyTags)
             {
-                game.storyTags.Remove(storyTag);
+                string storyTag = tag;
+                storyTag = storyTag.TrimStart('^');
+                if (storyTag.StartsWith("-"))
+                {
+                    storyTag = storyTag.TrimStart('-');
+                    if (storyTag.StartsWith("*"))
+                    {
+                        storyTag = storyTag.TrimStart('*');
+                        StoryTagHelper.RemoveMilestone(storyTag);
+                    }
+                    game.storyTags.Remove(storyTag);
+                }
+                else if (!string.IsNullOrEmpty(storyTag))
+                {
+                    if (storyTag.StartsWith("*"))
+                    {
+                        storyTag = storyTag.TrimStart('*');
+                        StoryTagHelper.SaveMilestone(storyTag);
+                    }
+                    game.AddTag(storyTag);
+                }
             }
-            else if (!string.IsNullOrEmpty(storyTag))
-            {
-                game.AddTag(storyTag);
-                Debug.Log($"Add story tag: {storyTag}");
-            }
+        }
+
+        public void ApplyRecipeHint(RecipeHintConfig config)
+        {
+            settings.recipeHintsStorage.SaveHint(config);
         }
 
         public void ApplyFractionShift(FractionData shift)
@@ -48,20 +75,25 @@ namespace CauldronCodebase
                 return nightEvent.bonusCards[0];
             }
 
-            var random = GetRandomValidIndex(nightEvent.bonusCards);
-
+            Encounter priority = null;
             for (var i = 0; i < nightEvent.bonusCards.Length; i++)
             {
-                if (i == random)
+                var nightEventBonusCard = nightEvent.bonusCards[i];
+                if (priority is null && !deck.IsCardNotValidForDeck(nightEventBonusCard))
+                {
+                    priority = nightEventBonusCard;
+                    continue;
+                }
+                if (game.currentDeck.AddToDeck(nightEventBonusCard))
                 {
                     continue;
                 }
-                if (!game.currentDeck.AddToDeck(nightEvent.bonusCards[i]))
+                if (!EncounterIdents.GetAllSpecialCharacters().Contains(nightEventBonusCard.villager.name))
                 {
-                    game.currentDeck.AddToPool(nightEvent.bonusCards[i]);
+                    game.currentDeck.AddToPool(nightEventBonusCard);
                 }
             }
-            return nightEvent.bonusCards[random];
+            return priority;
         }
 
         private int GetRandomValidIndex(Encounter[] cards)
@@ -71,7 +103,7 @@ namespace CauldronCodebase
             for (int i = 0; i < 10; i++)
             {
                 random = Random.Range(0, cards.Length);
-                if (StoryTagHelper.Check(cards[random], game))
+                if (!deck.IsCardNotValidForDeck(cards[random]))
                 {
                     priority = cards[random];
                     break;

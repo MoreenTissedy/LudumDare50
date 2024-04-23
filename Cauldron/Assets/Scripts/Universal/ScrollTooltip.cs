@@ -1,9 +1,11 @@
+using CauldronCodebase;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Universal
 {
@@ -30,6 +32,7 @@ namespace Universal
         private ContentSizeFitter fitter;
         private float targetWidth;
 
+        [Inject] private CatAnimations catAnimations;
         private void Start()
         {
             canvas.enabled = false;
@@ -48,8 +51,10 @@ namespace Universal
             Open(testText);
         }
 
-        public async UniTaskVoid Open(string text)
+        public async UniTask Open(string text)
         {
+            if(catAnimations.IsDragged) return;
+            
             canvas.enabled = false;
             await SetText(text);
             OpenAnimation();
@@ -57,7 +62,7 @@ namespace Universal
 
         public void Open()
         {
-            
+            if(catAnimations.IsDragged) return;
             OpenAnimation();
         }
 

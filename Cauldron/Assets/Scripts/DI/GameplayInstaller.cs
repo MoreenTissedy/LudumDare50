@@ -1,8 +1,6 @@
 using CauldronCodebase.GameStates;
-using EasyLoc;
 using Save;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -19,6 +17,7 @@ namespace CauldronCodebase
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
+        [SerializeField] private ExperimentController experimentController;
         [SerializeField] private Cauldron theCauldron;
         [SerializeField] private VisitorManager visitorManager;
         [SerializeField] private GameStateMachine stateMachine;
@@ -26,19 +25,16 @@ namespace CauldronCodebase
         [SerializeField] private CatTipsValidator catTipsValidator;
 
         [Header("UI")]
-        [SerializeField] private EndingScreen endingScreen;
-
         [SerializeField] private GameFXManager fxManager;
-
         [SerializeField] private NightPanel nightPanel;
-        
-        [SerializeField] private Tutorial tutorial;
         [SerializeField] private CatTipsView catTipsView;
+        [SerializeField] private CatAnimations catAnimations;
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
-        [Inject] private LocalizationTool localization;
+
+        private IAchievementManager achievementManager;
 
         public override void InstallBindings()
         {
@@ -60,34 +56,37 @@ namespace CauldronCodebase
 
         private void BindUI()
         {
-            Container.Bind<EndingScreen>().FromInstance(endingScreen).AsSingle();
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
-            Container.Bind<Tutorial>().FromInstance(tutorial).AsSingle();
             Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
+            Container.Bind<CatAnimations>().FromInstance(catAnimations).AsSingle();
         }
 
         private void BindGameplay()
         {
+            achievementManager = new AchievementManager();
+            
             Container.Bind<StatusChecker>().FromNew().AsSingle();
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
             Container.Bind<StateFactory>().AsTransient();
             Container.Bind<RecipeBook>().FromInstance(recipeBook).AsSingle().NonLazy();
+            Container.Bind<ExperimentController>().FromInstance(experimentController).AsSingle().NonLazy();
             Container.Bind<Cauldron>().FromInstance(theCauldron).AsSingle();
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
+            Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
         }
 
         private void Initialize()
         {
-            gameDataHandler.Init(mainSettings, encounterDeck, nightEvents, dataPersistenceManager, soDictionary);
-            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider);
+            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider, recipeBook);
             nightEvents.Init(dataPersistenceManager, soDictionary);
-            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler);
-            endings.Init();
-            localization.LoadSavedLanguage();
+            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
+            endings.Init(achievementManager);
         }
+
     }
 }

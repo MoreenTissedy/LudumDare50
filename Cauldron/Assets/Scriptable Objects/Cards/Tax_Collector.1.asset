@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Tax_Collector.1
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: -1
+  addToDeckOnRound: -1
   requiredStoryTag: 
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: ab63c9b4834352a458f55bb749416b3a, type: 2}
   text: "\u042F \u043F\u0440\u0438\u0435\u0445\u0430\u043B \u043A \u0432\u0430\u043C
     \u043D\u0430\u043B\u043E\u0433\u0438 \u0441\u043E\u0431\u0438\u0440\u0430\u0442\u044C.
@@ -22,7 +25,7 @@ MonoBehaviour:
     \u043C\u0435\u0441\u0442\u043D\u044B\u0445, \u0438 \u044F \u0432 \u0434\u043E\u043B\u0433\u0443
     \u043D\u0435 \u043E\u0441\u0442\u0430\u043D\u0443\u0441\u044C."
   hidden: 0
-  quest: 0
+  fraction: 1
   primaryInfluence: 1
   secondaryInfluence: 2
   primaryCoef: 2
@@ -40,6 +43,14 @@ MonoBehaviour:
     influenceCoef: 0.3
     bonusEvent: {fileID: 11400000, guid: 0257460c6bc241973985a85040c0b81d, type: 2}
     bonusCard: {fileID: 11400000, guid: a859044ad75cb804d99906938163e19b, type: 2}
+  - potion: 2
+    influenceCoef: 0.3
+    bonusEvent: {fileID: 11400000, guid: 0257460c6bc241973985a85040c0b81d, type: 2}
+    bonusCard: {fileID: 11400000, guid: a859044ad75cb804d99906938163e19b, type: 2}
+  - potion: 16
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 979d52deb0ee14f47b3307eb397b86e6, type: 2}
+    bonusCard: {fileID: 11400000, guid: a859044ad75cb804d99906938163e19b, type: 2}
   - potion: 3
     influenceCoef: -0.5
     bonusEvent: {fileID: 0}
@@ -56,7 +67,15 @@ MonoBehaviour:
     influenceCoef: -1
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
-  - potion: 2
-    influenceCoef: 0.3
-    bonusEvent: {fileID: 11400000, guid: 0257460c6bc241973985a85040c0b81d, type: 2}
-    bonusCard: {fileID: 11400000, guid: a859044ad75cb804d99906938163e19b, type: 2}
+  - potion: 14
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 15
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 19
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}

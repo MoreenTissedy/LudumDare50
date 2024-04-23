@@ -1,14 +1,13 @@
-﻿using System;
-using Cysharp.Threading.Tasks.Triggers;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
     public class AuthorsMenu : MonoBehaviour
     {
-        [SerializeField] private Button closePanelButton;
+        [SerializeField] private AnimatedButton closePanelButton;
 
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;
@@ -17,20 +16,19 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            closePanelButton.onClick.AddListener(Close);
+            closePanelButton.OnClick += Close;
         }
 
         public void Open()
         {
             gameObject.SetActive(true);
-            fadeController.FadeIn(endAlpha: fadeInTargetAlpha);
+            fadeController.FadeIn(endAlpha: fadeInTargetAlpha).Forget();
         }
         
         public void Close()
         {
-            fadeController.FadeOut();
             gameObject.SetActive(false);
-            
+            fadeController.FadeOut().Forget();
         }
         
     }

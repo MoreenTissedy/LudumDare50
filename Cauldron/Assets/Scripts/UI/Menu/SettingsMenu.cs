@@ -1,10 +1,11 @@
 using EasyLoc;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -29,26 +30,28 @@ namespace CauldronCodebase
         [Header("Toggle Fullscreen")] 
         [SerializeField] private Toggle toggleFullscreen;
 
+        [Header("Toggle AutoCooking")] 
+        [SerializeField] private Toggle autoCooking;
+        [SerializeField] private GameObject autoCookingObject;
+
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
 
-        [SerializeField] private Button openResetButton;
-        [FormerlySerializedAs("dialougeReset")] [SerializeField] private GameObject dialogueReset;
+        [SerializeField] private AnimatedButton openResetButton;
+        [SerializeField] private GameObject dialogueReset;
         [SerializeField] private Button acceptResetButton;
         [SerializeField] private Button declineResetButton;
 
         [Header("Other")]
-        [SerializeField] private Button closeSettingsButton;
-        
-        
+        [SerializeField] private AnimatedButton closeSettingsButton;
+
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;
         [Inject] private FadeController fadeController;
-        
-
 
         [Inject] private LocalizationTool locTool;
         private bool fullscreenMode;
+        private bool autoCookingMode;
         
         #if UNITY_EDITOR
         private void OnValidate()
@@ -62,13 +65,15 @@ namespace CauldronCodebase
             LoadVolumeValues();
             LoadResolution();
             LoadLanguage();
+            LoadAutoCookingMode();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
             toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
-            openResetButton.onClick.AddListener(OpenResetDialogue);
-            closeSettingsButton.onClick.AddListener(Close);
+            autoCooking.onValueChanged.AddListener(x => ChangeAutoCooking(x));
+            openResetButton.OnClick += OpenResetDialogue;
+            closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
             declineResetButton.onClick.AddListener(CloseResetDialogue);
         }
@@ -84,35 +89,26 @@ namespace CauldronCodebase
         private void ChangeLanguage(int index)
         {
             var newLanguage = index > 0 ? Language.RU : Language.EN;
-            locTool.LoadLanguage(newLanguage);
             PlayerPrefs.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
+            locTool.LoadLanguage(newLanguage);
         }
 
         private void LoadResolution()
         {
             LoadFullscreenMode();
             LoadResolutionDropdown();
-            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
-            {
-                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
-                Screen.SetResolution(resolutions[newResolution].width, resolutions[newResolution].height, fullscreenMode);
-            }
-            else
-            {   //Default screen resolution
-                Screen.SetResolution(1920, 1080, true);
-            }
         }
 
         public void Open()
         {
             gameObject.SetActive(true);
-            fadeController.FadeIn(endAlpha: fadeInTargetAlpha);
+            fadeController.FadeIn(endAlpha: fadeInTargetAlpha).Forget();
         }
 
         public void Close()
         {
             gameObject.SetActive(false);
-            fadeController.FadeOut();
+            fadeController.FadeOut().Forget();
         }
 
         private void OpenResetDialogue()
@@ -135,8 +131,8 @@ namespace CauldronCodebase
 
             foreach (var res in resolutions)
             {
-                options.Add(res.width + " x " + res.height);
-                if (res.width == Screen.width && res.height == Screen.height)
+                options.Add(res.width + " x " + res.height + " - " + res.refreshRate+" Hz");
+                if (res.width == Screen.width && res.height == Screen.height && res.refreshRate == Screen.currentResolution.refreshRate)
                 {
                     setResolutionIndex = currentResolutionIndex;
                 }
@@ -170,12 +166,22 @@ namespace CauldronCodebase
             Screen.fullScreen = fullscreenMode;
         }
 
+        private void ChangeAutoCooking(bool set)
+        {
+            autoCookingMode = set;
+            PlayerPrefs.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
+        }
+
         private void LoadFullscreenMode()
         {
             if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
             {
                 fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
                 toggleFullscreen.isOn = fullscreenMode;
+            }
+            else
+            {
+                fullscreenMode = true;
             }
         }
 
@@ -195,23 +201,49 @@ namespace CauldronCodebase
 
         private void LoadSlidersValues()
         {
-            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 1f;
+            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
             UpdateSliderLabel("SFX", sounds.value);
-            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 1f;
+            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
             UpdateSliderLabel("Music", music.value);
         }
 
         private void LoadVolumeValues()
         {
             LoadSlidersValues();
-            RuntimeManager.GetVCA("vca:/Music").setVolume(music.value);
-            RuntimeManager.GetVCA("vca:/SFX").setVolume(sounds.value);
         }
 
         private void ResetGameData()
         {
             mainMenu.ResetGameData();
             CloseResetDialogue();
+        }
+        
+        private void LoadAutoCookingMode()
+        {
+            if (PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
+                OpenAutoCooking();
+            }
+            else
+            {
+                CloseAutoCooking();
+            }
+
+            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
+            {
+                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
+                autoCooking.isOn = autoCookingMode;
+            }
+        }
+        
+        private void OpenAutoCooking()
+        {
+            autoCookingObject.gameObject.SetActive(true);
+        }
+
+        private void CloseAutoCooking()
+        {
+            autoCookingObject.gameObject.SetActive(false);
         }
     }
 }

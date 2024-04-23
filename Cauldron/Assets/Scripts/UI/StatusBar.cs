@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
@@ -9,9 +10,11 @@ namespace CauldronCodebase
     public class StatusBar : MonoBehaviour
     {
         public RectTransform mask;
-        public GameObject effect;
+        public float maskTailPercent = 6f;
+        public bool keepTailEmpty;
+        public ParticleFadeController effect;
         public RectTransform maskTemp;
-        public GameObject effectTemp;
+        public ParticleFadeController effectTemp;
         public float gradualReduce = 3f;
         public float effectDelay = 1.5f;
         public RectTransform symbol;
@@ -28,6 +31,8 @@ namespace CauldronCodebase
         private MainSettings settings;
         private int currentValue = Int32.MinValue;
 
+        private float gameMaskLength;
+
         [Inject]
         private void Construct(MainSettings mainSettings, GameDataHandler dataHandler)
         { 
@@ -35,10 +40,9 @@ namespace CauldronCodebase
            settings = mainSettings;
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
+           gameMaskLength = initialDimension - initialDimension * maskTailPercent / 100;
            gameDataHandler.StatusChanged += UpdateValue;
-           
-           effect.SetActive(false);
-           effectTemp.SetActive(false);
+
            signCritical.SetActive(false);
         }
 
@@ -58,21 +62,37 @@ namespace CauldronCodebase
             {
                 return;
             }
+
             bool statusIncrease = currentValue < current;
             currentValue = current;
             var newSize = CalculateMaskSize(current);
             if (animate)
             {
-                var animations = DOTween.Sequence();
+                if (DOTween.IsTweening(this))
+                {
+                    DOTween.Kill(this);
+                    effectTemp.Hide();
+                    effect.Hide();
+                }
+                
+                var animations = DOTween.Sequence(this);
                 RectTransform firstMask = statusIncrease ? maskTemp : mask;
-                GameObject theEffect = statusIncrease ? effectTemp : effect;
+                var theEffect = statusIncrease ? effectTemp : effect;
                 RectTransform secondMask = statusIncrease ? mask : maskTemp;
                 GrowSymbol();
                 animations
-                    .AppendCallback(() => theEffect.SetActive(true))
+                    .AppendCallback(() =>
+                    {
+                        if(current < settings.statusBars.Total)
+                            theEffect.Show().Forget();
+                        else
+                        {
+                            theEffect.Blink().Forget();
+                        }
+                    })
                     .Append(firstMask.DOSizeDelta(newSize, gradualReduce))
                     .AppendInterval(effectDelay)
-                    .AppendCallback(() => theEffect.SetActive(false))
+                    .AppendCallback(() => theEffect.Hide())
                     .Append(secondMask.DOSizeDelta(newSize, gradualReduce));
             }
             else
@@ -86,7 +106,16 @@ namespace CauldronCodebase
         {
             float ratio = (float) current / settings.statusBars.Total;
             ratio = Mathf.Clamp(ratio, 0, 1);
-            ratio *= initialDimension;
+            
+            if (keepTailEmpty && ratio < 1)
+            {
+                ratio *= gameMaskLength;
+            }
+            else
+            {
+                ratio *= initialDimension;
+            }
+            
             Vector2 newSize;
             if (vertical)
             {

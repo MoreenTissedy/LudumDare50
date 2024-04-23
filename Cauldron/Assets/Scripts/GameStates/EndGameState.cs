@@ -7,49 +7,59 @@ namespace CauldronCodebase.GameStates
 {
     public class EndGameState : BaseGameState
     {
-        private EndingScreen _endingScreen;
-        private DataPersistenceManager dataPersistenceManager;
-        private GameFXManager gameFXManager;
-        private string currentEnding;
+        private readonly DataPersistenceManager dataPersistenceManager;
+        private readonly GameFXManager gameFXManager;
+        private readonly RecipeBook recipeBook;
 
-        public EndGameState(EndingScreen endingScreen,
-                            DataPersistenceManager persistenceManager,
-                            GameFXManager fxManager)
+        private string currentEnding;
+        private Transform root;
+        private EndingScreen endingScreen;
+
+        public EndGameState(DataPersistenceManager persistenceManager,
+                            GameFXManager fxManager, RecipeBook recipeBook)
         {
-            _endingScreen = endingScreen;
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
+            this.recipeBook = recipeBook;
         }
         public override void Enter()
         {
+            recipeBook.CloseBook();
             ShowEffectAndEnding().Forget();
         }
 
-        public void SetEnding(string tag)
+        public void SetEnding(string tag, Transform root = null)
         {
+            this.root = root;
             currentEnding = tag;
         }
 
         private async UniTaskVoid ShowEffectAndEnding()
         {
-            await gameFXManager.ShowEndGame(currentEnding);
-            _endingScreen.Open(currentEnding);
-            _endingScreen.OnClose += ReloadGame;
+            var fx = gameFXManager.ShowEndGame(currentEnding);
+            var loading = Resources.LoadAsync<EndingScreen>(ResourceIdents.EndingScreen);
+            await UniTask.WhenAll(fx, loading.ToUniTask());
+            endingScreen = Object.Instantiate(loading.asset, root) as EndingScreen;
+            if (endingScreen != null)
+            {
+                endingScreen.Open(currentEnding);
+                endingScreen.OnClose += ReloadGame;
+            }
         }
 
         public override void Exit()
         {
             gameFXManager.Clear();
-            if (_endingScreen.isActiveAndEnabled)
+            if (endingScreen != null && endingScreen.isActiveAndEnabled)
             {
-                _endingScreen.Close();
+                endingScreen.Close();
             }
         }
 
         private void ReloadGame()
         {
             Debug.Log("reload scene");
-            _endingScreen.OnClose -= ReloadGame;
+            endingScreen.OnClose -= ReloadGame;
             dataPersistenceManager.NewGame();
             SceneManager.LoadScene(1);
         }

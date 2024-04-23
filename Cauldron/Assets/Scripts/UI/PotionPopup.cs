@@ -25,12 +25,10 @@ namespace CauldronCodebase
         public float startTweenSize = 0f;
         public Button accept;
         public Button decline;
-
-
-        [Inject] private DataPersistenceManager dataPersistenceManager;
-
+        
         [Inject] private SoundManager soundManager;
 
+        public bool IsEnable { get; private set; }
         
         public event Action OnAccept;
         public event Action OnDecline;
@@ -44,10 +42,18 @@ namespace CauldronCodebase
 
         public void Show(Recipe recipe, bool newPotion = false)
         {
+            IsEnable = true;
             gameObject.SetActive(true);
             newPotionEffect.SetActive(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
-                OnComplete(() => newPotionEffect.SetActive(newPotion)).
+                OnComplete(() =>
+                {
+                    newPotionEffect.SetActive(newPotion);
+                    if (newPotion)
+                    {
+                        soundManager.Play(Sounds.PotionUnlock);
+                    }
+                }).
                 SetDelay(EFFECT_DURATION);
             
             if (recipe is null)
@@ -87,6 +93,8 @@ namespace CauldronCodebase
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)
                 .OnComplete(() => gameObject.SetActive(false));
+
+            IsEnable = false;
         }
     }
 }

@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
+    [Obsolete]
     public class Tutorial : MonoBehaviour
     {
         public RectTransform[] pages;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "All Recipe Set", menuName = "Recipe Deck", order = 1)]
     public class RecipeProvider : ScriptableObject
     {
+        [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
         

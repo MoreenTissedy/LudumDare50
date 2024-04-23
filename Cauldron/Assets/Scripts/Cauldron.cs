@@ -30,10 +30,11 @@ namespace CauldronCodebase
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
         private GameDataHandler game;
+        private ExperimentController experimentController;
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game)
+            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game, ExperimentController experimentController)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
@@ -41,6 +42,7 @@ namespace CauldronCodebase
             this.soundManager = soundManager;
             this.tooltipManager = tooltipManager;
             this.game = game;
+            this.experimentController = experimentController;
         }
 
         private void Awake()
@@ -63,8 +65,6 @@ namespace CauldronCodebase
 
         public void AddToMix(Ingredients ingredient)
         {
-            splash.Play();
-            soundManager.Play(Sounds.Splash);
             Mix.Add(ingredient);
             IngredientAdded?.Invoke(ingredient);
             tooltipManager.ChangeOneIngredientHighlight(ingredient, false);
@@ -72,6 +72,11 @@ namespace CauldronCodebase
             if (mix.Count == 3)
             {
                 Brew();
+            }
+            else
+            {
+                splash.Play();
+                soundManager.Play(Sounds.Splash);
             }
         }
         
@@ -84,7 +89,7 @@ namespace CauldronCodebase
 
         private Potions Brew()
         {
-            soundManager.Play(Sounds.PotionReady);
+            //soundManager.Play(Sounds.PotionReady);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
             {
@@ -114,7 +119,7 @@ namespace CauldronCodebase
                 }
             }
 
-            recipeBook.RecordAttempt(new WrongPotion(mix));
+            experimentController.RecordAttempt(new WrongPotion(mix));
             game.wrongExperiments++;
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);

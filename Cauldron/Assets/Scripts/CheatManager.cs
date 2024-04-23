@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 using Zenject;
 
@@ -9,8 +10,27 @@ namespace CauldronCodebase
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private MainSettings settings;
+        [Inject] private EndingsProvider endingsProvider;
 
-        [ContextMenu("Unlock all recipes")]
+        [Button("Unlock all endings")]
+        public void UnlockAllEndings()
+        {
+            endingsProvider.Unlock(EndingsProvider.FINAL);
+            endingsProvider.Unlock(EndingsProvider.BANDIT);
+            endingsProvider.Unlock(EndingsProvider.END_DECK);
+            endingsProvider.Unlock(EndingsProvider.KING_BAD);
+            endingsProvider.Unlock(EndingsProvider.LOW_FAME);
+            endingsProvider.Unlock(EndingsProvider.LOW_FEAR);
+            endingsProvider.Unlock(EndingsProvider.HIGH_FAME);
+            endingsProvider.Unlock(EndingsProvider.HIGH_FEAR);
+            endingsProvider.Unlock(EndingsProvider.KING_GOOD);
+            endingsProvider.Unlock(EndingsProvider.BISHOP_BAD);
+            endingsProvider.Unlock(EndingsProvider.BISHOP_GOOD);
+            endingsProvider.Unlock(EndingsProvider.ENOUGH_MONEY);
+        }
+        
+        [Button("Unlock all recipes")]
         public void UnlockAllRecipes()
         {
             foreach (var recipe in recipeProvider.allRecipes)
@@ -21,6 +41,27 @@ namespace CauldronCodebase
                 }
                 recipeBook.RecordRecipe(recipe);
             }
+        }
+        
+        [Button("Reset fame and fear")]
+        public void ResetStatuses()
+        {
+            gameDataHandler.Fame = settings.statusBars.InitialValue;
+            gameDataHandler.Fear = settings.statusBars.InitialValue;
+        }
+
+        [Button("Unlock coven & get rich")]
+        public void UnlockCoven()
+        {
+            StoryTagHelper.SaveMilestone("circle");
+            gameDataHandler.AddTag("circle");
+            gameDataHandler.Money += 1000;
+        }
+       
+        [Button("Enable auto cooking")]
+        public void AutoCooking()
+        {
+            recipeBook.CheatUnlockAutoCooking();
         }
 
         private void Update()

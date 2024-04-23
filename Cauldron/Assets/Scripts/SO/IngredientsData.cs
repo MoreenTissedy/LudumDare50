@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EasyLoc;
+using ModestTree;
 using UnityEditor;
 using UnityEngine;
 
@@ -32,6 +33,11 @@ namespace CauldronCodebase
         public Ingredient Get(Ingredients type)
         {
             return (book.Where(x => x.type == type).ToArray()[0]);
+        }
+
+        public int IndexOf(Ingredient data)
+        {
+            return book.IndexOf(data);
         }
         
         #if UNITY_EDITOR

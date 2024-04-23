@@ -12,7 +12,6 @@ namespace CauldronCodebase.GameStates
         Cauldron cauldron;
         NightEventProvider nightEvents;
         NightPanel nightPanel;
-        EndingScreen endingScreen;
         GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
@@ -20,6 +19,7 @@ namespace CauldronCodebase.GameStates
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievementManager;
 
         private readonly SoundManager soundManager;
 
@@ -30,7 +30,6 @@ namespace CauldronCodebase.GameStates
                             Cauldron cauldron,
                             NightEventProvider nightEvents,
                             NightPanel nightPanel,
-                            EndingScreen endingScreen,
                             RecipeBook recipeBook,
 
                             GameDataHandler gameDataHandler,
@@ -38,7 +37,8 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine gameStateMachine,
                             SoundManager soundManager,
                             GameFXManager fxManager, 
-                            StatusChecker statusChecker)
+                            StatusChecker statusChecker, 
+                            IAchievementManager achievementManager)
 
         {
             this.deck = deck;
@@ -47,7 +47,6 @@ namespace CauldronCodebase.GameStates
             this.cauldron = cauldron;
             this.nightEvents = nightEvents;
             this.nightPanel = nightPanel;
-            this.endingScreen = endingScreen;
             this.gameDataHandler = gameDataHandler;
             this.gameStateMachine = gameStateMachine;
             this.recipeBook = recipeBook;
@@ -57,29 +56,30 @@ namespace CauldronCodebase.GameStates
             this.soundManager = soundManager;
             gameFXManager = fxManager;
             this.statusChecker = statusChecker;
+            this.achievementManager = achievementManager;
         }
 
         public VisitorState CreateVisitorState()
         {
             return new VisitorState(deck, settings, gameDataHandler, visitorManager, cauldron,
-                gameStateMachine, nightEvents, soundManager, statusChecker);
+                gameStateMachine, nightEvents, soundManager, statusChecker, achievementManager);
         }
 
 
         public VisitorWaitingState CreateVisitorWaitingState()
         {
-            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine, gameFXManager);
+            return new VisitorWaitingState(settings, gameDataHandler, gameStateMachine);
         }
 
         public NightState CreateNightState()
         {
             return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
-                gameStateMachine, recipeBook, gameFXManager, statusChecker);
+                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager);
         }
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(endingScreen, dataPersistenceManager, gameFXManager);
+            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook);
         }
 
     }

@@ -13,6 +13,7 @@ namespace CauldronCodebase
     {
         [FormerlySerializedAs("addToDeckOnDay")] public int addToDeckOnRound = -1;
         public string requiredStoryTag;
+        public RecipeHintConfig recipeHintConfig;
 
         [Serializable]
         public class PotionResult
@@ -29,7 +30,8 @@ namespace CauldronCodebase
         [TextArea(5, 10)]
         public string text;
 
-        public bool hidden = false, quest = false;
+        public bool hidden = false;
+        public Fractions fraction;
         public Statustype primaryInfluence, secondaryInfluence = Statustype.None;
         public float primaryCoef, secondaryCoef;
         [ReorderableList]

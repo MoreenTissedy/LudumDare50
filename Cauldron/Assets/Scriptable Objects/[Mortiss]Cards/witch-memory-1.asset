@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: witch-memory-1
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnRound: 2
+  addToDeckOnRound: -1
   requiredStoryTag: 
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: f66094a76c380ae48b9716f39994b67c, type: 2}
   text: "\u041F\u0440\u043E\u0448\u043B\u043E\u0435 \u043D\u0435 \u0434\u0430\u0435\u0442
     \u043C\u043D\u0435 \u043F\u043E\u043A\u043E\u044F. \u042D\u0442\u043E \u0432\u0441\u0435
@@ -22,8 +25,8 @@ MonoBehaviour:
     \u044F \u0442\u043E\u043B\u044C\u043A\u043E... \u0425\u043E\u0442\u044C \u0441\u0434\u0435\u043B\u0430\u043D\u043D\u043E\u0433\u043E
     \u043D\u0435 \u0432\u043E\u0440\u043E\u0442\u0438\u0448\u044C, \u0430 \u0437\u0430\u0431\u044B\u0442\u044C
     \u043D\u0435 \u043C\u043E\u0433\u0443."
-  hidden: 0
-  quest: 1
+  hidden: 1
+  fraction: 0
   primaryInfluence: 0
   secondaryInfluence: 0
   primaryCoef: 0
@@ -35,5 +38,5 @@ MonoBehaviour:
     bonusCard: {fileID: 11400000, guid: 617fe8718d727fc41b6da205816e9dcd, type: 2}
   - potion: 12
     influenceCoef: 1
-    bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 11400000, guid: 4264a2b80629a9d4fadc6c61a927e647, type: 2}
+    bonusEvent: {fileID: 11400000, guid: d07e3f55e6d0083479d59c6f93aa6db2, type: 2}
+    bonusCard: {fileID: 0}

@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Chameleon_Bandit_RobTaxCollector
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnDay: -1
-  requiredStoryTag: tax_success
-  villager: {fileID: 11400000, guid: 35e3642a71df6264fa9da44285ca8c3a, type: 2}
-  text: "Heard about all the money that guy has collected in tax? It\u2019ll only
-    be right to...er... expropriate it. Let\u2019s play a little hide\u2019n\u2019seek
-    and you\u2019ll get your cut.\r"
+  addToDeckOnRound: -1
+  requiredStoryTag: rogues, !bandit_dead
+  recipeHintConfig:
+    recipe: 99
+    level: 1
+  villager: {fileID: 11400000, guid: eec84c15e6c2e3944be1ed07bdb19009, type: 2}
+  text: The taxman sure did a work on the locals this time. Squeezed every copper
+    outta them. Yeah, so me and the boys were thinking of getting it all back, with
+    interest. Just need to get a drop on him. Any help?
   hidden: 0
-  quest: 0
+  fraction: 3
   primaryInfluence: 1
   secondaryInfluence: 0
   primaryCoef: 1
@@ -30,15 +33,35 @@ MonoBehaviour:
     influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 3db51a1ca47b5e446917a17f0b14a9d8, type: 2}
     bonusCard: {fileID: 0}
+  - potion: 13
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 3db51a1ca47b5e446917a17f0b14a9d8, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 11
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 3db51a1ca47b5e446917a17f0b14a9d8, type: 2}
+    bonusCard: {fileID: 0}
   - potion: 2
     influenceCoef: 0.5
-    bonusEvent: {fileID: 0}
-    bonusCard: {fileID: 0}
-  - potion: 3
-    influenceCoef: -0.5
-    bonusEvent: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 3db51a1ca47b5e446917a17f0b14a9d8, type: 2}
     bonusCard: {fileID: 0}
   - potion: 4
     influenceCoef: -1
     bonusEvent: {fileID: 11400000, guid: 2296b4495d5956346aee328b4a6752a4, type: 2}
     bonusCard: {fileID: 0}
+  - potion: 19
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 07e9e53a88991304c8be86a6fb4b807c, type: 2}
+    bonusCard: {fileID: 11400000, guid: 910a38f20c5141d4194302296a3f7f05, type: 2}
+  - potion: 14
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 07e9e53a88991304c8be86a6fb4b807c, type: 2}
+    bonusCard: {fileID: 11400000, guid: 910a38f20c5141d4194302296a3f7f05, type: 2}
+  - potion: 3
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 07e9e53a88991304c8be86a6fb4b807c, type: 2}
+    bonusCard: {fileID: 11400000, guid: 910a38f20c5141d4194302296a3f7f05, type: 2}
+  - potion: 10
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: 07e9e53a88991304c8be86a6fb4b807c, type: 2}
+    bonusCard: {fileID: 11400000, guid: 910a38f20c5141d4194302296a3f7f05, type: 2}

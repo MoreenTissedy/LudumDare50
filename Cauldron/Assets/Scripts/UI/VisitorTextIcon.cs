@@ -1,3 +1,5 @@
+using System;
+using Cysharp.Threading.Tasks;
 using EasyLoc;
 using TMPro;
 using UnityEngine;
@@ -12,26 +14,44 @@ namespace CauldronCodebase
         [Localize] public string fearHint = "Если вы поможете или навредите, изменится шкала страха.";
         [Localize] public string moneyHint = "Этот персонаж даст вам денег, если вы поможете ему.";
         [Localize] public string fameHint = "Если вы поможете или навредите, изменится шкала славы.";
+        [Localize] public string fractionHint = "Ваше решение будет замечено и оценено по достоинству.";
         
         public Image icon;
-        public Sprite fame, fear, money, question, item;
+        public Sprite fame, fear, money, question, bishop, king, bandit;
         public ScrollTooltip hint;
 
-        private string hintText;
+        private bool hintEnabled;
 
-        //TODO: special hints?
-        public void DisplayItem(Villager villager)
+        public void DisplayFraction(Fractions fraction)
         {
-            Display(Statustype.None);
+            if (fraction is Fractions.None)
+            {
+                return;
+            }
+            hintEnabled = false;
+            gameObject.SetActive(true);
+            switch (fraction)
+            {
+                case Fractions.King:
+                    icon.sprite = king;
+                    break;
+                case Fractions.Bishop:
+                    icon.sprite = bishop;
+                    break;
+                case Fractions.Rogue:
+                    icon.sprite = bandit;
+                    break;
+            }
+            hint.SetText(fractionHint).ContinueWith(() => hintEnabled = true);
         }
         
         public void Display(Statustype type, bool hidden = false)
         {
+            hintEnabled = false;
             if (hidden)
             {
                 icon.sprite = question;
                 gameObject.SetActive(true);
-                hintText = null;
                 return;
             }
             switch (type)
@@ -42,16 +62,16 @@ namespace CauldronCodebase
                 case Statustype.Money:
                     gameObject.SetActive(true);
                     icon.sprite = money;
-                    hintText = moneyHint;
+                    hint.SetText(moneyHint).ContinueWith(() => hintEnabled = true);
                     break;
                 case Statustype.Fear:
                     gameObject.SetActive(true);
                     icon.sprite = fear;
-                    hintText = fearHint;
+                    hint.SetText(fearHint).ContinueWith(() => hintEnabled = true);
                     break;
                 case Statustype.Fame:
                     gameObject.SetActive(true);
-                    hintText = fameHint;
+                    hint.SetText(fameHint).ContinueWith(() => hintEnabled = true);
                     icon.sprite = fame;
                     break;
             }
@@ -64,9 +84,9 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (!string.IsNullOrEmpty(hintText))
+            if (hintEnabled)
             {
-                hint.Open(hintText).Forget();
+                hint.Open();
             } 
         }
 

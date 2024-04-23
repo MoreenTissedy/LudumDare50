@@ -1,61 +1,83 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBookEntry : MonoBehaviour
+    public abstract class RecipeBookEntryHolder : MonoBehaviour
     {
-        public TMP_Text fullName;
-        public TMP_Text description;
-        public Image image;
-        public Image ingredient1, ingredient2, ingredient3;
-        public PotionSelect potionButton;
-        private Recipe currentRecipe;
-        public Recipe CurrentRecipe => currentRecipe;
+        [SerializeField] private RecipeBookEntry unlocked;
+        [SerializeField] private RecipeBookEntry locked;
 
-        private IngredientsData ingredientsData;
-
-        [SerializeField]
-        private Material lockedMaterial;
-           
         [Inject]
         public void Construct(IngredientsData data)
         {
-            ingredientsData = data;
             Clear();
         }
+
+        public void SetUnlocked(Recipe recipe)
+        {
+            locked.gameObject.SetActive(false);
+            unlocked.gameObject.SetActive(true);
+            unlocked.Display(recipe);
+        }
+
+        public void SetLocked(Recipe recipe)
+        {
+            locked.gameObject.SetActive(true);
+            unlocked.gameObject.SetActive(false);
+            locked.Display(recipe);
+        }
+        
+        public void Clear()
+        {
+            locked.gameObject.SetActive(false);
+            unlocked.gameObject.SetActive(true);
+            unlocked.Clear();
+        }
+    }
+    
+    public class RecipeBookEntry : MonoBehaviour
+    {
+        [Header("Recipe hint")]
+        public GameObject recipeHintBlock;
+        public TMP_Text recipeHintText;
+        public RecipeHintsStorage recipeHintsStorage;
+        
+        [Header("Common")]
+        public TMP_Text fullName;
+        public TMP_Text description;
+        public Image image;
+        public IngredientButton ingredient1, ingredient2, ingredient3;
+        private Recipe currentRecipe;
+        public Recipe CurrentRecipe => currentRecipe;
         
         public void Display(Recipe recipe)
         {
             currentRecipe = recipe;
             image.enabled = true;
-            ingredient1.enabled = true;
-            ingredient2.enabled = true;
-            ingredient3.enabled = true;
-            fullName.text = recipe.potionName;
-            description.text = recipe.description;
             image.sprite = recipe.image;
-            ingredient1.sprite = ingredientsData.Get(recipe.RecipeIngredients[0]).image;
-            ingredient2.sprite = ingredientsData.Get(recipe.RecipeIngredients[1]).image;
-            ingredient3.sprite = ingredientsData.Get(recipe.RecipeIngredients[2]).image;
-            image.material = null;
-            potionButton.clickable = true;
-        }
+            DisplayRecipeHint(recipe.potion);
+            
+            if (fullName)
+            {
+                fullName.text = recipe.potionName;
+            }
 
-        public void DisplayLocked(Recipe recipe)
-        {
-            currentRecipe = null;
-            image.enabled = true;
-            ingredient1.enabled = false;
-            ingredient2.enabled = false;
-            ingredient3.enabled = false;
-            fullName.text = "???";
-            description.text = "";
-            image.sprite = recipe.image;
-            image.material = lockedMaterial;
-            potionButton.clickable = false;
+            if (description)
+            {
+                description.text = recipe.description;
+            }
+
+            if (ingredient1 && ingredient2 && ingredient3)
+            {
+                ingredient1.Set(recipe.RecipeIngredients[0]);
+
+                ingredient2.Set(recipe.RecipeIngredients[1]);
+                ingredient3.Set(recipe.RecipeIngredients[2]);
+            }
         }
 
         public void Clear()
@@ -64,10 +86,30 @@ namespace CauldronCodebase
             fullName.text = "";
             description.text = "";
             image.enabled = false;
-            ingredient1.enabled = false;
-            ingredient2.enabled = false;
-            ingredient3.enabled = false;
+            ingredient1.Clear();
+            ingredient2.Clear();
+            ingredient3.Clear();
+            if (recipeHintBlock)
+            {
+                recipeHintBlock.SetActive(false);
+            }
         }
 
+        private void DisplayRecipeHint(Potions potion)
+        {
+            if (!recipeHintBlock)
+            {
+                return;
+            }
+            if (recipeHintsStorage.TryGetHint(potion, out var text))
+            {
+                recipeHintBlock.SetActive(true);
+                recipeHintText.text = text;
+            }
+            else
+            {
+                recipeHintBlock.SetActive(false);
+            }
+        }
     }
 }

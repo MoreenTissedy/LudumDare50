@@ -6,24 +6,24 @@ public class CatTipsValidator : MonoBehaviour
 {
     private bool tipsWasShown;
 
-    private GameDataHandler gameDataHandler;
+    private CatAnimations catAnimations;
     private CatTipsView catTipsView;
 
     [Inject]
-    private void Construct(GameDataHandler dataHandler, CatTipsView tipsView)
+    private void Construct(CatTipsView tipsView, CatAnimations animations)
     {
-        gameDataHandler = dataHandler;
         catTipsView = tipsView;
+        catAnimations = animations;
     }
 
     public bool ShowTips(CatTips tips)
     {
-        if (tipsWasShown)
+        if (!catAnimations.OnStartSpot)
         {
             return false;
         }
-
-        if (gameDataHandler.currentCard.villager.name == EncounterIdents.CAT)
+        
+        if (tipsWasShown)
         {
             return false;
         }

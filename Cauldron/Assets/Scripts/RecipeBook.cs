@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Save;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -27,27 +29,40 @@ namespace CauldronCodebase
         [SerializeField] private Transform attemptsSideBookmark;
         [SerializeField] private Transform ingredientsSideBookmark;
         
-        
-        [Header("Recipe Book")] 
-        
-        [SerializeField] protected RecipeBookEntry[] recipeEntries;
-        [SerializeField] protected RecipeBookEntry[] foodEntries;
-        [SerializeField] protected AttemptEntry[] attemptEntries;
+        [Header("Ending map")] 
+        [SerializeField] private GameObject endingBookmarkBlock;
+        [SerializeField] private AnimatedButton endingBookmarkButton;
+        [SerializeField] private Transform endingRoot;
+        private EndingScreen endingScreen;
+
+        [Header("Recipe Book")]
+        [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
+        [SerializeField] protected RecipeBookEntryHolder[] foodEntries;
         [SerializeField] protected IngredientInTheBook[] ingredientsEntries;
         [SerializeField] protected IngredientsData ingredientsData;
+
         public List<Recipe> allMagicalRecipes;
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
+        [SerializeField] private ExperimentController experimentController;
+        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
         public List<Recipe> LockedRecipes { get; private set; }
-        public List<WrongPotion> wrongPotions;
+        public List<Recipe> UnlockedRecipes => unlockedRecipes;
         [SerializeField] protected Text prevPageNum, nextPageNum;
         [SerializeField] private GameObject recipesDisplay, foodDisplay, attemptsDisplay, ingredientsDisplay;
+
+        private const float TargetPercentEnoughRecipesUnlocked = 0.8f;
+
         public event Action<Recipe> OnSelectRecipe;
+        public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
+        public event Action OnUnlockAutoCooking;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
+        private IAchievementManager achievements;
+        private EndingsProvider endingsProvider;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -63,25 +78,58 @@ namespace CauldronCodebase
         [ContextMenu("Find Entries")]
         void FindEntries()
         {
-            attemptEntries = attemptsDisplay.GetComponentsInChildren<AttemptEntry>();
-            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeBookEntry>();
-            foodEntries = foodDisplay.GetComponentsInChildren<RecipeBookEntry>();
+            recipeEntries = recipesDisplay.GetComponentsInChildren<RecipeEntryMagical>();
+            foodEntries = foodDisplay.GetComponentsInChildren<RecipeEntryCommon>();
         }
         [Inject]
         private void Construct(DataPersistenceManager dataPersistenceManager,
                                 TooltipManager tooltipManager,
                                 RecipeProvider recipeProvider,
-                                Cauldron cauldron)
+                                Cauldron cauldron, 
+                                IAchievementManager achievements, 
+                                EndingsProvider endingsProvider)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
+            this.achievements = achievements;
             this.tooltipManager = tooltipManager;
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
+            this.endingsProvider = endingsProvider;
         }
 
         private void Start()
         {
+            InitEndingsMap();
             LoadRecipes();
+            experimentController.OnContentChanged += () =>
+            {
+                InitTotalPages();
+                OpenPage(0);
+            };
+        }
+
+        private void InitEndingsMap()
+        {
+            bool reachedFirstEnding = endingsProvider.GetUnlockedEndingsCount() > 0;
+            endingBookmarkBlock.SetActive(reachedFirstEnding);
+            if (reachedFirstEnding)
+            {
+                endingBookmarkButton.OnClick += OpenEndingMap;
+            }
+        }
+
+        private void OpenEndingMap()
+        {
+            if (!endingScreen)
+            {
+                var asset = Resources.Load<EndingScreen>(ResourceIdents.EndingScreen);
+                endingScreen = Instantiate(asset, endingRoot);
+            }
+            if (endingScreen == null)
+            {
+                return;
+            }
+            endingScreen.Open(inBook: true);
         }
 
         public override void OpenBook()
@@ -111,19 +159,6 @@ namespace CauldronCodebase
             LockedRecipes = new List<Recipe>(recipeProvider.allRecipes.Except(unlockedRecipes));
         }
 
-        public void RecordAttempt(WrongPotion mix)
-        {
-            if (wrongPotions is null)
-            {
-                wrongPotions = new List<WrongPotion>(10);
-            }
-
-            if (!wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(mix.IngredientsList.Contains)))
-            {
-                wrongPotions.Add(mix);
-            }
-        }
-
         public bool IsRecipeInBook(Recipe recipe)
         {
             return unlockedRecipes.Contains(recipe);
@@ -134,11 +169,46 @@ namespace CauldronCodebase
             unlockedRecipes.Add(recipe);
             LockedRecipes.Remove(recipe);
             recipeProvider.SaveRecipes(unlockedRecipes);
+
+            if (recipe.magical)
+            {
+                achievements.TryUnlock(AchievIdents.FIRST_UNLOCK);
+                if (AllMagicalRecipesUnlocked())
+                {
+                    achievements.TryUnlock(AchievIdents.MAGIC_ALL);
+                }
+            }
+            else
+            {
+                if (unlockedRecipes.Count(x => !x.magical) == allHerbalRecipes.Count)
+                {
+                    achievements.TryUnlock(AchievIdents.FOOD_ALL);
+                }
+            }
+            
+            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            {
+                return;
+            }
+
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            OnUnlockAutoCooking?.Invoke();
+        }
+
+        public bool AllMagicalRecipesUnlocked()
+        {
+            return unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count;
+        }
+
+        public void CheatUnlockAutoCooking()
+        {
+            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            OnUnlockAutoCooking?.Invoke();
         }
 
         public void ChangeMode(Mode newMode)
         {
-
             switch (newMode)
             {
                 case Mode.Magical:
@@ -165,7 +235,6 @@ namespace CauldronCodebase
             InitTotalPages();
             UpdatePage();
             UpdateBookButtons();
-            
         }
 
         private void ChangeBookmarksOrder(Mode newMode)
@@ -248,18 +317,20 @@ namespace CauldronCodebase
 
         protected override void InitTotalPages()
         {
-            SortPotions();
             switch (currentMode)
             {
                 case Mode.Magical:
+                    
+                    SortPotions();
                     totalPages = Mathf.CeilToInt((float)allMagicalRecipes.Count / recipeEntries.Length);
                     break;
                 case Mode.Herbal:
+                    
+                    SortPotions();
                     totalPages = Mathf.CeilToInt((float) allHerbalRecipes.Count / foodEntries.Length);
                     break;
                 case Mode.Attempts:
-                    if (wrongPotions != null) totalPages = Mathf.CeilToInt((float) wrongPotions.Count / attemptEntries.Length);
-                    else totalPages = 1;
+                    totalPages = experimentController.TotalPages;
                     break;
                 case Mode.Ingredients:
                     totalPages = Mathf.CeilToInt((float)ingredientsData.book.Length / ingredientsEntries.Length);
@@ -273,7 +344,7 @@ namespace CauldronCodebase
         {
             void DisplaySet(List<Recipe> set)
             {
-                RecipeBookEntry[] entries = new RecipeBookEntry[] { };
+                RecipeBookEntryHolder[] entries = { };
                 switch (currentMode)
                 {
                     case Mode.Magical:
@@ -299,11 +370,11 @@ namespace CauldronCodebase
                     {
                         if(unlockedRecipes.Contains(set[num]))
                         {
-                            entries[i].Display(set[num]);
+                            entries[i].SetUnlocked(set[num]);
                         }
                         else
                         {
-                            entries[i].DisplayLocked(set[num]);
+                            entries[i].SetLocked(set[num]);
                         }
                     }
                     else
@@ -322,7 +393,7 @@ namespace CauldronCodebase
                     DisplaySet(allHerbalRecipes);
                     break;
                 case Mode.Attempts:
-                    DisplayAttempts();
+                    experimentController.UpdateTab(currentPage);
                     break;
                 case Mode.Ingredients:
                     DisplayIngredients();
@@ -330,8 +401,9 @@ namespace CauldronCodebase
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            nextPageNum.text = (currentPage *2+2).ToString();
-            prevPageNum.text = (currentPage*2+1).ToString();
+
+            nextPageNum.text = (currentPage * 2 + 2).ToString();
+            prevPageNum.text = (currentPage * 2 + 1).ToString();
         }
 
         private void DisplayIngredients()
@@ -369,26 +441,6 @@ namespace CauldronCodebase
                     ingredientsEntries[i].text.gameObject.SetActive(true);
                     ingredientsEntries[i].text.text = ingredientsData.book[num].TextInABook;
                 }
-                
-                //ingredientsEntries[i].RebuildLayout();
-            }
-        }
-
-        private void DisplayAttempts()
-        {
-            if (wrongPotions is null || wrongPotions.Count == 0)
-                return;
-            for (int i = 0; i < attemptEntries.Length; i++)
-            {
-                int num = currentPage * recipeEntries.Length + i;
-                if (num < wrongPotions.Count)
-                {
-                    attemptEntries[i].Display(wrongPotions[num].IngredientsList.ToArray());
-                }
-                else
-                {
-                    attemptEntries[i].Clear();
-                }
             }
         }
 
@@ -399,8 +451,11 @@ namespace CauldronCodebase
             attemptsDisplay.SetActive(false);
             ingredientsDisplay.SetActive(false);
         }
-        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
+        
+        public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
+            tooltipManager.DisableAllHighlights();
+            
             if (cauldron.Mix.Count != 0)
             {
                 foreach (var ingredient in cauldron.Mix)
@@ -414,12 +469,55 @@ namespace CauldronCodebase
             }
             
             CloseBook();
+
+            if (cauldron.potionPopup.IsEnable)
+            {
+                return;
+            }
+            
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
+
+            if (PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
+            {
+                return;
+            }
+            
+            tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
+        }
+
+        public async UniTaskVoid SwitchHighlight(List<Ingredients> ingredients)
+        {
+            tooltipManager.DisableAllHighlights();
+            
+            if (cauldron.Mix.Count != 0)
+            {
+                foreach (var ingredient in cauldron.Mix)
+                {
+                    if (ingredients.Contains(ingredient) == false)
+                    {
+                        TryHighlightIncorrectRecipe();
+                        return;
+                    }
+                }
+            }
+            
+            CloseBook();
+
+            if (cauldron.potionPopup.IsEnable)
+            {
+                return;
+            }
+
+            foreach (Ingredients ingredient in ingredients)
+            {
+                tooltipManager.ChangeOneIngredientHighlight(ingredient, true);
+            }
         }
 
         private void TryHighlightIncorrectRecipe()
         {
+            OnSelectIncorrectRecipe?.Invoke();
             Debug.LogWarning("The ingredients in the cauldron do not match this recipe"); 
         }
 
@@ -432,7 +530,7 @@ namespace CauldronCodebase
             }
 
             //Check attempts
-            if(wrongPotions.Count != 0 && wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
+            if(experimentController.wrongPotions.Count != 0 && experimentController.wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(recipe.Contains)))
             {
                 return true;
             }
@@ -442,17 +540,42 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            wrongPotions = data.AttemptsRecipes;
-            foreach (var potion in wrongPotions)
+            experimentController.wrongPotions = wrongRecipeProvider.LoadWrongRecipe();
+            foreach (var potion in experimentController.wrongPotions)
             {
                 potion.RestoreIngredients();
             }
-            
+            experimentController.GenerateData();
         }
 
         public void SaveData(ref GameData data)
         {
-            data.AttemptsRecipes = wrongPotions;
+            wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
+            wrongRecipeProvider.SaveWrongRecipe();
+        }
+
+        public override void CloseBook()
+        {
+            DisposeEndingScreen();
+            base.CloseBook();
+        }
+
+        private void DisposeEndingScreen()
+        {
+            if (!endingScreen)
+            {
+                return;
+            }
+            if (endingScreen.IsOpened)
+            {
+                endingScreen.Close();
+                endingScreen.OnClose += () => Destroy(endingScreen);
+            }
+            else
+            {
+                Destroy(endingScreen);
+            }
+            endingScreen = null;
         }
     }
 }

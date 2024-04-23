@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
@@ -30,14 +31,19 @@ namespace CauldronCodebase
         EndDay,
         GameEnd,
         EndingUnlock,
-        SpecialEndingUnlock
+        SpecialEndingUnlock,
+        EndingPanelFold,
+        EndingButtonAppear
     }
 
     public enum Music
     {
         Menu,
         Location1,
-        Location2
+        Location2,
+        Location3,
+        Location4,
+        Ending
     }
 
     public enum VisitorSound
@@ -53,7 +59,8 @@ namespace CauldronCodebase
         Purr,
         Conversation,
         Attention,
-        Annoyed
+        Annoyed,
+        Appear
     }
 
     public enum BookSound
@@ -90,6 +97,7 @@ namespace CauldronCodebase
         public EventReference Conversation;
         public EventReference Attention;
         public EventReference Annoyed;
+        public EventReference Appear;
     }
 
     [CreateAssetMenu]
@@ -101,9 +109,11 @@ namespace CauldronCodebase
         public EventReference[] musics;
         public VisitorSounds defaultVisitorSounds;
         public CatSounds catSounds;
+        public EventReference[] potionEffects;
 
         private EventInstance currentMusic;
         private EventInstance bubbling;
+
 
         private void OnValidate()
         {
@@ -176,6 +186,28 @@ namespace CauldronCodebase
             }
         }
 
+        public void Play(Potions potion)
+        {
+            EventReference reference;
+            if (potion == Potions.Placebo)
+            {
+                reference = potionEffects[20];
+            }
+            else if (PotionFilter.Get(Potions.MAGIC).Contains(potion))
+            {
+                reference = potionEffects[(int) potion];
+            }
+            else
+            {
+                reference = potionEffects[21];
+            }
+            if (reference.IsNull)
+            {
+                return;
+            }
+            RuntimeManager.PlayOneShot(reference);
+        }
+
         public void Play(Sounds sound)
         {
             EventReference reference = sounds[(int) sound];
@@ -244,6 +276,9 @@ namespace CauldronCodebase
                     break;
                 case CatSound.Annoyed:
                     sound = catSounds.Annoyed;
+                    break;
+                case CatSound.Appear:
+                    sound = catSounds.Appear;
                     break;
             }
             RuntimeManager.PlayOneShot(sound);

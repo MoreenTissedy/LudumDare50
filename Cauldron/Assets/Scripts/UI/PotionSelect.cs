@@ -9,7 +9,7 @@ namespace CauldronCodebase
         [Inject] private RecipeBook book;
         [Inject] private SoundManager soundManager;
 
-        public bool clickable;
+        public bool clickable = true;
         public override void OnPointerClick(PointerEventData eventData)
         {
             if (!clickable)
@@ -17,7 +17,7 @@ namespace CauldronCodebase
                 return;
             }
             base.OnPointerClick(eventData);
-            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
+            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>()).Forget();
         }
 
         public override void OnPointerEnter(PointerEventData eventData)

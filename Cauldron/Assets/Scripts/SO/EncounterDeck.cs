@@ -44,7 +44,19 @@ namespace CauldronCodebase
         private SODictionary soDictionary;
         private Encounter loadedCard;
         private MainSettings mainSettings;
+        private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
+
+        public bool TryUpdateDeck()
+        {
+            var validDeckCount = deck.Count(x => !IsCardNotValidInDeck(x));
+            if (validDeckCount < mainSettings.gameplay.cardsPerDay)
+            {
+                DealCards(mainSettings.gameplay.cardsPerDay - validDeckCount);
+                return deck.Count(x => !IsCardNotValidInDeck(x)) >= mainSettings.gameplay.cardsPerDay;
+            }
+            return true;
+        }
 
         private void OnValidate()
         {
@@ -59,12 +71,13 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings, RecipeProvider recipes)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
             mainSettings = settings;
             recipeProvider = recipes;
+            this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
@@ -82,18 +95,23 @@ namespace CauldronCodebase
             {
                 if (pool.round <= round)
                 {
-                    if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
-                    {
-                        totalPool.AddRange(pool.cards);
-                    }
-                    else
-                    {
-                        totalPool.AddRange(pool.cards.Except(rememberedCards.
-                            Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
-                    }
+                    AddCardsFromPool(round, pool, in totalPool);
                 }
             }
             cardPool = Shuffle(totalPool);
+        }
+
+        private void AddCardsFromPool(int round, CardPoolByRound pool, in List<Encounter> totalPool)
+        {
+            if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
+            {
+                totalPool.AddRange(pool.cards);
+            }
+            else
+            {
+                totalPool.AddRange(pool.cards
+                    .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+            }
         }
 
         private void InitRememberedCards()
@@ -101,9 +119,10 @@ namespace CauldronCodebase
             string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.UniqueCards);
             if (!string.IsNullOrEmpty(rememberedCardsJson))
             {
-                var wrapper = JsonUtility.FromJson<EncounterListWrapper>(rememberedCardsJson);
+                var wrapper = JsonUtility.FromJson<StringListWrapper>(rememberedCardsJson);
                 rememberedCards.Clear();
-                rememberedCards.AddRange(wrapper.encounters);
+                rememberedCards.AddRange(wrapper.list);
+                
             }
             else
             {
@@ -135,45 +154,47 @@ namespace CauldronCodebase
             }
             deck = newDeckList;
         }
-
-
-        /// <summary>
-        /// Add random cards from pool to deck until deck count reaches target.
-        /// </summary>
-        /// <param name="target">X - target number of cards in deck</param>
-        public void DealCardsTo(int target)
-        {
-            if (target - deck.Count <= 0)
-            {
-                return;
-            }
-            DealCards(target - deck.Count);
-        }
+        
 
         private void DealCards(int num)
         {
-            if (cardPool.Count < num)
+            var validCards = cardPool.Where(x => !IsCardNotValidForDeck(x)).ToList();
+            Debug.Log("valid cards found in pool: "+validCards.Count);
+            if (validCards.Count < num)
             {
+                Debug.Log("extending");
                 ExtendPool();
+                if (cardPool.Count(x => !IsCardNotValidForDeck(x)) < num)
+                {
+                    Debug.Log("extending again");
+                    ExtendPool();
+                }
             }
+            Debug.Log("cards total in pool: "+cardPool.Count);
             for (int i = 0; i < num; i++)
             {
+                if (cardPool.Count < 1)
+                {
+                    break;
+                }
+
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
                     int randomIndex = Random.Range(0, cardPool.Count);
-                    if (StoryTagHelper.Check(cardPool[randomIndex], gameDataHandler))
+                    if (AddToDeck(cardPool[randomIndex]))
                     {
-                        deck.AddLast(cardPool[randomIndex]);
                         cardPool.RemoveAt(randomIndex);
                         cardFound = true;
                         break;
                     }
                 }
-
                 if (!cardFound)
                 {
-                    Debug.LogWarning("No suitable card found in pool");
+                    if (ExtendPool())
+                    {
+                        num++;
+                    }
                 }
             }
 
@@ -181,19 +202,24 @@ namespace CauldronCodebase
             deckInfo = deck.ToArray();
         }
 
-        private void ExtendPool()
+        private bool CheckVisitorNotInDeck(Villager villager)
+        {
+            return deck.Count(card => card.villager == villager) == 0;
+        }
+
+        private bool ExtendPool()
         {
             var nextPools = cardPoolsByRound.Where(x => x.round == lastExtendedRoundNumber+1).ToArray();
             if (nextPools.Length == 0)
             {
-                return;
+                return false;
             }
             foreach (var pool in nextPools)
             {
-                cardPool.AddRange(pool.cards);
+                AddCardsFromPool(gameDataHandler.currentRound, pool, in cardPool);
             }
             lastExtendedRoundNumber++;
-            Debug.LogWarning("card pool extended");
+            return true;
         }
 
         public void AddToPool(Encounter card)
@@ -208,7 +234,7 @@ namespace CauldronCodebase
                 return true;
             }
             
-            if (!StoryTagHelper.Check(card, gameDataHandler) || deck.Contains(card))
+            if (IsCardNotValidForDeck(card))
             {
                 return false;
             }
@@ -225,12 +251,18 @@ namespace CauldronCodebase
             return true;
         }
 
+        public bool IsCardNotValidForDeck(Encounter card)
+        {
+            return card is null || !StoryTagHelper.Check(card, gameDataHandler) || !CheckVisitorNotInDeck(card.villager) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
+        }
+        
+        private bool IsCardNotValidInDeck(Encounter card)
+        {
+            return !StoryTagHelper.Check(card, gameDataHandler) || !PriorityLaneProvider.CheckDevilValid(card, recipeBook);
+        }
+
         public Encounter GetTopCard()
         {
-            if (deck.Count == 0)
-            {
-                return null;
-            }
             if (loadedCard != null)
             {
                 currentCard = loadedCard;
@@ -238,9 +270,7 @@ namespace CauldronCodebase
             }
             else
             {
-                var topCard = deck.First();
-                deck.RemoveFirst();
-                currentCard = topCard;
+                currentCard = GetTopCardInternal();
             }
 
             if (gameDataHandler.currentDay < mainSettings.gameplay.daysWithUniqueStartingCards
@@ -250,13 +280,30 @@ namespace CauldronCodebase
                 SaveCurrentCardAsUnique();
             }
 
+            deckInfo = deck.ToArray();
             return currentCard;
+        }
+
+        private Encounter GetTopCardInternal()
+        {
+            Encounter topCard;
+            do
+            {
+                if (deck.Count == 0)
+                {
+                    DealCards(1);
+                }
+                topCard = deck.First();
+                deck.RemoveFirst();
+            } 
+            while (!StoryTagHelper.Check(topCard, gameDataHandler));
+            return topCard;
         }
 
         void SaveCurrentCardAsUnique()
         {
             rememberedCards.Add(currentCard.name);
-            EncounterListWrapper wrapper = new EncounterListWrapper { encounters = rememberedCards };
+            StringListWrapper wrapper = new StringListWrapper { list = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
             PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
             Debug.Log("unique cards: "+json);
@@ -265,7 +312,14 @@ namespace CauldronCodebase
 
         public void LoadData(GameData data, bool newGame)
         {
-            loadedCard = gameDataHandler.currentCard;
+            if (string.IsNullOrEmpty(data.CurrentEncounter))
+            {
+                loadedCard = null;
+            }
+            else
+            {
+                loadedCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
+            }
 
             deck = new LinkedList<Encounter>();
             cardPool = new List<Encounter>(15);
@@ -281,20 +335,35 @@ namespace CauldronCodebase
                     {
                         foreach (var key in data.CardPool)
                         {
-                            cardPool.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                            if (soDictionary.AllScriptableObjects.TryGetValue(key, out var card))
+                            {
+                                cardPool.Add((Encounter)card);
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"The card {key} was not found in the dictionary");
+                            }
                         }
                     }
+
+                    lastExtendedRoundNumber = data.LastExtendedPoolNumber;
 
                     if (data.CurrentDeck != null)
                     {
                         List<Encounter> currentDeck = new List<Encounter>();
                         foreach (var key in data.CurrentDeck)
                         {
-                            currentDeck.Add((Encounter)soDictionary.AllScriptableObjects[key]);
+                            if (soDictionary.AllScriptableObjects.TryGetValue(key, out var card))
+                            {
+                                currentDeck.Add((Encounter)card);
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"The card {key} was not found in the dictionary");
+                            }
                         }
 
                         deck = new LinkedList<Encounter>(currentDeck);
-                        Debug.Log("New deck");
                     }
 
                     break;
@@ -305,31 +374,40 @@ namespace CauldronCodebase
         {
             int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
             InitCardPool(round);
-            //if not first time
-            if (round != 0)
-            {
-                DealCards(2);
-                List<Recipe> loadRecipes = recipeProvider.LoadRecipes().ToList();
-                if (loadRecipes.Count < 20)
-                {
-                    deck.AddFirst(introCards[3]);
-                }
-                else
-                {
-                    deck.AddFirst(introCards[2]);
-                }
-            }
-            else
+            if (round == 0)
             {
                 DealCards(1);
                 deck.AddFirst(introCards[0]);
                 deck.AddLast(introCards[1]);
+                return;
             }
+            DealCards(2);
+            gameDataHandler.storyTags = StoryTagHelper.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            {
+                deck.AddFirst(introCards[6]);
+                PlayerPrefs.SetInt(PrefKeys.CovenIntroShown, 1);
+                return;
+            }
+            if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[5]);
+                return;
+            }
+            if (StoryTagHelper.CovenQuestEnabled(gameDataHandler))
+            {
+                deck.AddFirst(introCards[4]);
+                return;
+            }
+            List<Recipe> loadRecipes = recipeProvider.LoadRecipes().Where(x => x.magical).ToList();
+            deck.AddFirst(loadRecipes.Count < 18 ? introCards[3] : introCards[2]);
         }
 
         public void SaveData(ref GameData data)
         {
             if (data == null) return;
+            data.LastExtendedPoolNumber = lastExtendedRoundNumber;
+            
             data.CardPool.Clear();
             foreach (var card in cardPool)
             {

@@ -18,16 +18,17 @@ MonoBehaviour:
     defaultMoneyChangeEvent: 15
     cardsPerDay: 3
     cardsDealtAtNight: 3
-    targetDeckCount: 6
+    targetDeckCount: 3
     villagerDelay: 2
-    roundsWithUniqueStartingCards: 2
-    daysWithUniqueStartingCards: 5
+    roundsWithUniqueStartingCards: 1
+    daysWithUniqueStartingCards: 8
   statusBars:
-    Total: 80
-    MoneyTotal: 200
+    Total: 90
     InitialValue: 40
-    InitialThreshold: 30
-    thresholdDecrement: 10
+    CovenMoneyFee: 150
+    CovenCost: 30
+    InitialThreshold: 15
+    thresholdDecrement: 8
     minThreshold: 5
   catTips:
     SlowTipsDelay: 60
@@ -35,4 +36,5 @@ MonoBehaviour:
     ScaleCheckDelay: 5
     ChanceToFail: 20
     ChanceToUnlock: 60
-    WrongExperimentThreshold: 3
+    WrongExperimentThreshold: 2
+  recipeHintsStorage: {fileID: 11400000, guid: 5aa2f4101212212448e45eb49ae98841, type: 2}

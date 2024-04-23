@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,6 +10,8 @@ namespace CauldronCodebase
         public Gameplay gameplay;
         public StatusBars statusBars;
         public CatTips catTips;
+        [Expandable]
+        public RecipeHintsStorage recipeHintsStorage;
         
         [Serializable]
         public class Gameplay
@@ -43,8 +46,9 @@ namespace CauldronCodebase
         public class StatusBars
         {
             public int Total = 80;
-            public int MoneyTotal = 200;
             public int InitialValue = 40;
+            public int CovenMoneyFee = 200;
+            public int CovenCost = 50;
             [Tooltip("Percent distance from a bar end")]
             public float InitialThreshold = 30;
             [SerializeField] private float thresholdDecrement = 10;

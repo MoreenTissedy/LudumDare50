@@ -15,26 +15,29 @@ MonoBehaviour:
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
   addToDeckOnRound: -1
   requiredStoryTag: 
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: 0d966975a79f06248a6b3b48f3adf0e7, type: 2}
-  text: "Me husband has run away again. I know, that\u2019s your doing! Make me the
-    right potion, or else\u2026\r"
+  text: "Me husband has run away again. I don't know how much that bitch pays you,
+    but I'll double it! Make me the right potion, or else\u2026"
   hidden: 0
-  quest: 0
-  primaryInfluence: 3
-  secondaryInfluence: 2
-  primaryCoef: 1
+  fraction: 0
+  primaryInfluence: 1
+  secondaryInfluence: 3
+  primaryCoef: 2
   secondaryCoef: -1
   resultsByPotion:
   - potion: 1
-    influenceCoef: 1
+    influenceCoef: 0.5
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 11400000, guid: edd377496c6bdac4d99e49dd354bb3e3, type: 2}
   - potion: 0
-    influenceCoef: 0.3
+    influenceCoef: 0.5
     bonusEvent: {fileID: 0}
     bonusCard: {fileID: 11400000, guid: edd377496c6bdac4d99e49dd354bb3e3, type: 2}
   - potion: 3
-    influenceCoef: -0.5
+    influenceCoef: -1
     bonusEvent: {fileID: 11400000, guid: bff922796a3d0fd40a6a5741e1148626, type: 2}
     bonusCard: {fileID: 0}
   - potion: 4
@@ -42,10 +45,14 @@ MonoBehaviour:
     bonusEvent: {fileID: 11400000, guid: 4c178b798838b9d4bb76df857905c49c, type: 2}
     bonusCard: {fileID: 0}
   - potion: 13
-    influenceCoef: -0.25
+    influenceCoef: -1
     bonusEvent: {fileID: 11400000, guid: a64315df0740e1f4496007cdd14aed04, type: 2}
     bonusCard: {fileID: 0}
   - potion: 17
-    influenceCoef: -0.25
+    influenceCoef: -1
     bonusEvent: {fileID: 11400000, guid: d631daecbc3d94b4fb273fbbf12f0ab5, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 100
+    influenceCoef: -1
+    bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}

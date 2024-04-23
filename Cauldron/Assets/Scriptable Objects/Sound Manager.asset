@@ -35,10 +35,15 @@ MonoBehaviour:
   - GameEnd
   - EndingUnlock
   - SpecialEndingUnlock
+  - EndingPanelFold
+  - EndingButtonAppear
   musicKeys:
   - Menu
   - Location1
   - Location2
+  - Location3
+  - Location4
+  - Ending
   sounds:
   - Guid:
       Data1: -248018065
@@ -59,11 +64,11 @@ MonoBehaviour:
       Data4: 30564739
     Path: event:/Game/potion_brewed
   - Guid:
-      Data1: -448958082
-      Data2: 1213714196
-      Data3: -1428382556
-      Data4: 30564739
-    Path: event:/Game/potion_brewed
+      Data1: 472608145
+      Data2: 1157609419
+      Data3: -685312865
+      Data4: 1074406678
+    Path: event:/UX/potion_unlock
   - Guid:
       Data1: 99115271
       Data2: 1262855970
@@ -172,6 +177,18 @@ MonoBehaviour:
       Data3: 1913108927
       Data4: 585427627
     Path: event:/Game/ending_coven
+  - Guid:
+      Data1: 1652348379
+      Data2: 1288378387
+      Data3: 347446938
+      Data4: -449814235
+    Path: event:/UX/endings_map_paper
+  - Guid:
+      Data1: -1192150795
+      Data2: 1168490612
+      Data3: 2040268475
+      Data4: 1770204318
+    Path: event:/UX/endings_map_icons
   musics:
   - Guid:
       Data1: 150303394
@@ -184,13 +201,31 @@ MonoBehaviour:
       Data2: 1215088978
       Data3: 1710768003
       Data4: -1834542631
-    Path: event:/Location/House/mus
+    Path: event:/Location/House/bgm
   - Guid:
       Data1: 1153922902
       Data2: 1258888018
       Data3: -786064255
       Data4: -904282465
     Path: event:/Location/Forest/bgm
+  - Guid:
+      Data1: 1500000885
+      Data2: 1302996778
+      Data3: 1256878239
+      Data4: -1985450465
+    Path: event:/Location/Swamp/bgm
+  - Guid:
+      Data1: 1550814974
+      Data2: 1259040789
+      Data3: 1530023829
+      Data4: -2139428808
+    Path: event:/Location/Pumpkin_music
+  - Guid:
+      Data1: 1873430497
+      Data2: 1099801530
+      Data3: -480258174
+      Data4: -1728199754
+    Path: event:/Location/end_scene
   defaultVisitorSounds:
     Door:
       Guid:
@@ -256,3 +291,143 @@ MonoBehaviour:
         Data3: 397700530
         Data4: 1611905687
       Path: event:/Chars/Cat/annoy
+    Appear:
+      Guid:
+        Data1: -620094711
+        Data2: 1075212049
+        Data3: 1493578659
+        Data4: -1434785000
+      Path: event:/Chars/Cat/in
+  potionEffects:
+  - Guid:
+      Data1: 1047535419
+      Data2: 1253557614
+      Data3: 562990256
+      Data4: -1471715577
+    Path: event:/Game/Potions/love
+  - Guid:
+      Data1: 1685606579
+      Data2: 1094627102
+      Data3: 1566616507
+      Data4: 2016401866
+    Path: event:/Game/Potions/unlove
+  - Guid:
+      Data1: 1267498327
+      Data2: 1335165556
+      Data3: -1322414416
+      Data4: -1645912044
+    Path: event:/Game/Potions/strong
+  - Guid:
+      Data1: 1831093488
+      Data2: 1234120047
+      Data3: 1045842823
+      Data4: -1662442140
+    Path: event:/Game/Potions/hexing
+  - Guid:
+      Data1: 1370128321
+      Data2: 1280655049
+      Data3: -822830440
+      Data4: 1006623337
+    Path: event:/Game/Potions/poison
+  - Guid:
+      Data1: 362582004
+      Data2: 1094535067
+      Data3: 1020174268
+      Data4: -1544029696
+    Path: event:/Game/Potions/healing
+  - Guid:
+      Data1: -812259935
+      Data2: 1256342655
+      Data3: -658822480
+      Data4: -1606696779
+    Path: event:/Game/Potions/chamelion
+  - Guid:
+      Data1: -735930476
+      Data2: 1219399970
+      Data3: 1043506563
+      Data4: 169416707
+    Path: event:/Game/Potions/beauty
+  - Guid:
+      Data1: -639448077
+      Data2: 1327284836
+      Data3: 803627933
+      Data4: -1175867403
+    Path: event:/Game/Potions/sleep
+  - Guid:
+      Data1: -639448077
+      Data2: 1327284836
+      Data3: 803627933
+      Data4: -1175867403
+    Path: event:/Game/Potions/sleep
+  - Guid:
+      Data1: -1157310164
+      Data2: 1111267954
+      Data3: 632043711
+      Data4: -693531406
+    Path: event:/Game/Potions/laughter
+  - Guid:
+      Data1: 2030632597
+      Data2: 1300768158
+      Data3: 2029671571
+      Data4: 903095561
+    Path: event:/Game/Potions/voice
+  - Guid:
+      Data1: -768598598
+      Data2: 1313327370
+      Data3: 1002805400
+      Data4: -368827448
+    Path: event:/Game/Potions/memory
+  - Guid:
+      Data1: 160733199
+      Data2: 1254467735
+      Data3: -1132387680
+      Data4: -152118661
+    Path: event:/Game/Potions/wing
+  - Guid:
+      Data1: 486582163
+      Data2: 1119209448
+      Data3: 1150318777
+      Data4: -52591472
+    Path: event:/Game/Potions/foolishness
+  - Guid:
+      Data1: 1688733578
+      Data2: 1243649711
+      Data3: -258673501
+      Data4: -2102952097
+    Path: event:/Game/Potions/numb
+  - Guid:
+      Data1: 305267595
+      Data2: 1269436401
+      Data3: 173597072
+      Data4: 479678087
+    Path: event:/Game/Potions/perception
+  - Guid:
+      Data1: 1455374264
+      Data2: 1247705825
+      Data3: 1058288259
+      Data4: -180198344
+    Path: event:/Game/Potions/rejuvenation
+  - Guid:
+      Data1: -2107755242
+      Data2: 1171831600
+      Data3: -74035818
+      Data4: 2020655111
+    Path: event:/Game/Potions/speed
+  - Guid:
+      Data1: -802060397
+      Data2: 1175021307
+      Data3: -581629255
+      Data4: -603863019
+    Path: event:/Game/Potions/clumsiness
+  - Guid:
+      Data1: -1159894359
+      Data2: 1125128722
+      Data3: -107694416
+      Data4: -489474731
+    Path: event:/UX/potion_wrong
+  - Guid:
+      Data1: -949070972
+      Data2: 1233945169
+      Data3: -680635763
+      Data4: 1590538252
+    Path: event:/Game/nomagic_potion

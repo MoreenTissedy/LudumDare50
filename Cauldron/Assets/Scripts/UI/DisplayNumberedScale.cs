@@ -27,7 +27,14 @@ namespace CauldronCodebase
 
         private void UpdateMoney()
         {
-            text.text = $"{gameDataHandler.Money} / {settings.statusBars.MoneyTotal}";
+            if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
+            {
+                text.text = $"{gameDataHandler.Money} / {settings.statusBars.CovenMoneyFee}";
+            }
+            else
+            {
+                text.text = gameDataHandler.Money.ToString();
+            }
         }
     
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -14,6 +15,7 @@ namespace CauldronCodebase.GameStates
         private readonly GameStateMachine stateMachine;
 
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievements;
         private readonly EventResolver eventResolver;
         private readonly List<Encounter> storyCards;
         private readonly RecipeBook recipeBook;
@@ -27,9 +29,10 @@ namespace CauldronCodebase.GameStates
                           EncounterDeck cardDeck,
                           NightPanel nightPanel,
                           GameStateMachine stateMachine,
-                          RecipeBook book,
+                          RecipeBook recipeBook,
                           GameFXManager gameFXManager,
-                          StatusChecker statusChecker)
+                          StatusChecker statusChecker, 
+                          IAchievementManager achievements)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -38,10 +41,11 @@ namespace CauldronCodebase.GameStates
             this.nightPanel = nightPanel;
             this.stateMachine = stateMachine;
             this.gameFXManager = gameFXManager;
-            recipeBook = book;
+            this.recipeBook = recipeBook;
             this.statusChecker = statusChecker;
+            this.achievements = achievements;
 
-            eventResolver = new EventResolver(settings, gameDataHandler);
+            eventResolver = new EventResolver(settings, gameDataHandler, cardDeck);
             storyCards = new List<Encounter>(2);
         }
         
@@ -51,6 +55,7 @@ namespace CauldronCodebase.GameStates
             {
                 recipeBook.CloseBook();
             }
+            gameDataHandler.SetCurrentCard(null);
             EnterWithFX();
         }
 
@@ -60,46 +65,83 @@ namespace CauldronCodebase.GameStates
 
             gameDataHandler.CalculatePotionsOnLastDays();
             var events = nightEvents.GetEvents(gameDataHandler).ToList();
-            CheckStoryEnding(events);
+            CheckStoryEnding(in events);
             nightPanel.OpenBookWithEvents(events.ToArray());
-            nightPanel.OnClose += NightPanelOnOnClose;
             nightPanel.EventClicked += NightPanelOnEventClicked;
         }
 
-        private void CheckStoryEnding(List<NightEvent> events)
+        private void CheckStoryEnding(in List<NightEvent> events)
         {
+            List<NightEvent> extraEndingEvents = new List<NightEvent>();
+            NightEvent endingEvent = null;
             for (var index = 0; index < events.Count; index++)
             {
                 string tag = events[index].storyTag;
+                tag = tag.Split(',')[0];
                 if (tag.StartsWith("^"))
                 {
-                    storyEnding = tag.TrimStart('^').Trim();
-                    events.RemoveAt(index);
-                    break;
+                    if (string.IsNullOrEmpty(storyEnding))
+                    {
+                        endingEvent = events[index];
+                        storyEnding = tag.TrimStart('^').TrimStart('*').Trim();
+                    }
+                    else
+                    {
+                        extraEndingEvents.Add(events[index]);
+                    }
                 }
+            }
+
+            if (endingEvent != null)
+            {
+                events.Remove(endingEvent);
+                events.Add(endingEvent);
+            }
+            
+            foreach (var extraEndingEvent in extraEndingEvents)
+            {
+                events.Remove(extraEndingEvent);
             }
         }
 
         private void NightPanelOnEventClicked(NightEvent nightEvent)
         {
+            nightEvent.OnResolve();
+            achievements.TryUnlock(nightEvent);
+            eventResolver.ApplyStoryTag(nightEvent);
             eventResolver.ApplyModifiers(nightEvent);
             eventResolver.ApplyFractionShift(nightEvent.fractionData);
-            var priorityEvent = eventResolver.AddBonusCards(nightEvent);
-            if (priorityEvent)
+            eventResolver.ApplyRecipeHint(nightEvent.recipeHint);
+            var priorityCard = eventResolver.AddBonusCards(nightEvent);
+            if (priorityCard)
             {
-                storyCards.Add(priorityEvent);
+                storyCards.Add(priorityCard);
+            }
+            if (nightPanel.CurrentPage + 1 >= nightPanel.TotalPages)
+            {
+                OnAllEventsResolved();
             }
         }
 
-        private async void NightPanelOnOnClose()
+        private async void OnAllEventsResolved()
         {
             if (IsGameEnd()) return;
-            UpdateDeck();
-            await gameFXManager.ShowSunrise();
-            stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
+            AddStoryCardsToDeck();
+            if (!cardDeck.TryUpdateDeck())
+            {
+                storyEnding = EndingsProvider.END_DECK;
+                await nightPanel.AddEventAsLast(nightEvents.movingEnding);
+                nightPanel.NextPage();
+            }
+            else
+            {
+                nightPanel.CloseBook();
+                await gameFXManager.ShowSunrise();
+                stateMachine.SwitchState(GameStateMachine.GamePhase.Visitor);
+            }
         }
 
-        private void UpdateDeck()
+        private void AddStoryCardsToDeck()
         {
             gameDataHandler.NextDay();
             
@@ -108,9 +150,6 @@ namespace CauldronCodebase.GameStates
             {
                 storyCards.Add(priorityCard);
             }
-            
-            cardDeck.DealCardsTo(settings.gameplay.targetDeckCount - storyCards.Count);
-            cardDeck.ShuffleDeck();
             for (var i = storyCards.Count-1; i >= 0; i--)
             {
                 var storyCard = storyCards[i];
@@ -141,7 +180,7 @@ namespace CauldronCodebase.GameStates
             storyEnding = string.Empty;
             storyCards.Clear();
             gameFXManager.Clear();
-            nightPanel.OnClose -= NightPanelOnOnClose;
+            nightEvents.ClearJoinedEvents();
             nightPanel.EventClicked -= NightPanelOnEventClicked;
             if (nightPanel.IsOpen)
             {

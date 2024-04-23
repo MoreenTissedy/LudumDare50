@@ -1,5 +1,4 @@
-﻿using Save;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase.GameStates
@@ -15,6 +14,7 @@ namespace CauldronCodebase.GameStates
 
         private readonly EncounterResolver resolver;
         private readonly StatusChecker statusChecker;
+        private readonly IAchievementManager achievementManager;
 
         public VisitorState(EncounterDeck deck,
                             MainSettings settings,
@@ -24,16 +24,17 @@ namespace CauldronCodebase.GameStates
                             GameStateMachine stateMachine,
                             NightEventProvider nightEventProvider, 
                             SoundManager soundManager,
-                            StatusChecker statusChecker)
+                            StatusChecker statusChecker, 
+                            IAchievementManager achievementManager)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
             this.visitorManager = visitorManager;
-            this.visitorManager.VisitorLeft += VisitorLeft;
             this.cauldron = cauldron;
             this.stateMachine = stateMachine;
             this.soundManager = soundManager;
             this.statusChecker = statusChecker;
+            this.achievementManager = achievementManager;
 
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
@@ -46,29 +47,37 @@ namespace CauldronCodebase.GameStates
                 cardDeck.AddToDeck(priorityCard, true);
             }
             Encounter currentCard = cardDeck.GetTopCard();
+            if(currentCard is null) return;
+            
             gameDataHandler.SetCurrentCard(currentCard);
-
-            if (gameDataHandler.currentCard is null)
-            {
-                Debug.LogError("Run out of cards!");
-                return;
-            }
                      
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
+            visitorManager.VisitorLeft += OnVisitorLeft;
         }
-        
+
         public override void Exit()
         {
             gameDataHandler.cardsDrawnToday++;
             cauldron.PotionAccepted -= EndEncounter;
+            visitorManager.VisitorLeft -= OnVisitorLeft;
             visitorManager.Exit();           
+        }
+
+        private void OnVisitorLeft()
+        {
+            EndEncounter(Potions.Placebo);
         }
 
         private void EndEncounter(Potions potion)
         {
+            if (!EncounterIdents.GetAllSpecialCharacters().Contains(gameDataHandler.currentCard.villager.name))
+            {
+                achievementManager.TryUnlock(AchievIdents.FIRST_POTION);
+            }
             SignalPotionSuccess(potion);
-            gameDataHandler.AddPotion(potion, !resolver.EndEncounter(potion));
+            bool potionEffective = resolver.EndEncounter(potion);
+            gameDataHandler.AddPotion(potion, !potionEffective);
             stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
 
@@ -85,11 +94,6 @@ namespace CauldronCodebase.GameStates
                 soundManager.Play(Sounds.PotionFailure);
                 visitorManager.PlayReaction(false);
             }
-        }
-
-        private void VisitorLeft()
-        {
-            stateMachine.SwitchState(GameStateMachine.GamePhase.VisitorWaiting);
         }
     }
 }

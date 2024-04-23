@@ -1,9 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
 
 namespace CauldronCodebase
 {
+    [Obsolete]
     public class TutorialButton : GrowOnMouseEnter
     {
         public Tutorial tutorialScript;

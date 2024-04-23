@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using CauldronCodebase.GameStates;
 using Save;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
@@ -42,16 +41,16 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
+        
         public FractionStatus fractionStatus;
+        public bool fractionEventTriggered;
+        
         public EncounterDeck currentDeck;
-        public NightEventProvider currentEvents;
 
-        private MainSettings.StatusBars statusSettings;
+        public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
 
-        private DataPersistenceManager dataPersistenceManager;
         public event Action StatusChanged;
-        public event Action<Encounter> OnNewCard; 
 
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
@@ -62,20 +61,36 @@ namespace CauldronCodebase
 
         private SODictionary soDictionary;
         
-        public void Init(MainSettings settings, EncounterDeck deck, NightEventProvider events, DataPersistenceManager dataManager, SODictionary dictionary)
+        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager, SODictionary dictionary)
         {
             soDictionary = dictionary;
-
-            dataPersistenceManager = dataManager;
+            
             dataManager.AddToDataPersistenceObjList(this);
 
             statusSettings = settings.statusBars;
-            gameplaySettings = settings.gameplay;
             
             currentDeck = deck;
-            currentEvents = events;
 
             fractionStatus = new FractionStatus();
+            
+            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
+            {
+                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
+            }
+            else
+            {
+                currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            }
+        }
+
+        public bool IsEnoughMoneyForRumours()
+        {
+            return Money >= statusSettings.CovenCost;
+        }
+
+        public void BuyRumour()
+        {
+            money -= statusSettings.CovenCost;
         }
 
         public void AddTag(string tag)
@@ -122,8 +137,8 @@ namespace CauldronCodebase
             if (type == Statustype.Money && num < 0)
                 return statValue;
             statValue += num;
-            if (statValue > ((type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total))
-                statValue = (type == Statustype.Money) ? statusSettings.MoneyTotal : statusSettings.Total;
+            if (statValue > ((type == Statustype.Money) ? 5000 : statusSettings.Total))
+                statValue = (type == Statustype.Money) ? 5000 : statusSettings.Total;
             else if (statValue < 0)
                 statValue = 0;
             switch (type)
@@ -145,7 +160,6 @@ namespace CauldronCodebase
         public void SetCurrentCard(Encounter card)
         {
             currentCard = card;
-            OnNewCard?.Invoke(currentCard);
         }
 
         public int Add(Statustype type, int value)
@@ -225,6 +239,7 @@ namespace CauldronCodebase
             currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
+                Debug.Log("wrong potion");
                 wrongPotionsCount++; // for global statistic
                 currentDayPotions.WrongPotions++;
             }
@@ -268,7 +283,6 @@ namespace CauldronCodebase
         {
             //refaaactor me
             if(data is null) return;
-
             status = data.Status;
             if (newGame)
             {
@@ -288,6 +302,7 @@ namespace CauldronCodebase
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
             fractionStatus.Load(data.FractionData);
+            fractionEventTriggered = data.FractionEventTriggered;
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -323,12 +338,17 @@ namespace CauldronCodebase
             data.StoryTags = storyTags;
             data.Phase = gamePhase;
             data.FractionData = fractionStatus.Save();
+            data.FractionEventTriggered = fractionEventTriggered;
 
-            if (currentCard != null)
+            if (currentCard == null)
+            {
+                data.CurrentEncounter = string.Empty;
+            }
+            else
             {
                 data.CurrentEncounter = currentCard.name;
             }
-            
+
             data.PotionsTotalOnRun.Clear();
             foreach (var potion in potionsTotal)
             {

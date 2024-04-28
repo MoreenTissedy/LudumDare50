@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -9,20 +7,32 @@ namespace CauldronCodebase
     {
         public static void SaveMilestone(string tag)
         {
+            SaveTag(tag, PrefKeys.Milestones);
+        }
+
+        public static void SaveFreeze(string tag)
+        {
+            SaveTag(tag, PrefKeys.Freezes);
+        }
+
+        private static void SaveTag(string tag, string prefKey)
+        {
             StringListWrapper tags;
-            if (PlayerPrefs.HasKey(PrefKeys.Milestones))
+            if (PlayerPrefs.HasKey(prefKey))
             {
-                var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+                var encodedTags = PlayerPrefs.GetString(prefKey);
                 tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
             }
             else
             {
                 tags = new StringListWrapper();
             }
+
             if (!tags.list.Contains(tag))
             {
                 tags.list.Add(tag);
-                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+                PlayerPrefs.SetString(prefKey, JsonUtility.ToJson(tags));
+                Debug.Log($"[Prefs save: {prefKey}] {tags}");
             }
         }
 
@@ -38,6 +48,18 @@ namespace CauldronCodebase
             }
             return new List<string>();
         }
+        
+        public static List<string> GetFreezes()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.Freezes))
+            {
+                var encodedTags = PlayerPrefs.GetString(PrefKeys.Freezes);
+                var cooldowns = JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
+                Debug.Log($"[Prefs load: {PrefKeys.Freezes}] {cooldowns}");
+                return cooldowns;
+            }
+            return new List<string>();
+        }
 
         private static void RunCompatibilityUpdate()
         {
@@ -49,21 +71,33 @@ namespace CauldronCodebase
 
         public static bool RemoveMilestone(string tag)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            return RemoveTag(tag, PrefKeys.Milestones);
+        }
+        
+        public static bool RemoveFreeze(string tag)
+        {
+            return RemoveTag(tag, PrefKeys.Freezes);
+        }
+
+        private static bool RemoveTag(string tag, string prefKey)
+        {
+            if (!PlayerPrefs.HasKey(prefKey))
             {
                 return false;
             }
-            var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
+
+            var encodedTags = PlayerPrefs.GetString(prefKey);
             var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
             if (tags.list.Remove(tag))
             {
-                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
+                PlayerPrefs.SetString(prefKey, JsonUtility.ToJson(tags));
+                Debug.Log($"[Prefs remove: {prefKey}] {tag}");
                 return true;
             }
 
             return false;
         }
-        
+
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
         {
             return Check(card.requiredStoryTag, gameDataHandler);

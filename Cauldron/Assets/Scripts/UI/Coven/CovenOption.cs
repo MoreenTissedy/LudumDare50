@@ -25,6 +25,10 @@ namespace CauldronCodebase
 
         private void OnEnable()
         {
+            if (!gameDataHandler)
+            {
+                return;
+            }
             blackout.SetActive(!gameDataHandler.IsEnoughMoneyForRumours());
             callToAction.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
             interactable = gameDataHandler.IsEnoughMoneyForRumours();

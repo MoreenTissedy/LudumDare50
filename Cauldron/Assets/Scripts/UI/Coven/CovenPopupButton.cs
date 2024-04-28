@@ -22,7 +22,10 @@ namespace CauldronCodebase
 
         private void OnEnable()
         {
-            activeGlow.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
+            if (gameDataHandler)
+            {
+                activeGlow.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
+            }
         }
 
         public override void OnPointerClick(PointerEventData eventData)

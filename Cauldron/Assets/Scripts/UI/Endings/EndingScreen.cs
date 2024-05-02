@@ -118,10 +118,7 @@ namespace CauldronCodebase
                 }
                 button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
-            if (tag != "none" && !endings.Unlocked(tag))
-            {
-                endings.Unlock(tag);
-            }
+            endings.TryUnlock(tag);
             if (buttonToUnlock != null)
             {
                 await UniTask.Delay(250);

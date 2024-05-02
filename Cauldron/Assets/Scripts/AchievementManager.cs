@@ -71,7 +71,7 @@ namespace CauldronCodebase
                 return false;
             }
             bool unlocked = achievement.Trigger();
-            if (unlocked) Debug.LogError($"Achievement {id} unlocked!");
+            if (unlocked) Debug.Log($"Achievement {id} unlocked!");
             else Debug.LogError($"Achievement {id} failed to unlock!");
             return unlocked;
         }

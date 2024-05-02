@@ -55,7 +55,7 @@ namespace CauldronCodebase
             {
                 var encodedTags = PlayerPrefs.GetString(PrefKeys.Freezes);
                 var cooldowns = JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
-                Debug.Log($"[Prefs load: {PrefKeys.Freezes}] {cooldowns}");
+                Debug.Log($"[Prefs load: {PrefKeys.Freezes}] {encodedTags}");
                 return cooldowns;
             }
             return new List<string>();

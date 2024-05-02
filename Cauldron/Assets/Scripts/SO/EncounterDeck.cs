@@ -83,6 +83,7 @@ namespace CauldronCodebase
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
+            freezeList = StoryTagHelper.GetFreezes();
         }
 
         /// <summary>
@@ -267,11 +268,6 @@ namespace CauldronCodebase
 
         private bool CheckAndRemoveFreeze(Encounter card)
         {
-            if (freezeList is null)
-            {
-                freezeList = StoryTagHelper.GetFreezes();
-            }
-
             if (freezeList.Contains(card.villager.name))
             {
                 freezeList.Remove(card.villager.name);

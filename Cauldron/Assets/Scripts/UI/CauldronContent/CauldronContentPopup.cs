@@ -29,12 +29,12 @@ public class CauldronContentPopup : MonoBehaviour
         this.cauldron = cauldron;
         this.ingredientsData = ingredientsData;
         this.recipeBook = recipeBook;
+        
+        recipeBook.OnSelectIncorrectRecipe += TriggerPopUp;
     }
 
     private void Start()
     {
-        recipeBook.OnSelectIncorrectRecipe += TriggerPopUp;
-        
         rectTransform = GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(0, hiddenPosition);
     }

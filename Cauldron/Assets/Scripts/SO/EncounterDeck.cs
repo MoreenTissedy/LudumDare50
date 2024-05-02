@@ -47,6 +47,8 @@ namespace CauldronCodebase
         private RecipeBook recipeBook;
         private int lastExtendedRoundNumber;
 
+        private List<string> freezeList;
+
         public bool TryUpdateDeck()
         {
             var validDeckCount = deck.Count(x => !IsCardNotValidInDeck(x));
@@ -81,6 +83,7 @@ namespace CauldronCodebase
             dataPersistenceManager.AddToDataPersistenceObjList(this);
 
             InitRememberedCards();
+            freezeList = StoryTagHelper.GetFreezes();
         }
 
         /// <summary>
@@ -105,12 +108,13 @@ namespace CauldronCodebase
         {
             if (round == 0 || (round > mainSettings.gameplay.roundsWithUniqueStartingCards))
             {
-                totalPool.AddRange(pool.cards);
+                totalPool.AddRange(Shuffle(pool.cards.ToList()));
             }
             else
             {
-                totalPool.AddRange(pool.cards
-                    .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x])).ToArray());
+                totalPool.AddRange(Shuffle(pool.cards
+                    .Except(rememberedCards.Select(x => (Encounter) soDictionary.AllScriptableObjects[x]))
+                    .ToList()));
             }
         }
 
@@ -181,12 +185,18 @@ namespace CauldronCodebase
                 bool cardFound = false;
                 for (int j = 0; j< 10; j++)
                 {
-                    int randomIndex = Random.Range(0, cardPool.Count);
-                    if (AddToDeck(cardPool[randomIndex]))
+                    if (AddToDeck(cardPool[j]))
                     {
-                        cardPool.RemoveAt(randomIndex);
+                        cardPool.RemoveAt(j);
                         cardFound = true;
                         break;
+                    }
+                    else
+                    {
+                        //send to back
+                        var card = cardPool[j];
+                        cardPool.RemoveAt(j);
+                        cardPool.Add(card);
                     }
                 }
                 if (!cardFound)
@@ -238,6 +248,11 @@ namespace CauldronCodebase
             {
                 return false;
             }
+
+            if (CheckAndRemoveFreeze(card))
+            {
+                return false;
+            }
             
             if (asFirst)
             {
@@ -249,6 +264,18 @@ namespace CauldronCodebase
             }
             deckInfo = deck.ToArray();
             return true;
+        }
+
+        private bool CheckAndRemoveFreeze(Encounter card)
+        {
+            if (freezeList.Contains(card.villager.name))
+            {
+                freezeList.Remove(card.villager.name);
+                StoryTagHelper.RemoveFreeze(card.villager.name);
+                return true;
+            }
+
+            return false;
         }
 
         public bool IsCardNotValidForDeck(Encounter card)

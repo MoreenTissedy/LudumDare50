@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: nest_harvester
+  m_Name: nest_harvester_2
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
-  addToDeckOnRound: -1
+  addToDeckOnRound: 1
   requiredStoryTag: 
   recipeHintConfig:
     recipe: 99
@@ -31,25 +31,21 @@ MonoBehaviour:
   hidden: 0
   fraction: 0
   primaryInfluence: 3
-  secondaryInfluence: 1
+  secondaryInfluence: 0
   primaryCoef: 1
   secondaryCoef: 1
   resultsByPotion:
-  - potion: 16
-    influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: 01e9f62194ebdaf4e85a903a04939d9a, type: 2}
-    bonusCard: {fileID: 0}
   - potion: 13
     influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
+    bonusEvent: {fileID: 0}
+    bonusCard: {fileID: 0}
+  - potion: 101
+    influenceCoef: 1
+    bonusEvent: {fileID: 0}
     bonusCard: {fileID: 0}
   - potion: 2
     influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 9
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
+    bonusEvent: {fileID: 11400000, guid: 69c24ce75d62c59478fdd593c09bac41, type: 2}
     bonusCard: {fileID: 0}
   - potion: 14
     influenceCoef: -1

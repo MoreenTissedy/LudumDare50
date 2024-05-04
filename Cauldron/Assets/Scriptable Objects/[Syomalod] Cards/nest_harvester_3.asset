@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 573c5d7fbab04752856213f3c1a1f00e, type: 3}
-  m_Name: nest_harvester
+  m_Name: nest_harvester_3
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
   addToDeckOnRound: -1
@@ -18,7 +18,7 @@ MonoBehaviour:
   recipeHintConfig:
     recipe: 99
     level: 1
-  villager: {fileID: 11400000, guid: 2313e6b70c26e3443adbf09480e1374b, type: 2}
+  villager: {fileID: 11400000, guid: 96fbdaa5f01882c4199f99a28648b5dd, type: 2}
   text: "\u0412 \u043B\u0435\u0441\u0430\u0445 \u0434\u0438\u0447\u044C \u0431\u0438\u0442\u044C
     \u0437\u0430\u043F\u0440\u0435\u0442\u0438\u043B\u0438, \u0437\u0430 \u0440\u044B\u0431\u0443
     \u0432\u043E\u0432\u0441\u0435 \u043F\u043B\u0435\u0442\u044C\u043C\u0438 \u0432\u044B\u043F\u043E\u0440\u043E\u0442\u044C
@@ -29,53 +29,33 @@ MonoBehaviour:
     \u041D\u0430 \u043D\u0438\u0445 \u043F\u043E\u043A\u0430 \u0437\u0430\u043F\u0440\u0435\u0442\u043E\u0432
     \u043D\u0435\u0442."
   hidden: 0
-  fraction: 0
-  primaryInfluence: 3
+  fraction: 2
+  primaryInfluence: 2
   secondaryInfluence: 1
-  primaryCoef: 1
-  secondaryCoef: 1
+  primaryCoef: -1
+  secondaryCoef: 0.5
   resultsByPotion:
-  - potion: 16
+  - potion: 0
     influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: 01e9f62194ebdaf4e85a903a04939d9a, type: 2}
+    bonusEvent: {fileID: 11400000, guid: c33f8889db7ce5a4798612621798d60d, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 13
+  - potion: 12
     influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 2
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 9
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 14
-    influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 2361ff929437c01468f34b42c6f4caf5, type: 2}
+    bonusEvent: {fileID: 11400000, guid: 4925bac6108f3384ab3cdadb5ca38751, type: 2}
     bonusCard: {fileID: 0}
   - potion: 4
     influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 4b1c68fbc969303489e79035382e2e44, type: 2}
+    bonusEvent: {fileID: 11400000, guid: 6e03ca1d2169dd149afdd153f69944ff, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 3
-    influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 4b1c68fbc969303489e79035382e2e44, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 15
-    influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 4b1c68fbc969303489e79035382e2e44, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 19
-    influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 4b1c68fbc969303489e79035382e2e44, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 0
+  - potion: 14
     influenceCoef: -0.5
-    bonusEvent: {fileID: 11400000, guid: 9489b16286f4cf24ebceaa5397682101, type: 2}
+    bonusEvent: {fileID: 11400000, guid: d21d7e40b664f9848a347ea1fcf046cb, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 100
+  - potion: 11
     influenceCoef: -0.5
-    bonusEvent: {fileID: 11400000, guid: ef1e0de90e0b2b640abee28b673fd659, type: 2}
+    bonusEvent: {fileID: 11400000, guid: d21d7e40b664f9848a347ea1fcf046cb, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 10
+    influenceCoef: -0.5
+    bonusEvent: {fileID: 11400000, guid: d21d7e40b664f9848a347ea1fcf046cb, type: 2}
     bonusCard: {fileID: 0}

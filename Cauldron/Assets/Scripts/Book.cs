@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Zenject;
 
@@ -21,6 +22,7 @@ namespace CauldronCodebase
         private float offScreenYPos, initialYPos;
         protected int currentPage = 0;
         protected int totalPages = 3;
+        protected Controls controls;
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
 
@@ -29,6 +31,7 @@ namespace CauldronCodebase
         [Inject] protected SoundManager SoundManager;
         
         public event Action OnClose;
+        
         protected virtual void Awake()
         {
             //cache initial position
@@ -38,26 +41,29 @@ namespace CauldronCodebase
             
             bookObject.enabled = false;
             UpdateBookButtons();
+            
+            controls = new Controls(); //inject me
+            controls.General.Enable();
+            controls.General.Exit.performed += (_) => CloseBook();
+            if (keyboardControl)
+            {
+                controls.General.BookNavigate.performed += ProcessNavigate;
+            }
         }
 
-        protected virtual void Update()
+        private void ProcessNavigate(InputAction.CallbackContext input)
         {
-            if (!keyboardControl)
-                return;
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            var leftRight = input.ReadValue<Vector2>().x;
+            if (leftRight > 0)
             {
                 NextPage();
             }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            else if (leftRight < 0)
             {
                 PrevPage();
             }
-            else if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                CloseBook();
-            }
         }
-        
+
         protected abstract void InitTotalPages();
         protected abstract void UpdatePage();
         

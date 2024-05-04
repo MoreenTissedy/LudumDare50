@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 namespace CauldronCodebase
@@ -11,20 +12,20 @@ namespace CauldronCodebase
         private void Construct(RecipeBook recipeBook)
         {
             this.recipeBook = recipeBook;
+            var controls = new Controls();
+            controls.General.Enable();
+            controls.General.Exit.performed += Process;
         }
-        
-        private void Update()
+
+        private void Process(InputAction.CallbackContext context)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (recipeBook.IsOpen)
             {
-                if (recipeBook.IsOpen)
-                {
-                    recipeBook.CloseBook();
-                }
-                else if (!GameLoader.IsMenuOpen())
-                {
-                    GameLoader.LoadMenu();
-                }
+                return;
+            }
+            else if (!GameLoader.IsMenuOpen())
+            {
+                GameLoader.LoadMenu();
             }
         }
     }

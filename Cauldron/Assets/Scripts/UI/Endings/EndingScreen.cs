@@ -129,7 +129,7 @@ namespace CauldronCodebase
             closeButton.gameObject.SetActive(true);
         }
 
-        public async void Close()
+        public void Close()
         {
             if (!active)
             {

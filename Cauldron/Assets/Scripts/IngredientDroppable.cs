@@ -50,7 +50,7 @@ namespace CauldronCodebase
 
         private void ChangeText()
         {
-            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified");
+            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified").Forget();
         }
         
         [Inject]

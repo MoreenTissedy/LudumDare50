@@ -106,6 +106,7 @@ namespace CauldronCodebase
                 InitTotalPages();
                 OpenPage(0);
             };
+            controls.General.BookToggle.performed += (_) => ToggleBook();
         }
 
         private void InitEndingsMap()
@@ -294,13 +295,6 @@ namespace CauldronCodebase
 
         }
 
-        protected override void Update()
-        {
-            base.Update();
-            if (Input.GetKeyDown(KeyCode.Space))
-                ToggleBook();
-        }
-
         private void SortPotions()
         {
             List<Recipe> lockedMagicalRecipes = allMagicalRecipes.Except(unlockedRecipes).ToList();
@@ -452,7 +446,7 @@ namespace CauldronCodebase
             ingredientsDisplay.SetActive(false);
         }
         
-        public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
+        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             tooltipManager.DisableAllHighlights();
             
@@ -486,7 +480,7 @@ namespace CauldronCodebase
             tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
         }
 
-        public async UniTaskVoid SwitchHighlight(List<Ingredients> ingredients)
+        public void SwitchHighlight(List<Ingredients> ingredients)
         {
             tooltipManager.DisableAllHighlights();
             

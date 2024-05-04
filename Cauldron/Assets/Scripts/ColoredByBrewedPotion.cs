@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -27,7 +28,7 @@ namespace CauldronCodebase
         private Cauldron cauldron;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private ParticleSystem particleSystem;
+        [FormerlySerializedAs("particleSystem")] [SerializeField] private ParticleSystem theParticleSystem;
         
         
         [Inject]
@@ -40,7 +41,7 @@ namespace CauldronCodebase
         private void OnValidate()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
-            particleSystem = GetComponent<ParticleSystem>();
+            theParticleSystem = GetComponent<ParticleSystem>();
             if (!tween)
             {
                 tweenTime = 0;
@@ -72,7 +73,7 @@ namespace CauldronCodebase
             { 
                 StartCoroutine(tween ? DoTweenColor(neutralColor, tweenTime) : SetColor(neutralColor)); 
             } 
-            if (particleSystem) 
+            if (theParticleSystem) 
             { 
                 StartCoroutine(tween ? DoTweenColor(neutralColor, tweenTime) : SetColor(neutralColor)); 
             } 
@@ -96,9 +97,9 @@ namespace CauldronCodebase
                 ChangeColor(color, spriteRenderer);
             }
 
-            if (particleSystem)
+            if (theParticleSystem)
             {
-                ChangeColor(color, particleSystem);
+                ChangeColor(color, theParticleSystem);
             }
         }
         
@@ -123,9 +124,9 @@ namespace CauldronCodebase
                 currentAlpha = spriteRenderer.color.a;
             }
 
-            if (particleSystem)
+            if (theParticleSystem)
             {
-                currentAlpha = particleSystem.main.startColor.color.a;
+                currentAlpha = theParticleSystem.main.startColor.color.a;
             }
             
             Color.RGBToHSV(color, out float h, out float s, out float v);
@@ -160,15 +161,15 @@ namespace CauldronCodebase
                 }
             }
 
-            if (particleSystem)
+            if (theParticleSystem)
             {
-                Color startColor = particleSystem.main.startColor.color;
+                Color startColor = theParticleSystem.main.startColor.color;
                 while (timer < time)
                 {
                     timer += Time.deltaTime;
                     float blend = Mathf.Clamp01(timer / time);
                     Color blendedColor = Color.Lerp(startColor, color, blend);
-                    var main = particleSystem.main;
+                    var main = theParticleSystem.main;
                     main.startColor = blendedColor;
                     yield return null;
                 }
@@ -177,9 +178,9 @@ namespace CauldronCodebase
 
         private IEnumerator SetColor(Color color)
         {
-            if (particleSystem)
+            if (theParticleSystem)
             {
-                var main = particleSystem.main;
+                var main = theParticleSystem.main;
                 yield return new WaitForSeconds(delay);
                 main.startColor = color;
             }

@@ -64,12 +64,12 @@ namespace CauldronCodebase
             recipeBook.CheatUnlockAutoCooking();
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Debug.LogWarning(gameDataHandler.fractionStatus);
-            }
-        }
+        // private void Update()
+        // {
+        //     if (Input.GetKeyDown(KeyCode.S))
+        //     {
+        //         Debug.LogWarning(gameDataHandler.fractionStatus);
+        //     }
+        // }
     }
 }

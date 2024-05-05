@@ -67,6 +67,7 @@ namespace CauldronCodebase
         public static int MAX_COMBINATIONS_COUNT = 120;
 
         private Mode currentMode;
+        public Mode CurrentMode => currentMode;
         public enum Mode
         {
             Magical,
@@ -106,7 +107,6 @@ namespace CauldronCodebase
                 InitTotalPages();
                 OpenPage(0);
             };
-            controls.General.BookToggle.performed += (_) => ToggleBook();
         }
 
         private void InitEndingsMap()

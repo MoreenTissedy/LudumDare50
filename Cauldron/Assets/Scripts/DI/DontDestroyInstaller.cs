@@ -30,6 +30,7 @@ namespace CauldronCodebase
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
+            Container.Bind<InputManager>().FromNew().AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
             
             SetInitialResolution();

@@ -22,15 +22,22 @@ namespace CauldronCodebase
         private float offScreenYPos, initialYPos;
         protected int currentPage = 0;
         protected int totalPages = 3;
-        protected Controls controls;
         public int CurrentPage => currentPage;
         public int TotalPages => totalPages;
 
         public bool IsOpen { get; private set; }
 
-        [Inject] protected SoundManager SoundManager;
+        protected SoundManager SoundManager;
+        private Controls controls;
         
         public event Action OnClose;
+
+        [Inject]
+        protected virtual void ConstructBase(SoundManager soundManager, InputManager inputManager)
+        {
+            SoundManager = soundManager;
+            controls = inputManager.Controls;
+        }
         
         protected virtual void Awake()
         {
@@ -42,8 +49,6 @@ namespace CauldronCodebase
             bookObject.enabled = false;
             UpdateBookButtons();
             
-            controls = new Controls(); //inject me
-            controls.General.Enable();
             controls.General.Exit.performed += (_) => CloseBook();
             if (keyboardControl)
             {

@@ -4,6 +4,8 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using Universal;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -13,6 +15,8 @@ namespace CauldronCodebase
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
+        private const float doubleClickTime = 0.5f;
+        
         public Ingredients ingredient;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
@@ -30,6 +34,7 @@ namespace CauldronCodebase
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
+        private float lastClickTime = -1000f;
 
         private CatAnimations catAnimations;
         private Cauldron cauldron;
@@ -126,7 +131,9 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.clickCount >= 2)
+            bool doubleClick = Time.timeSinceLevelLoad - lastClickTime < doubleClickTime;
+            lastClickTime = Time.timeSinceLevelLoad;
+            if (doubleClick || Gamepad.current != null)
             {
                 ThrowInCauldron().Forget();
             }

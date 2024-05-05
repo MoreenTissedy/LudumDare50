@@ -8,6 +8,7 @@ namespace CauldronCodebase
         {
             Controls = new Controls();
             Controls.General.Enable();
+            Controls.UI.Enable();
             
             //debug
         }

@@ -9,6 +9,7 @@ namespace CauldronCodebase
     {
         private RecipeBook recipeBook;
         private int recipeBookModeTotal;
+        private Controls controls;
 
         [Inject]
         private void Construct(RecipeBook recipeBook, InputManager inputManager)
@@ -16,13 +17,18 @@ namespace CauldronCodebase
             this.recipeBook = recipeBook;
             recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length;
             
-            var controls = inputManager.Controls;
+            controls = inputManager.Controls;
             
             controls.General.Exit.performed += ProcessExit;
-            controls.General.BookToggle.performed += (_) => recipeBook.ToggleBook();
+            controls.General.BookToggle.performed += ToggleBook;
             controls.General.BookNavigate.performed += BookNavigateUpDown;
         }
 
+        private void ToggleBook(InputAction.CallbackContext input)
+        {
+            recipeBook.ToggleBook();
+        }
+        
         private void BookNavigateUpDown(InputAction.CallbackContext input)
         {
             float upDown = input.ReadValue<Vector2>().y;
@@ -47,6 +53,13 @@ namespace CauldronCodebase
             {
                 GameLoader.LoadMenu();
             }
+        }
+
+        private void OnDestroy()
+        {
+            controls.General.Exit.performed -= ProcessExit;
+            controls.General.BookToggle.performed -= ToggleBook;
+            controls.General.BookNavigate.performed -= BookNavigateUpDown;
         }
     }
 }

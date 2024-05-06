@@ -580,9 +580,7 @@ namespace UnityEngine.InputSystem.UI
             UpdateMotion();
             if (isUseGamePad == false)
             {
-                Debug.LogError(Mouse.current.position.ReadValue());
                 InputState.Change(m_VirtualMouse.position, Mouse.current.position.ReadValue());
-                Debug.LogError(m_VirtualMouse.position.ReadValue());
             }
         }
 

@@ -3,6 +3,7 @@ using EasyLoc;
 using FMODUnity;
 using Save;
 using UnityEngine;
+using Universal;
 using UnityEngine.InputSystem.UI;
 using Zenject;
 
@@ -21,8 +22,12 @@ namespace CauldronCodebase
         [SerializeField] private FadeController fadeController;
         public override void InstallBindings()
         {
-            Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
+            GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
+            Camera mainCameraScript = cameraInstance.GetComponent<Camera>();
+            CameraAdapt cameraAdaptation = cameraInstance.GetComponent<CameraAdapt>();
+            Container.Bind<CameraAdapt>().FromInstance(cameraAdaptation).AsSingle();
             Container.Bind<Camera>().FromInstance(mainCameraScript).AsSingle();
+            
             Container.Bind<CatTipsProvider>().FromInstance(catTipsProvider).AsSingle();
             Container.Bind<SODictionary>().FromInstance(soDictionary).AsSingle();
             soDictionary.LoadDictionary();
@@ -37,7 +42,7 @@ namespace CauldronCodebase
             Container.Bind<VirtualMouseInput>().FromInstance(virtualMouseInput).AsSingle();
             
             SetPointerSpeed();
-            SetInitialResolution();
+            SetInitialResolution(cameraAdaptation);
             SetSoundVolume();
         }
 
@@ -53,7 +58,7 @@ namespace CauldronCodebase
             }
         }
 
-        private static void SetInitialResolution()
+        private static void SetInitialResolution(CameraAdapt cameraAdaptation)
         {
             bool fullscreenMode = true;
             if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
@@ -63,18 +68,20 @@ namespace CauldronCodebase
 
             if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
             {
-                var resolutions = Screen.resolutions;
-                int newResolution = PlayerPrefs.GetInt(PrefKeys.ResolutionSettings);
-                if (resolutions.Length > newResolution)
+                string newResolution = PlayerPrefs.GetString(PrefKeys.ResolutionSettings);
+                foreach (Resolution resolution in Screen.resolutions)
                 {
-                    Resolution savedResolution = resolutions[newResolution];
-                    Screen.SetResolution(savedResolution.width, savedResolution.height, fullscreenMode, savedResolution.refreshRate);
-                    return;
+                    if (resolution.ToString() == newResolution)
+                    {
+                        Screen.SetResolution(resolution.width, resolution.height, fullscreenMode, resolution.refreshRate);
+                        break;
+                    }
                 }
-                PlayerPrefs.DeleteKey(PrefKeys.ResolutionSettings);
             }
-            var chosenResolution = GetOptimalResolution(1080f / 1920);
-            Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
+            
+            cameraAdaptation.Rebuild();
+            //var chosenResolution = GetOptimalResolution(1080f / 1920);
+            //Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
         }
 
         private void SetSoundVolume()

@@ -57,6 +57,7 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
 
         [Inject] private LocalizationTool locTool;
+        [Inject] private CameraAdapt cameraAdaptation;
         [Inject] private VirtualMouseInput virtualMouse;
         private bool fullscreenMode;
         private bool autoCookingMode;
@@ -156,13 +157,16 @@ namespace CauldronCodebase
             resolutions = Screen.resolutions;
             resolutionDropdown.ClearOptions();
             List<string> options = new List<string>();
+            options.Add("Auto");
+            
             int currentResolutionIndex = 0;
             int setResolutionIndex = 0;
 
             foreach (var res in resolutions)
             {
-                options.Add(res.width + " x " + res.height + " - " + res.refreshRate+" Hz");
-                if (res.width == Screen.width && res.height == Screen.height && res.refreshRate == Screen.currentResolution.refreshRate)
+                options.Add(res.ToString());
+                if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings) 
+                    && PlayerPrefs.GetString(PrefKeys.ResolutionSettings) == res.ToString())
                 {
                     setResolutionIndex = currentResolutionIndex;
                 }
@@ -174,11 +178,18 @@ namespace CauldronCodebase
             resolutionDropdown.RefreshShownValue();
         }
 
-        public void ChangeResolution(int resIndex)
+        private void ChangeResolution(int resIndex)
         {
-            Resolution newResolution = resolutions[resIndex];
+            if (resIndex == 0)
+            {
+                PlayerPrefs.DeleteKey(PrefKeys.ResolutionSettings);
+                return;
+            }
+            Resolution newResolution = resolutions[resIndex-1];
             Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
-            PlayerPrefs.SetInt(PrefKeys.ResolutionSettings, resIndex);
+            PlayerPrefs.SetString(PrefKeys.ResolutionSettings, newResolution.ToString());
+            
+            cameraAdaptation.Rebuild();
         }
 
         private void ChangeVolume(string vca, float value, float max = 1)
@@ -194,6 +205,8 @@ namespace CauldronCodebase
             fullscreenMode = set;
             PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
+            
+            cameraAdaptation.Rebuild();
         }
 
         private void ChangeAutoCooking(bool set)

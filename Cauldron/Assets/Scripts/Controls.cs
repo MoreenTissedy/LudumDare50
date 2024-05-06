@@ -60,7 +60,7 @@ namespace CauldronCodebase
                 {
                     ""name"": """",
                     ""id"": ""cfef83c2-baea-4651-af99-86a5a328245f"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

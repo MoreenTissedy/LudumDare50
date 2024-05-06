@@ -3,6 +3,7 @@ using EasyLoc;
 using FMODUnity;
 using Save;
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 using Zenject;
 
 namespace CauldronCodebase
@@ -14,6 +15,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
         [SerializeField] private CatTipsProvider catTipsProvider;
+        [SerializeField] private VirtualMouseInput virtualMouseInput;
 
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
@@ -32,9 +34,23 @@ namespace CauldronCodebase
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<InputManager>().FromNew().AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
+            Container.Bind<VirtualMouseInput>().FromInstance(virtualMouseInput).AsSingle();
             
+            SetPointerSpeed();
             SetInitialResolution();
             SetSoundVolume();
+        }
+
+        private void SetPointerSpeed()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.PointerSpeed))
+            {
+                virtualMouseInput.cursorSpeed = PlayerPrefs.GetInt(PrefKeys.PointerSpeed);
+            }
+            else
+            {
+                virtualMouseInput.cursorSpeed = virtualMouseInput.DefaultSpeed;
+            }
         }
 
         private static void SetInitialResolution()

@@ -10,6 +10,7 @@
         public const string ResolutionSettings = "ResolutionSettings";
         public const string FullscreenModeSettings = "SetFullscreenSettings";
         public const string AutoCooking = "AutoCooking";
+        public const string PointerSpeed = "PointerSpeed";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
         public const string LanguageKey = "LanguageSettings";
         public const string Milestones = "Milestones";

@@ -4,6 +4,8 @@ using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using Universal;
 using Zenject;
@@ -33,6 +35,11 @@ namespace CauldronCodebase
         [Header("Toggle AutoCooking")] 
         [SerializeField] private Toggle autoCooking;
         [SerializeField] private GameObject autoCookingObject;
+        
+        [Header("Pointer speed 4 gamepad")]
+        [SerializeField] private Slider pointerSpeed;
+        const float pointerSpeedMaxValue = 2000;
+        const float pointerSpeedMinValue = 300;
 
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
@@ -50,6 +57,7 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
 
         [Inject] private LocalizationTool locTool;
+        [Inject] private VirtualMouseInput virtualMouse;
         private bool fullscreenMode;
         private bool autoCookingMode;
         
@@ -66,16 +74,38 @@ namespace CauldronCodebase
             LoadResolution();
             LoadLanguage();
             LoadAutoCookingMode();
+            LoadPointerSpeed();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
-            resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
-            toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
-            autoCooking.onValueChanged.AddListener(x => ChangeAutoCooking(x));
+            pointerSpeed.onValueChanged.AddListener(ChangePointerSpeed);
+            resolutionDropdown.onValueChanged.AddListener(ChangeResolution);
+            toggleFullscreen.onValueChanged.AddListener(ChangeFullscreenMode);
+            autoCooking.onValueChanged.AddListener(ChangeAutoCooking);
             openResetButton.OnClick += OpenResetDialogue;
             closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
             declineResetButton.onClick.AddListener(CloseResetDialogue);
+        }
+
+        private void LoadPointerSpeed()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.PointerSpeed))
+            {
+                pointerSpeed.value = PlayerPrefs.GetInt(PrefKeys.PointerSpeed);
+            }
+            else
+            {
+                pointerSpeed.value = (virtualMouse.DefaultSpeed - pointerSpeedMinValue)/(pointerSpeedMaxValue - pointerSpeedMinValue);
+            }
+        }
+
+        private void ChangePointerSpeed(float value)
+        {
+            int realValue = (int)Mathf.Lerp(pointerSpeedMinValue, pointerSpeedMaxValue, value);
+            
+            PlayerPrefs.SetInt(PrefKeys.PointerSpeed, realValue);
+            virtualMouse.cursorSpeed = realValue;
         }
 
         private void LoadLanguage()

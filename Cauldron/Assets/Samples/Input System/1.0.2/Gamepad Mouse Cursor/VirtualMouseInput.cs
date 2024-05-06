@@ -1,4 +1,5 @@
 using System;
+using CauldronCodebase;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
@@ -67,6 +68,8 @@ namespace UnityEngine.InputSystem.UI
             get => m_CursorSpeed;
             set => m_CursorSpeed = value;
         }
+
+        public float DefaultSpeed => m_defaultSpeed;
 
         /// <summary>
         /// Determines which cursor representation to use. If this is set to <see cref="CursorMode.SoftwareCursor"/>
@@ -278,7 +281,9 @@ namespace UnityEngine.InputSystem.UI
         {
             // Hijack system mouse, if enabled.
             if (m_CursorMode == CursorMode.HardwareCursorIfAvailable)
+            {
                 TryEnableHardwareCursor();
+            }
 
             // Add mouse device.
             if (m_VirtualMouse == null)
@@ -287,11 +292,14 @@ namespace UnityEngine.InputSystem.UI
                 InputSystem.AddDevice(m_VirtualMouse);
 
             // Set initial cursor position.
-            if (m_CursorTransform != null)
+            if (m_CursorTransform != null && m_CursorMode == CursorMode.SoftwareCursor)
             {
-                var position = m_CursorTransform.anchoredPosition;
-                InputState.Change(m_VirtualMouse.position, position);
-                m_SystemMouse?.WarpCursorPosition(position);
+                var objectPosition = m_CursorTransform.anchoredPosition;
+                InputState.Change(m_VirtualMouse.position, objectPosition);
+            }
+            else if (m_CursorMode == CursorMode.HardwareCursorIfAvailable)
+            {
+                InputState.Change(m_VirtualMouse.position, new Vector2(Screen.width/2, Screen.height/2));
             }
 
             // Hook into input update.
@@ -378,10 +386,6 @@ namespace UnityEngine.InputSystem.UI
                 return;
             }
 
-            // Sync position.
-            if (m_VirtualMouse != null)
-                m_SystemMouse.WarpCursorPosition(m_VirtualMouse.position.ReadValue());
-
             // Turn off mouse cursor image.
             if (m_CursorGraphic != null)
                 m_CursorGraphic.enabled = false;
@@ -434,13 +438,11 @@ namespace UnityEngine.InputSystem.UI
                 newPosition.x = Mathf.Clamp(newPosition.x, pixelRect.xMin, pixelRect.xMax);
                 newPosition.y = Mathf.Clamp(newPosition.y, pixelRect.yMin, pixelRect.yMax);
 
-                ////REVIEW: the fact we have no events on these means that actions won't have an event ID to go by; problem?
-                InputState.Change(m_VirtualMouse.position, newPosition);
-                InputState.Change(m_VirtualMouse.delta, delta);
-                
-                // обычная мышка
                 InputState.Change(virtualMouse.position, newPosition);
                 InputState.Change(virtualMouse.delta, delta);
+                
+                InputState.Change(m_SystemMouse.position, newPosition);
+                InputState.Change(m_SystemMouse.delta, delta);
 
                 Vector3 invertedPosition = new Vector2(newPosition.x, (Screen.height - newPosition.y)); 
                 
@@ -480,7 +482,8 @@ namespace UnityEngine.InputSystem.UI
         [SerializeField] private RectTransform m_CursorTransform;
 
         [Header("Motion")]
-        [SerializeField] private float m_CursorSpeed = 400;
+        [SerializeField] private float m_defaultSpeed = 1000;
+        private float m_CursorSpeed = 400;
         [SerializeField] private float m_ScrollSpeed = 45;
 
         [Space(10)]
@@ -575,10 +578,11 @@ namespace UnityEngine.InputSystem.UI
         private void OnAfterInputUpdate()
         {
             UpdateMotion();
-            // обновляем позицию курсора геймпада из позиции мышки, когда геймпад не задействован
             if (isUseGamePad == false)
             {
+                Debug.LogError(Mouse.current.position.ReadValue());
                 InputState.Change(m_VirtualMouse.position, Mouse.current.position.ReadValue());
+                Debug.LogError(m_VirtualMouse.position.ReadValue());
             }
         }
 

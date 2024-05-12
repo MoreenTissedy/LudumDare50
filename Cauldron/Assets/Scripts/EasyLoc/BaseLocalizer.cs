@@ -93,7 +93,7 @@ namespace EasyLoc
                     continue;
                 }
 
-                data[langIndex] = data[langIndex].Replace('>', '\n');
+                data[langIndex] = data[langIndex].Replace(">>", "\n\n");
                 locData.Add(data[1],data[langIndex]);
             }
 
@@ -123,7 +123,7 @@ namespace EasyLoc
                             if (locData.TryGetValue(textTool.GetId(), out string textValue))
                             {
                                 hasData = true;
-                                textTool.SetText(textValue.Replace(">", "\n"));
+                                textTool.SetText(textValue.Replace(">>", "\n\n"));
                             }
                         }
                         //for the custom scripts their respective class and field act as ID
@@ -132,7 +132,7 @@ namespace EasyLoc
                             if (locData.TryGetValue(objectFields[i].Name, out string textValue))
                             {
                                 hasData = true;
-                                objectFields[i].SetValue(mono, textValue.Replace(">", "\n"));
+                                objectFields[i].SetValue(mono, textValue.Replace(">>", "\n\n"));
                             }
                         }
                         //changes to prefab instances in editor are not recorded automatically,

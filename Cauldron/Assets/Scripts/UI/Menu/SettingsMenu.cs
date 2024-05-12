@@ -91,13 +91,13 @@ namespace CauldronCodebase
 
         private void LoadPointerSpeed()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.PointerSpeed))
+            pointerSpeed.value = PlayerPrefs.HasKey(PrefKeys.PointerSpeed) 
+                ? GetValueFromRealSpeed(PlayerPrefs.GetInt(PrefKeys.PointerSpeed)) 
+                : GetValueFromRealSpeed(virtualMouse.DefaultSpeed);
+
+            float GetValueFromRealSpeed(float realSpeed)
             {
-                pointerSpeed.value = PlayerPrefs.GetInt(PrefKeys.PointerSpeed);
-            }
-            else
-            {
-                pointerSpeed.value = (virtualMouse.DefaultSpeed - pointerSpeedMinValue)/(pointerSpeedMaxValue - pointerSpeedMinValue);
+                return (realSpeed - pointerSpeedMinValue)/(pointerSpeedMaxValue - pointerSpeedMinValue);
             }
         }
 
@@ -178,7 +178,15 @@ namespace CauldronCodebase
             resolutionDropdown.RefreshShownValue();
         }
 
-        private void ChangeResolution(int resIndex)
+        private void ChangeVolume(string vca, float value, float max = 1)
+        {
+            RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
+            UpdateSliderLabel(vca, value);
+            PlayerPrefs.SetFloat(PrefKeys.MusicValueSettings, music.value);
+            PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
+        }
+
+        private async void ChangeResolution(int resIndex)
         {
             if (resIndex == 0)
             {
@@ -189,23 +197,18 @@ namespace CauldronCodebase
             Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
             PlayerPrefs.SetString(PrefKeys.ResolutionSettings, newResolution.ToString());
             
+            await UniTask.NextFrame();
             cameraAdaptation.Rebuild();
         }
 
-        private void ChangeVolume(string vca, float value, float max = 1)
-        {
-            RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
-            UpdateSliderLabel(vca, value);
-            PlayerPrefs.SetFloat(PrefKeys.MusicValueSettings, music.value);
-            PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
-        }
-
-        private void ChangeFullscreenMode(bool set)
+        private async void ChangeFullscreenMode(bool set)
         {
             fullscreenMode = set;
             PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
-            
+
+            //maybe look for optimal resolution?
+            await UniTask.NextFrame();
             cameraAdaptation.Rebuild();
         }
 

@@ -150,6 +150,7 @@ namespace CauldronCodebase
 
         private void SetMovementVisuals()
         {
+            tooltip?.Close();
             dragging = true;
             image.transform.DOKill(true);
             dragTrail?.SetActive(true);

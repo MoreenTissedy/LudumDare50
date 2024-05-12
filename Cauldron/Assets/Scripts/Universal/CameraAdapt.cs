@@ -13,6 +13,8 @@ namespace Universal
         private Camera cameraComponent;
         private float initialSize;
 
+        public int Display => cameraComponent.targetDisplay;
+
         public void Rebuild()
         {
             if (!cameraComponent)

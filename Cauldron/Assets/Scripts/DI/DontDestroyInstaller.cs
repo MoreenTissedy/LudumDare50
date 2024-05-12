@@ -42,7 +42,7 @@ namespace CauldronCodebase
             Container.Bind<VirtualMouseInput>().FromInstance(virtualMouseInput).AsSingle();
             
             SetPointerSpeed();
-            SetInitialResolution(cameraAdaptation);
+            cameraAdaptation.Rebuild();
             SetSoundVolume();
         }
 
@@ -66,12 +66,12 @@ namespace CauldronCodebase
                 fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
             }
 
-            if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
+            //if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
             {
-                string newResolution = PlayerPrefs.GetString(PrefKeys.ResolutionSettings);
+                //string newResolution = PlayerPrefs.GetString(PrefKeys.ResolutionSettings);
                 foreach (Resolution resolution in Screen.resolutions)
                 {
-                    if (resolution.ToString() == newResolution)
+                    //if (resolution.ToString() == newResolution)
                     {
                         Screen.SetResolution(resolution.width, resolution.height, fullscreenMode, resolution.refreshRate);
                         break;
@@ -79,7 +79,7 @@ namespace CauldronCodebase
                 }
             }
             
-            cameraAdaptation.Rebuild();
+            
             //var chosenResolution = GetOptimalResolution(1080f / 1920);
             //Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
         }

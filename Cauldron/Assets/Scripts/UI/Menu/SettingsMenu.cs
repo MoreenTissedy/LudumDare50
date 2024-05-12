@@ -152,32 +152,6 @@ namespace CauldronCodebase
             dialogueReset.SetActive(false);
         }
 
-        private void LoadResolutionDropdown()
-        {
-            resolutions = Screen.resolutions;
-            resolutionDropdown.ClearOptions();
-            List<string> options = new List<string>();
-            options.Add("Auto");
-            
-            int currentResolutionIndex = 0;
-            int setResolutionIndex = 0;
-
-            foreach (var res in resolutions)
-            {
-                options.Add(res.ToString());
-                if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings) 
-                    && PlayerPrefs.GetString(PrefKeys.ResolutionSettings) == res.ToString())
-                {
-                    setResolutionIndex = currentResolutionIndex;
-                }
-                currentResolutionIndex++;
-            }
-
-            resolutionDropdown.AddOptions(options);
-            resolutionDropdown.value = setResolutionIndex;
-            resolutionDropdown.RefreshShownValue();
-        }
-
         private void ChangeVolume(string vca, float value, float max = 1)
         {
             RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
@@ -186,17 +160,39 @@ namespace CauldronCodebase
             PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
         }
 
+        private void LoadResolutionDropdown()
+        {
+            resolutions = Screen.resolutions;
+            resolutionDropdown.ClearOptions();
+            List<string> options = new List<string>();
+            
+            int setResolutionIndex = -1;
+
+            for (var index = 0; index < resolutions.Length; index++)
+            {
+                var res = resolutions[index];
+                options.Add(res.ToString());
+                Debug.LogError(Screen.currentResolution.ToString()+" "+res.ToString());
+                if (Screen.currentResolution.ToString() == res.ToString())
+                {
+                    setResolutionIndex = index;
+                }
+            }
+
+            resolutionDropdown.AddOptions(options);
+            resolutionDropdown.value = setResolutionIndex;
+            resolutionDropdown.RefreshShownValue();
+        }
+
         private async void ChangeResolution(int resIndex)
         {
             if (resIndex == 0)
             {
-                PlayerPrefs.DeleteKey(PrefKeys.ResolutionSettings);
                 return;
             }
             Resolution newResolution = resolutions[resIndex-1];
             Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
-            PlayerPrefs.SetString(PrefKeys.ResolutionSettings, newResolution.ToString());
-            
+
             await UniTask.NextFrame();
             cameraAdaptation.Rebuild();
         }
@@ -206,8 +202,14 @@ namespace CauldronCodebase
             fullscreenMode = set;
             PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
-
-            //maybe look for optimal resolution?
+            
+            if (set)
+            {
+                var newDisplay = Display.displays[cameraAdaptation.Display];
+                Debug.LogError(newDisplay.systemWidth+" "+newDisplay.systemHeight);
+                Screen.SetResolution(newDisplay.systemWidth, newDisplay.systemHeight, true);
+                LoadResolutionDropdown();
+            }
             await UniTask.NextFrame();
             cameraAdaptation.Rebuild();
         }

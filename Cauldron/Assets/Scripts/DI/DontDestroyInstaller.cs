@@ -1,4 +1,3 @@
-using System.Linq;
 using EasyLoc;
 using FMODUnity;
 using Save;
@@ -44,6 +43,9 @@ namespace CauldronCodebase
             SetPointerSpeed();
             cameraAdaptation.Rebuild();
             SetSoundVolume();
+            
+            QualitySettings.vSyncCount = 1;
+            Application.targetFrameRate = 60;
         }
 
         private void SetPointerSpeed()
@@ -58,55 +60,12 @@ namespace CauldronCodebase
             }
         }
 
-        private static void SetInitialResolution(CameraAdapt cameraAdaptation)
-        {
-            bool fullscreenMode = true;
-            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
-            {
-                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
-            }
-
-            //if (PlayerPrefs.HasKey(PrefKeys.ResolutionSettings))
-            {
-                //string newResolution = PlayerPrefs.GetString(PrefKeys.ResolutionSettings);
-                foreach (Resolution resolution in Screen.resolutions)
-                {
-                    //if (resolution.ToString() == newResolution)
-                    {
-                        Screen.SetResolution(resolution.width, resolution.height, fullscreenMode, resolution.refreshRate);
-                        break;
-                    }
-                }
-            }
-            
-            
-            //var chosenResolution = GetOptimalResolution(1080f / 1920);
-            //Screen.SetResolution(chosenResolution.width, chosenResolution.height, fullscreenMode);
-        }
-
         private void SetSoundVolume()
         {
             var soundVolume = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
             var musicVolume = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
             RuntimeManager.GetVCA("vca:/Music").setVolume(musicVolume);
             RuntimeManager.GetVCA("vca:/SFX").setVolume(soundVolume);
-        }
-
-        private static Resolution GetOptimalResolution(float aspectRatio)
-        {
-            var resolutions = Screen.resolutions;
-            var sortedResolutions = resolutions.OrderByDescending(x => x.height);
-            Resolution chosenResolution = Screen.currentResolution;
-            foreach (var resolution in sortedResolutions)
-            {
-                var aspect = (float)resolution.height / resolution.width;
-                if (Mathf.Abs(aspect - aspectRatio) < 0.01f)
-                {
-                    chosenResolution = resolution;
-                    break;
-                }
-            }
-            return chosenResolution;
         }
     }
 }

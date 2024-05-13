@@ -172,7 +172,6 @@ namespace CauldronCodebase
             {
                 var res = resolutions[index];
                 options.Add(res.ToString());
-                Debug.LogError(Screen.currentResolution.ToString()+" "+res.ToString());
                 if (Screen.currentResolution.ToString() == res.ToString())
                 {
                     setResolutionIndex = index;
@@ -206,7 +205,6 @@ namespace CauldronCodebase
             if (set)
             {
                 var newDisplay = Display.displays[cameraAdaptation.Display];
-                Debug.LogError(newDisplay.systemWidth+" "+newDisplay.systemHeight);
                 Screen.SetResolution(newDisplay.systemWidth, newDisplay.systemHeight, true);
                 LoadResolutionDropdown();
             }

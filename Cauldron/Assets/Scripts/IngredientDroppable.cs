@@ -167,23 +167,17 @@ namespace CauldronCodebase
 
         private void OverCauldron()
         {
-            AddToMixAndResetVisuals();
-            cauldron.MouseEnterCauldronZone -= OverCauldron;
-        }
-
-
-        private void AddToMixAndResetVisuals()
-        {
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            Unsubscribe();
         }
-        
-        
+
+
         private void OverCat()
         {
             ReturnToStartSpot();
             catAnimations.SetEatingAnimation(ingredient);
-            catAnimations.MouseOverCat -= OverCat;
+            Unsubscribe();
         }
 
         private void ReturnToStartSpot()
@@ -205,7 +199,13 @@ namespace CauldronCodebase
             {
                 ingredientParticle?.SetActive(true);
             }
+            Unsubscribe();
+        }
+
+        private void Unsubscribe()
+        {
             cauldron.MouseEnterCauldronZone -= OverCauldron;
+            catAnimations.MouseOverCat -= OverCat;
         }
 
         public void EnableHighlight()
@@ -247,7 +247,8 @@ namespace CauldronCodebase
 
             SetMovementVisuals();
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
-            AddToMixAndResetVisuals();
+            ReturnToStartSpot();
+            cauldron.AddToMix(ingredient);
         }
 
         private Vector3[] GetRandomBezierPath()

@@ -22,6 +22,7 @@ namespace CauldronCodebase
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
         public IngredientsData dataList;
+        public Collider2D collider;
         
         [SerializeField, HideInInspector]
         private ScrollTooltip tooltip;
@@ -150,6 +151,8 @@ namespace CauldronCodebase
 
         private void SetMovementVisuals()
         {
+            image.sortingLayerName = "Hints";
+            collider.enabled = false;
             tooltip?.Close();
             dragging = true;
             image.transform.DOKill(true);
@@ -182,24 +185,30 @@ namespace CauldronCodebase
 
         private void ReturnToStartSpot()
         {
-            dragging = false;
-            dragTrail?.SetActive(false);
+            ResetVisuals();
             transform.position = initialPosition;
             transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
         }
-        
+
         public void OnEndDrag(PointerEventData eventData)
         {
             if (!dragging)
                 return;
             transform.DOMove(initialPosition, returntime);
-            dragging = false;
-            dragTrail?.SetActive(false);
+            ResetVisuals();
             if (isHighlighted)
             {
                 ingredientParticle?.SetActive(true);
             }
             Unsubscribe();
+        }
+
+        private void ResetVisuals()
+        {
+            image.sortingLayerName = "Interactables";
+            collider.enabled = true;
+            dragging = false;
+            dragTrail?.SetActive(false);
         }
 
         private void Unsubscribe()

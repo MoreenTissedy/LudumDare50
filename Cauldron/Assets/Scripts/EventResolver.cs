@@ -48,6 +48,10 @@ namespace CauldronCodebase
                         storyTag = storyTag.TrimStart('*');
                         StoryTagHelper.SaveMilestone(storyTag);
                     }
+                    else if (storyTag.StartsWith("%"))
+                    {
+                        StoryTagHelper.SaveFreeze(storyTag.Trim('%'));
+                    }
                     game.AddTag(storyTag);
                 }
             }

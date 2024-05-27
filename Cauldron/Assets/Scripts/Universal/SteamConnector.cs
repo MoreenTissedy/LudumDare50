@@ -14,6 +14,7 @@ namespace Universal
                 SteamClient.Init(2027434);
                 Debug.Log("Steam connected to "+SteamClient.Name);
                 LoggedIn = true;
+                SteamUserStats.RequestCurrentStats();
             }
             catch (Exception e)
             {

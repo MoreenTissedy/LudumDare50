@@ -15,6 +15,9 @@ MonoBehaviour:
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
   addToDeckOnRound: 2
   requiredStoryTag: 
+  recipeHintConfig:
+    recipe: 99
+    level: 1
   villager: {fileID: 11400000, guid: 0c5be769e6859c64484e0a27d9bd1851, type: 2}
   text: "\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435,
     \u043C\u043D\u043E\u0433\u043E\u0443\u0432\u0430\u0436\u0430\u0435\u043C\u0430\u044F
@@ -26,7 +29,7 @@ MonoBehaviour:
     \u043A\u043E\u0440\u043E\u0432\u0430 \u0433\u043E\u043B\u043E\u0441\u043E\u043C
     \u0447\u0435\u043B\u043E\u0432\u0435\u0447\u0435\u0441\u043A\u0438\u043C \u0433\u043E\u0432\u043E\u0440\u0438\u043B\u0430!"
   hidden: 0
-  quest: 0
+  fraction: 0
   primaryInfluence: 3
   secondaryInfluence: 2
   primaryCoef: 1
@@ -36,31 +39,43 @@ MonoBehaviour:
     influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 4
-    influenceCoef: 1
-    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 6
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
-    bonusCard: {fileID: 0}
-  - potion: 12
-    influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
-    bonusCard: {fileID: 0}
   - potion: 10
     influenceCoef: 1
     bonusEvent: {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 4
+    influenceCoef: 1
+    bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
+    bonusCard: {fileID: 11400000, guid: 49d545308a3f8984e809f70a41f29420, type: 2}
+  - potion: 12
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
     bonusCard: {fileID: 0}
   - potion: 3
     influenceCoef: 0.5
     bonusEvent: {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
     bonusCard: {fileID: 11400000, guid: 49d545308a3f8984e809f70a41f29420, type: 2}
+  - potion: 6
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
+    bonusCard: {fileID: 0}
   - potion: 7
     influenceCoef: 0.5
-    bonusEvent: {fileID: 11400000, guid: 9a071e40d8f3d09b9a9200ecca518362, type: 2}
+    bonusEvent: {fileID: 11400000, guid: 0f60b6736a415e94c9282e060f9aef03, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 104
+  - potion: 17
     influenceCoef: 0.5
-    bonusEvent: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 4dcc10996cc83d44783027a5c6af1247, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 103
+    influenceCoef: 0.3
+    bonusEvent: {fileID: 11400000, guid: ef57f191de541bf4cb067fcf3de37b06, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 0
+    influenceCoef: 0.3
+    bonusEvent: {fileID: 11400000, guid: bcc9acd7cabb2394ba255b20f96b1d02, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 13
+    influenceCoef: 0.3
+    bonusEvent: {fileID: 11400000, guid: e0e160f7c64648f44a21a872844a7923, type: 2}
     bonusCard: {fileID: 0}

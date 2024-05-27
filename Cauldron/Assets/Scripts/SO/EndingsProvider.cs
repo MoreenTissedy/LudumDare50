@@ -74,11 +74,14 @@ namespace CauldronCodebase
             return endingDict[tag];
         }
 
-        public void Unlock(string tag)
+        public void TryUnlock(string tag)
         {
-            unlocked.Add(tag);
+            if (tag != "none" && !Unlocked(tag))
+            {
+                unlocked.Add(tag);
+                PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
+            }
             achievements.TryUnlock(tag);
-            PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
         }
 
         [ContextMenu("Export Endings to CSV")]

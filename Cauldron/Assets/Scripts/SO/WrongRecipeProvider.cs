@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -28,7 +29,15 @@ namespace CauldronCodebase
             if (File.Exists(Application.persistentDataPath + WrongRecipeKey))
             {
                 string saveData = File.ReadAllText(Application.persistentDataPath + WrongRecipeKey);
-                JsonUtility.FromJsonOverwrite(saveData, this);
+                try
+                {
+                    JsonUtility.FromJsonOverwrite(saveData, this);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("[JSON Error] Wrong recipe file corrupted! Delete it.");
+                    File.Delete(Application.persistentDataPath + WrongRecipeKey);
+                }
             }
 
             return wrongPotions;

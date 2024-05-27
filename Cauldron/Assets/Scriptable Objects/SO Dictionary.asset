@@ -14,6 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoUpdateDictionary: 1
   AllSOKeys:
+  - Philosopher-alcohol
+  - Philosopher-flight
+  - Philosopher-food
+  - Philosopher-foolish
+  - Philosopher-memory
+  - Philosopher-poison
+  - Zolotar-beauty
+  - Zolotar-chameleon
+  - Zolotar-default
+  - Zolotar-flight
+  - Zolotar-foolish
+  - Zolotar-poison
   - Adventurers_1
   - Adventurers_2
   - Adventurers_3
@@ -218,6 +230,8 @@ MonoBehaviour:
   - mushroom-story.3
   - mushroom-story.4
   - nest_harvester
+  - nest_harvester_2
+  - nest_harvester_3
   - old_knight-1
   - old_knight-2
   - old_knight-3
@@ -308,6 +322,17 @@ MonoBehaviour:
   - M-wildlings-1
   - mushroom-story-event.1
   - mushroom-story-event.2
+  - nest-cross-foolish
+  - nest-cross-forget
+  - nest-cross-love
+  - nest-cross-poison
+  - nest-harvester-curse
+  - nest-harvester-default
+  - nest-harvester-foolish
+  - nest-harvester-forage
+  - nest-harvester-love
+  - nest-harvester-perception
+  - nest-harvester-strength
   - old_knight_event.2
   - old_knight_event.3
   - old_knight_event_1
@@ -358,6 +383,7 @@ MonoBehaviour:
   - Children_Third
   - ChildrenOfBlacksmith
   - Cow_1
+  - Cow_2
   - Curse_Potion_Village_Second
   - Curse_Potion_Villager
   - Fool_1
@@ -461,8 +487,18 @@ MonoBehaviour:
   - BlacksmithKilledByMan
   - BlacksmithNumb
   - common_gay_event
+  - CowAlcohol
+  - CowBeauty
+  - CowFlight
   - CowForgotMilk
   - CowLost
+  - CowLove
+  - CowPerformClumsy
+  - CowPerformFake
+  - CowPerformFiasko
+  - CowPerformFlying
+  - CowPerformReturned
+  - CowRejuvenation
   - DrunkDied
   - FamilyReunited
   - FisherKissedTheFrog
@@ -521,8 +557,8 @@ MonoBehaviour:
   - WidowOfBlacksmith
   - WomenDied
   - WomenLostMemory
+  - "\u0421owPerformCancel"
   - "\u0421owPerforming"
-  - "\u0421owPerformingCancel"
   - Ingredients Book
   - Recipe Hints Storage
   - Beaty
@@ -604,6 +640,7 @@ MonoBehaviour:
   - Musician
   - Nun
   - Painter
+  - Philosopher
   - Soldier
   - SoldierLow
   - Tax_Collector
@@ -620,6 +657,18 @@ MonoBehaviour:
   - WitchMemory
   - Woodcarver
   AllSOValues:
+  - {fileID: 11400000, guid: 22e3cab6eab92aa45b968bb4472eec74, type: 2}
+  - {fileID: 11400000, guid: b2ab239952b20aa4c972071e681789b8, type: 2}
+  - {fileID: 11400000, guid: 6bf2051a98fb6cd44bf2bb80ff20bd79, type: 2}
+  - {fileID: 11400000, guid: 2ab5fbe6f3af60941a188d12ccfc85e0, type: 2}
+  - {fileID: 11400000, guid: f08fe08933f299e4196fef3d3e744a1d, type: 2}
+  - {fileID: 11400000, guid: e1215608b3b7bb8408fd27cead729951, type: 2}
+  - {fileID: 11400000, guid: 797231cad50c05342a26c84b03ad9ee6, type: 2}
+  - {fileID: 11400000, guid: aa2b453912fdd1442a7c0a788cd9d88c, type: 2}
+  - {fileID: 11400000, guid: bef777017f1517849928f9f0787e8457, type: 2}
+  - {fileID: 11400000, guid: 5e2bc09e731f7b646b3420f1f240314d, type: 2}
+  - {fileID: 11400000, guid: 8c97f4a030c98d84b86d151c0af44ec6, type: 2}
+  - {fileID: 11400000, guid: 54394a3649ffe2045bfb1c9f3e474a98, type: 2}
   - {fileID: 11400000, guid: e3af535f41c97d741becd11d52a77a5a, type: 2}
   - {fileID: 11400000, guid: d306ec730c0b4664ea92d664568ea537, type: 2}
   - {fileID: 11400000, guid: 1e0582b361140e24e94c3acd54c89090, type: 2}
@@ -823,7 +872,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a1de5bd3efdd0ab4e858909ef4902b9c, type: 2}
   - {fileID: 11400000, guid: 28382f307735ded4ab6576f35730a8c4, type: 2}
   - {fileID: 11400000, guid: d5495a3a7b7792d4faa5674107f7eefe, type: 2}
+  - {fileID: 11400000, guid: 9dc4fbb9011c1984d9592b3af0125eef, type: 2}
   - {fileID: 11400000, guid: f29edca58cfad6d4aae476b9cb543a44, type: 2}
+  - {fileID: 11400000, guid: a66ae788f05a06142aec18fb007967f5, type: 2}
   - {fileID: 11400000, guid: bfab646a778fde64cb31837eeb838490, type: 2}
   - {fileID: 11400000, guid: 4e04dd7e48d9d9f4db1bb68456a5a666, type: 2}
   - {fileID: 11400000, guid: a69d59b10c5597849b2d142fed425922, type: 2}
@@ -914,6 +965,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d428600fbc121ab46a7d68d3b4ab145e, type: 2}
   - {fileID: 11400000, guid: 358d5330d883fce4f9ee50e1ef8eacf9, type: 2}
   - {fileID: 11400000, guid: d0977d44fe0e6854f9882dad3797c44d, type: 2}
+  - {fileID: 11400000, guid: d21d7e40b664f9848a347ea1fcf046cb, type: 2}
+  - {fileID: 11400000, guid: 4925bac6108f3384ab3cdadb5ca38751, type: 2}
+  - {fileID: 11400000, guid: c33f8889db7ce5a4798612621798d60d, type: 2}
+  - {fileID: 11400000, guid: 6e03ca1d2169dd149afdd153f69944ff, type: 2}
+  - {fileID: 11400000, guid: 4b1c68fbc969303489e79035382e2e44, type: 2}
+  - {fileID: 11400000, guid: ef1e0de90e0b2b640abee28b673fd659, type: 2}
+  - {fileID: 11400000, guid: 2361ff929437c01468f34b42c6f4caf5, type: 2}
+  - {fileID: 11400000, guid: 717cb85e80bd1f7428c2acc32da290bd, type: 2}
+  - {fileID: 11400000, guid: 9489b16286f4cf24ebceaa5397682101, type: 2}
+  - {fileID: 11400000, guid: 01e9f62194ebdaf4e85a903a04939d9a, type: 2}
+  - {fileID: 11400000, guid: 69c24ce75d62c59478fdd593c09bac41, type: 2}
   - {fileID: 11400000, guid: 2fc7ee9459cea814598faf68b3a450c6, type: 2}
   - {fileID: 11400000, guid: 7e99dfa9599bc7a45be4ff86b48abff9, type: 2}
   - {fileID: 11400000, guid: 4bc347bb7d62c884b8b3ff2385fe0687, type: 2}
@@ -964,6 +1026,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6d00cfbf801c7e54fa8e0f4169bddbf3, type: 2}
   - {fileID: 11400000, guid: c3abc326b38cea940a458fa3d0ac1542, type: 2}
   - {fileID: 11400000, guid: 125bf8f3587b97b4195ea0944f23a163, type: 2}
+  - {fileID: 11400000, guid: 290ff34a836a53e44864943967d94b6f, type: 2}
   - {fileID: 11400000, guid: f317d9d4d68f7374d8cf75e7e68836b1, type: 2}
   - {fileID: 11400000, guid: cd5f99241470ae741b862d3e17734347, type: 2}
   - {fileID: 11400000, guid: 1a305e80ad297814caab86233706a1e5, type: 2}
@@ -1067,8 +1130,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7c32a19ba95e63b4988c796c80ba2154, type: 2}
   - {fileID: 11400000, guid: 4890b977fb172fe4783955d587f76304, type: 2}
   - {fileID: 11400000, guid: 31981cca5c99b204d89ea1e834c818a2, type: 2}
+  - {fileID: 11400000, guid: ef57f191de541bf4cb067fcf3de37b06, type: 2}
+  - {fileID: 11400000, guid: 0f60b6736a415e94c9282e060f9aef03, type: 2}
+  - {fileID: 11400000, guid: e0e160f7c64648f44a21a872844a7923, type: 2}
   - {fileID: 11400000, guid: 7ff1b8fc9b5124e42a5f61e6a18e6505, type: 2}
   - {fileID: 11400000, guid: a9ac532415547268bb1f3f8fbcb73cc3, type: 2}
+  - {fileID: 11400000, guid: bcc9acd7cabb2394ba255b20f96b1d02, type: 2}
+  - {fileID: 11400000, guid: 4c2d7602f7c1a3140b98ba969eb4109e, type: 2}
+  - {fileID: 11400000, guid: 5ef2ef483b61a2c40add0c52b3ce3a61, type: 2}
+  - {fileID: 11400000, guid: 2df5b8d2e497c2f4688e352b1bb3f16f, type: 2}
+  - {fileID: 11400000, guid: 63fc95d8c2f08964ea6d2184319b3ed6, type: 2}
+  - {fileID: 11400000, guid: 32b03d4d26e0cae46a7c8d38b0bbbfdf, type: 2}
+  - {fileID: 11400000, guid: 4dcc10996cc83d44783027a5c6af1247, type: 2}
   - {fileID: 11400000, guid: 15de4d01864403f4fb2c299ccdb26acf, type: 2}
   - {fileID: 11400000, guid: 9c5e78b6ac35df14cb316fefc96c435d, type: 2}
   - {fileID: 11400000, guid: 4f5594e63d8b1ad48b4906cef6ab1d06, type: 2}
@@ -1127,8 +1200,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ac10c4adbb24b484f8b8166f3ccd6850, type: 2}
   - {fileID: 11400000, guid: 511d964defb57bf4f902968c5a801bcd, type: 2}
   - {fileID: 11400000, guid: a4be1dd7b03812e448aa64f555a268ef, type: 2}
+  - {fileID: 11400000, guid: bc79bc837c5f3c14e8aa168034198bea, type: 2}
   - {fileID: 11400000, guid: 1103257d476d336bc85d5120ffb88482, type: 2}
-  - {fileID: 11400000, guid: 2df5b8d2e497c2f4688e352b1bb3f16f, type: 2}
   - {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
   - {fileID: 11400000, guid: 5aa2f4101212212448e45eb49ae98841, type: 2}
   - {fileID: 11400000, guid: f9ef458064cd2e646808f184b5d51ca5, type: 2}
@@ -1210,6 +1283,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0106e05ee14175f4c8ac918f2f5322f1, type: 2}
   - {fileID: 11400000, guid: 96fbdaa5f01882c4199f99a28648b5dd, type: 2}
   - {fileID: 11400000, guid: 91233a22086b1d14aa3c5516ec59d2cd, type: 2}
+  - {fileID: 11400000, guid: 238b0cafa370c2b4fbdde1cbefcf6fd8, type: 2}
   - {fileID: 11400000, guid: f5bbd271ef2934c4db8f1c277604d395, type: 2}
   - {fileID: 11400000, guid: 837fd6f25b8c09d4c95d7693551c449a, type: 2}
   - {fileID: 11400000, guid: ab63c9b4834352a458f55bb749416b3a, type: 2}

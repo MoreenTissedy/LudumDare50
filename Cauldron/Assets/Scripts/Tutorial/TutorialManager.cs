@@ -3,6 +3,7 @@ using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Universal;
 using Zenject;
@@ -12,6 +13,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private ScrollTooltip tooltipPrefab;
 
     [Localize] [TextArea (5, 10)] public string BookTutorialText;
+    [Localize] [TextArea (5, 10)] public string BookTutorialGamepadControls;
+    [Localize] [TextArea (5, 10)] public string BookTutorialKeyboardControls;
     [Localize] [TextArea (5, 10)] public string VisitorTutorialText;
     [Localize] [TextArea (5, 10)] public string ScaleTutorialText;
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
@@ -66,7 +69,9 @@ public class TutorialManager : MonoBehaviour
         if (PlayerPrefs.GetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 0) == 0)
         {
             PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 1);
-            tooltipPrefab.Open(BookTutorialText).Forget();
+            string tutorialText = string.Format(BookTutorialText,
+                Gamepad.current != null ? BookTutorialGamepadControls : BookTutorialKeyboardControls);
+            tooltipPrefab.Open(tutorialText).Forget();
         }
     }
 

@@ -4,6 +4,8 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using Universal;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -13,11 +15,14 @@ namespace CauldronCodebase
     public class IngredientDroppable: MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
         IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
+        private const float doubleClickTime = 0.5f;
+        
         public Ingredients ingredient;
         public float rotateAngle = 10f;
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
         public IngredientsData dataList;
+        public Collider2D collider;
         
         [SerializeField, HideInInspector]
         private ScrollTooltip tooltip;
@@ -30,6 +35,7 @@ namespace CauldronCodebase
         bool isHighlighted = false;
         private Vector3 initialPosition;
         private bool dragging;
+        private float lastClickTime = -1000f;
 
         private CatAnimations catAnimations;
         private Cauldron cauldron;
@@ -50,7 +56,7 @@ namespace CauldronCodebase
 
         private void ChangeText()
         {
-            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified");
+            tooltip.SetText(dataList?.Get(ingredient)?.friendlyName ?? "not specified").Forget();
         }
         
         [Inject]
@@ -126,7 +132,9 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.clickCount >= 2)
+            bool doubleClick = Time.timeSinceLevelLoad - lastClickTime < doubleClickTime;
+            lastClickTime = Time.timeSinceLevelLoad;
+            if (doubleClick || Gamepad.current != null)
             {
                 ThrowInCauldron().Forget();
             }
@@ -143,6 +151,9 @@ namespace CauldronCodebase
 
         private void SetMovementVisuals()
         {
+            image.sortingLayerName = "Hints";
+            collider.enabled = false;
+            tooltip?.Close();
             dragging = true;
             image.transform.DOKill(true);
             dragTrail?.SetActive(true);
@@ -159,45 +170,51 @@ namespace CauldronCodebase
 
         private void OverCauldron()
         {
-            AddToMixAndResetVisuals();
-            cauldron.MouseEnterCauldronZone -= OverCauldron;
-        }
-
-
-        private void AddToMixAndResetVisuals()
-        {
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            Unsubscribe();
         }
-        
-        
+
+
         private void OverCat()
         {
             ReturnToStartSpot();
             catAnimations.SetEatingAnimation(ingredient);
-            catAnimations.MouseOverCat -= OverCat;
+            Unsubscribe();
         }
 
         private void ReturnToStartSpot()
         {
-            dragging = false;
-            dragTrail?.SetActive(false);
+            ResetVisuals();
             transform.position = initialPosition;
             transform.DOScale(Vector3.one, rotateSpeed).From(Vector3.zero).ToUniTask();
         }
-        
+
         public void OnEndDrag(PointerEventData eventData)
         {
             if (!dragging)
                 return;
             transform.DOMove(initialPosition, returntime);
-            dragging = false;
-            dragTrail?.SetActive(false);
+            ResetVisuals();
             if (isHighlighted)
             {
                 ingredientParticle?.SetActive(true);
             }
+            Unsubscribe();
+        }
+
+        private void ResetVisuals()
+        {
+            image.sortingLayerName = "Interactables";
+            collider.enabled = true;
+            dragging = false;
+            dragTrail?.SetActive(false);
+        }
+
+        private void Unsubscribe()
+        {
             cauldron.MouseEnterCauldronZone -= OverCauldron;
+            catAnimations.MouseOverCat -= OverCat;
         }
 
         public void EnableHighlight()
@@ -239,7 +256,8 @@ namespace CauldronCodebase
 
             SetMovementVisuals();
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
-            AddToMixAndResetVisuals();
+            ReturnToStartSpot();
+            cauldron.AddToMix(ingredient);
         }
 
         private Vector3[] GetRandomBezierPath()

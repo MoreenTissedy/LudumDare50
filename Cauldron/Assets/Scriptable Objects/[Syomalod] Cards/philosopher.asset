@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localizationCSV: {fileID: 4900000, guid: 6e473c6de62065341a8e3f7ac4c0a495, type: 3}
   addToDeckOnRound: 2
-  requiredStoryTag: '!fool_dead'
+  requiredStoryTag: 
   recipeHintConfig:
     recipe: 99
     level: 1
-  villager: {fileID: 11400000, guid: 4dad8a4801aada04a8a09e3802e2e901, type: 2}
+  villager: {fileID: 11400000, guid: 238b0cafa370c2b4fbdde1cbefcf6fd8, type: 2}
   text: I was seeking the truth in a barrel, in the mountains, in swamp waters. Tried
     to achieve enlightenment, all in vain. My wife tells me to find a job, but who
     ever found the truth that way? Help me out, some soup will do too.
@@ -35,17 +35,25 @@ MonoBehaviour:
     bonusCard: {fileID: 0}
   - potion: 101
     influenceCoef: 0.5
-    bonusEvent: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 6bf2051a98fb6cd44bf2bb80ff20bd79, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 103
+    influenceCoef: 0.5
+    bonusEvent: {fileID: 11400000, guid: 22e3cab6eab92aa45b968bb4472eec74, type: 2}
     bonusCard: {fileID: 0}
   - potion: 14
     influenceCoef: -1
-    bonusEvent: {fileID: 0}
+    bonusEvent: {fileID: 11400000, guid: 2ab5fbe6f3af60941a188d12ccfc85e0, type: 2}
     bonusCard: {fileID: 0}
   - potion: 4
     influenceCoef: -1
-    bonusEvent: {fileID: 11400000, guid: 7114225aef9e3f84aa34e8a59cad948b, type: 2}
+    bonusEvent: {fileID: 11400000, guid: e1215608b3b7bb8408fd27cead729951, type: 2}
     bonusCard: {fileID: 0}
-  - potion: 100
-    influenceCoef: -0.5
-    bonusEvent: {fileID: 0}
+  - potion: 12
+    influenceCoef: -0.3
+    bonusEvent: {fileID: 11400000, guid: f08fe08933f299e4196fef3d3e744a1d, type: 2}
+    bonusCard: {fileID: 0}
+  - potion: 13
+    influenceCoef: -0.3
+    bonusEvent: {fileID: 11400000, guid: b2ab239952b20aa4c972071e681789b8, type: 2}
     bonusCard: {fileID: 0}

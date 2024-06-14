@@ -30,16 +30,7 @@ namespace CauldronCodebase
         private void Awake()
         {
             Clear();
-        }
-
-        private void OnEnable()
-        {
-            button.OnClick += () => recipeBook.SwitchHighlight(ingredients).Forget();
-        }
-
-        private void OnDisable()
-        {
-            button.OnClick -= () => recipeBook.SwitchHighlight(ingredients).Forget();
+            button.OnClick += () => recipeBook.SwitchHighlight(ingredients);
         }
 
         public void DisplayFailure(Ingredients[] attempt)

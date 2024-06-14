@@ -162,54 +162,45 @@ namespace CauldronCodebase
 
         private void DealCards(int num)
         {
-            var validCards = cardPool.Where(x => !IsCardNotValidForDeck(x)).ToList();
-            Debug.Log("valid cards found in pool: "+validCards.Count);
-            if (validCards.Count < num)
+            if (cardPool.Count < num)
             {
-                Debug.Log("extending");
                 ExtendPool();
-                if (cardPool.Count(x => !IsCardNotValidForDeck(x)) < num)
-                {
-                    Debug.Log("extending again");
-                    ExtendPool();
-                }
             }
-            Debug.Log("cards total in pool: "+cardPool.Count);
-            for (int i = 0; i < num; i++)
-            {
-                if (cardPool.Count < 1)
-                {
-                    break;
-                }
+            int cardsDealt = TryDealCards(num);
 
-                bool cardFound = false;
-                for (int j = 0; j< 10; j++)
-                {
-                    if (AddToDeck(cardPool[j]))
-                    {
-                        cardPool.RemoveAt(j);
-                        cardFound = true;
-                        break;
-                    }
-                    else
-                    {
-                        //send to back
-                        var card = cardPool[j];
-                        cardPool.RemoveAt(j);
-                        cardPool.Add(card);
-                    }
-                }
-                if (!cardFound)
-                {
-                    if (ExtendPool())
-                    {
-                        num++;
-                    }
-                }
+            if (cardsDealt < num)
+            {
+                ExtendPool();
+                TryDealCards(num - cardsDealt);
             }
 
             cardPool.TrimExcess();
             deckInfo = deck.ToArray();
+
+            int TryDealCards(int count)
+            {
+                int cardsFoundNumber = 0;
+                for (int i = 0; i < cardPool.Count; i++)
+                {
+                    if (AddToDeck(cardPool[0]))
+                    {
+                        cardPool.RemoveAt(0);
+                        cardsFoundNumber++;
+                        if (cardsFoundNumber == count)
+                        {
+                            return cardsFoundNumber;
+                        }
+                    }
+                    else
+                    {
+                        //send to back
+                        var card = cardPool[0];
+                        cardPool.RemoveAt(0);
+                        cardPool.Add(card);
+                    }
+                }
+                return cardsFoundNumber;
+            }
         }
 
         private bool CheckVisitorNotInDeck(Villager villager)
@@ -219,9 +210,11 @@ namespace CauldronCodebase
 
         private bool ExtendPool()
         {
+            Debug.Log("Extend pool");
             var nextPools = cardPoolsByRound.Where(x => x.round == lastExtendedRoundNumber+1).ToArray();
             if (nextPools.Length == 0)
             {
+                Debug.Log("End of cards");
                 return false;
             }
             foreach (var pool in nextPools)

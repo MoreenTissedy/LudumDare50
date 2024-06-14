@@ -7,11 +7,14 @@ namespace CauldronCodebase
     //You can remove me from production
     public class CheatManager : MonoBehaviour
     {
+        public string fractions;
+        
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private MainSettings settings;
         [Inject] private EndingsProvider endingsProvider;
+        [Inject] private IAchievementManager achievementManager;
 
         [Button("Unlock all endings")]
         public void UnlockAllEndings()
@@ -63,12 +66,18 @@ namespace CauldronCodebase
         {
             recipeBook.CheatUnlockAutoCooking();
         }
+        
+        [Button("Clear all achievements")]
+        public void ClearAchievements()
+        {
+            achievementManager.ClearAll();
+        }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
+            if (gameDataHandler)
             {
-                Debug.LogWarning(gameDataHandler.fractionStatus);
+                fractions = gameDataHandler.fractionStatus.ToString();
             }
         }
     }

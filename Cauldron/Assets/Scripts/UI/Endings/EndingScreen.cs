@@ -39,6 +39,7 @@ namespace CauldronCodebase
         private GameObject currentCartoon;
 
         [Inject] private SoundManager soundManager;
+        [Inject] private InputManager inputManager;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -69,7 +70,7 @@ namespace CauldronCodebase
             title.text = ending.title;
             description.text = ending.text;
             await UniTask.Delay(TimeSpan.FromSeconds(2));
-            await UniTask.WaitUntil(() => Input.anyKey);
+            await UniTask.WaitUntil(() => inputManager.Controls.General.AnyKey.triggered);
             //screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
             //{
                 screen.SetActive(false);
@@ -129,7 +130,7 @@ namespace CauldronCodebase
             closeButton.gameObject.SetActive(true);
         }
 
-        public async void Close()
+        public void Close()
         {
             if (!active)
             {

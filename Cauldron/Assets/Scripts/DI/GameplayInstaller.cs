@@ -23,6 +23,8 @@ namespace CauldronCodebase
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
         [SerializeField] private CatTipsValidator catTipsValidator;
+        [SerializeField] private Wardrobe wardrobe;
+        [SerializeField] private WitchSkinChanger witchSkinChanger;
 
         [Header("UI")]
         [SerializeField] private GameFXManager fxManager;
@@ -77,6 +79,8 @@ namespace CauldronCodebase
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
             Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
+            Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
+            Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();
         }
 
         private void Initialize()

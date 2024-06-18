@@ -114,6 +114,7 @@ namespace CauldronCodebase
                         PotionBrewed?.Invoke(recipe.potion);
                         potionPopup.OnAccept += () => OnPotionAccepted(recipe.potion);
                         mix.Clear();
+                        recipeBook.CheckExperimentsCompletion();
                         return recipe.potion;
                     }
                 }
@@ -125,6 +126,7 @@ namespace CauldronCodebase
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);
             mix.Clear();
+            recipeBook.CheckExperimentsCompletion();
             return Potions.Placebo;
         }
 

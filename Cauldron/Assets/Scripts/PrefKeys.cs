@@ -2,20 +2,21 @@
 {
     public static class PrefKeys
     {
-        public const string UniqueCards = "RememberedCards";  //maybe not needed in the cloud
+        public const string UniqueCards = "RememberedCards";  //not needed in the cloud
         
-        //converted to cloud save - used for backwards compatibility
+        //TODO cloud
         public const string UnlockedRecipes = "Recipes";
         public const string CurrentRound = "CurrentRound";
         public const string UnlockedEndings = "Endings";
         
-        public const string RecipeHints = "RecipeHints";  
+        public const string RecipeHints = "RecipeHints";  //converted to cloud save - used for backwards compatibility
         
+        //TODO cloud
         public const string Milestones = "Milestones";
         public const string CovenIntroShown = "CovenIntro";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
         
-        //settings - not needed
+        //settings - not needed in the cloud
         public const string MusicValueSettings = "MusicValue";
         public const string SoundsValueSettings = "SoundsValue";
         public const string ResolutionSettings = "ResolutionSettings";
@@ -23,7 +24,7 @@
         public const string AutoCooking = "AutoCooking";
         public const string LanguageKey = "LanguageSettings";
 
-        public struct Tutorial
+        public struct Tutorial //TODO cloud - one File
         {
             public const string BOOK_OPENED_KEY = "TUTORIAL_BOOK_OPENED";
             public const string BOOK_AUTOCOOKING_KEY = "BOOK_AUTOCOOKING_OPENED";

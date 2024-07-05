@@ -12,6 +12,7 @@ namespace CauldronCodebase
         public CatTips catTips;
         [Expandable]
         public RecipeHintsStorage recipeHintsStorage;
+        public TutorialStorage tutorialStorage;
         
         [Serializable]
         public class Gameplay

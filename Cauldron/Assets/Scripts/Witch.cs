@@ -111,7 +111,7 @@ namespace CauldronCodebase
         {
             Fly();
             
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            /*if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
             {
                 return;
             }
@@ -130,7 +130,7 @@ namespace CauldronCodebase
             if (!string.IsNullOrWhiteSpace(nextSkin))
             {
                 anim.Skeleton.SetSkin(nextSkin);
-            }
+            }*/
         }
 
         private List<string> GetUnlockedSkins()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Save;
 using UnityEngine;
 
@@ -12,117 +13,65 @@ public enum TutorialKeys
     TUTORIAL_RECIPE_HINTS 
 }
 
-[Serializable]
-public class Tutorials
-{
-    public bool TUTORIAL_BOOK_OPENED = false;
-    public bool BOOK_AUTOCOOKING_OPENED = false;
-    public bool TUTORIAL_VISITOR = false;
-    public bool TUTORIAL_CHANGE_SCALE = false;
-    public bool TUTORIAL_POTION_DENIED = false;
-    public bool TUTORIAL_RECIPE_HINTS = false;
-
-    public void SetValue(TutorialKeys key, bool value)
-    {
-        switch (key){
-            case TutorialKeys.TUTORIAL_BOOK_OPENED:
-                TUTORIAL_BOOK_OPENED = value;
-                break;
-            case TutorialKeys.BOOK_AUTOCOOKING_OPENED:
-                BOOK_AUTOCOOKING_OPENED = value;
-                break;
-            case TutorialKeys.TUTORIAL_VISITOR:
-                TUTORIAL_VISITOR = value;
-                break;
-            case TutorialKeys.TUTORIAL_CHANGE_SCALE:
-                TUTORIAL_CHANGE_SCALE = value;
-                break;
-            case TutorialKeys.TUTORIAL_POTION_DENIED:
-                TUTORIAL_POTION_DENIED = value;
-                break;
-            case TutorialKeys.TUTORIAL_RECIPE_HINTS:
-                TUTORIAL_RECIPE_HINTS = value;
-                break;
-        }
-    }
-
-    public bool GetValue(TutorialKeys key, out bool value)
-    {
-        switch (key){
-            case TutorialKeys.TUTORIAL_BOOK_OPENED:
-                value = TUTORIAL_BOOK_OPENED;
-                return true;
-            case TutorialKeys.BOOK_AUTOCOOKING_OPENED:
-                value = BOOK_AUTOCOOKING_OPENED;
-                return true;
-            case TutorialKeys.TUTORIAL_VISITOR:
-                value = TUTORIAL_VISITOR;
-                return true;
-            case TutorialKeys.TUTORIAL_CHANGE_SCALE:
-                value = TUTORIAL_CHANGE_SCALE;
-                return true;
-            case TutorialKeys.TUTORIAL_POTION_DENIED:
-                value = TUTORIAL_POTION_DENIED;
-                return true;
-            case TutorialKeys.TUTORIAL_RECIPE_HINTS:
-                value = TUTORIAL_RECIPE_HINTS;
-                return true;
-        }
-        value = false;
-        return false;
-    }
-}
-
-[CreateAssetMenu()]
-public class TutorialStorage: ScriptableObject
+public class TutorialStorage
 {
     private readonly string fileName = "Tutorial";
 
-    public void SaveTutorial(TutorialKeys key, bool value)
+    private HashSet<TutorialKeys> FromStringList(StringListWrapper data)
     {
-        FileDataHandler<Tutorials> fileDataHandler = new FileDataHandler<Tutorials>(fileName);
-        Tutorials tutorials;
+        var tutorials = new HashSet<TutorialKeys>();
+        foreach (var item in data.list)
+        {
+            if(Enum.TryParse(item, out TutorialKeys key))
+            {
+                tutorials.Add(key);
+            }
+        }
+        return tutorials;
+    }
+
+    private StringListWrapper ToStringList(HashSet<TutorialKeys> tutorials)
+    {
+        var data = new StringListWrapper();
+        foreach (var item in tutorials)
+        {
+            data.list.Add(item.ToString());
+        }
+        return data;
+    }
+
+    public void SaveTutorial(TutorialKeys key)
+    {
+        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
+        HashSet<TutorialKeys> tutorials;
 
         if (fileDataHandler.IsFileValid())
         {
-            tutorials = fileDataHandler.Load();
+            tutorials = FromStringList(fileDataHandler.Load());
         }
         else
         {
-            tutorials = new Tutorials();
+            tutorials = new HashSet<TutorialKeys>();
         }
 
-        tutorials.SetValue(key, value);
-        Debug.Log($"tutorial saved: {key}:{value} ");
-        fileDataHandler.Save(tutorials);
+        tutorials.Add(key);
+        Debug.Log($"tutorial saved: {key}");
+        fileDataHandler.Save(ToStringList(tutorials));
     }
 
-    public bool TryGetTutorial(TutorialKeys key, out bool value)
-    {
-        var tutorials = GetTutorials();
-        if (tutorials.GetValue(key, out value))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private Tutorials GetTutorials()
+    public HashSet<TutorialKeys> GetTutorials()
     {
         if (TryLoadLegacy(out var tutorials))
         {
             return tutorials;
         }
-        FileDataHandler<Tutorials> fileDataHandler = new FileDataHandler<Tutorials>(fileName);
-        return fileDataHandler.IsFileValid() ? fileDataHandler.Load() : new Tutorials();
+        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
+        return fileDataHandler.IsFileValid() ? FromStringList(fileDataHandler.Load()) : new HashSet<TutorialKeys>();
     }
 
-    public bool TryLoadLegacy(out Tutorials legacyTutorials)
+    public bool TryLoadLegacy(out HashSet<TutorialKeys> legacyTutorials)
     {
-        Tutorials tutorials = new Tutorials();
+        HashSet<TutorialKeys> tutorials = new HashSet<TutorialKeys>();
         var hasLegacy = false;
 
         foreach (TutorialKeys tutorialKey in TutorialKeys.GetValues(typeof(TutorialKeys)))
@@ -130,17 +79,16 @@ public class TutorialStorage: ScriptableObject
             var key = tutorialKey.ToString();
             if (PlayerPrefs.HasKey(key))
             {
-                var value = PlayerPrefs.GetInt(key) == 1;
-                tutorials.SetValue(tutorialKey, value);
+                tutorials.Add(tutorialKey);
                 PlayerPrefs.DeleteKey(key);
                 hasLegacy = true;
             }
         }
 
-        FileDataHandler<Tutorials> fileDataHandler = new FileDataHandler<Tutorials>(fileName);
+        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
         if (hasLegacy)
         {
-            fileDataHandler.Save(tutorials);
+            fileDataHandler.Save(ToStringList(tutorials));
             {
                 legacyTutorials = tutorials;
                 return true;

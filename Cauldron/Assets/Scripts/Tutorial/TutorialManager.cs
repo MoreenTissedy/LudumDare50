@@ -55,14 +55,19 @@ public class TutorialManager : MonoBehaviour
         recipeHintsStorage.HintAdded += ViewRecipeHintTutorial;
     }
 
+    private void SaveKey(TutorialKeys key)
+    {
+        tutorials.Add(key);
+        tutorialStorage.SaveTutorial(key);
+    }
+
     private void ViewRecipeHintTutorial(RecipeHint hint)
     {
         recipeHintsStorage.HintAdded -= ViewRecipeHintTutorial;
        
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_RECIPE_HINTS))
         {
-            tutorials.Add(TutorialKeys.TUTORIAL_RECIPE_HINTS);
-            tutorialStorage.SaveTutorial(TutorialKeys.TUTORIAL_RECIPE_HINTS);
+            SaveKey(TutorialKeys.TUTORIAL_RECIPE_HINTS);
             tooltipPrefab.Open(RecipeHintTutorialText).Forget();
         }
     }
@@ -73,8 +78,7 @@ public class TutorialManager : MonoBehaviour
         
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_BOOK_OPENED))
         {
-            tutorials.Add(TutorialKeys.TUTORIAL_BOOK_OPENED);
-            tutorialStorage.SaveTutorial(TutorialKeys.TUTORIAL_BOOK_OPENED);
+            SaveKey(TutorialKeys.TUTORIAL_BOOK_OPENED);
             tooltipPrefab.Open(BookTutorialText).Forget();
         }
     }
@@ -83,8 +87,7 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
         
-        tutorials.Add(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
-        tutorialStorage.SaveTutorial(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
+        SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
         acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
         rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
         tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
@@ -100,8 +103,7 @@ public class TutorialManager : MonoBehaviour
             
             if(!tutorials.Contains(TutorialKeys.TUTORIAL_VISITOR))
             {
-                tutorials.Add(TutorialKeys.TUTORIAL_VISITOR);
-                tutorialStorage.SaveTutorial(TutorialKeys.TUTORIAL_VISITOR);
+                SaveKey(TutorialKeys.TUTORIAL_VISITOR);
                 tooltipPrefab.Open(VisitorTutorialText).Forget();
             }
         }
@@ -113,8 +115,7 @@ public class TutorialManager : MonoBehaviour
         
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_CHANGE_SCALE))
         {            
-            tutorials.Add(TutorialKeys.TUTORIAL_CHANGE_SCALE);
-            tutorialStorage.SaveTutorial(TutorialKeys.TUTORIAL_CHANGE_SCALE);
+            SaveKey(TutorialKeys.TUTORIAL_CHANGE_SCALE);
             tooltipPrefab.Open(ScaleTutorialText).Forget();
         }
     }
@@ -127,8 +128,7 @@ public class TutorialManager : MonoBehaviour
         
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_POTION_DENIED))
         {
-            tutorials.Add(TutorialKeys.TUTORIAL_POTION_DENIED);
-            tutorialStorage.SaveTutorial(TutorialKeys.TUTORIAL_POTION_DENIED);
+            SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
     }

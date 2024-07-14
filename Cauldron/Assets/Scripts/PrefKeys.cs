@@ -1,4 +1,6 @@
-﻿namespace CauldronCodebase
+﻿using System.Collections.Generic;
+
+namespace CauldronCodebase
 {
     public static class PrefKeys
     {
@@ -24,14 +26,14 @@
         public const string AutoCooking = "AutoCooking";
         public const string LanguageKey = "LanguageSettings";
 
-        public struct Tutorial //TODO cloud - one File
+        public class PlayerProgress
         {
-            public const string BOOK_OPENED_KEY = "TUTORIAL_BOOK_OPENED";
-            public const string BOOK_AUTOCOOKING_KEY = "BOOK_AUTOCOOKING_OPENED";
-            public const string VISITOR_KEY = "TUTORIAL_VISITOR";
-            public const string SCALE_CHANGE_KEY = "TUTORIAL_CHANGE_SCALE";
-            public const string POTION_DENIED_KEY = "TUTORIAL_POTION_DENIED";
-            public const string RECIPE_HINT_ADDED = "TUTORIAL_RECIPE_HINTS";
+            public List<string> UnlockedRecipes;
+            public List<string> UnlockedEndings;
+            public List<string> Milestones;
+            public int CurrentRound;
+            public bool CovenIntroShown;
+            public bool IsAutoCookingUnlocked;
         }
     }
 }

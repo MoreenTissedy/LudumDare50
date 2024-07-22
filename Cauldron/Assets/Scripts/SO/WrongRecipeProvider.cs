@@ -32,7 +32,7 @@ namespace CauldronCodebase
 
             if (fileDataHandler.IsFileValid())
             {
-                wrongPotions = fileDataHandler.Load().wrongPotions;
+                fileDataHandler.LoadWithOverwrite(this);
             }
             return wrongPotions;
         }

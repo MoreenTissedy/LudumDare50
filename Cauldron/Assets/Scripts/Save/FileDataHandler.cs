@@ -18,6 +18,25 @@ namespace Save
         {
             return File.Exists(fullPath);
         }
+        
+        public T LoadWithOverwrite(T unityObject)
+        {
+            if (IsFileValid())
+            {
+                try
+                {
+                    var dataToLoad = GetFileData();
+                    JsonUtility.FromJsonOverwrite(dataToLoad, unityObject);
+                    Debug.LogWarning($"Data loaded from {fullPath} to Unity object");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Error occured  when trying to load data from file to a Unity object: " + fullPath + "\n" + e);
+                }
+            }
+
+            return unityObject;
+        }
 
         public T Load()
         {
@@ -26,16 +45,7 @@ namespace Save
             {
                 try
                 {
-                    string dataToLoad;
-                    
-                    using (FileStream stream = new FileStream(fullPath, FileMode.Open))
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            dataToLoad = reader.ReadToEnd();
-                        }
-                    }
-
+                    var dataToLoad = GetFileData();
                     loadedData = JsonUtility.FromJson<T>(dataToLoad);
                     Debug.LogWarning($"Data loaded from {fullPath}");
                 }
@@ -46,6 +56,21 @@ namespace Save
             }
 
             return loadedData;
+        }
+
+        private string GetFileData()
+        {
+            string dataToLoad;
+
+            using (FileStream stream = new FileStream(fullPath, FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    dataToLoad = reader.ReadToEnd();
+                }
+            }
+
+            return dataToLoad;
         }
 
         public void Save(T data)

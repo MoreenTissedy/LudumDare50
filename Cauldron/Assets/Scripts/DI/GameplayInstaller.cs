@@ -14,6 +14,7 @@ namespace CauldronCodebase
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
         [SerializeField] private PriorityLaneProvider priorityLane;
+        [SerializeField] private PlayerProgressProvider progressProvider;
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
@@ -48,6 +49,7 @@ namespace CauldronCodebase
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
+            Container.Bind<PlayerProgressProvider>().FromInstance(progressProvider).AsSingle();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
@@ -86,6 +88,8 @@ namespace CauldronCodebase
             nightEvents.Init(dataPersistenceManager, soDictionary);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
             endings.Init(achievementManager);
+            progressProvider.Init();
+            recipeProvider.Init(progressProvider);
         }
 
     }

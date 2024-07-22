@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -12,25 +13,25 @@ namespace CauldronCodebase
         [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
+        private PlayerProgressProvider progressProvider;
+
+        public void Init(PlayerProgressProvider progressProvider)
+        {
+            this.progressProvider = progressProvider;
+        }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
-            string data = string.Join(",", set.Select(x => (int) x.potion));
-            PlayerPrefs.SetString(PrefKeys.UnlockedRecipes, data);
+            progressProvider.SaveRecipes(set.Select(x => (int)x.potion).ToList());
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            if (progressProvider.UnlockedRecipes.Count > 0)
             {
-                string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
-                foreach (var potion in data.Split(','))
+                foreach (var potion in progressProvider.UnlockedRecipes)
                 {
-                    if (string.IsNullOrWhiteSpace(potion))
-                    {
-                        continue;
-                    }
-                    Recipe recipe = GetRecipeForPotion((Potions) int.Parse(potion));
+                    Recipe recipe = GetRecipeForPotion((Potions) potion);
                     if (recipe != null)
                     {
                         yield return recipe;

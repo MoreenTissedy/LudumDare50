@@ -9,11 +9,16 @@ namespace CauldronCodebase
     public class WrongRecipeProvider : ScriptableObject
     {
         private const string WrongRecipeKey = "WrongRecipe";
-
-        private readonly FileDataHandler<WrongRecipeProvider> fileDataHandler =
-            new FileDataHandler<WrongRecipeProvider>("WrongRecipe");
+        private FileDataHandler<WrongRecipeProvider> fileDataHandler;
 
         public List<WrongPotion> wrongPotions = new List<WrongPotion>();
+
+        private void TryInitDataHandler()
+        {
+            if (fileDataHandler != null) return;
+
+            fileDataHandler  = new FileDataHandler<WrongRecipeProvider>(WrongRecipeKey);
+        }
 
         public void ResetWrongRecipe()
         {
@@ -23,6 +28,7 @@ namespace CauldronCodebase
 
         public void SaveWrongRecipes()
         {
+            TryInitDataHandler();
             fileDataHandler.Save(this);
         }
 
@@ -30,6 +36,7 @@ namespace CauldronCodebase
         {
             if (TryLoadLegacy(out var list)) return list;
 
+            TryInitDataHandler();
             if (fileDataHandler.IsFileValid())
             {
                 fileDataHandler.LoadWithOverwrite(this);
@@ -43,6 +50,8 @@ namespace CauldronCodebase
             {
                 string saveData = File.ReadAllText(Application.persistentDataPath + WrongRecipeKey);
                 JsonUtility.FromJsonOverwrite(saveData, this);
+                
+                TryInitDataHandler();
                 fileDataHandler.Save(this);
                 File.Delete(Application.persistentDataPath + WrongRecipeKey);
                 

@@ -15,7 +15,7 @@ public enum TutorialKeys
 
 public class TutorialStorage
 {
-    private readonly string fileName = "Tutorial";
+    private FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>("Tutorial");
 
     private HashSet<TutorialKeys> FromStringList(StringListWrapper data)
     {
@@ -42,7 +42,6 @@ public class TutorialStorage
 
     public void SaveTutorial(TutorialKeys key)
     {
-        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
         HashSet<TutorialKeys> tutorials;
 
         if (fileDataHandler.IsFileValid())
@@ -65,7 +64,6 @@ public class TutorialStorage
         {
             return tutorials;
         }
-        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
         return fileDataHandler.IsFileValid() ? FromStringList(fileDataHandler.Load()) : new HashSet<TutorialKeys>();
     }
 
@@ -85,7 +83,6 @@ public class TutorialStorage
             }
         }
 
-        FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>(fileName);
         if (hasLegacy)
         {
             fileDataHandler.Save(ToStringList(tutorials));

@@ -26,10 +26,12 @@ namespace CauldronCodebase
         private List<string> unlocked;
         private Dictionary<string, Ending> endingDict;
         private IAchievementManager achievements;
+        private PlayerProgressProvider progressProvider;
 
-        public void Init(IAchievementManager achievements)
+        public void Init(IAchievementManager achievements, PlayerProgressProvider progressProvider)
         {
             this.achievements = achievements;
+            this.progressProvider = progressProvider;
             
             endingDict = new Dictionary<string, Ending>(12);
             foreach (var ending in endings)
@@ -37,14 +39,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
-            {
-                unlocked = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
-            }
-            else
-            {
-                unlocked = new List<string>();
-            }
+            unlocked = progressProvider.UnlockedEndings;
         }
 
         public int GetUnlockedEndingsCount()
@@ -78,7 +73,7 @@ namespace CauldronCodebase
         {
             unlocked.Add(tag);
             achievements.TryUnlock(tag);
-            PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
+            progressProvider.SaveEndings(unlocked);
         }
 
         [ContextMenu("Export Endings to CSV")]

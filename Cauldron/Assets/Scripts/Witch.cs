@@ -36,6 +36,7 @@ namespace CauldronCodebase
         [Inject] private Cauldron cauldron;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine gameStateMachine;
+        [Inject] private PlayerProgressProvider progressProvider;
         
         public bool Hidden { get; private set; }
 
@@ -71,10 +72,10 @@ namespace CauldronCodebase
 
         private void SetWitchSkin()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            if (progressProvider.UnlockedEndings.Count > 0)
             {
-                string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
-                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Length - 1]);
+                List<string> unlockedEndings = progressProvider.UnlockedEndings;
+                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Count - 1]);
                 if (!string.IsNullOrWhiteSpace(skinSet.WitchSkin))
                 {
                     anim.Skeleton.SetSkin(skinSet.WitchSkin);
@@ -111,7 +112,7 @@ namespace CauldronCodebase
         {
             Fly();
             
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            if (progressProvider.UnlockedEndings.Count == 0)
             {
                 return;
             }
@@ -135,7 +136,7 @@ namespace CauldronCodebase
 
         private List<string> GetUnlockedSkins()
         {
-            string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
+            List<string> unlockedEndings = progressProvider.UnlockedEndings;
             List<string> skinList = new List<string>() {"main"};
             foreach (var set in skinSets)
             {

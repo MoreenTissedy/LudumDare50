@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CauldronCodebase;
 using Save;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine;
 public class PlayerProgress
 {
     public List<int> UnlockedRecipes = new List<int>();
-    //public List<string> UnlockedEndings;
+    public List<string> UnlockedEndings = new List<string>();
     //public List<string> Milestones;
     //public int CurrentRound;
     //public bool CovenIntroShown;
@@ -24,6 +25,7 @@ public class PlayerProgressProvider : ScriptableObject
     [SerializeField] public PlayerProgress progress;
 
     public List<int> UnlockedRecipes => progress.UnlockedRecipes;
+    public List<string> UnlockedEndings => progress.UnlockedEndings;
    
     private void TryInitFileDataHandler()
     {
@@ -41,6 +43,14 @@ public class PlayerProgressProvider : ScriptableObject
     {
         progress.UnlockedRecipes = recipes;
         Debug.Log($"recipes saved");
+
+        SaveProgress();
+    }
+
+    public void SaveEndings(List<string> endings)
+    {
+        progress.UnlockedEndings = endings;
+        Debug.Log($"endings saved");
 
         SaveProgress();
     }
@@ -66,27 +76,28 @@ public class PlayerProgressProvider : ScriptableObject
         legacyProgress = new PlayerProgress();
         bool hasLegacy = false;
 
-        if (PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
-        {
-            legacyProgress.UnlockedRecipes = GetLegacyRecipes();
-            hasLegacy = true;
-        }
+        hasLegacy |= GetLegacyRecipes(out legacyProgress.UnlockedRecipes);
+        hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);
 
         TryInitFileDataHandler();
         if (hasLegacy)
         {
             fileDataHandler.Save(legacyProgress);
-            {
-                return true;
-            }
+            return true;
         }        
         legacyProgress = null;
         return false;    
     }
 
-    private List<int> GetLegacyRecipes()
+    private bool GetLegacyRecipes(out List<int> list)
     {
-        List<int> list = new List<int>();
+        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+        {
+            list = null;
+            return false;
+        }
+        
+        list = new List<int>();
         string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
         foreach (var potion in data.Split(','))
         {
@@ -96,6 +107,21 @@ public class PlayerProgressProvider : ScriptableObject
             }
             list.Add(int.Parse(potion));
         }
-        return list;
+        PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+
+        return true;
+    }
+
+    private bool GetLegacyEndings(out List<string> list)
+    {
+        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+        {
+            list = null;
+            return false;
+        }
+
+        list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
+        PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+        return true;
     }
 }

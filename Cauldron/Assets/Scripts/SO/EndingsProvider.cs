@@ -39,7 +39,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            unlocked = progressProvider.UnlockedEndings;
+            unlocked = progressProvider.GetUnlockedEndings();
         }
 
         public int GetUnlockedEndingsCount()

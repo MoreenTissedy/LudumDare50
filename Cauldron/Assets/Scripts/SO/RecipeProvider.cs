@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
-using Zenject;
 
 namespace CauldronCodebase
 {
@@ -14,22 +13,25 @@ namespace CauldronCodebase
         //cache to dictionary?
         public Recipe[] allRecipes;
         private PlayerProgressProvider progressProvider;
+        private List<int> unlocked;
 
         public void Init(PlayerProgressProvider progressProvider)
         {
             this.progressProvider = progressProvider;
+            unlocked = progressProvider.GetUnlockedRecipes();
         }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
-            progressProvider.SaveRecipes(set.Select(x => (int)x.potion).ToList());
+            unlocked = set.Select(x => (int)x.potion).ToList();
+            progressProvider.SaveRecipes(unlocked);
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (progressProvider.UnlockedRecipes.Count > 0)
+            if (unlocked.Count > 0)
             {
-                foreach (var potion in progressProvider.UnlockedRecipes)
+                foreach (var potion in unlocked)
                 {
                     Recipe recipe = GetRecipeForPotion((Potions) potion);
                     if (recipe != null)
@@ -44,6 +46,7 @@ namespace CauldronCodebase
                 }
             }
         }
+
         public Recipe GetRecipeForPotion(Potions potion)
         {
             var found = allRecipes.Where(x => x.potion == potion).ToArray();

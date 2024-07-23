@@ -24,8 +24,8 @@ public class PlayerProgressProvider : ScriptableObject
     
     [SerializeField] public PlayerProgress progress;
 
-    public List<int> UnlockedRecipes => progress.UnlockedRecipes;
-    public List<string> UnlockedEndings => progress.UnlockedEndings;
+    public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
+    public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
     public List<string> GetMilestones() => GetPlayerProgress().Milestones;
 
     public Action onChangeMilestone;

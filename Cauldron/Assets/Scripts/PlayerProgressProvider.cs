@@ -10,7 +10,7 @@ public class PlayerProgress
 {
     public List<int> UnlockedRecipes = new List<int>();
     public List<string> UnlockedEndings = new List<string>();
-    //public List<string> Milestones;
+    public List<string> Milestones;
     //public int CurrentRound;
     //public bool CovenIntroShown;
     //public bool IsAutoCookingUnlocked;
@@ -26,6 +26,9 @@ public class PlayerProgressProvider : ScriptableObject
 
     public List<int> UnlockedRecipes => progress.UnlockedRecipes;
     public List<string> UnlockedEndings => progress.UnlockedEndings;
+    public List<string> GetMilestones() => GetPlayerProgress().Milestones;
+
+    public Action onChangeMilestone;
    
     private void TryInitFileDataHandler()
     {
@@ -55,6 +58,15 @@ public class PlayerProgressProvider : ScriptableObject
         SaveProgress();
     }
 
+    public void SaveMilestones(List<string> milestones)
+    {
+        progress.Milestones = milestones;
+        Debug.Log($"milestones saved");
+
+        SaveProgress();
+        onChangeMilestone?.Invoke();
+    }
+
     private void SaveProgress()
     {
         TryInitFileDataHandler();
@@ -77,7 +89,8 @@ public class PlayerProgressProvider : ScriptableObject
         bool hasLegacy = false;
 
         hasLegacy |= GetLegacyRecipes(out legacyProgress.UnlockedRecipes);
-        hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);
+        hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);        
+        hasLegacy |= GetLegacyMilestones(out legacyProgress.Milestones);
 
         TryInitFileDataHandler();
         if (hasLegacy)
@@ -122,6 +135,19 @@ public class PlayerProgressProvider : ScriptableObject
 
         list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
         PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+        return true;
+    }
+
+     private bool GetLegacyMilestones(out List<string> list)
+    {
+        if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+        {
+            list = null;
+            return false;
+        }
+
+        list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
+        PlayerPrefs.DeleteKey(PrefKeys.Milestones);
         return true;
     }
 }

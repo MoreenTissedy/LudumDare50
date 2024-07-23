@@ -41,6 +41,7 @@ namespace CauldronCodebase
         public bool Hidden { get; private set; }
 
         private List<string> unlockedSkins;
+        private List<string> unlockedEndings;
 
         
         private void Awake()
@@ -50,9 +51,16 @@ namespace CauldronCodebase
 
         private void Start()
         {
+            UnlockedEndingsUpdate();
             SetWitchSkin();
             cauldron.PotionBrewed += CauldronOnPotionBrewed;
             gameStateMachine.OnChangeState += OnDayNightChange;
+            progressProvider.onChangeMilestone += UnlockedEndingsUpdate;
+        }
+
+        private void UnlockedEndingsUpdate()
+        {
+            unlockedEndings = progressProvider.GetUnlockedEndings();
         }
 
         private void OnDayNightChange(GameStateMachine.GamePhase phase)
@@ -72,9 +80,8 @@ namespace CauldronCodebase
 
         private void SetWitchSkin()
         {
-            if (progressProvider.UnlockedEndings.Count > 0)
+            if (unlockedEndings.Count > 0)
             {
-                List<string> unlockedEndings = progressProvider.UnlockedEndings;
                 var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Count - 1]);
                 if (!string.IsNullOrWhiteSpace(skinSet.WitchSkin))
                 {
@@ -112,7 +119,7 @@ namespace CauldronCodebase
         {
             Fly();
             
-            if (progressProvider.UnlockedEndings.Count == 0)
+            if (unlockedEndings.Count == 0)
             {
                 return;
             }
@@ -136,7 +143,6 @@ namespace CauldronCodebase
 
         private List<string> GetUnlockedSkins()
         {
-            List<string> unlockedEndings = progressProvider.UnlockedEndings;
             List<string> skinList = new List<string>() {"main"};
             foreach (var set in skinSets)
             {

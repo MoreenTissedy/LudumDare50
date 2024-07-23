@@ -4,6 +4,7 @@ using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
+using Zenject;
 
 namespace Save
 {
@@ -47,6 +48,8 @@ namespace Save
         
         public bool DarkStrangerCame, WitchCame, InquisitorCame;
 
+        [Inject] private MilestoneProvider milestoneProvider;
+
         public GameData(int initialValue)
         {
             AttemptsLeft = 3;
@@ -60,7 +63,7 @@ namespace Save
 
             CurrentEncounter = null;
 
-            StoryTags = StoryTagHelper.GetMilestones().ToList();
+            StoryTags = milestoneProvider.GetMilestones();
 
             WrongPotionsCountOnRun = 0;
 

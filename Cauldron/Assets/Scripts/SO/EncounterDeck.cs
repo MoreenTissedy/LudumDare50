@@ -45,6 +45,7 @@ namespace CauldronCodebase
         private Encounter loadedCard;
         private MainSettings mainSettings;
         private RecipeBook recipeBook;
+        private MilestoneProvider milestoneProvider;
         private int lastExtendedRoundNumber;
 
         public bool TryUpdateDeck()
@@ -71,7 +72,7 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook, MilestoneProvider milestoneProvider)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
@@ -79,7 +80,7 @@ namespace CauldronCodebase
             recipeProvider = recipes;
             this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
-
+            this.milestoneProvider = milestoneProvider;
             InitRememberedCards();
         }
 
@@ -382,7 +383,7 @@ namespace CauldronCodebase
                 return;
             }
             DealCards(2);
-            gameDataHandler.storyTags = StoryTagHelper.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            gameDataHandler.storyTags = milestoneProvider.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
             if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
             {
                 deck.AddFirst(introCards[6]);

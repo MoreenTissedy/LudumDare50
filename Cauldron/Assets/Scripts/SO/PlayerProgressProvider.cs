@@ -13,8 +13,8 @@ public class PlayerProgress
     public List<string> UnlockedEndings = new List<string>();
     public List<string> Milestones = new List<string>();
     public int CurrentRound = 0;
-    //public bool CovenIntroShown;
-    //public bool IsAutoCookingUnlocked;
+    public bool CovenIntroShown;
+    public bool IsAutoCookingUnlocked;
 }
 
 [CreateAssetMenu]
@@ -28,7 +28,9 @@ public class PlayerProgressProvider : ScriptableObject
     public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
     public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
     public List<string> GetMilestones() => GetPlayerProgress().Milestones;
-    public int CurrentRound => progress.CurrentRound;
+    public int CurrentRound => progress.CurrentRound;    
+    public bool CovenIntroShown => progress.CovenIntroShown;
+    public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
 
     public Action onChangeMilestone;
    
@@ -76,6 +78,22 @@ public class PlayerProgressProvider : ScriptableObject
 
         SaveProgress();
     }
+
+    public void SaveCovenIntroShown()
+    {
+        progress.CovenIntroShown = true;
+        Debug.Log($"CovenIntroShown saved");
+
+        SaveProgress();
+    }
+
+    public void SaveAutoCookingUnlocked()
+    {
+        progress.IsAutoCookingUnlocked = true;
+        Debug.Log($"IsAutoCookingUnlocked saved");
+
+        SaveProgress();
+    }
     
     private void SaveProgress()
     {
@@ -101,7 +119,9 @@ public class PlayerProgressProvider : ScriptableObject
         hasLegacy |= GetLegacyRecipes(out legacyProgress.UnlockedRecipes);
         hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);        
         hasLegacy |= GetLegacyMilestones(out legacyProgress.Milestones);        
-        hasLegacy |= GetLegacyRound(out legacyProgress.CurrentRound);
+        hasLegacy |= GetLegacyRound(out legacyProgress.CurrentRound);        
+        hasLegacy |= GetLegacyCovenIntroShown(out legacyProgress.CovenIntroShown);
+        hasLegacy |= GetLegacyAutoCooking(out legacyProgress.IsAutoCookingUnlocked);
 
         TryInitFileDataHandler();
         if (hasLegacy)
@@ -172,6 +192,33 @@ public class PlayerProgressProvider : ScriptableObject
         
         round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
         PlayerPrefs.DeleteKey(PrefKeys.CurrentRound);
+
+        return true;
+    }
+
+    private bool GetLegacyCovenIntroShown(out bool isShown)
+    {
+        if (!PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+        {
+            isShown = false;
+            return false;
+        }
+        
+        isShown = PlayerPrefs.GetInt(PrefKeys.CovenIntroShown) == 1;
+        PlayerPrefs.DeleteKey(PrefKeys.CovenIntroShown);
+
+        return true;
+    }
+     private bool GetLegacyAutoCooking(out bool isUnlocked)
+    {
+        if (!PlayerPrefs.HasKey(PrefKeys.IsAutoCookingUnlocked))
+        {
+            isUnlocked = false;
+            return false;
+        }
+        
+        isUnlocked = PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1;
+        PlayerPrefs.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
 
         return true;
     }

@@ -387,10 +387,10 @@ namespace CauldronCodebase
             }
             DealCards(2);
             gameDataHandler.storyTags = milestoneProvider.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
-            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !progressProvider.CovenIntroShown)
             {
                 deck.AddFirst(introCards[6]);
-                PlayerPrefs.SetInt(PrefKeys.CovenIntroShown, 1);
+                progressProvider.SaveCovenIntroShown();
                 return;
             }
             if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))

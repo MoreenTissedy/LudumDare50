@@ -29,6 +29,7 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
         [Inject] private LocalizationTool localizationTool;
+        [Inject] private PlayerProgressProvider progressProvider;
 
         private void Start()
         {
@@ -61,6 +62,7 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
+            progressProvider.Reset();
             wrongRecipeProvider.ResetWrongRecipe();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());

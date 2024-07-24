@@ -74,7 +74,7 @@ public class PlayerProgressProvider : ScriptableObject
     public void SaveCurrentRound(int round)
     {
         progress.CurrentRound = round;
-        Debug.Log($"milestones saved");
+        Debug.Log($"round saved");
 
         SaveProgress();
     }
@@ -221,5 +221,11 @@ public class PlayerProgressProvider : ScriptableObject
         PlayerPrefs.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
 
         return true;
+    }
+
+    public void Reset()
+    {
+        progress = new PlayerProgress();
+        SaveProgress();
     }
 }

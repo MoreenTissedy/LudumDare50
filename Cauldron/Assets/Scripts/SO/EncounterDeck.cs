@@ -46,6 +46,7 @@ namespace CauldronCodebase
         private MainSettings mainSettings;
         private RecipeBook recipeBook;
         private MilestoneProvider milestoneProvider;
+        private PlayerProgressProvider progressProvider;
         private int lastExtendedRoundNumber;
 
         public bool TryUpdateDeck()
@@ -72,7 +73,8 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook, MilestoneProvider milestoneProvider)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes,
+            RecipeBook recipeBook, MilestoneProvider milestoneProvider, PlayerProgressProvider progressProvider)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
@@ -81,6 +83,7 @@ namespace CauldronCodebase
             this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.milestoneProvider = milestoneProvider;
+            this.progressProvider = progressProvider;
             InitRememberedCards();
         }
 
@@ -373,7 +376,7 @@ namespace CauldronCodebase
 
         private void SetStartingDecks()
         {
-            int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            int round = progressProvider.CurrentRound;
             InitCardPool(round);
             if (round == 0)
             {

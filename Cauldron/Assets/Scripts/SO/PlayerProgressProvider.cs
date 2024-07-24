@@ -4,14 +4,15 @@ using System.Linq;
 using CauldronCodebase;
 using Save;
 using UnityEngine;
+using Zenject;
 
 [Serializable]
 public class PlayerProgress
 {
     public List<int> UnlockedRecipes = new List<int>();
     public List<string> UnlockedEndings = new List<string>();
-    public List<string> Milestones;
-    //public int CurrentRound;
+    public List<string> Milestones = new List<string>();
+    public int CurrentRound = 0;
     //public bool CovenIntroShown;
     //public bool IsAutoCookingUnlocked;
 }
@@ -27,6 +28,7 @@ public class PlayerProgressProvider : ScriptableObject
     public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
     public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
     public List<string> GetMilestones() => GetPlayerProgress().Milestones;
+    public int CurrentRound => progress.CurrentRound;
 
     public Action onChangeMilestone;
    
@@ -37,7 +39,7 @@ public class PlayerProgressProvider : ScriptableObject
         fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
     }
     
-    public void Init()
+    public void LoadProgress()
     {
         progress = GetPlayerProgress();
     }
@@ -67,6 +69,14 @@ public class PlayerProgressProvider : ScriptableObject
         onChangeMilestone?.Invoke();
     }
 
+    public void SaveCurrentRound(int round)
+    {
+        progress.CurrentRound = round;
+        Debug.Log($"milestones saved");
+
+        SaveProgress();
+    }
+    
     private void SaveProgress()
     {
         TryInitFileDataHandler();
@@ -90,7 +100,8 @@ public class PlayerProgressProvider : ScriptableObject
 
         hasLegacy |= GetLegacyRecipes(out legacyProgress.UnlockedRecipes);
         hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);        
-        hasLegacy |= GetLegacyMilestones(out legacyProgress.Milestones);
+        hasLegacy |= GetLegacyMilestones(out legacyProgress.Milestones);        
+        hasLegacy |= GetLegacyRound(out legacyProgress.CurrentRound);
 
         TryInitFileDataHandler();
         if (hasLegacy)
@@ -138,7 +149,7 @@ public class PlayerProgressProvider : ScriptableObject
         return true;
     }
 
-     private bool GetLegacyMilestones(out List<string> list)
+    private bool GetLegacyMilestones(out List<string> list)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
         {
@@ -148,6 +159,20 @@ public class PlayerProgressProvider : ScriptableObject
 
         list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
         PlayerPrefs.DeleteKey(PrefKeys.Milestones);
+        return true;
+    }
+
+    private bool GetLegacyRound(out int round)
+    {
+        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+        {
+            round = 0;
+            return false;
+        }
+        
+        round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+        PlayerPrefs.DeleteKey(PrefKeys.CurrentRound);
+
         return true;
     }
 }

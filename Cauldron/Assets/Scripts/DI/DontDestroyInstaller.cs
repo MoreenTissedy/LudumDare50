@@ -17,6 +17,8 @@ namespace CauldronCodebase
 
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
+        [SerializeField] private PlayerProgressProvider progressProvider;
+
         public override void InstallBindings()
         {
             Camera mainCameraScript = Container.InstantiatePrefab(mainCamera).GetComponent<Camera>();
@@ -27,6 +29,8 @@ namespace CauldronCodebase
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
             
+            Container.Bind<PlayerProgressProvider>().FromInstance(progressProvider).AsSingle().NonLazy();
+            progressProvider.LoadProgress();
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();

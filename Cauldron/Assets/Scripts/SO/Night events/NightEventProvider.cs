@@ -44,10 +44,11 @@ namespace CauldronCodebase
         public List<CooldownEvent> eventsOnCooldown;
         private SODictionary soDictionary;
         private DataPersistenceManager dataPersistenceManager;
-
+        private PlayerProgressProvider progressProvider;
+        
         private List<NightEvent> joinedEvents;
 
-        public void Init(DataPersistenceManager dataPersistenceManager, SODictionary dictionary)
+        public void Init(DataPersistenceManager dataPersistenceManager, SODictionary dictionary, PlayerProgressProvider progressProvider)
         {
             eventsOnCooldown = new List<CooldownEvent>(5);
             inGameConditionals = new List<ConditionalEvent>(conditionalEvents.Count);
@@ -57,6 +58,7 @@ namespace CauldronCodebase
             soDictionary = dictionary;
             this.dataPersistenceManager = dataPersistenceManager;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
+            this.progressProvider = progressProvider;
         }
 
         private NightEvent GetRandomEvent(GameDataHandler gameDataHandler)
@@ -110,7 +112,7 @@ namespace CauldronCodebase
 
         public NightEvent[] GetEvents(GameDataHandler game)
         {
-            if (PlayerPrefs.GetInt(PrefKeys.CurrentRound) == 0 && 
+            if (progressProvider.CurrentRound == 0 && 
                 game.currentDay == 0)
             {
                 return new[] {intro};

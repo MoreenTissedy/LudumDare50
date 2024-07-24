@@ -48,9 +48,7 @@ namespace Save
         
         public bool DarkStrangerCame, WitchCame, InquisitorCame;
 
-        [Inject] private MilestoneProvider milestoneProvider;
-
-        public GameData(int initialValue)
+        public GameData(int initialValue, List<string> milestones)
         {
             AttemptsLeft = 3;
             
@@ -63,7 +61,7 @@ namespace Save
 
             CurrentEncounter = null;
 
-            StoryTags = milestoneProvider.GetMilestones();
+            StoryTags = milestones;
 
             WrongPotionsCountOnRun = 0;
 

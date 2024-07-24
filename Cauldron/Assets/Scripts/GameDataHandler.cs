@@ -49,6 +49,7 @@ namespace CauldronCodebase
 
         public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
+        PlayerProgressProvider progressProvider;
 
         public event Action StatusChanged;
 
@@ -61,7 +62,8 @@ namespace CauldronCodebase
 
         private SODictionary soDictionary;
         
-        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager, SODictionary dictionary)
+        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager,
+                         SODictionary dictionary, PlayerProgressProvider progressProvider)
         {
             soDictionary = dictionary;
             
@@ -72,15 +74,9 @@ namespace CauldronCodebase
             currentDeck = deck;
 
             fractionStatus = new FractionStatus();
+            this.progressProvider = progressProvider;
             
-            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
-            {
-                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
-            }
-            else
-            {
-                currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-            }
+            currentRound = progressProvider.CurrentRound;
         }
 
         public bool IsEnoughMoneyForRumours()
@@ -261,7 +257,7 @@ namespace CauldronCodebase
         public void RememberRound()
         {
             currentRound += 1;
-            PlayerPrefs.SetInt(PrefKeys.CurrentRound, currentRound);
+            progressProvider.SaveCurrentRound(currentRound);
         }
         
         public void CalculatePotionsOnLastDays()

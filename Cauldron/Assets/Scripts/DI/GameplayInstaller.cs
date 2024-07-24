@@ -14,7 +14,6 @@ namespace CauldronCodebase
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
         [SerializeField] private PriorityLaneProvider priorityLane;
-        [SerializeField] private PlayerProgressProvider progressProvider;
         [SerializeField] private MilestoneProvider milestoneProvider;
 
         [Header("Gameplay")]
@@ -33,6 +32,7 @@ namespace CauldronCodebase
         [SerializeField] private CatAnimations catAnimations;
 
         [Inject] private MainSettings mainSettings;
+        [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
 
@@ -85,11 +85,11 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
-            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
-            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider, recipeBook, milestoneProvider);
-            nightEvents.Init(dataPersistenceManager, soDictionary);
+            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings,
+                            recipeProvider, recipeBook, milestoneProvider, progressProvider);
+            nightEvents.Init(dataPersistenceManager, soDictionary, progressProvider);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
-            progressProvider.Init();
             endings.Init(achievementManager, progressProvider);
             recipeProvider.Init(progressProvider);
             milestoneProvider.Init(progressProvider);

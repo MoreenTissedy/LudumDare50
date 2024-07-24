@@ -18,15 +18,17 @@ namespace Save
 
         private MainSettings settings;
         private SODictionary soDictionary;
+        private PlayerProgressProvider progressProvider;
 
         public bool IsNewGame { get; private set; }
 
         [Inject]
-        private void Construct(MainSettings mainSettings, SODictionary dictionary)
+        private void Construct(MainSettings mainSettings, SODictionary dictionary, PlayerProgressProvider progressProvider)
         {
             settings = mainSettings;
             soDictionary = dictionary;
             fileDataHandler = new FileDataHandler<GameData>(fileName);
+            this.progressProvider = progressProvider;
         }
 
         private void Awake()
@@ -51,7 +53,7 @@ namespace Save
         public void NewGame()
         {
             fileDataHandler.Delete();
-            gameData = new GameData(settings.statusBars.InitialValue);
+            gameData = new GameData(settings.statusBars.InitialValue, progressProvider.GetMilestones());
             IsNewGame = true;
         }
 

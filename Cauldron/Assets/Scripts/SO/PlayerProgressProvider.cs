@@ -4,7 +4,6 @@ using System.Linq;
 using CauldronCodebase;
 using Save;
 using UnityEngine;
-using Zenject;
 
 [Serializable]
 public class PlayerProgress
@@ -33,16 +32,10 @@ public class PlayerProgressProvider : ScriptableObject
     public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
 
     public Action onChangeMilestone;
-   
-    private void TryInitFileDataHandler()
-    {
-        if (fileDataHandler != null) return;
-
-        fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
-    }
     
     public void LoadProgress()
     {
+        fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
         progress = GetPlayerProgress();
     }
 
@@ -97,7 +90,6 @@ public class PlayerProgressProvider : ScriptableObject
     
     private void SaveProgress()
     {
-        TryInitFileDataHandler();
         fileDataHandler.Save(progress);
     }
 
@@ -107,7 +99,6 @@ public class PlayerProgressProvider : ScriptableObject
         {
             return legacyProgress;
         }
-        TryInitFileDataHandler();
         return fileDataHandler.IsFileValid() ? fileDataHandler.Load() : new PlayerProgress();
     }
 
@@ -116,14 +107,13 @@ public class PlayerProgressProvider : ScriptableObject
         legacyProgress = new PlayerProgress();
         bool hasLegacy = false;
 
-        hasLegacy |= GetLegacyRecipes(out legacyProgress.UnlockedRecipes);
-        hasLegacy |= GetLegacyEndings(out legacyProgress.UnlockedEndings);        
-        hasLegacy |= GetLegacyMilestones(out legacyProgress.Milestones);        
-        hasLegacy |= GetLegacyRound(out legacyProgress.CurrentRound);        
-        hasLegacy |= GetLegacyCovenIntroShown(out legacyProgress.CovenIntroShown);
-        hasLegacy |= GetLegacyAutoCooking(out legacyProgress.IsAutoCookingUnlocked);
+        hasLegacy |= GetLegacyRecipes(ref legacyProgress.UnlockedRecipes);
+        hasLegacy |= GetLegacyEndings(ref legacyProgress.UnlockedEndings);        
+        hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
+        hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
+        hasLegacy |= GetLegacyCovenIntroShown(ref legacyProgress.CovenIntroShown);
+        hasLegacy |= GetLegacyAutoCooking(ref legacyProgress.IsAutoCookingUnlocked);
 
-        TryInitFileDataHandler();
         if (hasLegacy)
         {
             fileDataHandler.Save(legacyProgress);
@@ -133,7 +123,7 @@ public class PlayerProgressProvider : ScriptableObject
         return false;    
     }
 
-    private bool GetLegacyRecipes(out List<int> list)
+    private bool GetLegacyRecipes(ref List<int> list)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
         {
@@ -156,7 +146,7 @@ public class PlayerProgressProvider : ScriptableObject
         return true;
     }
 
-    private bool GetLegacyEndings(out List<string> list)
+    private bool GetLegacyEndings(ref List<string> list)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
         {
@@ -169,7 +159,7 @@ public class PlayerProgressProvider : ScriptableObject
         return true;
     }
 
-    private bool GetLegacyMilestones(out List<string> list)
+    private bool GetLegacyMilestones(ref List<string> list)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
         {
@@ -182,7 +172,7 @@ public class PlayerProgressProvider : ScriptableObject
         return true;
     }
 
-    private bool GetLegacyRound(out int round)
+    private bool GetLegacyRound(ref int round)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
         {
@@ -196,7 +186,7 @@ public class PlayerProgressProvider : ScriptableObject
         return true;
     }
 
-    private bool GetLegacyCovenIntroShown(out bool isShown)
+    private bool GetLegacyCovenIntroShown(ref bool isShown)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
         {
@@ -209,7 +199,7 @@ public class PlayerProgressProvider : ScriptableObject
 
         return true;
     }
-     private bool GetLegacyAutoCooking(out bool isUnlocked)
+     private bool GetLegacyAutoCooking(ref bool isUnlocked)
     {
         if (!PlayerPrefs.HasKey(PrefKeys.IsAutoCookingUnlocked))
         {

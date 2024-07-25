@@ -1,220 +1,221 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CauldronCodebase;
-using Save;
 using UnityEngine;
 
-[Serializable]
-public class PlayerProgress
+namespace CauldronCodebase
 {
-    public List<int> UnlockedRecipes = new List<int>();
-    public List<string> UnlockedEndings = new List<string>();
-    public List<string> Milestones = new List<string>();
-    public int CurrentRound = 0;
-    public bool CovenIntroShown;
-    public bool IsAutoCookingUnlocked;
-}
-
-public class PlayerProgressProvider
-{
-    private readonly string fileName = "PlayerProgress";
-    private FileDataHandler<PlayerProgress> fileDataHandler;
-    
-    public PlayerProgress progress;
-
-    public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
-    public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
-    public List<string> GetMilestones() => GetPlayerProgress().Milestones;
-    public int CurrentRound => progress.CurrentRound;    
-    public bool CovenIntroShown => progress.CovenIntroShown;
-    public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
-
-    public Action onChangeMilestone;
-    
-    public PlayerProgressProvider()
+    [Serializable]
+    public class PlayerProgress
     {
-        fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
-        progress = GetPlayerProgress();
+        public List<int> UnlockedRecipes = new List<int>();
+        public List<string> UnlockedEndings = new List<string>();
+        public List<string> Milestones = new List<string>();
+        public int CurrentRound = 0;
+        public bool CovenIntroShown;
+        public bool IsAutoCookingUnlocked;
     }
 
-    public void SaveRecipes(List<int> recipes)
+    public class PlayerProgressProvider
     {
-        progress.UnlockedRecipes = recipes;
-        Debug.Log($"recipes saved");
+        private readonly string fileName = "PlayerProgress";
+        private FileDataHandler<PlayerProgress> fileDataHandler;
+        
+        public PlayerProgress progress;
 
-        SaveProgress();
-    }
+        public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
+        public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
+        public List<string> GetMilestones() => GetPlayerProgress().Milestones;
+        public int CurrentRound => progress.CurrentRound;    
+        public bool CovenIntroShown => progress.CovenIntroShown;
+        public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
 
-    public void SaveEndings(List<string> endings)
-    {
-        progress.UnlockedEndings = endings;
-        Debug.Log($"endings saved");
-
-        SaveProgress();
-    }
-
-    public void SaveMilestones(List<string> milestones)
-    {
-        progress.Milestones = milestones;
-        Debug.Log($"milestones saved");
-
-        SaveProgress();
-        onChangeMilestone?.Invoke();
-    }
-
-    public void SaveCurrentRound(int round)
-    {
-        progress.CurrentRound = round;
-        Debug.Log($"round saved");
-
-        SaveProgress();
-    }
-
-    public void SaveCovenIntroShown()
-    {
-        progress.CovenIntroShown = true;
-        Debug.Log($"CovenIntroShown saved");
-
-        SaveProgress();
-    }
-
-    public void SaveAutoCookingUnlocked()
-    {
-        progress.IsAutoCookingUnlocked = true;
-        Debug.Log($"IsAutoCookingUnlocked saved");
-
-        SaveProgress();
-    }
-    
-    private void SaveProgress()
-    {
-        fileDataHandler.Save(progress);
-    }
-
-    private PlayerProgress GetPlayerProgress()
-    {
-        if (TryLoadLegacy(out var legacyProgress))
+        public Action onChangeMilestone;
+        
+        public PlayerProgressProvider()
         {
-            return legacyProgress;
+            fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
+            progress = GetPlayerProgress();
         }
-        return fileDataHandler.IsFileValid() ? fileDataHandler.Load() : new PlayerProgress();
-    }
 
-    private bool TryLoadLegacy(out PlayerProgress legacyProgress)
-    {
-        legacyProgress = new PlayerProgress();
-        bool hasLegacy = false;
-
-        hasLegacy |= GetLegacyRecipes(ref legacyProgress.UnlockedRecipes);
-        hasLegacy |= GetLegacyEndings(ref legacyProgress.UnlockedEndings);        
-        hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
-        hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
-        hasLegacy |= GetLegacyCovenIntroShown(ref legacyProgress.CovenIntroShown);
-        hasLegacy |= GetLegacyAutoCooking(ref legacyProgress.IsAutoCookingUnlocked);
-
-        if (hasLegacy)
+        public void SaveRecipes(List<int> recipes)
         {
-            fileDataHandler.Save(legacyProgress);
-            return true;
-        }        
-        legacyProgress = null;
-        return false;    
-    }
+            progress.UnlockedRecipes = recipes;
+            Debug.Log($"recipes saved");
 
-    private bool GetLegacyRecipes(ref List<int> list)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            SaveProgress();
+        }
+
+        public void SaveEndings(List<string> endings)
         {
-            list = null;
-            return false;
+            progress.UnlockedEndings = endings;
+            Debug.Log($"endings saved");
+
+            SaveProgress();
+        }
+
+        public void SaveMilestones(List<string> milestones)
+        {
+            progress.Milestones = milestones;
+            Debug.Log($"milestones saved");
+
+            SaveProgress();
+            onChangeMilestone?.Invoke();
+        }
+
+        public void SaveCurrentRound(int round)
+        {
+            progress.CurrentRound = round;
+            Debug.Log($"round saved");
+
+            SaveProgress();
+        }
+
+        public void SaveCovenIntroShown()
+        {
+            progress.CovenIntroShown = true;
+            Debug.Log($"CovenIntroShown saved");
+
+            SaveProgress();
+        }
+
+        public void SaveAutoCookingUnlocked()
+        {
+            progress.IsAutoCookingUnlocked = true;
+            Debug.Log($"IsAutoCookingUnlocked saved");
+
+            SaveProgress();
         }
         
-        list = new List<int>();
-        string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
-        foreach (var potion in data.Split(','))
+        private void SaveProgress()
         {
-            if (string.IsNullOrWhiteSpace(potion))
+            fileDataHandler.Save(progress);
+        }
+
+        private PlayerProgress GetPlayerProgress()
+        {
+            if (TryLoadLegacy(out var legacyProgress))
             {
-                continue;
+                return legacyProgress;
             }
-            list.Add(int.Parse(potion));
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load() : new PlayerProgress();
         }
-        PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
 
-        return true;
-    }
-
-    private bool GetLegacyEndings(ref List<string> list)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+        private bool TryLoadLegacy(out PlayerProgress legacyProgress)
         {
-            list = null;
-            return false;
+            legacyProgress = new PlayerProgress();
+            bool hasLegacy = false;
+
+            hasLegacy |= GetLegacyRecipes(ref legacyProgress.UnlockedRecipes);
+            hasLegacy |= GetLegacyEndings(ref legacyProgress.UnlockedEndings);        
+            hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
+            hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
+            hasLegacy |= GetLegacyCovenIntroShown(ref legacyProgress.CovenIntroShown);
+            hasLegacy |= GetLegacyAutoCooking(ref legacyProgress.IsAutoCookingUnlocked);
+
+            if (hasLegacy)
+            {
+                fileDataHandler.Save(legacyProgress);
+                return true;
+            }        
+            legacyProgress = null;
+            return false;    
         }
 
-        list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
-        PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
-        return true;
-    }
-
-    private bool GetLegacyMilestones(ref List<string> list)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+        private bool GetLegacyRecipes(ref List<int> list)
         {
-            list = null;
-            return false;
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            {
+                list = null;
+                return false;
+            }
+            
+            list = new List<int>();
+            string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
+            foreach (var potion in data.Split(','))
+            {
+                if (string.IsNullOrWhiteSpace(potion))
+                {
+                    continue;
+                }
+                list.Add(int.Parse(potion));
+            }
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+
+            return true;
         }
 
-        list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
-        PlayerPrefs.DeleteKey(PrefKeys.Milestones);
-        return true;
-    }
-
-    private bool GetLegacyRound(ref int round)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+        private bool GetLegacyEndings(ref List<string> list)
         {
-            round = 0;
-            return false;
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            {
+                list = null;
+                return false;
+            }
+
+            list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+            return true;
         }
-        
-        round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-        PlayerPrefs.DeleteKey(PrefKeys.CurrentRound);
 
-        return true;
-    }
-
-    private bool GetLegacyCovenIntroShown(ref bool isShown)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+        private bool GetLegacyMilestones(ref List<string> list)
         {
-            isShown = false;
-            return false;
-        }
-        
-        isShown = PlayerPrefs.GetInt(PrefKeys.CovenIntroShown) == 1;
-        PlayerPrefs.DeleteKey(PrefKeys.CovenIntroShown);
+            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                list = null;
+                return false;
+            }
 
-        return true;
-    }
-     private bool GetLegacyAutoCooking(ref bool isUnlocked)
-    {
-        if (!PlayerPrefs.HasKey(PrefKeys.IsAutoCookingUnlocked))
+            list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
+            PlayerPrefs.DeleteKey(PrefKeys.Milestones);
+            return true;
+        }
+
+        private bool GetLegacyRound(ref int round)
         {
-            isUnlocked = false;
-            return false;
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            {
+                round = 0;
+                return false;
+            }
+            
+            round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            PlayerPrefs.DeleteKey(PrefKeys.CurrentRound);
+
+            return true;
         }
-        
-        isUnlocked = PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1;
-        PlayerPrefs.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
 
-        return true;
-    }
+        private bool GetLegacyCovenIntroShown(ref bool isShown)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            {
+                isShown = false;
+                return false;
+            }
+            
+            isShown = PlayerPrefs.GetInt(PrefKeys.CovenIntroShown) == 1;
+            PlayerPrefs.DeleteKey(PrefKeys.CovenIntroShown);
 
-    public void Reset()
-    {
-        progress = new PlayerProgress();
-        SaveProgress();
+            return true;
+        }
+        private bool GetLegacyAutoCooking(ref bool isUnlocked)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.IsAutoCookingUnlocked))
+            {
+                isUnlocked = false;
+                return false;
+            }
+            
+            isUnlocked = PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1;
+            PlayerPrefs.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            progress = new PlayerProgress();
+            SaveProgress();
+        }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
-namespace Save
+namespace CauldronCodebase
 {
     public class DataPersistenceManager : MonoBehaviour
     {

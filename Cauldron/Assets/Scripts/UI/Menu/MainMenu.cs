@@ -1,5 +1,4 @@
 using EasyLoc;
-using Save;
 using UnityEngine;
 using Universal;
 using Zenject;

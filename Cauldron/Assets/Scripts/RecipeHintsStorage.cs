@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EasyLoc;
-using Save;
 using UnityEngine;
 
 #if UNITY_EDITOR

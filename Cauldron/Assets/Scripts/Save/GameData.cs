@@ -6,7 +6,7 @@ using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
-namespace Save
+namespace CauldronCodebase
 {
     [Serializable]
     public class GameData

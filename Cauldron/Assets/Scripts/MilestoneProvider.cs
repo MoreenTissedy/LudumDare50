@@ -1,57 +1,60 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MilestoneProvider
+namespace CauldronCodebase
 {
-    private PlayerProgressProvider progressProvider;
-    private List<string> milestones;
-
-    public void Init(PlayerProgressProvider progressProvider)
+    public class MilestoneProvider
     {
-        this.progressProvider = progressProvider;
-        milestones = progressProvider.GetMilestones();
-    }
+        private PlayerProgressProvider progressProvider;
+        private List<string> milestones;
 
-    public void SaveMilestone(string tag)
-    {
-        if (!milestones.Contains(tag))
+        public void Init(PlayerProgressProvider progressProvider)
         {
-            milestones.Add(tag);
-            progressProvider.SaveMilestones(milestones);
+            this.progressProvider = progressProvider;
+            milestones = progressProvider.GetMilestones();
         }
-    }
 
-    public List<string> GetMilestones()
-    {
-        if (milestones.Count > 0)
+        public void SaveMilestone(string tag)
         {
-            RunCompatibilityUpdate();
-            
-            return milestones;
+            if (!milestones.Contains(tag))
+            {
+                milestones.Add(tag);
+                progressProvider.SaveMilestones(milestones);
+            }
         }
-        return new List<string>();
-    }
 
-    private void RunCompatibilityUpdate()
-    {
-        if (RemoveMilestone("bishops sister cured"))
+        public List<string> GetMilestones()
         {
-            Debug.Log("[Compatibility] Removed 'bishops sister cured' milestone");
+            if (milestones.Count > 0)
+            {
+                RunCompatibilityUpdate();
+                
+                return milestones;
+            }
+            return new List<string>();
         }
-    }
 
-    public bool RemoveMilestone(string tag)
-    {
-        if (milestones.Count == 0)
+        private void RunCompatibilityUpdate()
         {
+            if (RemoveMilestone("bishops sister cured"))
+            {
+                Debug.Log("[Compatibility] Removed 'bishops sister cured' milestone");
+            }
+        }
+
+        public bool RemoveMilestone(string tag)
+        {
+            if (milestones.Count == 0)
+            {
+                return false;
+            }
+            if (milestones.Remove(tag))
+            {
+                progressProvider.SaveMilestones(milestones);
+                return true;
+            }
+
             return false;
         }
-        if (milestones.Remove(tag))
-        {
-            progressProvider.SaveMilestones(milestones);
-            return true;
-        }
-
-        return false;
     }
 }

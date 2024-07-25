@@ -16,13 +16,12 @@ public class PlayerProgress
     public bool IsAutoCookingUnlocked;
 }
 
-[CreateAssetMenu]
-public class PlayerProgressProvider : ScriptableObject
+public class PlayerProgressProvider
 {
     private readonly string fileName = "PlayerProgress";
     private FileDataHandler<PlayerProgress> fileDataHandler;
     
-    [SerializeField] public PlayerProgress progress;
+    public PlayerProgress progress;
 
     public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
     public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
@@ -33,7 +32,7 @@ public class PlayerProgressProvider : ScriptableObject
 
     public Action onChangeMilestone;
     
-    public void LoadProgress()
+    public PlayerProgressProvider()
     {
         fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
         progress = GetPlayerProgress();

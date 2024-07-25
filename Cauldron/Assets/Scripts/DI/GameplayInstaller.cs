@@ -52,7 +52,6 @@ namespace CauldronCodebase
             
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
-            Container.Bind<PlayerProgressProvider>().FromInstance(progressProvider).AsSingle();
             Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();

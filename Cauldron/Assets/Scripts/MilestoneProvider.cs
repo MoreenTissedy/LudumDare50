@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class MilestoneProvider : ScriptableObject
+public class MilestoneProvider
 {
     private PlayerProgressProvider progressProvider;
     private List<string> milestones;

@@ -14,7 +14,7 @@ namespace CauldronCodebase
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private EndingsProvider endings;
         [SerializeField] private PriorityLaneProvider priorityLane;
-        [SerializeField] private MilestoneProvider milestoneProvider;
+        private MilestoneProvider milestoneProvider;
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
@@ -48,6 +48,8 @@ namespace CauldronCodebase
 
         private void BindDataProviders()
         {
+            milestoneProvider = new MilestoneProvider();
+            
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<PlayerProgressProvider>().FromInstance(progressProvider).AsSingle();

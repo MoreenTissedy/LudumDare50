@@ -39,7 +39,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            unlocked = progressProvider.GetUnlockedEndings();
+            unlocked = progressProvider.UnlockedEndings;
         }
 
         public int GetUnlockedEndingsCount()
@@ -73,7 +73,7 @@ namespace CauldronCodebase
         {
             unlocked.Add(tag);
             achievements.TryUnlock(tag);
-            progressProvider.SaveEndings(unlocked);
+            progressProvider.SaveProgress();
         }
 
         [ContextMenu("Export Endings to CSV")]

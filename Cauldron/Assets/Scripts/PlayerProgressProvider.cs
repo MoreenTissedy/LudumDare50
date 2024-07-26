@@ -23,44 +23,17 @@ namespace CauldronCodebase
         
         public PlayerProgress progress;
 
-        public List<int> GetUnlockedRecipes() => GetPlayerProgress().UnlockedRecipes;
-        public List<string> GetUnlockedEndings() => GetPlayerProgress().UnlockedEndings;
-        public List<string> GetMilestones() => GetPlayerProgress().Milestones;
+        public List<int> UnlockedRecipes => progress.UnlockedRecipes;
+        public List<string> UnlockedEndings => progress.UnlockedEndings;
+        public List<string> Milestones => progress.Milestones;
         public int CurrentRound => progress.CurrentRound;    
         public bool CovenIntroShown => progress.CovenIntroShown;
         public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
-
-        public Action onChangeMilestone;
         
         public PlayerProgressProvider()
         {
             fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
             progress = GetPlayerProgress();
-        }
-
-        public void SaveRecipes(List<int> recipes)
-        {
-            progress.UnlockedRecipes = recipes;
-            Debug.Log($"recipes saved");
-
-            SaveProgress();
-        }
-
-        public void SaveEndings(List<string> endings)
-        {
-            progress.UnlockedEndings = endings;
-            Debug.Log($"endings saved");
-
-            SaveProgress();
-        }
-
-        public void SaveMilestones(List<string> milestones)
-        {
-            progress.Milestones = milestones;
-            Debug.Log($"milestones saved");
-
-            SaveProgress();
-            onChangeMilestone?.Invoke();
         }
 
         public void SaveCurrentRound(int round)
@@ -87,7 +60,7 @@ namespace CauldronCodebase
             SaveProgress();
         }
         
-        private void SaveProgress()
+        public void SaveProgress()
         {
             fileDataHandler.Save(progress);
         }

@@ -18,13 +18,13 @@ namespace CauldronCodebase
         public void Init(PlayerProgressProvider progressProvider)
         {
             this.progressProvider = progressProvider;
-            unlocked = progressProvider.GetUnlockedRecipes();
+            unlocked = progressProvider.UnlockedRecipes;
         }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
             unlocked = set.Select(x => (int)x.potion).ToList();
-            progressProvider.SaveRecipes(unlocked);
+            progressProvider.SaveProgress();
         }
 
         public IEnumerable<Recipe> LoadRecipes()

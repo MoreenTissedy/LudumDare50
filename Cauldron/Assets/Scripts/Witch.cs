@@ -51,16 +51,10 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            UnlockedEndingsUpdate();
+            unlockedEndings = progressProvider.UnlockedEndings;
             SetWitchSkin();
             cauldron.PotionBrewed += CauldronOnPotionBrewed;
             gameStateMachine.OnChangeState += OnDayNightChange;
-            progressProvider.onChangeMilestone += UnlockedEndingsUpdate;
-        }
-
-        private void UnlockedEndingsUpdate()
-        {
-            unlockedEndings = progressProvider.GetUnlockedEndings();
         }
 
         private void OnDayNightChange(GameStateMachine.GamePhase phase)

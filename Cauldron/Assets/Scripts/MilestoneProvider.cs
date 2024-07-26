@@ -11,7 +11,7 @@ namespace CauldronCodebase
         public void Init(PlayerProgressProvider progressProvider)
         {
             this.progressProvider = progressProvider;
-            milestones = progressProvider.GetMilestones();
+            milestones = progressProvider.Milestones;
         }
 
         public void SaveMilestone(string tag)
@@ -19,7 +19,7 @@ namespace CauldronCodebase
             if (!milestones.Contains(tag))
             {
                 milestones.Add(tag);
-                progressProvider.SaveMilestones(milestones);
+                progressProvider.SaveProgress();
             }
         }
 
@@ -50,7 +50,7 @@ namespace CauldronCodebase
             }
             if (milestones.Remove(tag))
             {
-                progressProvider.SaveMilestones(milestones);
+                progressProvider.SaveProgress();
                 return true;
             }
 

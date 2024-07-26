@@ -52,7 +52,7 @@ namespace CauldronCodebase
         public void NewGame()
         {
             fileDataHandler.Delete();
-            gameData = new GameData(settings.statusBars.InitialValue, progressProvider.GetMilestones());
+            gameData = new GameData(settings.statusBars.InitialValue, progressProvider.Milestones);
             IsNewGame = true;
         }
 

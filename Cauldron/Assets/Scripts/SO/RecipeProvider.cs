@@ -7,45 +7,39 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    [Serializable]
-    public class UnlockedRecipes
-    {
-        public List<int> list;
-    }
-
     [CreateAssetMenu(fileName = "All Recipe Set", menuName = "Recipe Deck", order = 1)]
     public class RecipeProvider : ScriptableObject
     {
         [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
-        private UnlockedRecipes unlockedRecipes;
+        private List<int> unlockedRecipes;
 
         private readonly string fileName = "UnlokedRecipes";
-        private FileDataHandler<UnlockedRecipes> fileDataHandler;
+        private FileDataHandler<ListToSave<int>> fileDataHandler;
 
         public void Load()
         {
-            fileDataHandler  = new FileDataHandler<UnlockedRecipes>(fileName);
-            unlockedRecipes.list = LoadUnlockedRecipes();
+            fileDataHandler  = new FileDataHandler<ListToSave<int>>(fileName);
+            unlockedRecipes = LoadUnlockedRecipes();
         }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
-            unlockedRecipes.list = set.Select(x => (int)x.potion).ToList();
+            unlockedRecipes = set.Select(x => (int)x.potion).ToList();
             Save();
         }
 
         private void Save()
         {
-            fileDataHandler.Save(unlockedRecipes);
+            fileDataHandler.Save(new ListToSave<int>(unlockedRecipes));
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (unlockedRecipes.list.Count > 0)
+            if (unlockedRecipes.Count > 0)
             {
-                foreach (var potion in unlockedRecipes.list)
+                foreach (var potion in unlockedRecipes)
                 {
                     Recipe recipe = GetRecipeForPotion((Potions) potion);
                     if (recipe != null)
@@ -119,7 +113,7 @@ namespace CauldronCodebase
 
         public void Reset()
         {
-            unlockedRecipes.list.Clear();
+            unlockedRecipes.Clear();
             Save();
         }
 

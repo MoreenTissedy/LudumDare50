@@ -86,7 +86,7 @@ namespace CauldronCodebase
 
         private bool GetLegacyRound(ref int round)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
             {
                 round = 0;
                 return false;

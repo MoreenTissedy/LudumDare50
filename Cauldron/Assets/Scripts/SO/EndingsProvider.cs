@@ -26,12 +26,17 @@ namespace CauldronCodebase
         private List<string> unlocked;
         private Dictionary<string, Ending> endingDict;
         private IAchievementManager achievements;
-        private PlayerProgressProvider progressProvider;
+        
+        private readonly string fileName = "UnlokedEndings";
+        private FileDataHandler<ListToSave<string>> fileDataHandler;
 
-        public void Init(IAchievementManager achievements, PlayerProgressProvider progressProvider)
+        public IReadOnlyList<string> UnlockedEndings => unlocked.AsReadOnly();
+
+        public void Init(IAchievementManager achievements)
         {
             this.achievements = achievements;
-            this.progressProvider = progressProvider;
+
+            fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
             
             endingDict = new Dictionary<string, Ending>(12);
             foreach (var ending in endings)
@@ -39,7 +44,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            unlocked = progressProvider.UnlockedEndings;
+            unlocked = LoadUnloackedEndings();
         }
 
         public int GetUnlockedEndingsCount()
@@ -73,7 +78,38 @@ namespace CauldronCodebase
         {
             unlocked.Add(tag);
             achievements.TryUnlock(tag);
-            progressProvider.SaveProgress();
+            Save();
+        }
+
+        private void Save()
+        {
+            fileDataHandler.Save(new ListToSave<string>(unlocked));
+        }
+
+        private List<string> LoadUnloackedEndings()
+        {
+            if (TryLoadLegacy(out var list)) return list;
+
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+        }
+
+        private bool TryLoadLegacy(out List<string> list)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            {
+                list = null;
+                return false;
+            }
+
+            list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+            return true;  
+        }
+        
+        public void Reset()
+        {
+            unlocked.Clear();
+            Save();
         }
 
         [ContextMenu("Export Endings to CSV")]

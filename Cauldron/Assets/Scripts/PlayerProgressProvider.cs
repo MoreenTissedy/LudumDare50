@@ -8,7 +8,6 @@ namespace CauldronCodebase
     [Serializable]
     public class PlayerProgress
     {
-        public List<string> UnlockedEndings = new List<string>();
         public List<string> Milestones = new List<string>();
         public int CurrentRound = 0;
         public bool CovenIntroShown;
@@ -21,8 +20,7 @@ namespace CauldronCodebase
         private FileDataHandler<PlayerProgress> fileDataHandler;
         
         public PlayerProgress progress;
-
-        public List<string> UnlockedEndings => progress.UnlockedEndings;
+        
         public List<string> Milestones => progress.Milestones;
         public int CurrentRound => progress.CurrentRound;    
         public bool CovenIntroShown => progress.CovenIntroShown;
@@ -77,7 +75,6 @@ namespace CauldronCodebase
             legacyProgress = new PlayerProgress();
             bool hasLegacy = false;
 
-            hasLegacy |= GetLegacyEndings(ref legacyProgress.UnlockedEndings);        
             hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
             hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
             hasLegacy |= GetLegacyCovenIntroShown(ref legacyProgress.CovenIntroShown);
@@ -90,19 +87,6 @@ namespace CauldronCodebase
             }        
             legacyProgress = null;
             return false;    
-        }
-
-        private bool GetLegacyEndings(ref List<string> list)
-        {
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
-            {
-                list = null;
-                return false;
-            }
-
-            list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
-            PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
-            return true;
         }
 
         private bool GetLegacyMilestones(ref List<string> list)

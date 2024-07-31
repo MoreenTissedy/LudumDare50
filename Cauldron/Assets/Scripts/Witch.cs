@@ -36,12 +36,12 @@ namespace CauldronCodebase
         [Inject] private Cauldron cauldron;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine gameStateMachine;
-        [Inject] private PlayerProgressProvider progressProvider;
+        [Inject] private EndingsProvider endingsProvider;
         
         public bool Hidden { get; private set; }
 
         private List<string> unlockedSkins;
-        private List<string> unlockedEndings;
+        private IReadOnlyList<string> unlockedEndings;
 
         
         private void Awake()
@@ -51,7 +51,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            unlockedEndings = progressProvider.UnlockedEndings;
+            unlockedEndings = endingsProvider.UnlockedEndings;
             SetWitchSkin();
             cauldron.PotionBrewed += CauldronOnPotionBrewed;
             gameStateMachine.OnChangeState += OnDayNightChange;

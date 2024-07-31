@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,32 +7,45 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
+    [Serializable]
+    public class UnlockedRecipes
+    {
+        public List<int> list;
+    }
+
     [CreateAssetMenu(fileName = "All Recipe Set", menuName = "Recipe Deck", order = 1)]
     public class RecipeProvider : ScriptableObject
     {
         [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
-        private PlayerProgressProvider progressProvider;
-        private List<int> unlocked;
+        private UnlockedRecipes unlockedRecipes;
 
-        public void Init(PlayerProgressProvider progressProvider)
+        private readonly string fileName = "UnlokedRecipes";
+        private FileDataHandler<UnlockedRecipes> fileDataHandler;
+
+        public void Load()
         {
-            this.progressProvider = progressProvider;
-            unlocked = progressProvider.UnlockedRecipes;
+            fileDataHandler  = new FileDataHandler<UnlockedRecipes>(fileName);
+            unlockedRecipes.list = LoadUnlockedRecipes();
         }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
-            unlocked = set.Select(x => (int)x.potion).ToList();
-            progressProvider.SaveProgress();
+            unlockedRecipes.list = set.Select(x => (int)x.potion).ToList();
+            Save();
+        }
+
+        private void Save()
+        {
+            fileDataHandler.Save(unlockedRecipes);
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (unlocked.Count > 0)
+            if (unlockedRecipes.list.Count > 0)
             {
-                foreach (var potion in unlocked)
+                foreach (var potion in unlockedRecipes.list)
                 {
                     Recipe recipe = GetRecipeForPotion((Potions) potion);
                     if (recipe != null)
@@ -73,7 +87,42 @@ namespace CauldronCodebase
             return null;
         }
         
-        
+        private List<int> LoadUnlockedRecipes()
+        {
+            if (TryLoadLegacy(out var list)) return list;
+            
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<int>();
+        }
+
+        private bool TryLoadLegacy(out List<int> list)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            {
+                list = null;
+                return false;
+            }
+
+            list = new List<int>();
+            string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
+            foreach (var potion in data.Split(','))
+            {
+                if (string.IsNullOrWhiteSpace(potion))
+                {
+                    continue;
+                }
+                list.Add(int.Parse(potion));
+            }
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            unlockedRecipes.list.Clear();
+            Save();
+        }
+
         [ContextMenu("Export Recipes to CSV")]
         public void ExportRecipes()
         {

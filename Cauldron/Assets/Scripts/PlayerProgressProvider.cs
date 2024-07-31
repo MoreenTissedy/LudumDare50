@@ -8,7 +8,6 @@ namespace CauldronCodebase
     [Serializable]
     public class PlayerProgress
     {
-        public List<int> UnlockedRecipes = new List<int>();
         public List<string> UnlockedEndings = new List<string>();
         public List<string> Milestones = new List<string>();
         public int CurrentRound = 0;
@@ -23,7 +22,6 @@ namespace CauldronCodebase
         
         public PlayerProgress progress;
 
-        public List<int> UnlockedRecipes => progress.UnlockedRecipes;
         public List<string> UnlockedEndings => progress.UnlockedEndings;
         public List<string> Milestones => progress.Milestones;
         public int CurrentRound => progress.CurrentRound;    
@@ -79,7 +77,6 @@ namespace CauldronCodebase
             legacyProgress = new PlayerProgress();
             bool hasLegacy = false;
 
-            hasLegacy |= GetLegacyRecipes(ref legacyProgress.UnlockedRecipes);
             hasLegacy |= GetLegacyEndings(ref legacyProgress.UnlockedEndings);        
             hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
             hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
@@ -93,29 +90,6 @@ namespace CauldronCodebase
             }        
             legacyProgress = null;
             return false;    
-        }
-
-        private bool GetLegacyRecipes(ref List<int> list)
-        {
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
-            {
-                list = null;
-                return false;
-            }
-            
-            list = new List<int>();
-            string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
-            foreach (var potion in data.Split(','))
-            {
-                if (string.IsNullOrWhiteSpace(potion))
-                {
-                    continue;
-                }
-                list.Add(int.Parse(potion));
-            }
-            PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
-
-            return true;
         }
 
         private bool GetLegacyEndings(ref List<string> list)

@@ -17,17 +17,17 @@ namespace CauldronCodebase
 
         private MainSettings settings;
         private SODictionary soDictionary;
-        private PlayerProgressProvider progressProvider;
+        private MilestoneProvider milestones;
 
         public bool IsNewGame { get; private set; }
 
         [Inject]
-        private void Construct(MainSettings mainSettings, SODictionary dictionary, PlayerProgressProvider progressProvider)
+        private void Construct(MainSettings mainSettings, SODictionary dictionary, MilestoneProvider milestones)
         {
             settings = mainSettings;
             soDictionary = dictionary;
             fileDataHandler = new FileDataHandler<GameData>(fileName);
-            this.progressProvider = progressProvider;
+            this.milestones = milestones;
         }
 
         private void Awake()
@@ -52,7 +52,7 @@ namespace CauldronCodebase
         public void NewGame()
         {
             fileDataHandler.Delete();
-            gameData = new GameData(settings.statusBars.InitialValue, progressProvider.Milestones);
+            gameData = new GameData(settings.statusBars.InitialValue, milestones.milestones);
             IsNewGame = true;
         }
 

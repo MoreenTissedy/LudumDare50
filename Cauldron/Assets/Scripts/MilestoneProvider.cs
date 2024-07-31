@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
     public class MilestoneProvider
     {
-        private PlayerProgressProvider progressProvider;
-        private List<string> milestones;
+        public List<string> milestones;
+        
+        private readonly string fileName = "Milestones";
+        private FileDataHandler<ListToSave<string>> fileDataHandler;
 
-        public void Init(PlayerProgressProvider progressProvider)
+        public MilestoneProvider()
         {
-            this.progressProvider = progressProvider;
-            milestones = progressProvider.Milestones;
+            fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
+            milestones = LoadMilestones();
         }
 
         public void SaveMilestone(string tag)
@@ -19,8 +22,13 @@ namespace CauldronCodebase
             if (!milestones.Contains(tag))
             {
                 milestones.Add(tag);
-                progressProvider.SaveProgress();
+                Save();
             }
+        }
+
+        private void Save()
+        {
+            fileDataHandler.Save(new ListToSave<string>(milestones));
         }
 
         public List<string> GetMilestones()
@@ -50,11 +58,39 @@ namespace CauldronCodebase
             }
             if (milestones.Remove(tag))
             {
-                progressProvider.SaveProgress();
+                Save();
                 return true;
             }
 
             return false;
+        }
+
+        private List<string> LoadMilestones()
+        {
+            if (TryLoadLegacy(out var legacyProgress))
+            {
+                return legacyProgress;
+            }
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+        }
+
+        private bool TryLoadLegacy(out List<string> list)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            {
+                list = null;
+                return false;
+            }
+
+            list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
+            PlayerPrefs.DeleteKey(PrefKeys.Milestones);
+            return true;
+        }
+
+        public void Reset()
+        {
+            milestones.Clear();
+            Save();
         }
     }
 }

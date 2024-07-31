@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -8,7 +6,6 @@ namespace CauldronCodebase
     [Serializable]
     public class PlayerProgress
     {
-        public List<string> Milestones = new List<string>();
         public int CurrentRound = 0;
         public bool CovenIntroShown;
         public bool IsAutoCookingUnlocked;
@@ -21,7 +18,6 @@ namespace CauldronCodebase
         
         public PlayerProgress progress;
         
-        public List<string> Milestones => progress.Milestones;
         public int CurrentRound => progress.CurrentRound;    
         public bool CovenIntroShown => progress.CovenIntroShown;
         public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
@@ -74,8 +70,7 @@ namespace CauldronCodebase
         {
             legacyProgress = new PlayerProgress();
             bool hasLegacy = false;
-
-            hasLegacy |= GetLegacyMilestones(ref legacyProgress.Milestones);        
+    
             hasLegacy |= GetLegacyRound(ref legacyProgress.CurrentRound);        
             hasLegacy |= GetLegacyCovenIntroShown(ref legacyProgress.CovenIntroShown);
             hasLegacy |= GetLegacyAutoCooking(ref legacyProgress.IsAutoCookingUnlocked);
@@ -87,19 +82,6 @@ namespace CauldronCodebase
             }        
             legacyProgress = null;
             return false;    
-        }
-
-        private bool GetLegacyMilestones(ref List<string> list)
-        {
-            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
-            {
-                list = null;
-                return false;
-            }
-
-            list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
-            PlayerPrefs.DeleteKey(PrefKeys.Milestones);
-            return true;
         }
 
         private bool GetLegacyRound(ref int round)

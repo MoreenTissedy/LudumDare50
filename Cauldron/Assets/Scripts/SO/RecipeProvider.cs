@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,25 +13,35 @@ namespace CauldronCodebase
         [ReorderableList]
         //cache to dictionary?
         public Recipe[] allRecipes;
+        private List<int> unlockedRecipes;
+
+        private readonly string fileName = "UnlokedRecipes";
+        private FileDataHandler<ListToSave<int>> fileDataHandler;
+
+        public void Load()
+        {
+            fileDataHandler  = new FileDataHandler<ListToSave<int>>(fileName);
+            unlockedRecipes = LoadUnlockedRecipes();
+        }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
         {
-            string data = string.Join(",", set.Select(x => (int) x.potion));
-            PlayerPrefs.SetString(PrefKeys.UnlockedRecipes, data);
+            unlockedRecipes = set.Select(x => (int)x.potion).ToList();
+            Save();
+        }
+
+        private void Save()
+        {
+            fileDataHandler.Save(new ListToSave<int>(unlockedRecipes));
         }
 
         public IEnumerable<Recipe> LoadRecipes()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            if (unlockedRecipes.Count > 0)
             {
-                string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
-                foreach (var potion in data.Split(','))
+                foreach (var potion in unlockedRecipes)
                 {
-                    if (string.IsNullOrWhiteSpace(potion))
-                    {
-                        continue;
-                    }
-                    Recipe recipe = GetRecipeForPotion((Potions) int.Parse(potion));
+                    Recipe recipe = GetRecipeForPotion((Potions) potion);
                     if (recipe != null)
                     {
                         yield return recipe;
@@ -43,6 +54,7 @@ namespace CauldronCodebase
                 }
             }
         }
+
         public Recipe GetRecipeForPotion(Potions potion)
         {
             var found = allRecipes.Where(x => x.potion == potion).ToArray();
@@ -69,7 +81,42 @@ namespace CauldronCodebase
             return null;
         }
         
-        
+        private List<int> LoadUnlockedRecipes()
+        {
+            if (TryLoadLegacy(out var list)) return list;
+            
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<int>();
+        }
+
+        private bool TryLoadLegacy(out List<int> list)
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            {
+                list = null;
+                return false;
+            }
+
+            list = new List<int>();
+            string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
+            foreach (var potion in data.Split(','))
+            {
+                if (string.IsNullOrWhiteSpace(potion))
+                {
+                    continue;
+                }
+                list.Add(int.Parse(potion));
+            }
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            unlockedRecipes.Clear();
+            Save();
+        }
+
         [ContextMenu("Export Recipes to CSV")]
         public void ExportRecipes()
         {

@@ -1,69 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using UnityEngine;
-
 namespace CauldronCodebase
 {
     public static class StoryTagHelper
-    {
-        public static void SaveMilestone(string tag)
-        {
-            StringListWrapper tags;
-            if (PlayerPrefs.HasKey(PrefKeys.Milestones))
-            {
-                var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
-                tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
-            }
-            else
-            {
-                tags = new StringListWrapper();
-            }
-            if (!tags.list.Contains(tag))
-            {
-                tags.list.Add(tag);
-                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
-            }
-        }
-
-        public static List<string> GetMilestones()
-        {
-            if (PlayerPrefs.HasKey(PrefKeys.Milestones))
-            {
-                RunCompatibilityUpdate();
-                
-                var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
-                var milestones = JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
-                return milestones;
-            }
-            return new List<string>();
-        }
-
-        private static void RunCompatibilityUpdate()
-        {
-            if (RemoveMilestone("bishops sister cured"))
-            {
-                Debug.Log("[Compatibility] Removed 'bishops sister cured' milestone");
-            }
-        }
-
-        public static bool RemoveMilestone(string tag)
-        {
-            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
-            {
-                return false;
-            }
-            var encodedTags = PlayerPrefs.GetString(PrefKeys.Milestones);
-            var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
-            if (tags.list.Remove(tag))
-            {
-                PlayerPrefs.SetString(PrefKeys.Milestones, JsonUtility.ToJson(tags));
-                return true;
-            }
-
-            return false;
-        }
-        
+    {        
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
         {
             return Check(card.requiredStoryTag, gameDataHandler);

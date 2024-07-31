@@ -1,5 +1,4 @@
 using CauldronCodebase.GameStates;
-using Save;
 using UnityEngine;
 using Zenject;
 
@@ -8,11 +7,9 @@ namespace CauldronCodebase
     public class GameplayInstaller : MonoInstaller
     {
         [Header("Data Providers")]
-        [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
         [SerializeField] private EncounterDeck encounterDeck;
         [SerializeField] private IngredientsData ingredientsData;
-        [SerializeField] private EndingsProvider endings;
         [SerializeField] private PriorityLaneProvider priorityLane;
 
         [Header("Gameplay")]
@@ -33,6 +30,10 @@ namespace CauldronCodebase
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
+        [Inject] private RecipeProvider recipeProvider;
+        [Inject] private EndingsProvider endings;
+        [Inject] private PlayerProgressProvider progressProvider;
+        [Inject] private MilestoneProvider milestoneProvider;
 
         private IAchievementManager achievementManager;
 
@@ -48,9 +49,7 @@ namespace CauldronCodebase
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
-            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
-            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             Container.Bind<PriorityLaneProvider>().FromInstance(priorityLane).AsSingle();
         }
 
@@ -81,9 +80,10 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
-            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
-            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider, recipeBook);
-            nightEvents.Init(dataPersistenceManager, soDictionary);
+            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings,
+                            recipeProvider, recipeBook, milestoneProvider, progressProvider);
+            nightEvents.Init(dataPersistenceManager, soDictionary, progressProvider);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
             endings.Init(achievementManager);
         }

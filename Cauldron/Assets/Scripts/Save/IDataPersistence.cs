@@ -1,4 +1,4 @@
-﻿namespace Save
+﻿namespace CauldronCodebase
 {
     public interface IDataPersistence
     {

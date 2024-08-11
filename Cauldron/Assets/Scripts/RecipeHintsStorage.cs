@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EasyLoc;
-using Save;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -33,10 +32,19 @@ namespace CauldronCodebase
     [CreateAssetMenu()]
     public class RecipeHintsStorage: LocalizableSO
     {
+        private readonly string fileName = "RecipeHint";
+        private FileDataHandler<StringListWrapper> fileDataHandler;
+
         [SerializeField] private RecipeHint[] hints;
 
         public event Action<RecipeHint> HintAdded;
-        private readonly FileDataHandler<StringListWrapper> fileDataHandler = new FileDataHandler<StringListWrapper>("RecipeHints");
+        
+        private void TryInitFileDataHandler()
+        {
+            if (fileDataHandler != null) return;
+
+            fileDataHandler  = new FileDataHandler<StringListWrapper>(fileName);
+        }
 
         public bool TryGetHint(Potions recipe, out string hint)
         {
@@ -89,6 +97,7 @@ namespace CauldronCodebase
 
         private void SaveHint(RecipeHint hint, int level)
         {
+            TryInitFileDataHandler();
             StringListWrapper tags;
             if (fileDataHandler.IsFileValid())
             {
@@ -115,6 +124,7 @@ namespace CauldronCodebase
             {
                 return list;
             }
+            TryInitFileDataHandler();
             return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
         }
 
@@ -125,6 +135,7 @@ namespace CauldronCodebase
                 var encodedTags = PlayerPrefs.GetString(PrefKeys.RecipeHints);
                 PlayerPrefs.DeleteKey(PrefKeys.RecipeHints);
                 StringListWrapper wrapper = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+                TryInitFileDataHandler();
                 fileDataHandler.Save(wrapper);
                 {
                     list = wrapper.list;

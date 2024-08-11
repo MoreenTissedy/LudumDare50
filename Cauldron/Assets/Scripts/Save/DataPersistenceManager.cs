@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
-namespace Save
+namespace CauldronCodebase
 {
     public class DataPersistenceManager : MonoBehaviour
     {
@@ -18,15 +17,17 @@ namespace Save
 
         private MainSettings settings;
         private SODictionary soDictionary;
+        private MilestoneProvider milestones;
 
         public bool IsNewGame { get; private set; }
 
         [Inject]
-        private void Construct(MainSettings mainSettings, SODictionary dictionary)
+        private void Construct(MainSettings mainSettings, SODictionary dictionary, MilestoneProvider milestones)
         {
             settings = mainSettings;
             soDictionary = dictionary;
             fileDataHandler = new FileDataHandler<GameData>(fileName);
+            this.milestones = milestones;
         }
 
         private void Awake()
@@ -51,7 +52,7 @@ namespace Save
         public void NewGame()
         {
             fileDataHandler.Delete();
-            gameData = new GameData(settings.statusBars.InitialValue);
+            gameData = new GameData(settings.statusBars.InitialValue, milestones.milestones);
             IsNewGame = true;
         }
 

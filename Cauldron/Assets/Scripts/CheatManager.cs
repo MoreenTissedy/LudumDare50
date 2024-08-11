@@ -12,6 +12,7 @@ namespace CauldronCodebase
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private MainSettings settings;
         [Inject] private EndingsProvider endingsProvider;
+        [Inject] private MilestoneProvider milestoneProvider;
 
         [Button("Unlock all endings")]
         public void UnlockAllEndings()
@@ -53,7 +54,7 @@ namespace CauldronCodebase
         [Button("Unlock coven & get rich")]
         public void UnlockCoven()
         {
-            StoryTagHelper.SaveMilestone("circle");
+            milestoneProvider.SaveMilestone("circle");
             gameDataHandler.AddTag("circle");
             gameDataHandler.Money += 1000;
         }

@@ -1,5 +1,4 @@
 using EasyLoc;
-using Save;
 using UnityEngine;
 using Universal;
 using Zenject;
@@ -29,6 +28,10 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
         [Inject] private LocalizationTool localizationTool;
+        [Inject] private PlayerProgressProvider progressProvider;
+        [Inject] private RecipeProvider recipeProvider;
+        [Inject] private EndingsProvider endingsProvider;
+        [Inject] private MilestoneProvider milestoneProvider;
 
         private void Start()
         {
@@ -61,7 +64,11 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
+            progressProvider.Reset();
             wrongRecipeProvider.ResetWrongRecipe();
+            recipeProvider.Reset();
+            endingsProvider.Reset();
+            milestoneProvider.Reset();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();

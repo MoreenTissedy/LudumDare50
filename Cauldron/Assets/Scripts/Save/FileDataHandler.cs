@@ -11,11 +11,17 @@ namespace CauldronCodebase
         public FileDataHandler(string dataFileName, bool extension = true)
         {
             string dataDirPath = Application.persistentDataPath;
+            string SubFolder = "Saves";
+            string subDirPath = Path.Combine(dataDirPath, SubFolder);
+            if (!Directory.Exists(subDirPath))
+            {
+                Directory.CreateDirectory(subDirPath);
+            }
             if (extension)
             {
                 dataFileName += ".sav";
             }
-            fullPath = Path.Combine(dataDirPath, "Saves", dataFileName);
+            fullPath = Path.Combine(subDirPath, dataFileName);
         }
 
         public bool IsFileValid()

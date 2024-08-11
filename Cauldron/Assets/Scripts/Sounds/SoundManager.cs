@@ -162,6 +162,7 @@ namespace CauldronCodebase
                 currentMusic.stop(STOP_MODE.ALLOWFADEOUT);
             }
             currentMusic = RuntimeManager.CreateInstance(musics[(int)music]);
+            currentMusic.set3DAttributes(Vector3.zero.To3DAttributes());
             currentMusic.start();
             if (withBubbling)
             {

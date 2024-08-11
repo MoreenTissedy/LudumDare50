@@ -74,13 +74,17 @@ namespace CauldronCodebase
             return endingDict[tag];
         }
 
-        public void Unlock(string tag)
+        public void TryUnlock(string tag)
         {
-            unlocked.Add(tag);
+            if (tag != "none" && !Unlocked(tag))
+            {
+                unlocked.Add(tag);
+                Save();
+            }
             achievements.TryUnlock(tag);
-            Save();
         }
-
+        
+        
         private void Save()
         {
             fileDataHandler.Save(new ListToSave<string>(unlocked));

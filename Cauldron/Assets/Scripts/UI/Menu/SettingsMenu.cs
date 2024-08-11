@@ -4,6 +4,8 @@ using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using Universal;
 using Zenject;
@@ -33,6 +35,11 @@ namespace CauldronCodebase
         [Header("Toggle AutoCooking")] 
         [SerializeField] private Toggle autoCooking;
         [SerializeField] private GameObject autoCookingObject;
+        
+        [Header("Pointer speed 4 gamepad")]
+        [SerializeField] private Slider pointerSpeed;
+        const float pointerSpeedMaxValue = 2000;
+        const float pointerSpeedMinValue = 300;
 
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
@@ -51,6 +58,8 @@ namespace CauldronCodebase
 
         [Inject] private LocalizationTool locTool;
         [Inject] private PlayerProgressProvider progressProvider;
+        [Inject] private CameraAdapt cameraAdaptation;
+        [Inject] private VirtualMouseInput virtualMouse;
         private bool fullscreenMode;
         private bool autoCookingMode;
         
@@ -67,16 +76,38 @@ namespace CauldronCodebase
             LoadResolution();
             LoadLanguage();
             LoadAutoCookingMode();
+            LoadPointerSpeed();
             language.onValueChanged.AddListener(ChangeLanguage);
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
-            resolutionDropdown.onValueChanged.AddListener(x => ChangeResolution(x));
-            toggleFullscreen.onValueChanged.AddListener(x => ChangeFullscreenMode(x));
-            autoCooking.onValueChanged.AddListener(x => ChangeAutoCooking(x));
+            pointerSpeed.onValueChanged.AddListener(ChangePointerSpeed);
+            resolutionDropdown.onValueChanged.AddListener(ChangeResolution);
+            toggleFullscreen.onValueChanged.AddListener(ChangeFullscreenMode);
+            autoCooking.onValueChanged.AddListener(ChangeAutoCooking);
             openResetButton.OnClick += OpenResetDialogue;
             closeSettingsButton.OnClick += Close;
             acceptResetButton.onClick.AddListener(ResetGameData);
             declineResetButton.onClick.AddListener(CloseResetDialogue);
+        }
+
+        private void LoadPointerSpeed()
+        {
+            pointerSpeed.value = PlayerPrefs.HasKey(PrefKeys.PointerSpeed) 
+                ? GetValueFromRealSpeed(PlayerPrefs.GetInt(PrefKeys.PointerSpeed)) 
+                : GetValueFromRealSpeed(virtualMouse.DefaultSpeed);
+
+            float GetValueFromRealSpeed(float realSpeed)
+            {
+                return (realSpeed - pointerSpeedMinValue)/(pointerSpeedMaxValue - pointerSpeedMinValue);
+            }
+        }
+
+        private void ChangePointerSpeed(float value)
+        {
+            int realValue = (int)Mathf.Lerp(pointerSpeedMinValue, pointerSpeedMaxValue, value);
+            
+            PlayerPrefs.SetInt(PrefKeys.PointerSpeed, realValue);
+            virtualMouse.cursorSpeed = realValue;
         }
 
         private void LoadLanguage()
@@ -122,36 +153,6 @@ namespace CauldronCodebase
             dialogueReset.SetActive(false);
         }
 
-        private void LoadResolutionDropdown()
-        {
-            resolutions = Screen.resolutions;
-            resolutionDropdown.ClearOptions();
-            List<string> options = new List<string>();
-            int currentResolutionIndex = 0;
-            int setResolutionIndex = 0;
-
-            foreach (var res in resolutions)
-            {
-                options.Add(res.width + " x " + res.height + " - " + res.refreshRate+" Hz");
-                if (res.width == Screen.width && res.height == Screen.height && res.refreshRate == Screen.currentResolution.refreshRate)
-                {
-                    setResolutionIndex = currentResolutionIndex;
-                }
-                currentResolutionIndex++;
-            }
-
-            resolutionDropdown.AddOptions(options);
-            resolutionDropdown.value = setResolutionIndex;
-            resolutionDropdown.RefreshShownValue();
-        }
-
-        public void ChangeResolution(int resIndex)
-        {
-            Resolution newResolution = resolutions[resIndex];
-            Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
-            PlayerPrefs.SetInt(PrefKeys.ResolutionSettings, resIndex);
-        }
-
         private void ChangeVolume(string vca, float value, float max = 1)
         {
             RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
@@ -160,11 +161,56 @@ namespace CauldronCodebase
             PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
         }
 
-        private void ChangeFullscreenMode(bool set)
+        private void LoadResolutionDropdown()
+        {
+            resolutions = Screen.resolutions;
+            resolutionDropdown.ClearOptions();
+            List<string> options = new List<string>();
+            
+            int setResolutionIndex = -1;
+
+            for (var index = 0; index < resolutions.Length; index++)
+            {
+                var res = resolutions[index];
+                options.Add(res.ToString());
+                if (Screen.currentResolution.ToString() == res.ToString())
+                {
+                    setResolutionIndex = index;
+                }
+            }
+
+            resolutionDropdown.AddOptions(options);
+            resolutionDropdown.value = setResolutionIndex;
+            resolutionDropdown.RefreshShownValue();
+        }
+
+        private async void ChangeResolution(int resIndex)
+        {
+            if (resIndex == 0)
+            {
+                return;
+            }
+            Resolution newResolution = resolutions[resIndex-1];
+            Screen.SetResolution(newResolution.width, newResolution.height, fullscreenMode);
+
+            await UniTask.NextFrame();
+            cameraAdaptation.Rebuild();
+        }
+
+        private async void ChangeFullscreenMode(bool set)
         {
             fullscreenMode = set;
             PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
+            
+            if (set)
+            {
+                var newDisplay = Display.displays[cameraAdaptation.Display];
+                Screen.SetResolution(newDisplay.systemWidth, newDisplay.systemHeight, true);
+                LoadResolutionDropdown();
+            }
+            await UniTask.NextFrame();
+            cameraAdaptation.Rebuild();
         }
 
         private void ChangeAutoCooking(bool set)

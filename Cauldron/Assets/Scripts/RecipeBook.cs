@@ -67,6 +67,7 @@ namespace CauldronCodebase
         public static int MAX_COMBINATIONS_COUNT = 120;
 
         private Mode currentMode;
+        public Mode CurrentMode => currentMode;
         public enum Mode
         {
             Magical,
@@ -301,13 +302,6 @@ namespace CauldronCodebase
 
         }
 
-        protected override void Update()
-        {
-            base.Update();
-            if (Input.GetKeyDown(KeyCode.Space))
-                ToggleBook();
-        }
-
         private void SortPotions()
         {
             List<Recipe> lockedMagicalRecipes = allMagicalRecipes.Except(unlockedRecipes).ToList();
@@ -459,7 +453,7 @@ namespace CauldronCodebase
             ingredientsDisplay.SetActive(false);
         }
         
-        public async UniTaskVoid SwitchHighlight(RecipeBookEntry recipeBookEntry)
+        public void SwitchHighlight(RecipeBookEntry recipeBookEntry)
         {
             tooltipManager.DisableAllHighlights();
             
@@ -493,7 +487,7 @@ namespace CauldronCodebase
             tooltipManager.SendSelectRecipe(recipeBookEntry.CurrentRecipe).Forget();
         }
 
-        public async UniTaskVoid SwitchHighlight(List<Ingredients> ingredients)
+        public void SwitchHighlight(List<Ingredients> ingredients)
         {
             tooltipManager.DisableAllHighlights();
             

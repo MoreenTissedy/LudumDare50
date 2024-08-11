@@ -82,12 +82,12 @@ namespace Editor
                     randomCard.minDay = ConvertIntFromString(randomData[0]);
                 }
                 //Title & Text
-                card.title = data[2];
-                card.flavourText = data[3];
+                card.title = data[1];
+                card.flavourText = data[2];
                 //Coefs
-                card.moneyCoef = ConvertFloatFromString(data[4]);
-                card.fearCoef = ConvertFloatFromString(data[5]);
-                card.fameCoef = ConvertFloatFromString(data[6]);
+                card.moneyCoef = ConvertFloatFromString(data[3]);
+                card.fearCoef = ConvertFloatFromString(data[4]);
+                card.fameCoef = ConvertFloatFromString(data[5]);
                 if (newSO)
                 {
                     AssetDatabase.CreateAsset(card, $"Assets/{eventFolder}/{card.name}.asset");

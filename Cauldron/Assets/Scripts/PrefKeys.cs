@@ -14,6 +14,8 @@ namespace CauldronCodebase
         public const string RecipeHints = "RecipeHints";  //converted to cloud save - used for backwards compatibility
         
         //TODO cloud
+        public const string Freezes = "Cooldowns";
+        
         public const string Milestones = "Milestones";
         public const string CovenIntroShown = "CovenIntro";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
@@ -21,9 +23,10 @@ namespace CauldronCodebase
         //settings - not needed in the cloud
         public const string MusicValueSettings = "MusicValue";
         public const string SoundsValueSettings = "SoundsValue";
-        public const string ResolutionSettings = "ResolutionSettings";
         public const string FullscreenModeSettings = "SetFullscreenSettings";
         public const string AutoCooking = "AutoCooking";
+        public const string PointerSpeed = "PointerSpeed";
+        public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
         public const string LanguageKey = "LanguageSettings";
 
         public class PlayerProgress

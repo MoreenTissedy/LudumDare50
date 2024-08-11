@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Steamworks;
+using Steamworks.Data;
 using UnityEngine;
 using Universal;
 
@@ -10,6 +11,7 @@ namespace CauldronCodebase
     {
         bool TryUnlock(string id);
         bool TryUnlock(NightEvent nightEvent);
+        void ClearAll();
     }
 
     public static class AchievIdents
@@ -43,7 +45,7 @@ namespace CauldronCodebase
             {"ixbt-guard-success", "vampire slayer"},
             {"tavern.wake", "bard"},
             {"TaxCollectorFoundDead", "death and taxes"},
-            {"СowPerformingCancel", "cow"},
+            {"CowPerformReturned", "cow"},
             {"scarecrow-knight-drunk", "scarecrows"},
             {"old_knight_event.2","knight"},
             {"moonshine-stealing-fairies-caught","pixies"},
@@ -60,6 +62,7 @@ namespace CauldronCodebase
             {
                 return false;
             }
+            
             var achievement = SteamUserStats.Achievements.FirstOrDefault(x => x.Identifier == id);
             if (string.IsNullOrWhiteSpace(achievement.Name))
             {
@@ -71,7 +74,11 @@ namespace CauldronCodebase
                 return false;
             }
             bool unlocked = achievement.Trigger();
-            if (unlocked) Debug.LogError($"Achievement {id} unlocked!");
+            if (unlocked)
+            {
+                Debug.Log($"Achievement {id} unlocked!");
+                SteamUserStats.StoreStats();
+            }
             else Debug.LogError($"Achievement {id} failed to unlock!");
             return unlocked;
         }
@@ -83,6 +90,16 @@ namespace CauldronCodebase
                 return false;
             }
             return TryUnlock(tag);
+        }
+
+        public void ClearAll()
+        {
+            foreach (Achievement achievement in SteamUserStats.Achievements)
+            {
+                achievement.Clear();
+            }
+            SteamUserStats.StoreStats();
+            Debug.LogError("Achievements cleared!");
         }
     }
 }

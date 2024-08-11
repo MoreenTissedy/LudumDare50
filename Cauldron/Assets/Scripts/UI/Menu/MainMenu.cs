@@ -51,14 +51,15 @@ namespace CauldronCodebase
             authorsButton.OnClick += authorsMenu.Open;
         }
 
-        private void Update()
-        {
-            //for playtests
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                ResetGameData(false);
-            }
-        }
+        // private void Update()
+        // {
+        //     //for playtests
+        //     Controls controls = new Controls();
+        //     if (controls.controlSchemes.KeyCode.Delete))
+        //     {
+        //         ResetGameData(false);
+        //     }
+        // }
 
         public void ResetGameData(bool saveLanguage = true)
         {

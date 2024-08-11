@@ -48,7 +48,7 @@ namespace Universal
         [ContextMenu("TestOpen")]
         public void TestOpen()
         {
-            Open(testText);
+            Open(testText).Forget();
         }
 
         public async UniTask Open(string text)

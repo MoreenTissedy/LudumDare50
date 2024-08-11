@@ -7,28 +7,31 @@ namespace CauldronCodebase
     //You can remove me from production
     public class CheatManager : MonoBehaviour
     {
+        public string fractions;
+        
         [Inject] private RecipeBook recipeBook;
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private MainSettings settings;
         [Inject] private EndingsProvider endingsProvider;
         [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private IAchievementManager achievementManager;
 
         [Button("Unlock all endings")]
         public void UnlockAllEndings()
         {
-            endingsProvider.Unlock(EndingsProvider.FINAL);
-            endingsProvider.Unlock(EndingsProvider.BANDIT);
-            endingsProvider.Unlock(EndingsProvider.END_DECK);
-            endingsProvider.Unlock(EndingsProvider.KING_BAD);
-            endingsProvider.Unlock(EndingsProvider.LOW_FAME);
-            endingsProvider.Unlock(EndingsProvider.LOW_FEAR);
-            endingsProvider.Unlock(EndingsProvider.HIGH_FAME);
-            endingsProvider.Unlock(EndingsProvider.HIGH_FEAR);
-            endingsProvider.Unlock(EndingsProvider.KING_GOOD);
-            endingsProvider.Unlock(EndingsProvider.BISHOP_BAD);
-            endingsProvider.Unlock(EndingsProvider.BISHOP_GOOD);
-            endingsProvider.Unlock(EndingsProvider.ENOUGH_MONEY);
+            endingsProvider.TryUnlock(EndingsProvider.FINAL);
+            endingsProvider.TryUnlock(EndingsProvider.BANDIT);
+            endingsProvider.TryUnlock(EndingsProvider.END_DECK);
+            endingsProvider.TryUnlock(EndingsProvider.KING_BAD);
+            endingsProvider.TryUnlock(EndingsProvider.LOW_FAME);
+            endingsProvider.TryUnlock(EndingsProvider.LOW_FEAR);
+            endingsProvider.TryUnlock(EndingsProvider.HIGH_FAME);
+            endingsProvider.TryUnlock(EndingsProvider.HIGH_FEAR);
+            endingsProvider.TryUnlock(EndingsProvider.KING_GOOD);
+            endingsProvider.TryUnlock(EndingsProvider.BISHOP_BAD);
+            endingsProvider.TryUnlock(EndingsProvider.BISHOP_GOOD);
+            endingsProvider.TryUnlock(EndingsProvider.ENOUGH_MONEY);
         }
         
         [Button("Unlock all recipes")]
@@ -64,12 +67,18 @@ namespace CauldronCodebase
         {
             recipeBook.CheatUnlockAutoCooking();
         }
+        
+        [Button("Clear all achievements")]
+        public void ClearAchievements()
+        {
+            achievementManager.ClearAll();
+        }
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
+            if (gameDataHandler)
             {
-                Debug.LogWarning(gameDataHandler.fractionStatus);
+                fractions = gameDataHandler.fractionStatus.ToString();
             }
         }
     }

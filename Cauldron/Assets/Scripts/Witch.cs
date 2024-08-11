@@ -36,10 +36,12 @@ namespace CauldronCodebase
         [Inject] private Cauldron cauldron;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine gameStateMachine;
+        [Inject] private EndingsProvider endingsProvider;
         
         public bool Hidden { get; private set; }
 
         private List<string> unlockedSkins;
+        private IReadOnlyList<string> unlockedEndings;
 
         
         private void Awake()
@@ -49,6 +51,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
+            unlockedEndings = endingsProvider.UnlockedEndings;
             SetWitchSkin();
             cauldron.PotionBrewed += CauldronOnPotionBrewed;
             gameStateMachine.OnChangeState += OnDayNightChange;
@@ -71,10 +74,9 @@ namespace CauldronCodebase
 
         private void SetWitchSkin()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            if (unlockedEndings.Count > 0)
             {
-                string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
-                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Length - 1]);
+                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Count - 1]);
                 if (!string.IsNullOrWhiteSpace(skinSet.WitchSkin))
                 {
                     anim.Skeleton.SetSkin(skinSet.WitchSkin);
@@ -111,7 +113,7 @@ namespace CauldronCodebase
         {
             Fly();
             
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            if (unlockedEndings.Count == 0)
             {
                 return;
             }
@@ -135,7 +137,6 @@ namespace CauldronCodebase
 
         private List<string> GetUnlockedSkins()
         {
-            string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
             List<string> skinList = new List<string>() {"main"};
             foreach (var set in skinSets)
             {

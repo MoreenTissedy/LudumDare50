@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
@@ -63,6 +62,7 @@ namespace CauldronCodebase
         private Cauldron cauldron;
         private IAchievementManager achievements;
         private EndingsProvider endingsProvider;
+        private PlayerProgressProvider progressProvider;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -88,7 +88,8 @@ namespace CauldronCodebase
                                 RecipeProvider recipeProvider,
                                 Cauldron cauldron, 
                                 IAchievementManager achievements, 
-                                EndingsProvider endingsProvider)
+                                EndingsProvider endingsProvider,
+                                PlayerProgressProvider progressProvider)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -96,6 +97,7 @@ namespace CauldronCodebase
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
             this.endingsProvider = endingsProvider;
+            this.progressProvider = progressProvider;
         }
 
         private void Start()
@@ -196,13 +198,18 @@ namespace CauldronCodebase
                 }
             }
             
-            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
-            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            TryUnlockAutoCooking();
+        }
+
+        private void TryUnlockAutoCooking()
+        {
+            int targetPercent = (int) ((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < targetPercent || progressProvider.IsAutoCookingUnlocked)
             {
                 return;
             }
 
-            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            progressProvider.SaveAutoCookingUnlocked();
             OnUnlockAutoCooking?.Invoke();
         }
 
@@ -213,7 +220,7 @@ namespace CauldronCodebase
 
         public void CheatUnlockAutoCooking()
         {
-            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            progressProvider.SaveAutoCookingUnlocked();
             OnUnlockAutoCooking?.Invoke();
         }
 
@@ -554,7 +561,7 @@ namespace CauldronCodebase
         public void SaveData(ref GameData data)
         {
             wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
-            wrongRecipeProvider.SaveWrongRecipe();
+            wrongRecipeProvider.SaveWrongRecipes();
         }
 
         public override void CloseBook()

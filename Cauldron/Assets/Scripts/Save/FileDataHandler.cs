@@ -8,10 +8,14 @@ namespace CauldronCodebase
     {
         private readonly string fullPath;
 
-        public FileDataHandler(string dataFileName)
+        public FileDataHandler(string dataFileName, bool extension = true)
         {
             string dataDirPath = Application.persistentDataPath;
-            fullPath = Path.Combine(dataDirPath, dataFileName);
+            if (extension)
+            {
+                dataFileName += ".sav";
+            }
+            fullPath = Path.Combine(dataDirPath, "Saves", dataFileName);
         }
 
         public bool IsFileValid()

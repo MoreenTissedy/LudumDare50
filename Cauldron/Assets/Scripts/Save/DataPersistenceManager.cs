@@ -26,7 +26,7 @@ namespace CauldronCodebase
         {
             settings = mainSettings;
             soDictionary = dictionary;
-            fileDataHandler = new FileDataHandler<GameData>(fileName);
+            fileDataHandler = new FileDataHandler<GameData>(fileName, false);
             this.milestones = milestones;
         }
 

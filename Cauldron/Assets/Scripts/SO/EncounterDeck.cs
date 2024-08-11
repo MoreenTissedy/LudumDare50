@@ -86,7 +86,7 @@ namespace CauldronCodebase
             this.milestoneProvider = milestoneProvider;
             this.progressProvider = progressProvider;
             InitRememberedCards();
-            freezeList = StoryTagHelper.GetFreezes();
+            freezeList = Freezes.GetFreezes();
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace CauldronCodebase
             if (freezeList.Contains(card.villager.name))
             {
                 freezeList.Remove(card.villager.name);
-                StoryTagHelper.RemoveFreeze(card.villager.name);
+                Freezes.RemoveFreeze(card.villager.name);
                 return true;
             }
 

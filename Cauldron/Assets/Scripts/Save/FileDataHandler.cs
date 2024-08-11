@@ -27,7 +27,7 @@ namespace CauldronCodebase
                 {
                     var dataToLoad = GetFileData();
                     JsonUtility.FromJsonOverwrite(dataToLoad, unityObject);
-                    Debug.LogWarning($"Data loaded from {fullPath} to Unity object");
+                    Debug.Log($"Data loaded from {fullPath} to Unity object");
                 }
                 catch (Exception e)
                 {
@@ -47,7 +47,7 @@ namespace CauldronCodebase
                 {
                     var dataToLoad = GetFileData();
                     loadedData = JsonUtility.FromJson<T>(dataToLoad);
-                    Debug.LogWarning($"Data loaded from {fullPath}");
+                    Debug.Log($"Data loaded from {fullPath}");
                 }
                 catch (Exception e)
                 {

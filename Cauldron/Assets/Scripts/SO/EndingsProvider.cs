@@ -27,7 +27,7 @@ namespace CauldronCodebase
         private Dictionary<string, Ending> endingDict;
         private IAchievementManager achievements;
         
-        private readonly string fileName = "UnlokedEndings";
+        private readonly string fileName = "UnlockedEndings";
         private FileDataHandler<ListToSave<string>> fileDataHandler;
 
         public IReadOnlyList<string> UnlockedEndings => unlocked.AsReadOnly();
@@ -44,7 +44,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            unlocked = LoadUnloackedEndings();
+            unlocked = LoadUnlockedEndings();
         }
 
         public int GetUnlockedEndingsCount()
@@ -90,7 +90,7 @@ namespace CauldronCodebase
             fileDataHandler.Save(new ListToSave<string>(unlocked));
         }
 
-        private List<string> LoadUnloackedEndings()
+        private List<string> LoadUnlockedEndings()
         {
             if (TryLoadLegacy(out var list)) return list;
 

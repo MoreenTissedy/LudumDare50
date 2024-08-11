@@ -1,25 +1,19 @@
-﻿using System.Collections.Generic;
-
-namespace CauldronCodebase
+﻿namespace CauldronCodebase
 {
     public static class PrefKeys
     {
-        public const string UniqueCards = "RememberedCards";  //not needed in the cloud
+        //Player flow modifiers - not needed in the cloud
+        public const string UniqueCards = "RememberedCards";
+        public const string Freezes = "Cooldowns";
         
-        //TODO cloud
+        //Legacy progress load keys
         public const string UnlockedRecipes = "Recipes";
         public const string CurrentRound = "CurrentRound";
         public const string UnlockedEndings = "Endings";
-        
-        public const string RecipeHints = "RecipeHints";  //converted to cloud save - used for backwards compatibility
-        
-        //TODO cloud
-        public const string Freezes = "Cooldowns";
-        
+        public const string RecipeHints = "RecipeHints";
         public const string Milestones = "Milestones";
         public const string CovenIntroShown = "CovenIntro";
-        public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
-        
+
         //settings - not needed in the cloud
         public const string MusicValueSettings = "MusicValue";
         public const string SoundsValueSettings = "SoundsValue";
@@ -28,15 +22,5 @@ namespace CauldronCodebase
         public const string PointerSpeed = "PointerSpeed";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
         public const string LanguageKey = "LanguageSettings";
-
-        public class PlayerProgress
-        {
-            public List<string> UnlockedRecipes;
-            public List<string> UnlockedEndings;
-            public List<string> Milestones;
-            public int CurrentRound;
-            public bool CovenIntroShown;
-            public bool IsAutoCookingUnlocked;
-        }
     }
 }

@@ -15,7 +15,7 @@ namespace CauldronCodebase
         public Recipe[] allRecipes;
         private List<int> unlockedRecipes;
 
-        private readonly string fileName = "UnlokedRecipes";
+        private readonly string fileName = "UnlockedRecipes";
         private FileDataHandler<ListToSave<int>> fileDataHandler;
 
         public void Load()

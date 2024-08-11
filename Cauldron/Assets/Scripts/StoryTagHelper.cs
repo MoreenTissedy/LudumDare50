@@ -1,62 +1,7 @@
 namespace CauldronCodebase
-using System.Collections.Generic;
-using UnityEngine;
-
 {
     public static class StoryTagHelper
-    {        
-        //freezes
-        public static bool RemoveFreeze(string tag)
-        {
-            return RemoveTag(tag, PrefKeys.Freezes);
-        }
-
-        private static bool RemoveTag(string tag, string prefKey)
-        {
-            if (!PlayerPrefs.HasKey(prefKey))
-            {
-                return false;
-            }
-
-            var encodedTags = PlayerPrefs.GetString(prefKey);
-            var tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
-            if (tags.list.Remove(tag))
-            {
-                PlayerPrefs.SetString(prefKey, JsonUtility.ToJson(tags));
-                Debug.Log($"[Prefs remove: {prefKey}] {tag}");
-                return true;
-            }
-
-            return false;
-        }
-        
-        public static void SaveFreeze(string tag)
-        {
-            SaveTag(tag, PrefKeys.Freezes);
-        }
-
-        private static void SaveTag(string tag, string prefKey)
-        {
-            StringListWrapper tags;
-            if (PlayerPrefs.HasKey(prefKey))
-            {
-                var encodedTags = PlayerPrefs.GetString(prefKey);
-                tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
-            }
-            else
-            {
-                tags = new StringListWrapper();
-            }
-
-            if (!tags.list.Contains(tag))
-            {
-                tags.list.Add(tag);
-                PlayerPrefs.SetString(prefKey, JsonUtility.ToJson(tags));
-                Debug.Log($"[Prefs save: {prefKey}] {tags}");
-            }
-        }
-        
-        
+    {
         public static bool Check(Encounter card, GameDataHandler gameDataHandler)
         {
             return Check(card.requiredStoryTag, gameDataHandler);

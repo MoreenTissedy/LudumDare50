@@ -52,7 +52,7 @@ namespace CauldronCodebase
                     }
                     else if (storyTag.StartsWith("%"))
                     {
-                        StoryTagHelper.SaveFreeze(storyTag.Trim('%'));
+                        Freezes.SaveFreeze(storyTag.Trim('%'));
                     }
                     game.AddTag(storyTag);
                 }

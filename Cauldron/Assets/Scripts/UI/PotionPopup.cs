@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using EasyLoc;
 using DG.Tweening;
-using Save;
 using Zenject;
 using TMPro;
 

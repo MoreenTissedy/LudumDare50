@@ -32,9 +32,19 @@ namespace CauldronCodebase
     [CreateAssetMenu()]
     public class RecipeHintsStorage: LocalizableSO
     {
+        private readonly string fileName = "RecipeHint";
+        private FileDataHandler<StringListWrapper> fileDataHandler;
+
         [SerializeField] private RecipeHint[] hints;
 
         public event Action<RecipeHint> HintAdded;
+        
+        private void TryInitFileDataHandler()
+        {
+            if (fileDataHandler != null) return;
+
+            fileDataHandler  = new FileDataHandler<StringListWrapper>(fileName);
+        }
 
         public bool TryGetHint(Potions recipe, out string hint)
         {
@@ -85,13 +95,13 @@ namespace CauldronCodebase
             HintAdded?.Invoke(hint);
         }
 
-        private static void SaveHint(RecipeHint hint, int level)
+        private void SaveHint(RecipeHint hint, int level)
         {
+            TryInitFileDataHandler();
             StringListWrapper tags;
-            if (PlayerPrefs.HasKey(PrefKeys.RecipeHints))
+            if (fileDataHandler.IsFileValid())
             {
-                var encodedTags = PlayerPrefs.GetString(PrefKeys.RecipeHints);
-                tags = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+                tags = fileDataHandler.Load();
             }
             else
             {
@@ -104,19 +114,37 @@ namespace CauldronCodebase
                 tags.list.RemoveAt(indexOfRecipe);
             }
             tags.list.Add($"{hint.recipe}:{level}");
-            string value = JsonUtility.ToJson(tags);
-            Debug.Log("recipe hint saved: "+value);
-            PlayerPrefs.SetString(PrefKeys.RecipeHints, value);
+            Debug.Log("recipe hint saved: "+tags);
+            fileDataHandler.Save(tags);
         }
 
-        private static List<string> GetHints()
+        private List<string> GetHints()
+        {
+            if (TryLoadLegacy(out var list))
+            {
+                return list;
+            }
+            TryInitFileDataHandler();
+            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+        }
+
+        private bool TryLoadLegacy(out List<string> list)
         {
             if (PlayerPrefs.HasKey(PrefKeys.RecipeHints))
             {
                 var encodedTags = PlayerPrefs.GetString(PrefKeys.RecipeHints);
-                return JsonUtility.FromJson<StringListWrapper>(encodedTags).list;
+                PlayerPrefs.DeleteKey(PrefKeys.RecipeHints);
+                StringListWrapper wrapper = JsonUtility.FromJson<StringListWrapper>(encodedTags);
+                TryInitFileDataHandler();
+                fileDataHandler.Save(wrapper);
+                {
+                    list = wrapper.list;
+                    return true;
+                }
             }
-            return new List<string>();
+
+            list = null;
+            return false;
         }
 
         private static int FindIndexOfRecipe(Potions recipe, List<string> strings)

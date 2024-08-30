@@ -1,6 +1,5 @@
 using EasyLoc;
 using FMODUnity;
-using Save;
 using UnityEngine;
 using Universal;
 using UnityEngine.InputSystem.UI;
@@ -15,10 +14,15 @@ namespace CauldronCodebase
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
         [SerializeField] private CatTipsProvider catTipsProvider;
+        [SerializeField] private RecipeProvider recipeProvider;
+        [SerializeField] private EndingsProvider endings;
         [SerializeField] private VirtualMouseInput virtualMouseInput;
 
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
+
+        private MilestoneProvider milestoneProvider;
+
         public override void InstallBindings()
         {
             GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
@@ -33,6 +37,12 @@ namespace CauldronCodebase
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
             
+            Container.Bind<PlayerProgressProvider>().FromNew().AsSingle().NonLazy();
+            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();
+            recipeProvider.Load();            
+            milestoneProvider = new MilestoneProvider();
+            Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();
+            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();

@@ -2,43 +2,62 @@
 using System.IO;
 using UnityEngine;
 
-namespace Save
+namespace CauldronCodebase
 {
-    public class FileDataHandler
+    public class FileDataHandler<T> where T: class
     {
-        public const string PrefSaveKey = "SaveExists";
-        
         private readonly string fullPath;
 
-        public FileDataHandler(string dataDirPath, string dataFileName)
+        public FileDataHandler(string dataFileName, bool extension = true)
         {
-            fullPath = Path.Combine(dataDirPath, dataFileName);
+            string dataDirPath = Application.persistentDataPath;
+            string SubFolder = "Saves";
+            string subDirPath = Path.Combine(dataDirPath, SubFolder);
+            if (!Directory.Exists(subDirPath))
+            {
+                Directory.CreateDirectory(subDirPath);
+            }
+            if (extension)
+            {
+                dataFileName += ".sav";
+            }
+            fullPath = Path.Combine(subDirPath, dataFileName);
         }
 
-        public bool IsSaveValid()
+        public bool IsFileValid()
         {
             return File.Exists(fullPath);
         }
-
-        public GameData Load()
+        
+        public T LoadWithOverwrite(T unityObject)
         {
-            GameData loadedData = null;
-            if (IsSaveValid())
+            if (IsFileValid())
             {
                 try
                 {
-                    string dataToLoad;
-                    
-                    using (FileStream stream = new FileStream(fullPath, FileMode.Open))
-                    {
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            dataToLoad = reader.ReadToEnd();
-                        }
-                    }
+                    var dataToLoad = GetFileData();
+                    JsonUtility.FromJsonOverwrite(dataToLoad, unityObject);
+                    Debug.Log($"Data loaded from {fullPath} to Unity object");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Error occured  when trying to load data from file to a Unity object: " + fullPath + "\n" + e);
+                }
+            }
 
-                    loadedData = JsonUtility.FromJson<GameData>(dataToLoad);
-                    Debug.LogWarning($"Data loaded from {fullPath}");
+            return unityObject;
+        }
+
+        public T Load()
+        {
+            T loadedData = null;
+            if (IsFileValid())
+            {
+                try
+                {
+                    var dataToLoad = GetFileData();
+                    loadedData = JsonUtility.FromJson<T>(dataToLoad);
+                    Debug.Log($"Data loaded from {fullPath}");
                 }
                 catch (Exception e)
                 {
@@ -49,7 +68,22 @@ namespace Save
             return loadedData;
         }
 
-        public void Save(GameData data)
+        private string GetFileData()
+        {
+            string dataToLoad;
+
+            using (FileStream stream = new FileStream(fullPath, FileMode.Open))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    dataToLoad = reader.ReadToEnd();
+                }
+            }
+
+            return dataToLoad;
+        }
+
+        public void Save(T data)
         {
             try
             {
@@ -61,7 +95,6 @@ namespace Save
                     using (StreamWriter writer = new StreamWriter(stream))
                     {
                         writer.Write(dataToStore);
-                        PlayerPrefs.SetInt(PrefSaveKey, 1);
                     }
                 }
             }
@@ -74,7 +107,6 @@ namespace Save
         public void Delete()
         {
             File.Delete(fullPath);
-            PlayerPrefs.DeleteKey(PrefSaveKey);
         }
     }
 }

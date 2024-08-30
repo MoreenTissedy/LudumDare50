@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -9,38 +8,58 @@ namespace CauldronCodebase
     public class WrongRecipeProvider : ScriptableObject
     {
         private const string WrongRecipeKey = "WrongRecipe";
-        
+        private FileDataHandler<WrongRecipeProvider> fileDataHandler;
+
         public List<WrongPotion> wrongPotions = new List<WrongPotion>();
+
+        private void TryInitDataHandler()
+        {
+            if (fileDataHandler != null) return;
+
+            fileDataHandler  = new FileDataHandler<WrongRecipeProvider>(WrongRecipeKey);
+        }
 
         public void ResetWrongRecipe()
         {
             wrongPotions.Clear();
-            SaveWrongRecipe();
+            SaveWrongRecipes();
         }
 
-        public void SaveWrongRecipe()
+        public void SaveWrongRecipes()
         {
-            string saveData = JsonUtility.ToJson(this);
-            File.WriteAllText(Application.persistentDataPath + WrongRecipeKey, saveData);
+            TryInitDataHandler();
+            fileDataHandler.Save(this);
         }
 
         public List<WrongPotion> LoadWrongRecipe()
         {
+            if (TryLoadLegacy(out var list)) return list;
+
+            TryInitDataHandler();
+            if (fileDataHandler.IsFileValid())
+            {
+                fileDataHandler.LoadWithOverwrite(this);
+            }
+            return wrongPotions;
+        }
+
+        private bool TryLoadLegacy(out List<WrongPotion> list)
+        {
             if (File.Exists(Application.persistentDataPath + WrongRecipeKey))
             {
                 string saveData = File.ReadAllText(Application.persistentDataPath + WrongRecipeKey);
-                try
-                {
-                    JsonUtility.FromJsonOverwrite(saveData, this);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError("[JSON Error] Wrong recipe file corrupted! Delete it.");
-                    File.Delete(Application.persistentDataPath + WrongRecipeKey);
-                }
+                JsonUtility.FromJsonOverwrite(saveData, this);
+                
+                TryInitDataHandler();
+                fileDataHandler.Save(this);
+                File.Delete(Application.persistentDataPath + WrongRecipeKey);
+                
+                list = wrongPotions;
+                return true;
             }
 
-            return wrongPotions;
+            list = null;
+            return false;
         }
     }
 }

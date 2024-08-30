@@ -1,4 +1,5 @@
 ﻿using CauldronCodebase;
+using System.Collections.Generic;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
@@ -30,6 +31,8 @@ public class TutorialManager : MonoBehaviour
     private Cauldron cauldron;
     private GameStateMachine stateMachine;
     private RecipeHintsStorage recipeHintsStorage;
+    private TutorialStorage tutorialStorage;
+    private HashSet<TutorialKeys> tutorials;
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
@@ -40,10 +43,13 @@ public class TutorialManager : MonoBehaviour
         cauldron = witchCauldron;
         stateMachine = gameStateMachine;
         recipeHintsStorage = settings.recipeHintsStorage;
+        tutorialStorage = new TutorialStorage();
     }
 
     private void Start()
     {
+        tutorials = tutorialStorage.GetTutorials();
+        
         recipeBook.OnOpenBook += ViewBookTutorial;
         recipeBook.OnUnlockAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
@@ -52,12 +58,19 @@ public class TutorialManager : MonoBehaviour
         recipeHintsStorage.HintAdded += ViewRecipeHintTutorial;
     }
 
+    private void SaveKey(TutorialKeys key)
+    {
+        tutorials.Add(key);
+        tutorialStorage.SaveTutorial(key);
+    }
+
     private void ViewRecipeHintTutorial(RecipeHint hint)
     {
         recipeHintsStorage.HintAdded -= ViewRecipeHintTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 0) == 0)
+       
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_RECIPE_HINTS))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 1);
+            SaveKey(TutorialKeys.TUTORIAL_RECIPE_HINTS);
             tooltipPrefab.Open(RecipeHintTutorialText).Forget();
         }
     }
@@ -66,9 +79,9 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewBookTutorial;
         
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 0) == 0)
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_BOOK_OPENED))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 1);
+            SaveKey(TutorialKeys.TUTORIAL_BOOK_OPENED);
             string tutorialText = string.Format(BookTutorialText,
                 Gamepad.current != null ? BookTutorialGamepadControls : BookTutorialKeyboardControls);
             tooltipPrefab.Open(tutorialText).Forget();
@@ -79,7 +92,7 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
         
-        PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_AUTOCOOKING_KEY, 1);
+        SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
         acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
         rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
         tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
@@ -92,9 +105,10 @@ public class TutorialManager : MonoBehaviour
         if (gameDataHandler.currentCard == targetTutorialVisitor)
         {
             cauldron.PotionAccepted -= ViewVisitorTutorial;
-            if (PlayerPrefs.GetInt(PrefKeys.Tutorial.VISITOR_KEY, 0) == 0)
+            
+            if(!tutorials.Contains(TutorialKeys.TUTORIAL_VISITOR))
             {
-                PlayerPrefs.SetInt(PrefKeys.Tutorial.VISITOR_KEY, 1);
+                SaveKey(TutorialKeys.TUTORIAL_VISITOR);
                 tooltipPrefab.Open(VisitorTutorialText).Forget();
             }
         }
@@ -103,9 +117,10 @@ public class TutorialManager : MonoBehaviour
     private void ViewScaleChangeTutorial()
     {
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 0) == 0)
-        {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 1);
+        
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_CHANGE_SCALE))
+        {            
+            SaveKey(TutorialKeys.TUTORIAL_CHANGE_SCALE);
             tooltipPrefab.Open(ScaleTutorialText).Forget();
         }
     }
@@ -115,9 +130,10 @@ public class TutorialManager : MonoBehaviour
         if(stateMachine.currentGamePhase == GameStateMachine.GamePhase.Night) return;
         
         cauldron.PotionDeclined -= ViewPotionDeniedTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 0) == 0)
+        
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_POTION_DENIED))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 1);
+            SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
     }

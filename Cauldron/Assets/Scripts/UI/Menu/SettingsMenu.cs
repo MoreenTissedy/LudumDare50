@@ -57,6 +57,7 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
 
         [Inject] private LocalizationTool locTool;
+        [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private CameraAdapt cameraAdaptation;
         [Inject] private VirtualMouseInput virtualMouse;
         private bool fullscreenMode;
@@ -266,7 +267,7 @@ namespace CauldronCodebase
         
         private void LoadAutoCookingMode()
         {
-            if (PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            if (progressProvider.IsAutoCookingUnlocked)
             {
                 OpenAutoCooking();
             }

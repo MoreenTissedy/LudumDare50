@@ -167,6 +167,15 @@ namespace CauldronCodebase
             return unlockedRecipes.Contains(recipe);
         }
 
+        
+        public void CheckExperimentsCompletion()
+        {
+            if (unlockedRecipes.Count + experimentController.wrongPotions.Count == MAX_COMBINATIONS_COUNT)
+            {
+                achievements.TryUnlock(AchievIdents.EXPERIMENTS_ALL);
+            }
+        }
+
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);

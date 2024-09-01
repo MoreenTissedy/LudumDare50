@@ -7,10 +7,17 @@ namespace CauldronCodebase
     public class SkinSO : LocalizableSO
     {
         public string SkinName;
-        public Sprite Preview;
-        public string Text;
-        public bool IsAvailable;
+        
+        public Sprite PreviewIcon;
+        public Sprite FullPreview;
+        
+        public string FlavorText;
+        public string DescriptionText;
+
+        public int Price;
+        
         public string[] LastUnlockedEnding;
+        
         public override bool Localize(Language language)
         {
             return true;

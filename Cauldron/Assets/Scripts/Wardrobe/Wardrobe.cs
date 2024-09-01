@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
+﻿using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +12,7 @@ namespace CauldronCodebase
         
         [SerializeField] private Button confirmSkinButton;
         [SerializeField] private Button closeButton;
-        
-        [SerializeField] private SkinSO[] skinModels;
+
         [SerializeField] private WardrobeCell[] wardrobeCells;
 
         [Header("Animation")]
@@ -23,6 +20,7 @@ namespace CauldronCodebase
         [SerializeField] private float descriptionPanelXPos;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
+        [Inject] private SkinsProvider skinsProvider;
 
         private WardrobeCell _selectedCell;
         private float _initDescriptionPanelPos;
@@ -41,13 +39,12 @@ namespace CauldronCodebase
         
         protected override void UpdatePage()
         {
-            var unlockedSkins = GetUnlockedSkins();
-            for (int i = 0; i < wardrobeCells.Length; i++)
+            for (int i = 0; i < skinsProvider.skins.Length; i++)
             {
-                skinModels[i].IsAvailable = unlockedSkins.Contains(skinModels[i].SkinName);
-                wardrobeCells[i].Setup(skinModels[i]);
+                var skin = skinsProvider.skins[i];
+                wardrobeCells[i].Setup(skin, skinsProvider.Unlocked(skin.name));
                 wardrobeCells[i].OnClick += SelectCell;
-                if (witchSkinChanger.CurrentSkin == skinModels[i])
+                if (witchSkinChanger.CurrentSkin == skin)
                 {
                     _selectedCell = wardrobeCells[i];
                     _selectedCell.ToggleSelect(true);
@@ -67,7 +64,7 @@ namespace CauldronCodebase
             _selectedCell = cell;
             cell.ToggleSelect(true);
 
-            description.text = cell.Skin.Text;
+            description.text = cell.Skin.DescriptionText;
             ShowDescriptionPanel();
             ConfirmSkin();
         }
@@ -99,21 +96,6 @@ namespace CauldronCodebase
             }
             
             base.CloseBook();
-        }
-        
-        private List<string> GetUnlockedSkins()
-        {
-            string[] unlockedEndings = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',');
-            List<string> skinList = new List<string>() {"main"};
-            foreach (var skin in skinModels)
-            {
-                if (skin.LastUnlockedEnding.Any(ending => unlockedEndings.Contains(ending)) && !skinList.Contains(skin.SkinName))
-                {
-                    skinList.Add(skin.SkinName);
-                }
-            }
-
-            return skinList;
         }
     }
 }

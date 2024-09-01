@@ -1117,6 +1117,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1175652703001152770, guid: 54e6ef31f79d877409ae8f6625678bb2, type: 3}
+      propertyPath: wardrobeButton
+      value: 
+      objectReference: {fileID: 1929831905}
     - target: {fileID: 1175652703001152781, guid: 54e6ef31f79d877409ae8f6625678bb2, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1631,11 +1635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5622affbbf64d1aa292e64a77bb8dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recipeProvider: {fileID: 11400000, guid: 13277fc82c941ed92b77870f6ea189e3, type: 2}
   nightEvents: {fileID: 11400000, guid: 2c8ed395dcf99dc93bdf5778f7335d9f, type: 2}
   encounterDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
   ingredientsData: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
-  endings: {fileID: 11400000, guid: b0637f48345d84e2c887a048f1a71429, type: 2}
   priorityLane: {fileID: 11400000, guid: 3bba3886f1a1d4d448bb7312f77c7afc, type: 2}
   recipeBook: {fileID: 5061474872853149060}
   experimentController: {fileID: 8623712692507905906}
@@ -2246,6 +2248,7 @@ GameObject:
   - component: {fileID: 1929831904}
   - component: {fileID: 1929831903}
   - component: {fileID: 1929831902}
+  - component: {fileID: 1929831905}
   m_Layer: 5
   m_Name: WardrobeTestButton
   m_TagString: Untagged
@@ -2280,7 +2283,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1929831900}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -2366,6 +2369,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1929831900}
   m_CullTransparentMesh: 0
+--- !u!114 &1929831905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929831900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f5cda85ac724e50a0cfa9d9a566923a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rect: {fileID: 1929831901}
+  moveDuration: 0.8
 --- !u!1 &1959972231
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,21 +2530,6 @@ MonoBehaviour:
   hide: Active_exit
   unhide: Active_start
   angry: Agression
-  skinSets:
-  - LastUnlockedEnding: circle
-    WitchSkin: Dark
-  - LastUnlockedEnding: king success
-    WitchSkin: Noble
-  - LastUnlockedEnding: bandit revolt
-    WitchSkin: Puppet
-  - LastUnlockedEnding: bishop success
-    WitchSkin: Inquisitor
-  - LastUnlockedEnding: moving
-    WitchSkin: Dark
-  - LastUnlockedEnding: bishop failure
-    WitchSkin: Fire
-  - LastUnlockedEnding: king failure
-    WitchSkin: Halloween
 --- !u!61 &1959972237
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -24,12 +24,12 @@ namespace CauldronCodebase
 
         public event Action<WardrobeCell> OnClick; 
 
-        public void Setup(SkinSO newSkin)
+        public void Setup(SkinSO newSkin, bool unlock)
         {
             skin = newSkin;
-            skinPreview.sprite = skin.Preview;
+            skinPreview.sprite = skin.PreviewIcon;
             
-            if (skin.IsAvailable)
+            if (unlock)
             {
                 isAvailable = true;
                 skinPreview.material = null;

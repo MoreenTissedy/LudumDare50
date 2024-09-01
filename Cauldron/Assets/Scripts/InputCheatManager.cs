@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -14,7 +15,7 @@ public class CheatCodes
 
 public class InputCheatManager : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField] [ReadOnly]
     private string compositeString;
 
     [SerializeField,

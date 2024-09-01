@@ -24,20 +24,12 @@ public class InputCheatManager : MonoBehaviour
     [SerializeField]
     private List<CheatCodes> cheatCodes;
 
-    private InputAction _anyKeyWait;
     private Coroutine _clearTimer;
     private float _timeUntilClear;
-
-
-    private void Awake()
-    {
-        _anyKeyWait = new InputAction(type:InputActionType.Button);
-    }
 
     private void OnEnable()
     {
         Keyboard.current.onTextInput += InputKey;
-        _anyKeyWait.Enable();
         _clearTimer = StartCoroutine(ClearTimer());
     }
 
@@ -45,7 +37,6 @@ public class InputCheatManager : MonoBehaviour
     {
         StopCoroutine(_clearTimer);
         Keyboard.current.onTextInput -= InputKey;
-        _anyKeyWait.Disable();
     }
 
     private void InputKey(char inputChar)

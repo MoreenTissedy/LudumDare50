@@ -205,6 +205,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 274211408b0b42cd998bbe2c2443878a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &99461335
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1745953328}
+    m_Modifications:
+    - target: {fileID: 5537417363755299246, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_Name
+      value: CheatManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+--- !u!4 &99461336 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+  m_PrefabInstance: {fileID: 99461335}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &222198771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -387,6 +449,10 @@ PrefabInstance:
     - target: {fileID: 6448282156904387657, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
       propertyPath: m_Name
       value: VisitorPanel_new
+      objectReference: {fileID: 0}
+    - target: {fileID: 6448282157261802973, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -59.99994
       objectReference: {fileID: 0}
     - target: {fileID: 6792356608515422576, guid: 9d1816636f86fae47af66bc36c4bd76c, type: 3}
       propertyPath: m_SizeDelta.x
@@ -823,6 +889,8 @@ MonoBehaviour:
     \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u043C
     \u0438 \u043B\u0438\u0441\u0442\u0430\u0442\u044C \u043A\u043B\u0430\u0432\u0438\u0448\u0430\u043C\u0438
     A/D."
+  BookTutorialGamepadControls: 
+  BookTutorialKeyboardControls: 
   VisitorTutorialText: "\u041A\u0430\u0436\u0434\u043E\u0435 \u0437\u0435\u043B\u044C\u0435
     \u0441\u043E\u0441\u0442\u043E\u0438\u0442 \u0438\u0437 \u0442\u0440\u0435\u0445
     \u0440\u0430\u0437\u043D\u044B\u0445 \u0438\u043D\u0433\u0440\u0435\u0434\u0438\u0435\u043D\u0442\u043E\u0432.
@@ -1287,11 +1355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5622affbbf64d1aa292e64a77bb8dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recipeProvider: {fileID: 11400000, guid: 13277fc82c941ed92b77870f6ea189e3, type: 2}
   nightEvents: {fileID: 11400000, guid: 2c8ed395dcf99dc93bdf5778f7335d9f, type: 2}
   encounterDeck: {fileID: 11400000, guid: 3a2354bc2661da9198dc6488c72cf5f0, type: 2}
   ingredientsData: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
-  endings: {fileID: 11400000, guid: b0637f48345d84e2c887a048f1a71429, type: 2}
   priorityLane: {fileID: 11400000, guid: 3bba3886f1a1d4d448bb7312f77c7afc, type: 2}
   recipeBook: {fileID: 5061474872853149060}
   experimentController: {fileID: 8623712692507905906}
@@ -1612,7 +1678,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1745953328}
   - component: {fileID: 1745953327}
-  - component: {fileID: 1745953330}
   - component: {fileID: 1745953329}
   m_Layer: 0
   m_Name: GameManager
@@ -1650,6 +1715,7 @@ Transform:
   - {fileID: 1999137260}
   - {fileID: 1404366175}
   - {fileID: 491399971}
+  - {fileID: 99461336}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1706,18 +1772,6 @@ MonoBehaviour:
   - {fileID: 2016194589}
   - {fileID: 7354000312683070564}
   - {fileID: 8623712692507905906}
---- !u!114 &1745953330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745953326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b34c6b2b27614f1bb84874c78402449c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1771675331
 GameObject:
   m_ObjectHideFlags: 0

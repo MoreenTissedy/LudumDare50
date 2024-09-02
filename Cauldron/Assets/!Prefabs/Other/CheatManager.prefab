@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5537417363755299246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5537417363755299247}
+  - component: {fileID: 5537417363755299232}
+  - component: {fileID: 5426982134444791154}
+  m_Layer: 0
+  m_Name: CheatManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5537417363755299247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5537417363755299246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5537417363755299232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5537417363755299246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cc1355cf827714fafcc5b19c3e30eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  compositeString: 
+  clearAfter: 0.75
+  cheatCodes:
+  - CheatCode: emafear
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: ResetStatuses
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - CheatCode: sdnella
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: UnlockAllEndings
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - CheatCode: picerlla
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: UnlockAllRecipes
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - CheatCode: nevoc
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: UnlockCoven
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - CheatCode: koocotua
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: AutoCooking
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - CheatCode: veihca
+    Event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5426982134444791154}
+          m_TargetAssemblyTypeName: CauldronCodebase.CheatManager, Assembly-CSharp
+          m_MethodName: ClearAchievements
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &5426982134444791154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5537417363755299246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b34c6b2b27614f1bb84874c78402449c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fractions: 

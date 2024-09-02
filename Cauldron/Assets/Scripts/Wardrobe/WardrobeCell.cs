@@ -6,6 +6,14 @@ using Universal;
 
 namespace CauldronCodebase
 {
+    public enum WardrobeCellState
+    {
+        Unavailable,
+        Available,
+        Owned,
+        NewlyUnlocked,
+    }
+    
     public class WardrobeCell : GrowOnMouseEnter
     {
         [SerializeField] private Image skinPreview;
@@ -17,29 +25,47 @@ namespace CauldronCodebase
         [SerializeField] private Sprite availableSkinBackground;
         [SerializeField] private Sprite lockedSkinBackground;
 
-        private bool isAvailable = true;
+        private WardrobeCellState currentState;
         
         private SkinSO skin;
         public SkinSO Skin => skin;
 
         public event Action<WardrobeCell> OnClick; 
 
-        public void Setup(SkinSO newSkin, bool unlock)
+        public void Setup(SkinSO newSkin, WardrobeCellState wardrobeCellState)
         {
             skin = newSkin;
             skinPreview.sprite = skin.PreviewIcon;
             
-            if (unlock)
+            SetState(wardrobeCellState);
+        }
+
+        public void SetState(WardrobeCellState newState)
+        {
+            currentState = newState;
+
+            switch (currentState)
             {
-                isAvailable = true;
-                skinPreview.material = null;
-                background.sprite = availableSkinBackground;
-            }
-            else
-            {
-                isAvailable = false;
-                skinPreview.material = lockedSkinMaterial;
-                background.sprite = lockedSkinBackground;
+                case WardrobeCellState.Unavailable:
+                    skinPreview.material = lockedSkinMaterial;
+                    background.sprite = lockedSkinBackground;
+                    break;
+                case WardrobeCellState.Available:
+                    skinPreview.material = null;
+                    background.sprite = availableSkinBackground;
+                    break;
+                case WardrobeCellState.Owned:
+                    //TODO: Добавить индикацию для имеющихся у игрока скинов
+                    skinPreview.material = null;
+                    background.sprite = availableSkinBackground;
+                    break;
+                case WardrobeCellState.NewlyUnlocked:
+                    //TODO: Добавить индикацию для только что открытых скинов
+                    skinPreview.material = null;
+                    background.sprite = availableSkinBackground;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -50,7 +76,7 @@ namespace CauldronCodebase
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if(!isAvailable) return;
+            if(currentState == WardrobeCellState.Unavailable) return;
             
             base.OnPointerClick(eventData);
             
@@ -59,7 +85,7 @@ namespace CauldronCodebase
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
-            if (!isAvailable) return;
+            if(currentState == WardrobeCellState.Unavailable) return;
             base.OnPointerEnter(eventData);
         }
     }

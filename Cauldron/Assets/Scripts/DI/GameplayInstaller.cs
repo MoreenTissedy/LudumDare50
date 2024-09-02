@@ -22,6 +22,7 @@ namespace CauldronCodebase
         [SerializeField] private CatTipsValidator catTipsValidator;
         [SerializeField] private Wardrobe wardrobe;
         [SerializeField] private WitchSkinChanger witchSkinChanger;
+        [SerializeField] private SkinShop skinShop;
 
         [Header("UI")]
         [SerializeField] private GameFXManager fxManager;
@@ -81,6 +82,7 @@ namespace CauldronCodebase
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
             Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
             Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();
+            Container.Bind<SkinShop>().FromInstance(skinShop).AsSingle();
         }
 
         private void Initialize()

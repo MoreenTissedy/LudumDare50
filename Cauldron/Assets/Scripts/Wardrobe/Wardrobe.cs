@@ -42,7 +42,7 @@ namespace CauldronCodebase
             for (int i = 0; i < skinsProvider.skins.Length; i++)
             {
                 var skin = skinsProvider.skins[i];
-                wardrobeCells[i].Setup(skin, skinsProvider.Unlocked(skin.name));
+                wardrobeCells[i].Setup(skin, DetermineCellState(skin));
                 wardrobeCells[i].OnClick += SelectCell;
                 if (witchSkinChanger.CurrentSkin == skin)
                 {
@@ -56,6 +56,17 @@ namespace CauldronCodebase
             }
         }
 
+        private WardrobeCellState DetermineCellState(SkinSO skin)
+        {
+            //TODO: add display of the newly opened skin
+            if (skinsProvider.Unlocked(skin.name))
+            {
+                return WardrobeCellState.Available;
+            }
+
+            return WardrobeCellState.Unavailable;
+        }
+        
         private void SelectCell(WardrobeCell cell)
         {
             if (cell == _selectedCell) return;

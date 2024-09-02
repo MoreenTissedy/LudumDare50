@@ -1,12 +1,13 @@
 ﻿using EasyLoc;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "SkinSo")]
     public class SkinSO : LocalizableSO
     {
-        public string SkinName;
+        public string FriendlyName;
         
         public Sprite PreviewIcon;
         public Sprite FullPreview;

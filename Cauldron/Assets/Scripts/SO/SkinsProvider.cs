@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 namespace CauldronCodebase
@@ -37,6 +38,23 @@ namespace CauldronCodebase
         public int GetUnlockedSkinsCount()
         {
             return unlocked.Count;
+        }
+        
+        public int GetMinimumPrice()
+        {
+            if (skins == null || skins.Length == 0)
+            {
+                throw new InvalidOperationException("The list is empty or null");
+            }
+
+            var positivePrices = skins.Where(skin => skin.Price > 0).Select(skin => skin.Price).ToList();
+
+            if (!positivePrices.Any())
+            {
+                throw new InvalidOperationException("No positive prices found in the list");
+            }
+
+            return positivePrices.Min();
         }
         
         public bool Unlocked(string skin)

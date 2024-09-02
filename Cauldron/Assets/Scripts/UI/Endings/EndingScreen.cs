@@ -18,7 +18,8 @@ namespace CauldronCodebase
         [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
-        [SerializeField] private Button closeButton; 
+        [SerializeField] private Button closeButton;
+        [SerializeField] private Button shopButton;
         [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
         [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
         
@@ -32,6 +33,7 @@ namespace CauldronCodebase
 
         public event Action OnClose;
         private bool active;
+        private bool showShopButton;
 
         public bool IsOpened => active;
 
@@ -55,6 +57,15 @@ namespace CauldronCodebase
                 buttons[i].OnClick += OnEndingClick;
             }
             closeButton.onClick.AddListener(Close);
+        }
+
+        public void CheckSkinShop(SkinShop skinShop, SkinsProvider skinsProvider, GameDataHandler gameDataHandler)
+        {
+            if (skinsProvider.GetUnlockedSkinsCount() > 1 || gameDataHandler.Money >= skinsProvider.GetMinimumPrice())
+            {
+                showShopButton = true;
+                shopButton.onClick.AddListener(skinShop.OpenBook);
+            }
         }
 
         private async void OnEndingClick(string tag)
@@ -128,6 +139,10 @@ namespace CauldronCodebase
                 OnEndingClick(tag);
             }
             closeButton.gameObject.SetActive(true);
+            if (showShopButton)
+            {
+                shopButton.gameObject.SetActive(true);
+            }
         }
 
         public void Close()
@@ -145,6 +160,7 @@ namespace CauldronCodebase
             active = false;
             screen.SetActive(false);
             closeButton.gameObject.SetActive(false);
+            shopButton.gameObject.SetActive(false);
             soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {

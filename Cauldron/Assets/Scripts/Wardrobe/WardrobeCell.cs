@@ -8,9 +8,9 @@ namespace CauldronCodebase
 {
     public enum WardrobeCellState
     {
-        Unavailable,
-        Available,
         Owned,
+        Available,
+        Unavailable,
         NewlyUnlocked,
     }
     

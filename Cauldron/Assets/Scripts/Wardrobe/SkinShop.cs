@@ -1,15 +1,20 @@
 ﻿using System.Collections.Generic;
+using EasyLoc;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Zenject;
+using Button = UnityEngine.UI.Button;
+
 namespace CauldronCodebase
 {
     public class SkinShop : Book
     {
-        [SerializeField] private string ownedText;
-        [SerializeField] private string priceText;
+        [Localize] [SerializeField] private string ownedText;
+        [Localize] [SerializeField] private string cantBuyText = "Unlocked only by ending";
+        [Localize] [SerializeField] private string priceText;
+        
         [SerializeField] private string playersMoneyText;
         [SerializeField] private Color defaultTextColor;
         [SerializeField] private Color unavailableTextColor;
@@ -17,7 +22,9 @@ namespace CauldronCodebase
         [SerializeField] private SkeletonGraphic witchSkeleton;
         [SerializeField] private TMP_Text playersMoneyTMP;
         [SerializeField] private TMP_Text descriptionTMP;
-        [SerializeField] private TMP_Text priceTMP;
+        [SerializeField] private TMP_Text noPriceText;
+        [SerializeField] private TMP_Text priceField;
+        [SerializeField] private GameObject priceBlock;
         [SerializeField] private TMP_Text headerTMP;
         [SerializeField] private Button buyButton;
         [SerializeField] private Button closeButton;
@@ -64,11 +71,10 @@ namespace CauldronCodebase
             {
                 return WardrobeCellState.Owned;
             }
-            if (skin.Price < 0)
+            if (skin.Price <= 0 || skin.Price > playersMoney)
             {
                 return WardrobeCellState.Unavailable;
             }
-
             return WardrobeCellState.Available;
         }
 
@@ -98,22 +104,41 @@ namespace CauldronCodebase
 
             if (skinsProvider.Unlocked(skin.name))
             {
-                buyButton.gameObject.SetActive(false);
-                priceTMP.text = ownedText;
+                SetPrice(ownedText);
+            }
+            else if (skin.Price <= 0)
+            {
+                SetPrice(cantBuyText);
             }
             else
             {
-                if (playersMoney >= skin.Price)
-                {
-                    buyButton.interactable = true;
-                    priceTMP.text = $"{priceText}: <color=#{defaultColorHex}>{skin.Price}</color>";
-                }
-                else
-                {
-                    buyButton.interactable = false;
-                    priceTMP.text = $"{priceText}: <color=#{unavailableColorHex}>{skin.Price}</color>";
-                }
+                SetPrice(skin.Price);
             }
+        }
+
+        private void SetPrice(string text)
+        {
+            priceBlock.SetActive(false);
+            noPriceText.gameObject.SetActive(true);
+            priceField.text = text;
+            buyButton.interactable = false;
+        }
+
+        private void SetPrice(int price)
+        {
+            priceBlock.SetActive(true);
+            if (price >= playersMoney)
+            {
+                priceField.text = $"<color=#{unavailableColorHex}>{price}</color>";
+                buyButton.interactable = false;
+            }
+            else
+            {
+                priceField.text = $"<color=#{defaultColorHex}>{price}</color>";
+                buyButton.interactable = true;
+            }
+            priceField.text = price.ToString();
+            noPriceText.gameObject.SetActive(false);
         }
 
         private void OnBuyButtonClicked()
@@ -125,7 +150,7 @@ namespace CauldronCodebase
                 skinsProvider.TryUnlock(selectedCell.Skin);
 
                 UpdatePLayerMoneyUI();
-                selectedCell.SetState(WardrobeCellState.Owned);
+                selectedCell.SetState(WardrobeCellState.NewlyUnlocked);
                 buyButton.interactable = false;
             }
         }

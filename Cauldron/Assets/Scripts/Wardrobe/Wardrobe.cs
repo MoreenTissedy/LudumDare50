@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,19 +18,27 @@ namespace CauldronCodebase
 
         [Header("Animation")]
         [SerializeField] private float descriptionPanelShowSpeed;
-        [SerializeField] private float descriptionPanelXPos;
+        [SerializeField] private float descriptionPanelHiddenYPos;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
 
-        private WardrobeCell _selectedCell;
-        private float _initDescriptionPanelPos;
+        private WardrobeCell selectedCell;
+        private float initDescriptionPanelPos;
 
         private void Start()
         {
             closeButton.onClick.AddListener(CloseBook);
             confirmSkinButton.onClick.AddListener(CloseBook);
-            _initDescriptionPanelPos = descriptionPanel.anchoredPosition.x;
+            InitDescriptionPanelAnimation();
+        }
+
+        private void InitDescriptionPanelAnimation()
+        {
+            var anchoredPosition = descriptionPanel.anchoredPosition;
+            initDescriptionPanelPos = anchoredPosition.y;
+            anchoredPosition = new Vector2(anchoredPosition.x, descriptionPanelHiddenYPos);
+            descriptionPanel.anchoredPosition = anchoredPosition;
         }
 
         protected override void InitTotalPages()
@@ -39,15 +48,28 @@ namespace CauldronCodebase
         
         protected override void UpdatePage()
         {
-            for (int i = 0; i < skinsProvider.skins.Length; i++)
+            var skinsProviderSkins = skinsProvider.skins;
+            LinkedList<SkinSO> sortedSkins = new LinkedList<SkinSO>();
+            foreach (SkinSO skin in skinsProviderSkins)
             {
-                var skin = skinsProvider.skins[i];
+                if (skinsProvider.Unlocked(skin.name))
+                {
+                    sortedSkins.AddFirst(skin);
+                }
+                else
+                {
+                    sortedSkins.AddLast(skin);
+                }
+            }
+            for (int i = 0; i < sortedSkins.Count; i++)
+            {
+                var skin = skinsProviderSkins[i];
                 wardrobeCells[i].Setup(skin, DetermineCellState(skin));
                 wardrobeCells[i].OnClick += SelectCell;
                 if (witchSkinChanger.CurrentSkin == skin)
                 {
-                    _selectedCell = wardrobeCells[i];
-                    _selectedCell.ToggleSelect(true);
+                    selectedCell = wardrobeCells[i];
+                    selectedCell.ToggleSelect(true);
                 }
                 else
                 {
@@ -69,10 +91,10 @@ namespace CauldronCodebase
         
         private void SelectCell(WardrobeCell cell)
         {
-            if (cell == _selectedCell) return;
+            if (cell == selectedCell) return;
             
-            _selectedCell.ToggleSelect(false);
-            _selectedCell = cell;
+            selectedCell.ToggleSelect(false);
+            selectedCell = cell;
             cell.ToggleSelect(true);
 
             description.text = cell.Skin.DescriptionText;
@@ -82,19 +104,19 @@ namespace CauldronCodebase
 
         private void ShowDescriptionPanel()
         {
-            descriptionPanel.DOLocalMoveX(descriptionPanelXPos, descriptionPanelShowSpeed).SetEase(Ease.OutQuart);
+            descriptionPanel.DOLocalMoveY(initDescriptionPanelPos, descriptionPanelShowSpeed).SetEase(Ease.OutQuart);
         }
 
         private void HideDescriptionPanel()
         {
-            descriptionPanel.DOLocalMoveX(_initDescriptionPanelPos, descriptionPanelShowSpeed).SetEase(Ease.OutQuart);
+            descriptionPanel.DOLocalMoveY(descriptionPanelHiddenYPos, descriptionPanelShowSpeed).SetEase(Ease.OutQuart);
         }
 
         private void ConfirmSkin()
         {
             if (!witchSkinChanger.SkinChangeAvailable) return;
             
-            witchSkinChanger.ChangeSkin(_selectedCell.Skin);
+            witchSkinChanger.ChangeSkin(selectedCell.Skin);
             //HideDescriptionPanel();
         }
 

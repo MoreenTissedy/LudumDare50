@@ -1,6 +1,5 @@
 ﻿using EasyLoc;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CauldronCodebase
 {
@@ -17,6 +16,7 @@ namespace CauldronCodebase
 
         public int Price;
         
+        [Header("Legacy compatibility")]
         public string[] LastUnlockedEnding;
         
         public override bool Localize(Language language)

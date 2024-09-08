@@ -79,6 +79,7 @@ namespace CauldronCodebase
             if (!Unlocked(skin.name))
             {
                 unlocked.Add(skin.name);
+                Debug.Log("Skin unlocked "+skin.name);
                 Save();
             }
             achievements.TryUnlock(skin.name);
@@ -95,6 +96,7 @@ namespace CauldronCodebase
             var list = fileDataHandler.IsFileValid()
                 ? fileDataHandler.Load().list : new List<string> { "main" };
             LoadLegacy(list);
+            Debug.Log($"Skins unlocked {String.Join(", ", list)}");
             return list;
         }
 
@@ -102,7 +104,7 @@ namespace CauldronCodebase
         {
             foreach (var skin in skins)
             {
-                if(skin.LastUnlockedEnding.Any(ending => unlockedEndings.Contains(ending)));
+                if(skin.LastUnlockedEnding.Any(ending => unlockedEndings.Contains(ending)))
                 {
                     if (!list.Contains(skin.name))
                     {

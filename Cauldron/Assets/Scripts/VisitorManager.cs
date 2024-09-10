@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -27,14 +28,18 @@ namespace CauldronCodebase
         private SoundManager soundManager;
         private DataPersistenceManager dataPersistenceManager;
 
+        private VisitorsProvider visitorsProvider;
+
         [Inject]
-        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager)
+        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager, VisitorsProvider visitorsProvider)
         {
             this.soundManager = soundManager;
             this.cauldron = cauldron;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.dataPersistenceManager = dataPersistenceManager;
+            this.visitorsProvider = visitorsProvider;
         }
+
         private void Awake()
         {
             HideText();
@@ -97,6 +102,7 @@ namespace CauldronCodebase
             }
 
             currentVillager = villager;
+            visitorsProvider.TryAddVisitor(villager.name);
             
             // I couldn't think of a better way for regular visitors and the animated cat to work.
             if (villager.name == EncounterIdents.CAT)

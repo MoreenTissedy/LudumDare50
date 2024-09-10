@@ -21,7 +21,8 @@ namespace CauldronCodebase
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
 
-        private MilestoneProvider milestoneProvider;
+        private MilestoneProvider milestoneProvider;        
+        private VisitorsProvider visitorsProvider;
 
         public override void InstallBindings()
         {
@@ -40,9 +41,15 @@ namespace CauldronCodebase
             Container.Bind<PlayerProgressProvider>().FromNew().AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();
             recipeProvider.Load();            
+
             milestoneProvider = new MilestoneProvider();
             Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();
+            
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
+            
+            visitorsProvider = new VisitorsProvider();
+            Container.Bind<VisitorsProvider>().FromInstance(visitorsProvider).AsSingle();
+            
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();

@@ -32,6 +32,7 @@ namespace CauldronCodebase
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private EndingsProvider endingsProvider;
         [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private VisitorsProvider visitorsProvider;
 
         private void Start()
         {
@@ -70,6 +71,7 @@ namespace CauldronCodebase
             recipeProvider.Reset();
             endingsProvider.Reset();
             milestoneProvider.Reset();
+            visitorsProvider.Reset();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();

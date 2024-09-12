@@ -111,6 +111,11 @@ namespace CauldronCodebase
             {
                 soundManager.SetMusic(Music.Ending, false);
             }
+            
+            //Init shop button here
+            shopButton.gameObject.SetActive(!inBook);
+            
+            
             gameObject.SetActive(true);
             closeButton.gameObject.SetActive(false);
             active = true;

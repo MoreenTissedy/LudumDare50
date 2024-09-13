@@ -32,7 +32,7 @@ namespace CauldronCodebase
         [Inject] private RecipeProvider recipeProvider;
         [Inject] private EndingsProvider endingsProvider;
         [Inject] private MilestoneProvider milestoneProvider;
-        [Inject] private VisitorsProvider visitorsProvider;
+        [Inject] private VillagerFamiliarityChecker visitorsProvider;
 
         private void Start()
         {

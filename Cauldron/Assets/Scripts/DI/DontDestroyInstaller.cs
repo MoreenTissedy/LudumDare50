@@ -22,7 +22,7 @@ namespace CauldronCodebase
         [SerializeField] private FadeController fadeController;
 
         private MilestoneProvider milestoneProvider;        
-        private VisitorsProvider visitorsProvider;
+        private VillagerFamiliarityChecker visitorsProvider;
 
         public override void InstallBindings()
         {
@@ -47,8 +47,8 @@ namespace CauldronCodebase
             
             Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             
-            visitorsProvider = new VisitorsProvider();
-            Container.Bind<VisitorsProvider>().FromInstance(visitorsProvider).AsSingle();
+            visitorsProvider = new VillagerFamiliarityChecker();
+            Container.Bind<VillagerFamiliarityChecker>().FromInstance(visitorsProvider).AsSingle();
             
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();

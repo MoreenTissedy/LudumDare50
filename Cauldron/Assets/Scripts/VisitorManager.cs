@@ -28,10 +28,10 @@ namespace CauldronCodebase
         private SoundManager soundManager;
         private DataPersistenceManager dataPersistenceManager;
 
-        private VisitorsProvider visitorsProvider;
+        private VillagerFamiliarityChecker visitorsProvider;
 
         [Inject]
-        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager, VisitorsProvider visitorsProvider)
+        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager, VillagerFamiliarityChecker visitorsProvider)
         {
             this.soundManager = soundManager;
             this.cauldron = cauldron;

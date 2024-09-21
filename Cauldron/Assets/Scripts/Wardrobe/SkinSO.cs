@@ -15,6 +15,8 @@ namespace CauldronCodebase
         public string DescriptionText;
 
         public int Price;
+
+        public GameModeBase GameMode;
         
         [Header("Legacy compatibility")]
         public string[] LastUnlockedEnding;

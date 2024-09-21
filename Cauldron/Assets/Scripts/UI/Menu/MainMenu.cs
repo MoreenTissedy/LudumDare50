@@ -1,3 +1,4 @@
+using System.IO;
 using EasyLoc;
 using UnityEngine;
 using Universal;
@@ -18,9 +19,6 @@ namespace CauldronCodebase
         [SerializeField] private AnimatedButton authorsButton;
         [SerializeField] private AuthorsMenu authorsMenu;
 
-        [Header("WrongRecipeProvider")]
-        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
-
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
 
@@ -28,10 +26,6 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
         [Inject] private LocalizationTool localizationTool;
-        [Inject] private PlayerProgressProvider progressProvider;
-        [Inject] private RecipeProvider recipeProvider;
-        [Inject] private EndingsProvider endingsProvider;
-        [Inject] private MilestoneProvider milestoneProvider;
 
         private void Start()
         {
@@ -65,15 +59,23 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
-            progressProvider.Reset();
-            wrongRecipeProvider.ResetWrongRecipe();
-            recipeProvider.Reset();
-            endingsProvider.Reset();
-            milestoneProvider.Reset();
+            ClearAllSaveFiles();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
             Debug.LogWarning("All data cleared!");
+        }
+
+        private static void ClearAllSaveFiles()
+        {
+            string dataDirPath = Application.persistentDataPath;
+            string SubFolder = "Saves";
+            string subDirPath = Path.Combine(dataDirPath, SubFolder);
+            DirectoryInfo di = new DirectoryInfo(subDirPath);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
         }
 
         private void HideContinueButton()

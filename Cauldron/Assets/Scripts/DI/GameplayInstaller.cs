@@ -83,6 +83,7 @@ namespace CauldronCodebase
             Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
             Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();
             Container.Bind<SkinShop>().FromInstance(skinShop).AsSingle();
+            Container.Bind<GameModeFactory>().FromNew().AsSingle().NonLazy();
         }
 
         private void Initialize()

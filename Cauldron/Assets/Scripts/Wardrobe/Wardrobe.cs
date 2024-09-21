@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+
 namespace CauldronCodebase
 {
     public class Wardrobe : Book
@@ -26,10 +28,12 @@ namespace CauldronCodebase
         private WardrobeCell selectedCell;
         private float initDescriptionPanelPos;
 
+        public event Action<SkinSO> SkinApplied;
+
         private void Start()
         {
             closeButton.onClick.AddListener(CloseBook);
-            confirmSkinButton.onClick.AddListener(CloseBook);
+            confirmSkinButton.onClick.AddListener(ApplySkin);
             InitDescriptionPanelAnimation();
         }
 
@@ -118,6 +122,15 @@ namespace CauldronCodebase
             
             witchSkinChanger.ChangeSkin(selectedCell.Skin);
             //HideDescriptionPanel();
+        }
+
+        public void ApplySkin()
+        {
+            //save skin as applied
+            //confirm message ? 
+            SkinApplied?.Invoke(selectedCell.Skin);
+            CloseBook();
+            //disable wardrobe
         }
 
         public override void CloseBook()

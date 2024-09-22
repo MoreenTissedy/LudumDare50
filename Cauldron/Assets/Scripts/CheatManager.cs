@@ -16,6 +16,16 @@ namespace CauldronCodebase
         [Inject] private EndingsProvider endingsProvider;
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private IAchievementManager achievementManager;
+        [Inject] private SkinsProvider skinsProvider;
+
+        [Button("Unlock all skins")]
+        public void UnlockAllSkins()
+        {
+            foreach (SkinSO skin in skinsProvider.skins)
+            {
+                skinsProvider.TryUnlock(skin);
+            }
+        }
 
         [Button("Unlock all endings")]
         public void UnlockAllEndings()

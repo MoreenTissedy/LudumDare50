@@ -25,7 +25,7 @@ namespace CauldronCodebase
         private void Start()
         {
             currentSkin = initSkin;
-            witchSkeleton.Skeleton.SetSkin(currentSkin.name);
+            witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
         }
 
         public void ChangeSkin(SkinSO newSkin)
@@ -36,7 +36,7 @@ namespace CauldronCodebase
             
             skinChangeVFX.Play();
             witchSkeleton.AnimationState.SetAnimation(0, activeAnimation, false);
-            witchSkeleton.Skeleton.SetSkin(currentSkin.name);
+            witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
             witchSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0);
             
         }

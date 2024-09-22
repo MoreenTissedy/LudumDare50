@@ -94,7 +94,7 @@ namespace CauldronCodebase
         private List<string> LoadUnlockedSkins()
         {
             var list = fileDataHandler.IsFileValid()
-                ? fileDataHandler.Load().list : new List<string> { "main" };
+                ? fileDataHandler.Load().list : new List<string> { "Default" };
             LoadLegacy(list);
             Debug.Log($"Skins unlocked {String.Join(", ", list)}");
             return list;

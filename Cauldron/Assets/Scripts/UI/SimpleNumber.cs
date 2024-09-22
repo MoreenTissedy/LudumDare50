@@ -20,7 +20,7 @@ namespace CauldronCodebase
         private void Start()
         {
             text = GetComponent<Text>();
-            gameDataHandler.StatusChanged += () => SetValue(gameDataHandler.Get(type));
+            gameDataHandler.StatusChanged += (x, y) => SetValue(gameDataHandler.Get(type));
             SetValue(gameDataHandler.Get(type));
         }
 

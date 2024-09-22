@@ -49,8 +49,7 @@ namespace CauldronCodebase
         public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
         PlayerProgressProvider progressProvider;
-
-        public event Action StatusChanged;
+        public event Action<Statustype, int> StatusChanged;
 
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
@@ -148,7 +147,7 @@ namespace CauldronCodebase
                     fame = statValue;
                     break;
             }
-            StatusChanged?.Invoke();
+            StatusChanged?.Invoke(type, num);
             return statValue;
         }
 

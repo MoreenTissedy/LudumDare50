@@ -116,7 +116,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void ViewScaleChangeTutorial()
+    private void ViewScaleChangeTutorial(Statustype statustype, int i)
     {
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
         

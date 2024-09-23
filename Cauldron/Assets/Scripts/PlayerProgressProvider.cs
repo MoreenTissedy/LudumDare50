@@ -124,11 +124,5 @@ namespace CauldronCodebase
 
             return true;
         }
-
-        public void Reset()
-        {
-            progress = new PlayerProgress();
-            SaveProgress();
-        }
     }
 }

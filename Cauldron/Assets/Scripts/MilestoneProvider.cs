@@ -86,11 +86,5 @@ namespace CauldronCodebase
             PlayerPrefs.DeleteKey(PrefKeys.Milestones);
             return true;
         }
-
-        public void Reset()
-        {
-            milestones.Clear();
-            Save();
-        }
     }
 }

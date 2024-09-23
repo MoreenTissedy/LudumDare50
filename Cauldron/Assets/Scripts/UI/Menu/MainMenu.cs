@@ -28,11 +28,6 @@ namespace CauldronCodebase
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
         [Inject] private LocalizationTool localizationTool;
-        [Inject] private PlayerProgressProvider progressProvider;
-        [Inject] private RecipeProvider recipeProvider;
-        [Inject] private EndingsProvider endingsProvider;
-        [Inject] private MilestoneProvider milestoneProvider;
-        [Inject] private VillagerFamiliarityChecker visitorsProvider;
 
         private void Start()
         {
@@ -66,12 +61,6 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
-            progressProvider.Reset();
-            wrongRecipeProvider.ResetWrongRecipe();
-            recipeProvider.Reset();
-            endingsProvider.Reset();
-            milestoneProvider.Reset();
-            visitorsProvider.Reset();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();

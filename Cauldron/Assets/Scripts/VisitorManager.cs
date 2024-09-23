@@ -28,16 +28,16 @@ namespace CauldronCodebase
         private SoundManager soundManager;
         private DataPersistenceManager dataPersistenceManager;
 
-        private VillagerFamiliarityChecker visitorsProvider;
+        private VillagerFamiliarityChecker villagerFamiliarityChecker;
 
         [Inject]
-        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager, VillagerFamiliarityChecker visitorsProvider)
+        private void Init(Cauldron cauldron, DataPersistenceManager dataPersistenceManager, SoundManager soundManager, VillagerFamiliarityChecker villagerFamiliarityChecker)
         {
             this.soundManager = soundManager;
             this.cauldron = cauldron;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.dataPersistenceManager = dataPersistenceManager;
-            this.visitorsProvider = visitorsProvider;
+            this.villagerFamiliarityChecker = villagerFamiliarityChecker;
         }
 
         private void Awake()
@@ -102,7 +102,7 @@ namespace CauldronCodebase
             }
 
             currentVillager = villager;
-            visitorsProvider.TryAddVisitor(villager.name);
+            villagerFamiliarityChecker.TryAddVisitor(villager.name);
             
             // I couldn't think of a better way for regular visitors and the animated cat to work.
             if (villager.name == EncounterIdents.CAT)

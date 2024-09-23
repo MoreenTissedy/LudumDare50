@@ -53,10 +53,4 @@ public class VillagerFamiliarityChecker
     {
         fileDataHandler.Save(new ListToSave<string>(unlocked));
     }
-    
-    public void Reset()
-    {
-        unlocked.Clear();
-        Save();
-    }
 }

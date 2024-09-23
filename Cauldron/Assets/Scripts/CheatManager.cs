@@ -53,6 +53,7 @@ namespace CauldronCodebase
             gameDataHandler.Fame = settings.statusBars.InitialValue;
             gameDataHandler.Fear = settings.statusBars.InitialValue;
         }
+        
 
         [Button("Unlock coven & get rich")]
         public void UnlockCoven()

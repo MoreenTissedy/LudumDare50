@@ -1,11 +1,10 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Serialization;
 using Universal;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -22,7 +21,7 @@ namespace CauldronCodebase
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
         public IngredientsData dataList;
-        public Collider2D collider;
+        [FormerlySerializedAs("collider")] public Collider2D theCollider;
         
         [SerializeField, HideInInspector]
         private ScrollTooltip tooltip;
@@ -152,7 +151,7 @@ namespace CauldronCodebase
         private void SetMovementVisuals()
         {
             image.sortingLayerName = "Hints";
-            collider.enabled = false;
+            theCollider.enabled = false;
             tooltip?.Close();
             dragging = true;
             image.transform.DOKill(true);
@@ -206,7 +205,7 @@ namespace CauldronCodebase
         private void ResetVisuals()
         {
             image.sortingLayerName = "Interactables";
-            collider.enabled = true;
+            theCollider.enabled = true;
             dragging = false;
             dragTrail?.SetActive(false);
         }

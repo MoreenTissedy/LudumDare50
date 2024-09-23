@@ -21,6 +21,8 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
     [Localize] [TextArea(5, 10)] public string RecipeHintTutorialText;
+    [Localize] [TextArea(5, 10)] public string ShopTutorialText;
+    [Localize] [TextArea(5, 10)] public string WardrobeTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     [SerializeField] private Button rejectButton;
@@ -114,7 +116,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void ViewScaleChangeTutorial()
+    private void ViewScaleChangeTutorial(Statustype statustype, int i)
     {
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
         
@@ -136,6 +138,16 @@ public class TutorialManager : MonoBehaviour
             SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
+    }
+
+    private void ViewShopTutorial()
+    {
+        //TODO: add shop tutorial
+    }
+
+    private void ViewWardrobeTutorial()
+    {
+        //TODO: add wardrobe tutorial
     }
     
     private void AcceptAutoCookingClickButton()

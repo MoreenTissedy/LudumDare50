@@ -22,11 +22,15 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            UpdateMoney();
+            UpdateMoney(Statustype.Money, 0);
         }
 
-        private void UpdateMoney()
+        private void UpdateMoney(Statustype statustype, int i)
         {
+            if (statustype != Statustype.Money || i == 0)
+            {
+                return;
+            }
             if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))
             {
                 text.text = $"{gameDataHandler.Money} / {settings.statusBars.CovenMoneyFee}";

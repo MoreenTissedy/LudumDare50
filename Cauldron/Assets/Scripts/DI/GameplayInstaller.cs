@@ -20,6 +20,9 @@ namespace CauldronCodebase
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
         [SerializeField] private CatTipsValidator catTipsValidator;
+        [SerializeField] private Wardrobe wardrobe;
+        [SerializeField] private WitchSkinChanger witchSkinChanger;
+        [SerializeField] private SkinShop skinShop;
 
         [Header("UI")]
         [SerializeField] private GameFXManager fxManager;
@@ -35,6 +38,7 @@ namespace CauldronCodebase
         [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private VillagerFamiliarityChecker villagerFamiliarityChecker;
+        [Inject] private SkinsProvider skinsProvider;
 
         private IAchievementManager achievementManager;
 
@@ -77,6 +81,10 @@ namespace CauldronCodebase
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
             Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
+            Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
+            Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();
+            Container.Bind<SkinShop>().FromInstance(skinShop).AsSingle();
+            Container.Bind<GameModeFactory>().FromNew().AsSingle().NonLazy();
         }
 
         private void Initialize()
@@ -88,6 +96,7 @@ namespace CauldronCodebase
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
             endings.Init(achievementManager);
             villagerFamiliarityChecker.Init(achievementManager, soDictionary);
+            skinsProvider.Init(achievementManager, endings);
         }
 
     }

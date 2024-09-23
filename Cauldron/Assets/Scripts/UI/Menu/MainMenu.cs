@@ -1,3 +1,4 @@
+using System.IO;
 using EasyLoc;
 using UnityEngine;
 using Universal;
@@ -17,9 +18,6 @@ namespace CauldronCodebase
         [Header("Authors")] 
         [SerializeField] private AnimatedButton authorsButton;
         [SerializeField] private AuthorsMenu authorsMenu;
-
-        [Header("WrongRecipeProvider")]
-        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
@@ -61,10 +59,23 @@ namespace CauldronCodebase
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
+            ClearAllSaveFiles();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
             Debug.LogWarning("All data cleared!");
+        }
+
+        private static void ClearAllSaveFiles()
+        {
+            string dataDirPath = Application.persistentDataPath;
+            string SubFolder = "Saves";
+            string subDirPath = Path.Combine(dataDirPath, SubFolder);
+            DirectoryInfo di = new DirectoryInfo(subDirPath);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
         }
 
         private void HideContinueButton()

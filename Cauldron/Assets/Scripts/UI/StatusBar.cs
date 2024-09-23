@@ -51,8 +51,12 @@ namespace CauldronCodebase
             SetValue(this.gameDataHandler.Get(type), false);
         }
 
-        private void UpdateValue()
+        private void UpdateValue(Statustype statusType, int i)
         {
+            if (statusType != type || i == 0)
+            {
+                return;
+            }
             SetValue(gameDataHandler.Get(type));
         }
 

@@ -10,13 +10,6 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    [Serializable]
-    public struct WitchSkinSet
-    {
-        public string LastUnlockedEnding;
-        [SpineSkin()] public string WitchSkin;
-    }
-    
     [RequireComponent(typeof(SkeletonAnimation))]
     public class Witch : MonoBehaviour, IPointerClickHandler
     {
@@ -31,18 +24,11 @@ namespace CauldronCodebase
 
         [SpineAnimation()] public string angry;
 
-        [SerializeField] private WitchSkinSet[] skinSets;
-
         [Inject] private Cauldron cauldron;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine gameStateMachine;
-        [Inject] private EndingsProvider endingsProvider;
         
         public bool Hidden { get; private set; }
-
-        private List<string> unlockedSkins;
-        private IReadOnlyList<string> unlockedEndings;
-
         
         private void Awake()
         {
@@ -51,8 +37,6 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            unlockedEndings = endingsProvider.UnlockedEndings;
-            SetWitchSkin();
             cauldron.PotionBrewed += CauldronOnPotionBrewed;
             gameStateMachine.OnChangeState += OnDayNightChange;
         }
@@ -69,18 +53,6 @@ namespace CauldronCodebase
             {
                 anim.AnimationState.SetAnimation(1, hide, false);
                 Hidden = true;
-            }
-        }
-
-        private void SetWitchSkin()
-        {
-            if (unlockedEndings.Count > 0)
-            {
-                var skinSet = skinSets.FirstOrDefault(x => x.LastUnlockedEnding == unlockedEndings[unlockedEndings.Count - 1]);
-                if (!string.IsNullOrWhiteSpace(skinSet.WitchSkin))
-                {
-                    anim.Skeleton.SetSkin(skinSet.WitchSkin);
-                }
             }
         }
 
@@ -112,41 +84,6 @@ namespace CauldronCodebase
         public void OnPointerClick(PointerEventData eventData)
         {
             Fly();
-            
-            if (unlockedEndings.Count == 0)
-            {
-                return;
-            }
-
-            if (unlockedSkins is null)
-            {
-                unlockedSkins = GetUnlockedSkins();
-            }
-            if (unlockedSkins.Count == 0)
-            {
-                return;
-            }
-            
-            int currentSkinIndex = unlockedSkins.IndexOf(anim.Skeleton.Skin.Name);
-            string nextSkin = unlockedSkins[(currentSkinIndex + 1) % unlockedSkins.Count];
-            if (!string.IsNullOrWhiteSpace(nextSkin))
-            {
-                anim.Skeleton.SetSkin(nextSkin);
-            }
-        }
-
-        private List<string> GetUnlockedSkins()
-        {
-            List<string> skinList = new List<string>() {"main"};
-            foreach (var set in skinSets)
-            {
-                if (unlockedEndings.Contains(set.LastUnlockedEnding) && !skinList.Contains(set.WitchSkin))
-                {
-                    skinList.Add(set.WitchSkin);
-                }
-            }
-
-            return skinList;
         }
 
         private void Fly()

@@ -65,9 +65,10 @@ namespace CauldronCodebase
                     sortedSkins.AddLast(skin);
                 }
             }
-            for (int i = 0; i < sortedSkins.Count; i++)
+
+            int i = 0;
+            foreach (SkinSO skin in sortedSkins)
             {
-                var skin = skinsProviderSkins[i];
                 wardrobeCells[i].Setup(skin, DetermineCellState(skin));
                 wardrobeCells[i].OnClick += SelectCell;
                 if (witchSkinChanger.CurrentSkin == skin)
@@ -79,6 +80,8 @@ namespace CauldronCodebase
                 {
                     wardrobeCells[i].ToggleSelect(false);
                 }
+
+                i++;
             }
         }
 

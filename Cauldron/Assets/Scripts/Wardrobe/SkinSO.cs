@@ -1,4 +1,5 @@
-﻿using EasyLoc;
+﻿using System.IO;
+using EasyLoc;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -27,7 +28,45 @@ namespace CauldronCodebase
 
         public override bool Localize(Language language)
         {
-            return true;
+            if (localizationCSV == null)
+                return false;
+            //cache??
+            string[] lines = localizationCSV.text.Split('\n');
+            int requiredColumn = -1;
+            string[] headers = lines[0].Split(';');
+            for (int i = 0; i < headers.Length; i++)
+            {
+                if (headers[i].Contains("_"+language.ToString()))
+                {
+                    requiredColumn = i;
+                    break;
+                }
+            }
+            if (requiredColumn < 1)
+            {
+                return false;
+            }
+
+            bool found = false;
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] data = lines[i].Split(';');
+                if (data[0] == $"{name}.title")
+                {
+                    FriendlyName = data[requiredColumn];
+                    found = true;
+                }
+                else if (data[0] == $"{name}.description")
+                {
+                    FlavorText = data[requiredColumn];
+                    found = true;
+                }
+                else if (data[0] == $"{name}.short")
+                {
+                    DescriptionText = data[requiredColumn];
+                }
+            }
+            return found;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 namespace CauldronCodebase
@@ -117,6 +118,21 @@ namespace CauldronCodebase
         private void Save()
         {
             fileDataHandler.Save(new ListToSave<string>(unlocked));
+        }
+
+        [ContextMenu("Export Skins to CSV")]
+        public void ExportEndings()
+        {
+            var file = File.CreateText(Application.dataPath+"/Localize/Skins.csv");
+            file.WriteLine("id;string_RU;string_EN");
+            
+            foreach (var skinSo in skins)
+            {
+                file.WriteLine($"{skinSo.name}.title;{skinSo.FriendlyName}");
+                file.WriteLine($"{skinSo.name}.description;{skinSo.FlavorText}");
+                file.WriteLine($"{skinSo.name}.short;{skinSo.DescriptionText}");
+            }
+            file.Close();
         }
     }
 }

@@ -19,12 +19,6 @@ namespace CauldronCodebase
             fileDataHandler  = new FileDataHandler<WrongRecipeProvider>(WrongRecipeKey);
         }
 
-        public void ResetWrongRecipe()
-        {
-            wrongPotions.Clear();
-            SaveWrongRecipes();
-        }
-
         public void SaveWrongRecipes()
         {
             TryInitDataHandler();

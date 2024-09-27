@@ -109,12 +109,6 @@ namespace CauldronCodebase
             PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
             return true;  
         }
-        
-        public void Reset()
-        {
-            unlocked.Clear();
-            Save();
-        }
 
         [ContextMenu("Export Endings to CSV")]
         public void ExportEndings()

@@ -111,12 +111,6 @@ namespace CauldronCodebase
             return true;
         }
 
-        public void Reset()
-        {
-            unlockedRecipes.Clear();
-            Save();
-        }
-
         [ContextMenu("Export Recipes to CSV")]
         public void ExportRecipes()
         {

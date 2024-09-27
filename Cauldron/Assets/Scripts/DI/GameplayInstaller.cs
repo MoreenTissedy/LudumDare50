@@ -37,6 +37,7 @@ namespace CauldronCodebase
         [Inject] private EndingsProvider endings;
         [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private VillagerFamiliarityChecker villagerFamiliarityChecker;
         [Inject] private SkinsProvider skinsProvider;
 
         private IAchievementManager achievementManager;
@@ -94,6 +95,7 @@ namespace CauldronCodebase
             nightEvents.Init(dataPersistenceManager, soDictionary, progressProvider);
             priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
             endings.Init(achievementManager);
+            villagerFamiliarityChecker.Init(achievementManager, soDictionary);
             skinsProvider.Init(achievementManager, endings);
         }
 

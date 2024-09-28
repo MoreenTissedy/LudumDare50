@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +32,7 @@ namespace CauldronCodebase
         [SerializeField] private AnimatedButton endingBookmarkButton;
         [SerializeField] private Transform endingRoot;
         private EndingScreen endingScreen;
+        public SkinSO culinarySkin;
 
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
@@ -216,6 +216,12 @@ namespace CauldronCodebase
         public bool AllMagicalRecipesUnlocked()
         {
             return unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count;
+        }
+        
+        public bool AllHerbalRecipesUnlocked(out SkinSO skin)
+        {
+            skin = culinarySkin;
+            return unlockedRecipes.Count(x => !x.magical) == allHerbalRecipes.Count;
         }
 
         public void CheatUnlockAutoCooking()

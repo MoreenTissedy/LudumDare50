@@ -46,6 +46,7 @@ namespace CauldronCodebase
         [Inject] private SoundManager soundManager;
         [Inject] private InputManager inputManager;
         [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private RecipeBook recipeBook;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -63,13 +64,33 @@ namespace CauldronCodebase
             closeButton.onClick.AddListener(Close);
         }
 
-        private void InitSkinShop(bool inBook)
+        private void InitSkinShop(bool inBook, string endingTag)
         {
-            //if (!inBook && skinShop.CanBeOpened(playerMoney))
+            if (!inBook && skinShop.CanBeOpened(gameDataHandler.Money))
             {
                 skinShopEnabled = true;
                 skinShop.SetPlayerMoney(gameDataHandler.Money);
-                skinShop.SetInitialSkin(gameDataHandler.currentSkin, false);
+                
+                SkinSO initialSkin = gameDataHandler.currentSkin;
+                bool tryUnlock = false;
+                if (endingTag != "none")
+                {
+                    var unlockedEnding = endings.Get(endingTag);
+                    if (unlockedEnding.unlocksSkin != null)
+                    {
+                        initialSkin = unlockedEnding.unlocksSkin;
+                        tryUnlock = true;
+                    }
+                }
+                if (!tryUnlock)
+                {
+                    if (recipeBook.AllHerbalRecipesUnlocked(out var skin))
+                    {
+                        initialSkin = skin;
+                        tryUnlock = true;
+                    }
+                }
+                skinShop.SetInitialSkin(initialSkin, tryUnlock);
             }
         }
         
@@ -126,7 +147,7 @@ namespace CauldronCodebase
                 soundManager.SetMusic(Music.Ending, false);
             }
             
-            InitSkinShop(inBook);
+            InitSkinShop(inBook, endingTag);
             
             gameObject.SetActive(true);
             shopButton.gameObject.SetActive(false);

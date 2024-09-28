@@ -57,10 +57,9 @@ namespace CauldronCodebase
         public void SetInitialSkin(SkinSO skin, bool unlock)
         {
             initialSkin = skin;
-            initialSkinJustUnlocked = unlock;
-            if (unlock)
+            if (unlock && skinsProvider.TryUnlock(skin))
             {
-                skinsProvider.TryUnlock(skin);
+                initialSkinJustUnlocked = true;
             }
         }
 

@@ -78,15 +78,17 @@ namespace CauldronCodebase
             return false;
         }
 
-        public void TryUnlock(SkinSO skin)
+        public bool TryUnlock(SkinSO skin)
         {
             if (!Unlocked(skin.name))
             {
                 unlocked.Add(skin.name);
                 Debug.Log("Skin unlocked "+skin.name);
                 Save();
+                return true;
             }
             achievements.TryUnlock(skin.name);
+            return false;
         }
 
         public void Reset()

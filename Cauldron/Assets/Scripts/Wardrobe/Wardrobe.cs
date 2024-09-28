@@ -12,6 +12,7 @@ namespace CauldronCodebase
     {
         [SerializeField] private RectTransform descriptionPanel;
         [SerializeField] private TMP_Text description;
+        [SerializeField] private TMP_Text description2;
         
         [SerializeField] private Button confirmSkinButton;
         [SerializeField] private Button closeButton;
@@ -27,6 +28,8 @@ namespace CauldronCodebase
 
         private WardrobeCell selectedCell;
         private float initDescriptionPanelPos;
+
+        private Action OnClosed;
 
         public event Action<SkinSO> SkinApplied;
 
@@ -105,6 +108,7 @@ namespace CauldronCodebase
             cell.ToggleSelect(true);
 
             description.text = cell.Skin.DescriptionText;
+            description2.text = cell.Skin.FlavorText;
             ShowDescriptionPanel();
             ConfirmSkin();
         }
@@ -145,6 +149,13 @@ namespace CauldronCodebase
             }
             
             base.CloseBook();
+            OnClosed?.Invoke();
+        }
+
+        public void OpenWithCallback(Action onClosed)
+        {
+            OnClosed = onClosed;
+            OpenBook();
         }
     }
 }

@@ -4,23 +4,28 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
+
 namespace CauldronCodebase
 {
     public class WardrobeButton : MonoBehaviour, IPointerClickHandler
     {
-        [SerializeField] private RectTransform rect;
+        [SerializeField] private float offsetX = 5;
+        [SerializeField] private float clickedOffset = -2;
         [SerializeField] private float moveDuration;
         private float initialXPos, offScreenXPos;
         
         [Inject] private Wardrobe wardrobe;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine stateMachine;
+        [Inject] private SkinsProvider skinsProvider;
+
+        private bool hidden;
 
         private void Awake()
         {
-            initialXPos = rect.anchoredPosition.x;
-            offScreenXPos = initialXPos + 300;
-            rect.gameObject.SetActive(false);
+            initialXPos = transform.position.x;
+            offScreenXPos = initialXPos + offsetX;
+            gameObject.SetActive(false);
             
             stateMachine.OnGameStarted += TryShow;
             stateMachine.OnChangeState += Hide;
@@ -30,40 +35,67 @@ namespace CauldronCodebase
         {
             stateMachine.OnGameStarted -= TryShow;
             stateMachine.OnChangeState -= Hide;
+            wardrobe.SkinApplied -= Hide;
         }
         
         private void TryShow()
         {
-            if (gameDataHandler.currentDay == 0 && gameDataHandler.cardsDrawnToday == 0)
+            if (gameDataHandler.currentDay == 0 && gameDataHandler.cardsDrawnToday == 0 && skinsProvider.GetUnlockedSkinsCount() > 1)
             {
                 Show();
+                wardrobe.SkinApplied += Hide;
             }
             else
             {
-                Destroy(rect.gameObject);
+                Destroy(gameObject);
             }
         }
         
-        [Button]
+        [Button("Show")]
         private void Show()
         {
-            rect.gameObject.SetActive(true);
-            rect.DOLocalMoveX(initialXPos, moveDuration)
+            gameObject.SetActive(true);
+            transform.DOLocalMoveX(initialXPos, moveDuration)
                 .From(offScreenXPos)
                 .SetEase(Ease.OutBack)
                 .SetDelay(1.5f);
         }
 
-        [Button]
         private void Hide(GameStateMachine.GamePhase phase)
         {
-            rect.DOLocalMoveX(offScreenXPos, moveDuration).SetEase(Ease.InBack)
-                .OnComplete(()=> Destroy(rect.gameObject));
+            Hide();
+        }
+        
+        private void Hide(SkinSO skin)
+        {
+            Hide();
+        }
+
+        [Button()]
+        private void Hide()
+        {
+            hidden = true;
+            transform.DOLocalMoveX(offScreenXPos, moveDuration).SetEase(Ease.InBack)
+                .OnComplete(()=> Destroy(gameObject));
+        }
+
+        public void Close()
+        {
+            if (hidden)
+            {
+                return;
+            }
+            transform.DOLocalMoveX(initialXPos, moveDuration);
         }
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            wardrobe.OpenBook();
+            if (hidden)
+            {
+                return;
+            }
+            transform.DOLocalMoveX(initialXPos + clickedOffset, moveDuration);
+            wardrobe.OpenWithCallback(Close);
         }
     }
 }

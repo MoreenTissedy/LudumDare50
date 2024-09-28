@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EasyLoc;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Zenject;
 using Button = UnityEngine.UI.Button;
 
 namespace CauldronCodebase
@@ -13,7 +13,6 @@ namespace CauldronCodebase
     {
         [Localize] [SerializeField] private string ownedText;
         [Localize] [SerializeField] private string cantBuyText = "Unlocked only by ending";
-        [Localize] [SerializeField] private string priceText;
         
         [SerializeField] private string playersMoneyText;
         [SerializeField] private Color defaultTextColor;
@@ -22,6 +21,7 @@ namespace CauldronCodebase
         [SerializeField] private SkeletonGraphic witchSkeleton;
         [SerializeField] private TMP_Text playersMoneyTMP;
         [SerializeField] private TMP_Text descriptionTMP;
+        [SerializeField] private TMP_Text description2TMP;
         [SerializeField] private TMP_Text noPriceText;
         [SerializeField] private TMP_Text priceField;
         [SerializeField] private GameObject priceBlock;
@@ -31,10 +31,11 @@ namespace CauldronCodebase
 
         [SerializeField] private List<WardrobeCell> cells;
 
-        [Inject] private SkinsProvider skinsProvider;
-        [Inject] private GameDataHandler gameDataHandler;
+        [SerializeField] private SkinsProvider skinsProvider;
 
         private int playersMoney;
+        private SkinSO initialSkin;
+        private bool initialSkinJustUnlocked;
         private WardrobeCell selectedCell;
 
         private string defaultColorHex, unavailableColorHex;
@@ -48,6 +49,26 @@ namespace CauldronCodebase
             unavailableColorHex = ColorUtility.ToHtmlStringRGB(unavailableTextColor);
         }
 
+        public void SetPlayerMoney(int playerMoney)
+        {
+            playersMoney = playerMoney;
+        }
+        
+        public void SetInitialSkin(SkinSO skin, bool unlock)
+        {
+            initialSkin = skin;
+            initialSkinJustUnlocked = unlock;
+            if (unlock)
+            {
+                skinsProvider.TryUnlock(skin);
+            }
+        }
+
+        public bool CanBeOpened(int playerMoney)
+        {
+            return skinsProvider.GetUnlockedSkinsCount() > 1 || playerMoney >= skinsProvider.GetMinimumPrice();
+        }
+
         protected override void InitTotalPages()
         {
             totalPages = 1;
@@ -55,27 +76,45 @@ namespace CauldronCodebase
         
         protected override void UpdatePage()
         {
-            playersMoney = gameDataHandler.Money;
-            
-            for (int i = 0; i < skinsProvider.skins.Length; i++)
+            var skins = skinsProvider.skins;
+            List<(WardrobeCellState, SkinSO)> sortedList = new List<(WardrobeCellState, SkinSO)>();
+            foreach (var skinSo in skins)
             {
-                var skin = skinsProvider.skins[i];
-                cells[i].Setup(skin, DetermineCellState(skin));
-                cells[i].OnClick += OnCellClicked;
+                sortedList.Add((DetermineCellState(skinSo), skinSo));
             }
+
+            int i = 0;
+            foreach (var (wardrobeCellState, skinSo) in sortedList.OrderBy(x => x.Item1))
+            {
+                cells[i].Setup(skinSo, wardrobeCellState);
+                cells[i].OnClick += OnCellClicked;
+                if (skinSo == initialSkin)
+                {
+                    selectedCell = cells[i];
+                    selectedCell.ToggleSelect(true);
+                }
+                i++;
+            }
+            
+            UpdateSelectedSkinUI(initialSkin);
+            UpdatePlayerMoneyUI();
         }
 
         private WardrobeCellState DetermineCellState(SkinSO skin)
         {
+            if (skin == initialSkin && initialSkinJustUnlocked)
+            {
+                return WardrobeCellState.NewlyUnlocked;
+            }
             if (skinsProvider.Unlocked(skin.name))
             {
                 return WardrobeCellState.Owned;
             }
             if (skin.Price <= 0 || skin.Price > playersMoney)
             {
-                return WardrobeCellState.Unavailable;
+                return WardrobeCellState.UnavailableToBuy;
             }
-            return WardrobeCellState.Available;
+            return WardrobeCellState.AvailableToBuy;
         }
 
         private void OnCellClicked(WardrobeCell cell)
@@ -95,9 +134,10 @@ namespace CauldronCodebase
         private void UpdateSelectedSkinUI(SkinSO skin)
         {
             witchSkeleton.AnimationState.SetAnimation(0, "Active", false);
-            witchSkeleton.Skeleton.SetSkin(skin.name);
+            witchSkeleton.Skeleton.SetSkin(skin.SpineName);
             witchSkeleton.AnimationState.AddAnimation(0, "Idle", true, 0);
-            descriptionTMP.text = skin.DescriptionText;
+            descriptionTMP.text = skin.FlavorText;
+            description2TMP.text = skin.DescriptionText;
             headerTMP.text = skin.FriendlyName;
             
             buyButton.gameObject.SetActive(!skinsProvider.Unlocked(skin.name));
@@ -120,14 +160,15 @@ namespace CauldronCodebase
         {
             priceBlock.SetActive(false);
             noPriceText.gameObject.SetActive(true);
-            priceField.text = text;
-            buyButton.interactable = false;
+            noPriceText.text = text;
+            buyButton.gameObject.SetActive(false);
         }
 
         private void SetPrice(int price)
         {
             priceBlock.SetActive(true);
-            if (price >= playersMoney)
+            buyButton.gameObject.SetActive(true);
+            if (price > playersMoney)
             {
                 priceField.text = $"<color=#{unavailableColorHex}>{price}</color>";
                 buyButton.interactable = false;
@@ -149,15 +190,24 @@ namespace CauldronCodebase
                 
                 skinsProvider.TryUnlock(selectedCell.Skin);
 
-                UpdatePLayerMoneyUI();
+                UpdatePlayerMoneyUI();
                 selectedCell.SetState(WardrobeCellState.NewlyUnlocked);
-                buyButton.interactable = false;
+                SetPrice(ownedText);
+                
+                foreach (var cell in cells)
+                {
+                    if (selectedCell == cell)
+                    {
+                        continue;
+                    }
+                    cell.SetState(DetermineCellState(cell.Skin));
+                }
             }
         }
 
-        private void UpdatePLayerMoneyUI()
+        private void UpdatePlayerMoneyUI()
         {
-            playersMoneyTMP.text = $"{playersMoneyText}: <color=#{defaultColorHex}>{playersMoney}</color>";
+            playersMoneyTMP.text = $"<color=#{defaultColorHex}>{playersMoney}</color>";
         }
 
         public override void CloseBook()

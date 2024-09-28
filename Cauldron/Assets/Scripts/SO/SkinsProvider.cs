@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
 namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Skins Provider", menuName = "Skins Provider", order = 10)]
     public class SkinsProvider : ScriptableObject
     {
-        public SkinSO[] skins;
+        public SkinSO initialSkin; 
+        
+        [ReorderableList] public SkinSO[] skins;
 
         private List<string> unlocked;
         private Dictionary<string, SkinSO> skinsDictionary;
@@ -40,7 +43,7 @@ namespace CauldronCodebase
         {
             return unlocked.Count;
         }
-        
+
         public int GetMinimumPrice()
         {
             if (skins == null || skins.Length == 0)

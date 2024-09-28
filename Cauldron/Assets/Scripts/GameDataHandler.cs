@@ -40,6 +40,9 @@ namespace CauldronCodebase
 
         //TODO: separate entities
         public List<string> storyTags;
+
+        public SkinSO currentSkin;  //TODO: save
+        public bool premiumSkin;
         
         public FractionStatus fractionStatus;
         public bool fractionEventTriggered;
@@ -61,7 +64,7 @@ namespace CauldronCodebase
         private SODictionary soDictionary;
         
         public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager,
-                         SODictionary dictionary, PlayerProgressProvider progressProvider)
+                         SODictionary dictionary, PlayerProgressProvider progressProvider, SkinsProvider skinsProvider)
         {
             soDictionary = dictionary;
             
@@ -75,6 +78,7 @@ namespace CauldronCodebase
             this.progressProvider = progressProvider;
             
             currentRound = progressProvider.CurrentRound;
+            currentSkin = skinsProvider.initialSkin;
         }
 
         public bool IsEnoughMoneyForRumours()

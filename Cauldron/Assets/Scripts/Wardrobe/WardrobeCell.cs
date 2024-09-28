@@ -8,10 +8,12 @@ namespace CauldronCodebase
 {
     public enum WardrobeCellState
     {
+        None,
         Owned,
-        Available,
-        Unavailable,
         NewlyUnlocked,
+        AvailableToBuy,
+        UnavailableToBuy,
+        Locked
     }
     
     public class WardrobeCell : GrowOnMouseEnter
@@ -19,8 +21,9 @@ namespace CauldronCodebase
         [SerializeField] private Image skinPreview;
         [SerializeField] private Image background;
         [SerializeField] private Image Highlight;
+        [SerializeField] private Image SmallHighlight;
 
-        [SerializeField] private Material lockedSkinMaterial;
+        public Material lockedMaterial;
         
         [SerializeField] private Sprite availableSkinBackground;
         [SerializeField] private Sprite lockedSkinBackground;
@@ -43,26 +46,27 @@ namespace CauldronCodebase
         public void SetState(WardrobeCellState newState)
         {
             currentState = newState;
+            SmallHighlight.enabled = false;
+            Highlight.enabled = false;
+            background.sprite = lockedSkinBackground;
 
             switch (currentState)
             {
-                case WardrobeCellState.Unavailable:
-                    skinPreview.material = lockedSkinMaterial;
-                    background.sprite = lockedSkinBackground;
+                case WardrobeCellState.UnavailableToBuy:
+                case WardrobeCellState.None:
                     break;
-                case WardrobeCellState.Available:
-                    skinPreview.material = null;
-                    background.sprite = availableSkinBackground;
+                case WardrobeCellState.AvailableToBuy:
+                    SmallHighlight.enabled = true;
                     break;
                 case WardrobeCellState.Owned:
-                    //TODO: Добавить индикацию для имеющихся у игрока скинов
-                    skinPreview.material = null;
                     background.sprite = availableSkinBackground;
                     break;
                 case WardrobeCellState.NewlyUnlocked:
-                    //TODO: Добавить индикацию для только что открытых скинов
-                    skinPreview.material = null;
                     background.sprite = availableSkinBackground;
+                    //TODO
+                    break;
+                case WardrobeCellState.Locked:
+                    skinPreview.material = lockedMaterial;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -76,7 +80,10 @@ namespace CauldronCodebase
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if(currentState == WardrobeCellState.Unavailable) return;
+            if (currentState == WardrobeCellState.Locked)
+            {
+                return;
+            }
             
             base.OnPointerClick(eventData);
             
@@ -85,7 +92,10 @@ namespace CauldronCodebase
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
-            if(currentState == WardrobeCellState.Unavailable) return;
+            if (currentState == WardrobeCellState.Locked)
+            {
+                return;
+            }
             base.OnPointerEnter(eventData);
         }
     }

@@ -19,7 +19,6 @@ namespace CauldronCodebase
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
         [SerializeField] private Button closeButton;
-        [SerializeField] private Button shopButton;
         [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
         [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
         
@@ -30,18 +29,23 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
         [SerializeField] private Transform root;
+        
+        [Header("Skin shop")]
+        [SerializeField] private Button shopButton;
+        [SerializeField] private SkinShop skinShop;
 
         public event Action OnClose;
         private bool active;
-        private bool showShopButton;
 
         public bool IsOpened => active;
 
         private bool final;
+        private bool skinShopEnabled;
         private GameObject currentCartoon;
 
         [Inject] private SoundManager soundManager;
         [Inject] private InputManager inputManager;
+        [Inject] private GameDataHandler gameDataHandler;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -59,11 +63,21 @@ namespace CauldronCodebase
             closeButton.onClick.AddListener(Close);
         }
 
-        public void CheckSkinShop(SkinShop skinShop, SkinsProvider skinsProvider, GameDataHandler gameDataHandler)
+        private void InitSkinShop(bool inBook)
         {
-            if (skinsProvider.GetUnlockedSkinsCount() > 1 || gameDataHandler.Money >= skinsProvider.GetMinimumPrice())
+            //if (!inBook && skinShop.CanBeOpened(playerMoney))
             {
-                showShopButton = true;
+                skinShopEnabled = true;
+                skinShop.SetPlayerMoney(gameDataHandler.Money);
+                skinShop.SetInitialSkin(gameDataHandler.currentSkin, false);
+            }
+        }
+        
+        private void TryEnableSkinShop()
+        {
+            if (skinShopEnabled)
+            {
+                shopButton.gameObject.SetActive(true);
                 shopButton.onClick.AddListener(skinShop.OpenBook);
             }
         }
@@ -112,11 +126,10 @@ namespace CauldronCodebase
                 soundManager.SetMusic(Music.Ending, false);
             }
             
-            //Init shop button here
-            shopButton.gameObject.SetActive(!inBook);
-            
+            InitSkinShop(inBook);
             
             gameObject.SetActive(true);
+            shopButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(false);
             active = true;
             soundManager.Play(Sounds.EndingPanelFold);
@@ -144,10 +157,7 @@ namespace CauldronCodebase
                 OnEndingClick(tag);
             }
             closeButton.gameObject.SetActive(true);
-            if (showShopButton)
-            {
-                shopButton.gameObject.SetActive(true);
-            }
+            TryEnableSkinShop();
         }
 
         public void Close()

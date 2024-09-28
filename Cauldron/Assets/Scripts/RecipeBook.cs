@@ -63,9 +63,6 @@ namespace CauldronCodebase
         private IAchievementManager achievements;
         private EndingsProvider endingsProvider;
         private PlayerProgressProvider progressProvider;
-        private SkinShop skinShop;
-        private SkinsProvider skinsProvider;
-        private GameDataHandler gameDataHandler;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -92,10 +89,7 @@ namespace CauldronCodebase
                                 Cauldron cauldron, 
                                 IAchievementManager achievements, 
                                 EndingsProvider endingsProvider,
-                                PlayerProgressProvider progressProvider,
-                                SkinShop skinShop,
-                                SkinsProvider skinsProvider,
-                                GameDataHandler gameDataHandler)
+                                PlayerProgressProvider progressProvider)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -104,9 +98,6 @@ namespace CauldronCodebase
             this.cauldron = cauldron;
             this.endingsProvider = endingsProvider;
             this.progressProvider = progressProvider;
-            this.skinShop = skinShop;
-            this.skinsProvider = skinsProvider;
-            this.gameDataHandler = gameDataHandler;
         }
 
         private void Start()
@@ -136,7 +127,6 @@ namespace CauldronCodebase
             {
                 var asset = Resources.Load<EndingScreen>(ResourceIdents.EndingScreen);
                 endingScreen = Instantiate(asset, endingRoot);
-                endingScreen.CheckSkinShop(skinShop, skinsProvider, gameDataHandler);
             }
             if (endingScreen == null)
             {

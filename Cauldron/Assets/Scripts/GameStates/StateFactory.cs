@@ -15,8 +15,6 @@ namespace CauldronCodebase.GameStates
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
         MilestoneProvider milestoneProvider;
-        private SkinsProvider skinsProvider;
-        private SkinShop skinShop;
         
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
@@ -41,9 +39,7 @@ namespace CauldronCodebase.GameStates
                             GameFXManager fxManager, 
                             StatusChecker statusChecker, 
                             IAchievementManager achievementManager,
-                            MilestoneProvider milestoneProvider,
-                            SkinShop skinShop,
-                            SkinsProvider skinsProvider)
+                            MilestoneProvider milestoneProvider)
 
         {
             this.deck = deck;
@@ -55,8 +51,6 @@ namespace CauldronCodebase.GameStates
             this.gameDataHandler = gameDataHandler;
             this.gameStateMachine = gameStateMachine;
             this.recipeBook = recipeBook;
-            this.skinShop = skinShop;
-            this.skinsProvider = skinsProvider;
 
             this.dataPersistenceManager = dataPersistenceManager;
 
@@ -87,7 +81,7 @@ namespace CauldronCodebase.GameStates
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook, skinShop, skinsProvider, gameDataHandler);
+            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook, gameDataHandler);
         }
 
     }

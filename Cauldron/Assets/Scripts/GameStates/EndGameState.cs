@@ -9,24 +9,18 @@ namespace CauldronCodebase.GameStates
         private readonly DataPersistenceManager dataPersistenceManager;
         private readonly GameFXManager gameFXManager;
         private readonly RecipeBook recipeBook;
+        private readonly GameDataHandler gameDataHandler;
 
         private string currentEnding;
         private Transform root;
         private EndingScreen endingScreen;
 
-        private SkinShop skinShop;
-        private SkinsProvider skinsProvider;
-        private GameDataHandler gameDataHandler;
-
         public EndGameState(DataPersistenceManager persistenceManager,
-                            GameFXManager fxManager, RecipeBook recipeBook, SkinShop skinShop,
-                            SkinsProvider skinsProvider, GameDataHandler gameDataHandler)
+                            GameFXManager fxManager, RecipeBook recipeBook, GameDataHandler gameDataHandler)
         {
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
             this.recipeBook = recipeBook;
-            this.skinShop = skinShop;
-            this.skinsProvider = skinsProvider;
             this.gameDataHandler = gameDataHandler;
         }
         public override void Enter()
@@ -51,7 +45,6 @@ namespace CauldronCodebase.GameStates
             {
                 endingScreen.Open(currentEnding);
                 endingScreen.OnClose += ReloadGame;
-                endingScreen.CheckSkinShop(skinShop, skinsProvider, gameDataHandler);
             }
         }
 

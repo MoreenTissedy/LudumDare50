@@ -87,13 +87,13 @@ namespace CauldronCodebase
 
         private WardrobeCellState DetermineCellState(SkinSO skin)
         {
-            //TODO: add display of the newly opened skin
+            //TODO: add display of the newly opened skin ?
             if (skinsProvider.Unlocked(skin.name))
             {
-                return WardrobeCellState.Available;
+                return WardrobeCellState.None;
             }
 
-            return WardrobeCellState.Unavailable;
+            return WardrobeCellState.Locked;
         }
         
         private void SelectCell(WardrobeCell cell)

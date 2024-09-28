@@ -1,5 +1,6 @@
 ﻿using Spine.Unity;
 using UnityEngine;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -14,17 +15,17 @@ namespace CauldronCodebase
         
         [SpineAnimation, SerializeField] private string idleAnimation;
 
-        [SerializeField] private SkinSO initSkin;
-
         private SkinSO currentSkin;
         public SkinSO CurrentSkin => currentSkin;
 
         private bool skinChangeAvailable = true;
         public bool SkinChangeAvailable => skinChangeAvailable;
 
+        [Inject] private GameDataHandler gameDataHandler;
+
         private void Start()
         {
-            currentSkin = initSkin;
+            currentSkin = gameDataHandler.currentSkin;
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
         }
 
@@ -33,12 +34,12 @@ namespace CauldronCodebase
             if (newSkin == currentSkin) return;
 
             currentSkin = newSkin;
+            gameDataHandler.currentSkin = newSkin;
             
             skinChangeVFX.Play();
             witchSkeleton.AnimationState.SetAnimation(0, activeAnimation, false);
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
             witchSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0);
-            
         }
     }
 }

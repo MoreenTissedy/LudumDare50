@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NaughtyAttributes;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 namespace CauldronCodebase
 {
@@ -22,6 +23,11 @@ namespace CauldronCodebase
         
         //For legacy skin unlock
         private IReadOnlyList<string> unlockedEndings;
+
+        public SkinSO Get(string name)
+        {
+            return skins.First(x => x.name == name);
+        }
 
         public void Init(IAchievementManager achievementManager, EndingsProvider endingsProvider)
         {

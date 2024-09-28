@@ -30,6 +30,8 @@ namespace CauldronCodebase
         public int Fear, Fame, Money; // GameDataHandler
         public int CurrentDay; // GameDataHandler
         public int CardDrawnToday; // GameDataHandler
+        public string CurrentSkin;
+        public bool PremiumSkin;
 
         public string CurrentEncounter;  // GameDataHandler
 

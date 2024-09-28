@@ -25,6 +25,7 @@ namespace CauldronCodebase
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
+        [Inject] private GameDataHandler gameDataHandler;
 
         private WardrobeCell selectedCell;
         private float initDescriptionPanelPos;
@@ -35,7 +36,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            closeButton.onClick.AddListener(CloseBook);
+            closeButton.onClick.AddListener(CloseWithoutApply);
             confirmSkinButton.onClick.AddListener(ApplySkin);
             InitDescriptionPanelAnimation();
         }
@@ -110,7 +111,7 @@ namespace CauldronCodebase
             description.text = cell.Skin.DescriptionText;
             description2.text = cell.Skin.FlavorText;
             ShowDescriptionPanel();
-            ConfirmSkin();
+            TrySkin();
         }
 
         private void ShowDescriptionPanel()
@@ -123,7 +124,7 @@ namespace CauldronCodebase
             descriptionPanel.DOLocalMoveY(descriptionPanelHiddenYPos, descriptionPanelShowSpeed).SetEase(Ease.OutQuart);
         }
 
-        private void ConfirmSkin()
+        private void TrySkin()
         {
             if (!witchSkinChanger.SkinChangeAvailable) return;
             
@@ -133,11 +134,16 @@ namespace CauldronCodebase
 
         public void ApplySkin()
         {
-            //save skin as applied
+            gameDataHandler.currentSkin = selectedCell.Skin;
             //confirm message ? 
             SkinApplied?.Invoke(selectedCell.Skin);
             CloseBook();
-            //disable wardrobe
+        }
+
+        public void CloseWithoutApply()
+        {
+            witchSkinChanger.ChangeSkin(gameDataHandler.currentSkin);
+            CloseBook();
         }
 
         public override void CloseBook()

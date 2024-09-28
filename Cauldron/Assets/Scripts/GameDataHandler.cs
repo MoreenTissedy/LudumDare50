@@ -41,7 +41,7 @@ namespace CauldronCodebase
         //TODO: separate entities
         public List<string> storyTags;
 
-        public SkinSO currentSkin;  //TODO: save
+        public SkinSO currentSkin;
         public bool premiumSkin;
         
         public FractionStatus fractionStatus;
@@ -62,6 +62,7 @@ namespace CauldronCodebase
         public int DayCountThreshold = 2;
 
         private SODictionary soDictionary;
+        private SkinsProvider skinsProvider;
         
         public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager,
                          SODictionary dictionary, PlayerProgressProvider progressProvider, SkinsProvider skinsProvider)
@@ -78,7 +79,9 @@ namespace CauldronCodebase
             this.progressProvider = progressProvider;
             
             currentRound = progressProvider.CurrentRound;
+            
             currentSkin = skinsProvider.initialSkin;
+            this.skinsProvider = skinsProvider;
         }
 
         public bool IsEnoughMoneyForRumours()
@@ -301,6 +304,11 @@ namespace CauldronCodebase
             storyTags = data.StoryTags;
             fractionStatus.Load(data.FractionData);
             fractionEventTriggered = data.FractionEventTriggered;
+            if (!string.IsNullOrEmpty(data.CurrentSkin))
+            {
+                currentSkin = skinsProvider.Get(data.CurrentSkin);
+            }
+            premiumSkin = data.PremiumSkin;
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -357,6 +365,9 @@ namespace CauldronCodebase
 
             data.CurrentDayPotions = currentDayPotions;
             data.PotionsBrewedInADays = potionsBrewedInADays;
+
+            data.CurrentSkin = currentSkin.name;
+            data.PremiumSkin = premiumSkin;
         }
     }
 }

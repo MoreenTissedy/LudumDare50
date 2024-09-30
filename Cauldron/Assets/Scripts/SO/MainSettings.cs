@@ -48,7 +48,8 @@ namespace CauldronCodebase
             public int Total = 80;
             public int InitialValue = 40;
             public int CovenMoneyFee = 200;
-            public int CovenCost = 50;
+            [SerializeField] private int covenCost = 40;
+
             [Tooltip("Percent distance from a bar end")]
             public float InitialThreshold = 30;
             [SerializeField] private float thresholdDecrement = 10;
@@ -57,6 +58,10 @@ namespace CauldronCodebase
             public int ThresholdDecrement => (int)(thresholdDecrement/100 * Total);
             public int GetMinThreshold => (int)(minThreshold/100 * Total);
             public int GetMaxThreshold => (int)((100f - minThreshold)/100 * Total);
+        
+            
+            public event Func<int,int> TryGetCovenCost;
+            public int CovenCost => TryGetCovenCost?.Invoke(covenCost) ?? covenCost;
         }
     }
 }

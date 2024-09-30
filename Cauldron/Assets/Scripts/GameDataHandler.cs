@@ -91,7 +91,7 @@ namespace CauldronCodebase
 
         public void BuyRumour()
         {
-            money -= statusSettings.CovenCost;
+            Money -= statusSettings.CovenCost;
         }
 
         public void AddTag(string tag)
@@ -135,8 +135,8 @@ namespace CauldronCodebase
             int num = newValue - statValue;
             if (num == 0)
                 return statValue;
-            if (type == Statustype.Money && num < 0)
-                return statValue;
+            //if (type == Statustype.Money && num < 0)
+                //return statValue;
             statValue += num;
             if (statValue > ((type == Statustype.Money) ? 5000 : statusSettings.Total))
                 statValue = (type == Statustype.Money) ? 5000 : statusSettings.Total;

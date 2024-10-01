@@ -60,8 +60,8 @@ namespace CauldronCodebase
             public int GetMaxThreshold => (int)((100f - minThreshold)/100 * Total);
         
             
-            public event Func<int,int> TryGetCovenCost;
-            public int CovenCost => TryGetCovenCost?.Invoke(covenCost) ?? covenCost;
+            public int? CovenCostMode = null;
+            public int CovenCost => CovenCostMode ?? covenCost;
         }
     }
 }

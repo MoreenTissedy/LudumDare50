@@ -6,7 +6,7 @@ namespace CauldronCodebase
     [CreateAssetMenu(order = 50, menuName = "GameModes/RumorsPrice")]
     public class RumorsPriceGameMode : GameModeBase
     {
-        [SerializeField] private int modRumorPrice = -10;
+        [SerializeField] private int modRumorPrice = 30;
         private GameDataHandler gameDataHandler;
 
         [Inject]
@@ -17,12 +17,7 @@ namespace CauldronCodebase
 
         public override void Apply()
         {
-            gameDataHandler.statusSettings.TryGetCovenCost += GetModPrice;
-        }
-
-        public int GetModPrice(int price)
-        {
-            return price + modRumorPrice;
+            gameDataHandler.statusSettings.CovenCostMode = modRumorPrice;
         }
     }
 }

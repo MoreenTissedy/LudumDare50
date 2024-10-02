@@ -61,7 +61,6 @@ namespace CauldronCodebase
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
             ClearAllSaveFiles();
-            milestoneProvider.milestones.Clear();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();

@@ -107,6 +107,7 @@ namespace CauldronCodebase
         public void BuyRumour()
         {
             money -= statusSettings.CovenCost;
+            StatusChanged?.Invoke(Statustype.Money, -statusSettings.CovenCost);
         }
 
         public void AddTag(string tag)

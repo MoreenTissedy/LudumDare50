@@ -40,7 +40,7 @@ namespace CauldronCodebase
         
         private void TryShow()
         {
-            if (gameDataHandler.currentDay == 0 && gameDataHandler.cardsDrawnToday == 0 && skinsProvider.GetUnlockedSkinsCount() > 1)
+            if (gameDataHandler.IsWardrobeButtonAvailable())
             {
                 Show();
                 wardrobe.SkinApplied += Hide;

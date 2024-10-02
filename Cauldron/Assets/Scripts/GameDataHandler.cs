@@ -84,6 +84,21 @@ namespace CauldronCodebase
             this.skinsProvider = skinsProvider;
         }
 
+        public bool IsWardrobeButtonAvailable()
+        {
+            return currentDay == 0 &&
+                   cardsDrawnToday == 0 &&
+                   IsWardrobeUnlocked;
+        }
+        
+        public bool ShouldApplyGameMode()
+        {
+            return currentDay == 0 &&
+                   cardsDrawnToday == 1;
+        }
+        
+        public bool IsWardrobeUnlocked => skinsProvider.GetUnlockedSkinsCount() > 1;
+
         public bool IsEnoughMoneyForRumours()
         {
             return Money >= statusSettings.CovenCost;

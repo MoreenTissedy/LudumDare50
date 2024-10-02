@@ -93,7 +93,7 @@ namespace CauldronCodebase
                 Save();
                 return true;
             }
-            achievements.TryUnlock(skin.name);
+            achievements.TryUnlock("skin "+skin.name.ToLowerInvariant());
             return false;
         }
         

@@ -20,5 +20,7 @@ namespace CauldronCodebase
         {
             deck.AddToDeck(cardToAdd, true);
         }
+
+        public override bool ShouldReapply => false;
     }
 }

@@ -22,8 +22,6 @@ namespace CauldronCodebase
         public const string FOOD_ALL = "food recipes";
         public const string EXPERIMENTS_ALL = "experiments";
         public const string VISITORS_ALL = "all visitors";
-        public const string SPEND_COINS = "in circulation";
-        public const int SPEND_TARGET = 200;
 
         public static readonly Dictionary<string, string> EVENT_NAMES_TO_ACHIEVEMENTS = new Dictionary<string, string>()
         {

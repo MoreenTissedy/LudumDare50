@@ -96,12 +96,6 @@ namespace CauldronCodebase
             achievements.TryUnlock(skin.name);
             return false;
         }
-
-        public void Reset()
-        {
-            unlocked.Clear();
-            Save();
-        }
         
         private List<string> LoadUnlockedSkins()
         {

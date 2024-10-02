@@ -8,7 +8,7 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text textField;
         [SerializeField] private MainSettings settings;
         
-        private void Start()
+        private void OnEnable()
         {
             textField.text = $"-{settings.statusBars.CovenCost}";
         }

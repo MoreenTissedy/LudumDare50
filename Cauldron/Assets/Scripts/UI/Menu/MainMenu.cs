@@ -25,7 +25,8 @@ namespace CauldronCodebase
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
-        [Inject] private LocalizationTool localizationTool;
+        [Inject] private LocalizationTool localizationTool;        
+        [Inject] private MilestoneProvider milestoneProvider;
 
         private void Start()
         {

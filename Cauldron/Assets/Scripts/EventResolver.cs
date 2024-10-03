@@ -36,7 +36,8 @@ namespace CauldronCodebase
                 if (storyTag.StartsWith("-"))
                 {
                     storyTag = storyTag.TrimStart('-');
-                    if (storyTag.StartsWith("*"))
+                    
+                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.RemoveMilestone(storyTag);
@@ -45,12 +46,12 @@ namespace CauldronCodebase
                 }
                 else if (!string.IsNullOrEmpty(storyTag))
                 {
-                    if (storyTag.StartsWith("*"))
+                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.SaveMilestone(storyTag);
                     }
-                    else if (storyTag.StartsWith("%"))
+                    else if (storyTag.StartsWith("%") && !game.milestonesDisable)
                     {
                         Freezes.SaveFreeze(storyTag.Trim('%'));
                     }

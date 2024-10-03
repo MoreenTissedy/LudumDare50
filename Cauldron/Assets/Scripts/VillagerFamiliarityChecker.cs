@@ -5,7 +5,7 @@ using UnityEngine;
 public class VillagerFamiliarityChecker
 {
     private List<string> unlocked;
-    private List<string> locked = new List<string>();
+    private List<string> locked;
     private IAchievementManager achievements;
     
     private readonly string fileName = "UnlockedVillager";
@@ -18,6 +18,7 @@ public class VillagerFamiliarityChecker
         fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
         unlocked = LoadUnlockedVillager();
 
+        locked = new List<string>();
         foreach(var item in soDictionary.AllScriptableObjects)
         {
             if (item.Value is Villager && !unlocked.Contains(item.Value.name))

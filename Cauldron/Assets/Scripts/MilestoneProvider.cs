@@ -17,6 +17,11 @@ namespace CauldronCodebase
             milestones = LoadMilestones();
         }
 
+        public void Update()
+        {
+            milestones = LoadMilestones();
+        }
+
         public void SaveMilestone(string tag)
         {
             if (!milestones.Contains(tag))

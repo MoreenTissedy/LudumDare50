@@ -1,4 +1,6 @@
+using System;
 using System.Threading;
+using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -41,6 +43,9 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
+        private GameStateMachine gameStateMachine;
+
+        public event Action<IngredientDroppable> IngredientAdded;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -59,8 +64,9 @@ namespace CauldronCodebase
         }
         
         [Inject]
-        public void Construct(Cauldron cauldron, CatAnimations catAnimations)
+        public void Construct(Cauldron cauldron, CatAnimations catAnimations, GameStateMachine gameStateMachine)
         {
+            this.gameStateMachine = gameStateMachine;
             this.catAnimations = catAnimations;
             this.cauldron = cauldron;
             ingredientManager = cauldron.tooltipManager;
@@ -245,6 +251,9 @@ namespace CauldronCodebase
 
         public async UniTaskVoid ThrowInCauldron()
         {
+            if (gameStateMachine.currentGamePhase != GameStateMachine.GamePhase.Visitor)
+                return;
+
             if(!useDoubleClick)
                 return;
             
@@ -255,7 +264,9 @@ namespace CauldronCodebase
 
             SetMovementVisuals();
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
+            
             ReturnToStartSpot();
+            IngredientAdded?.Invoke(this);
             cauldron.AddToMix(ingredient);
         }
 

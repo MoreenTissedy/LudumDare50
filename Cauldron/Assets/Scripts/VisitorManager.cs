@@ -16,6 +16,7 @@ namespace CauldronCodebase
         [SerializeField] private ParticleSystem negativeReaction;
 
         public event Action VisitorLeft;
+        public event Action<Villager> VisitorEnter;
 
         private int attemptsLeft;
         private Visitor currentVisitor;
@@ -79,6 +80,7 @@ namespace CauldronCodebase
         public async void Enter(Encounter card)
         {
             Villager villager = card.villager;
+            VisitorEnter?.Invoke(villager);
 
             //TODO: refactor
             switch (ignoreSavedAttempts)

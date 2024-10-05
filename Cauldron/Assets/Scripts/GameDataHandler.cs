@@ -37,7 +37,7 @@ namespace CauldronCodebase
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
         public int wrongExperiments = 0;  //no need to save
-        public List<Ingredients> ingredientsFreez;
+        public List<Ingredients> ingredientsFreezed;
 
         //TODO: separate entities
         public List<string> storyTags;
@@ -349,7 +349,7 @@ namespace CauldronCodebase
             currentDayPotions = data.CurrentDayPotions;
             potionsBrewedInADays = data.PotionsBrewedInADays;
 
-            ingredientsFreez = data.IngredientsFreez;
+            ingredientsFreezed = data.IngredientsFreezed;
         }
 
         public void SaveData(ref GameData data)
@@ -391,7 +391,7 @@ namespace CauldronCodebase
             data.CurrentSkin = currentSkin.name;
             data.PremiumSkin = premiumSkin;
             
-            data.IngredientsFreez = ingredientsFreez;
+            data.IngredientsFreezed = ingredientsFreezed;
         }
     }
 }

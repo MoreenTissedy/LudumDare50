@@ -51,7 +51,7 @@ namespace CauldronCodebase
         
         public bool DarkStrangerCame, WitchCame, InquisitorCame;
 
-        public List<Ingredients> IngredientsFreez;
+        public List<Ingredients> IngredientsFreezed;
 
         public GameData(int initialValue, List<string> milestones)
         {
@@ -75,7 +75,7 @@ namespace CauldronCodebase
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
-            IngredientsFreez = new List<Ingredients>();
+            IngredientsFreezed = new List<Ingredients>();
         }
 
         public void ValidateSave(SODictionary soDictionary)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
@@ -11,33 +12,43 @@ namespace CauldronCodebase
     public class SilverGameMode : GameModeBase
     {
         private int patience = 1;
-        private List<Ingredients> freez => gameData.ingredientsFreez;
+        private List<Ingredients> freezed => gameData.ingredientsFreezed;
 
-        private VisitorManager visitorManager;        
+        private VisitorManager visitorManager;
         private TooltipManager ingredients;
         private GameStateMachine gameStates;
         private GameDataHandler gameData;
+        private Cauldron cauldron;
 
         [Inject]
-        public void Construct(VisitorManager visitorManager, TooltipManager ingredients, GameStateMachine gameStates, GameDataHandler gameData)
+        public void Construct(VisitorManager visitorManager, TooltipManager ingredients,
+                                GameStateMachine gameStates, GameDataHandler gameData,
+                                Cauldron cauldron)
         {
             this.visitorManager = visitorManager;
             this.ingredients = ingredients;
             this.gameStates = gameStates;
             this.gameData = gameData;
+            this.cauldron = cauldron;
         }
 
         public override void Apply()
         {
             visitorManager.VisitorEnter += (Villager villager) => villager.patience = patience;
-            gameStates.OnChangeState += TryMorningReset;
 
+            gameStates.OnChangeState += TryMorningReset;
+            cauldron.MixCleared += ResetNonUsedIngredients;
+            LoadFreezedIngredients();            
+        }
+
+        private void LoadFreezedIngredients()
+        {
             foreach (var temp in ingredients.Dict)
             {
                 var ingredient = temp.Value;
                 ingredient.IngredientAdded += FreezIngredient;
 
-                if (freez.Contains(ingredient.ingredient))
+                if (freezed.Contains(ingredient.ingredient))
                 {
                     ingredient.gameObject.SetActive(false);
                 }
@@ -47,7 +58,17 @@ namespace CauldronCodebase
         private void FreezIngredient(IngredientDroppable ingredient)
         {
             ingredient.gameObject.SetActive(false);
-            freez.Add(ingredient.ingredient);
+            freezed.Add(ingredient.ingredient);
+        }
+
+        private void ResetNonUsedIngredients()
+        {
+            while(freezed.Count % 3 != 0)
+            {
+                var ingredient = ingredients.Dict.First(x => x.Key == freezed[freezed.Count-1]);
+                ingredient.Value.gameObject.SetActive(true);
+                freezed.Remove(ingredient.Key);
+            }
         }
 
         private void TryMorningReset(GamePhase phase)
@@ -56,10 +77,10 @@ namespace CauldronCodebase
 
             foreach (var temp in ingredients.Dict)
             {
-                var ingredientDrop = temp.Value;
-                ingredientDrop.gameObject.SetActive(true);
+                var ingredient = temp.Value;
+                ingredient.gameObject.SetActive(true);
             }
-            freez.Clear();
+            freezed.Clear();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace CauldronCodebase
         public event Action<Potions> PotionBrewed;
         public event Action<Potions> PotionAccepted;
         public event Action PotionDeclined;
+        public event Action MixCleared;
 
         private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
@@ -84,7 +85,13 @@ namespace CauldronCodebase
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
 
+            MixClear();
+        }
+
+        private void MixClear()
+        {
             mix.Clear();
+            MixCleared?.Invoke();
         }
 
         private Potions Brew()
@@ -113,7 +120,7 @@ namespace CauldronCodebase
 
                         PotionBrewed?.Invoke(recipe.potion);
                         potionPopup.OnAccept += () => OnPotionAccepted(recipe.potion);
-                        mix.Clear();
+                        MixClear();
                         recipeBook.CheckExperimentsCompletion();
                         return recipe.potion;
                     }
@@ -125,7 +132,7 @@ namespace CauldronCodebase
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);
-            mix.Clear();
+            MixClear();
             recipeBook.CheckExperimentsCompletion();
             return Potions.Placebo;
         }

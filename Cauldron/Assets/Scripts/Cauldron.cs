@@ -14,6 +14,8 @@ namespace CauldronCodebase
         public PotionPopup potionPopup;
         public ParticleSystem splash;
         public TooltipManager tooltipManager;
+        public GameObject dropZone;
+        public bool IsActive => dropZone.activeInHierarchy;
         private List<Ingredients> mix = new List<Ingredients>();
 
         public List<Ingredients> Mix => mix;
@@ -47,14 +49,15 @@ namespace CauldronCodebase
 
         private void Awake()
         {
-            gameStateMachine.OnChangeState += Clear;
+            gameStateMachine.OnChangeState += ClearAndActivate;
             splash.Stop();
             potionPopup.OnDecline += () => PotionDeclined?.Invoke();
+            potionPopup.OnDecline += () => dropZone.SetActive(true);
         }
 
         private void OnDestroy()
         {
-            gameStateMachine.OnChangeState -= Clear;
+            gameStateMachine.OnChangeState -= ClearAndActivate;
         }
 
         private void OnValidate()
@@ -80,16 +83,18 @@ namespace CauldronCodebase
             }
         }
         
-        public void Clear(GameStateMachine.GamePhase phase)
+        public void ClearAndActivate(GameStateMachine.GamePhase phase)
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
 
             mix.Clear();
+            dropZone.SetActive(true);
         }
 
         private Potions Brew()
         {
             //soundManager.Play(Sounds.PotionReady);
+            dropZone.SetActive(false);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
             {

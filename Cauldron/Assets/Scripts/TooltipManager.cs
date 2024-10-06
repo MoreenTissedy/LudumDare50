@@ -13,6 +13,8 @@ public class TooltipManager
     private Dictionary<Ingredients, IngredientDroppable> dict;
     private bool isUseAutoCookingProcess;
 
+    public Dictionary<Ingredients, IngredientDroppable> Dict => dict;
+
     [Inject] private Cauldron cauldron;
 
     public TooltipManager()

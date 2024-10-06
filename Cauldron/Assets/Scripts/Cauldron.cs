@@ -28,7 +28,6 @@ namespace CauldronCodebase
         private RecipeProvider recipeProvider;
         private RecipeBook recipeBook;
 
-        private Potions currentPotionBrewed;
         private GameStateMachine gameStateMachine;
         private SoundManager soundManager;
         private GameDataHandler game;
@@ -51,8 +50,7 @@ namespace CauldronCodebase
         {
             gameStateMachine.OnChangeState += ClearAndActivate;
             splash.Stop();
-            potionPopup.OnDecline += () => PotionDeclined?.Invoke();
-            potionPopup.OnDecline += () => dropZone.SetActive(true);
+            potionPopup.OnDecline += OnPotionDecline;
         }
 
         private void OnDestroy()
@@ -65,6 +63,11 @@ namespace CauldronCodebase
             potionPopup = FindObjectOfType<PotionPopup>();
         }
 
+        private void OnPotionDecline()
+        {
+            dropZone.SetActive(true);
+            PotionDeclined?.Invoke();
+        }
 
         public void AddToMix(Ingredients ingredient)
         {

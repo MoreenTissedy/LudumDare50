@@ -6,8 +6,8 @@ using static CauldronCodebase.GameStates.GameStateMachine;
 
 namespace CauldronCodebase
 {
-    [CreateAssetMenu(order = 50, menuName = "GameModes/Silver")]
-    public class SilverGameMode : GameModeBase
+    [CreateAssetMenu(order = 50, menuName = "GameModes/LimitIngredients")]
+    public class LimitIngredientsGameMode : GameModeBase
     {
         private int patience = 1;
         private List<Ingredients> freezed => gameData.ingredientsFreezed;
@@ -19,8 +19,7 @@ namespace CauldronCodebase
 
         [Inject]
         public void Construct(VisitorManager visitorManager, TooltipManager ingredients,
-                                GameStateMachine gameStates, GameDataHandler gameData,
-                                Cauldron cauldron)
+                                GameStateMachine gameStates, GameDataHandler gameData)
         {
             this.visitorManager = visitorManager;
             this.ingredients = ingredients;
@@ -30,7 +29,7 @@ namespace CauldronCodebase
 
         public override void Apply()
         {
-            visitorManager.VisitorEnter += () => visitorManager.attemptsLeft = patience;
+            visitorManager.VisitorEntering += () => visitorManager.attemptsLeft = patience;
 
             gameStates.OnChangeState += TryMorningReset;
             LoadFreezedIngredients();            

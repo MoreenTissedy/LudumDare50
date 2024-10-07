@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -41,6 +42,8 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
+
+        public event Action<IngredientDroppable> IngredientAdded;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -248,7 +251,7 @@ namespace CauldronCodebase
             if(!useDoubleClick)
                 return;
             
-            if (cauldron.Mix.Contains(ingredient))
+            if (cauldron.Mix.Contains(ingredient) || !cauldron.IsActive)
                  return;
             
             const float timeMoveDoubleClick = 0.5f;
@@ -257,6 +260,7 @@ namespace CauldronCodebase
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            IngredientAdded?.Invoke(this);
         }
 
         private Vector3[] GetRandomBezierPath()

@@ -148,7 +148,7 @@ namespace CauldronCodebase
 
         public void ClearPot()
         {
-            pot.Clear(GameStateMachine.GamePhase.Visitor);
+            pot.ClearAndActivate(GameStateMachine.GamePhase.Visitor);
         }
     }
 }

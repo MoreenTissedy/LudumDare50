@@ -16,8 +16,9 @@ namespace CauldronCodebase
         [SerializeField] private ParticleSystem negativeReaction;
 
         public event Action VisitorLeft;
+        public event Action VisitorEntering;
 
-        private int attemptsLeft;
+        public int attemptsLeft;
         private Visitor currentVisitor;
         private Villager currentVillager;
         public Villager CurrentVillager => currentVillager;
@@ -91,7 +92,7 @@ namespace CauldronCodebase
                     ignoreSavedAttempts = true;
                     break;
             }
-            
+            VisitorEntering?.Invoke();
             visitorTimer.ResetTimer(villager.patience);
             if (attemptsLeft != villager.patience)
             {

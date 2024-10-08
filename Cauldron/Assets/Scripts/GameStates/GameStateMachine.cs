@@ -33,6 +33,7 @@ namespace CauldronCodebase.GameStates
 
         public event Action<GamePhase> OnChangeState;
         public event Action OnGameStarted;
+        public event Action OnNewDay;
         
         private CancellationTokenSource cancellationTokenSource;
 
@@ -95,12 +96,15 @@ namespace CauldronCodebase.GameStates
  
         public void SwitchState(GamePhase phase)
         {
+            var isNewDay = currentGamePhase == GamePhase.Night;
+            
             currentGameState.Exit();
             currentGamePhase = phase;
             currentGameState = gameStates[phase];
             gameData.gamePhase = phase;
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
+            if (isNewDay) OnNewDay?.Invoke();
             dataPersistenceManager.SaveGame();
         }
 

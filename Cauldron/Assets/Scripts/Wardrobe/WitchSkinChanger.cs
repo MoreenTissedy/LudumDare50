@@ -1,5 +1,4 @@
-﻿using CauldronCodebase.GameStates;
-using Spine.Unity;
+﻿using Spine.Unity;
 using UnityEngine;
 using Zenject;
 
@@ -18,21 +17,13 @@ namespace CauldronCodebase
 
         private SkinSO currentSkin;
         public SkinSO CurrentSkin => currentSkin;
+        public bool SkinChangeAvailable { get; } = true;
 
-        private bool skinChangeAvailable = true;
-        public bool SkinChangeAvailable => skinChangeAvailable;
-
-        [Inject] private GameDataHandler gameDataHandler;
-        [Inject] private GameStateMachine gameStateMachine;
+        [Inject] private SkinsProvider skinsProvider;
 
         private void Start()
         {
-            gameStateMachine.OnGameStarted += SetInitial;
-        }
-
-        private void SetInitial()
-        {
-            currentSkin = gameDataHandler.currentSkin;
+            currentSkin = skinsProvider.GetLastUnlocked();
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
         }
 

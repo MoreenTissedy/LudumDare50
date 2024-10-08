@@ -20,7 +20,7 @@ namespace CauldronCodebase
         private FileDataHandler<ListToSave<string>> fileDataHandler;
         
         //For legacy skin unlock
-        private IReadOnlyList<string> unlockedEndings;
+        private EndingsProvider endings;
 
         public SkinSO Get(string name)
         {
@@ -30,7 +30,7 @@ namespace CauldronCodebase
         public void Init(IAchievementManager achievementManager, EndingsProvider endingsProvider)
         {
             achievements = achievementManager;
-            unlockedEndings = endingsProvider.UnlockedEndings;
+            endings = endingsProvider;
             
             fileDataHandler = new FileDataHandler<ListToSave<string>>(fileName);
             skinsDictionary = new Dictionary<string, SkinSO>(12);
@@ -112,16 +112,20 @@ namespace CauldronCodebase
         {
             var list = fileDataHandler.IsFileValid()
                 ? fileDataHandler.Load().list : new List<string> { "Default" };
-            LoadLegacy(list);
+            TryLoadLegacy(list);
             Debug.Log($"Skins unlocked {String.Join(", ", list)}");
             return list;
         }
 
-        private void LoadLegacy(ICollection<string> list)
+        private void TryLoadLegacy(ICollection<string> list)
         {
+            if (!endings.Legacy)
+            {
+                return;
+            }
             foreach (var skin in skins)
             {
-                if(skin.LastUnlockedEnding.Any(ending => unlockedEndings.Contains(ending)))
+                if (skin.LastUnlockedEnding.Any(ending => endings.UnlockedEndings.Contains(ending)))
                 {
                     if (!list.Contains(skin.name))
                     {

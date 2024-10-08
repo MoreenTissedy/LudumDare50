@@ -409,6 +409,7 @@ namespace CauldronCodebase
             if (gameDataHandler.IsWardrobeUnlocked && !progressProvider.IsWardrobeUnlocked)
             {
                 deck.AddFirst(introCards[7]);
+                progressProvider.SaveWardrobeUnlocked();
                 return;
             }
             if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !progressProvider.CovenIntroShown)

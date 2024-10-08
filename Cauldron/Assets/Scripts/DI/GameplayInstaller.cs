@@ -88,6 +88,7 @@ namespace CauldronCodebase
 
         private void Initialize()
         {
+            recipeProvider.Load();
             endings.Init(achievementManager);
             skinsProvider.Init(achievementManager, endings);
             gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider, skinsProvider);

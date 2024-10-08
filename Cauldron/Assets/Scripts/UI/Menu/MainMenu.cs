@@ -27,6 +27,7 @@ namespace CauldronCodebase
         [Inject] private SoundManager soundManager;
         [Inject] private LocalizationTool localizationTool;        
         [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private PlayerProgressProvider playerProgressProvider;
 
         private void Start()
         {
@@ -67,7 +68,7 @@ namespace CauldronCodebase
             Debug.LogWarning("All data cleared!");
         }
 
-        private static void ClearAllSaveFiles()
+        private void ClearAllSaveFiles()
         {
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
@@ -77,6 +78,8 @@ namespace CauldronCodebase
             {
                 file.Delete();
             }
+            milestoneProvider.Update();
+            playerProgressProvider.Update();
         }
 
         private void HideContinueButton()

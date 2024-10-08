@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -69,7 +70,7 @@ namespace CauldronCodebase
             if (!inBook && skinShop.CanBeOpened(gameDataHandler.Money))
             {
                 skinShopEnabled = true;
-                skinShop.SetPlayerMoney(gameDataHandler.Money);
+                int money = gameDataHandler.Money;
                 
                 SkinSO initialSkin = gameDataHandler.currentSkin;
                 bool tryUnlock = false;
@@ -79,6 +80,10 @@ namespace CauldronCodebase
                     if (unlockedEnding.unlocksSkin != null)
                     {
                         initialSkin = unlockedEnding.unlocksSkin;
+                        if (endingTag == "circle")
+                        {
+                            money -= 150; //crutch
+                        }
                         tryUnlock = true;
                     }
                 }
@@ -90,6 +95,7 @@ namespace CauldronCodebase
                         tryUnlock = true;
                     }
                 }
+                skinShop.SetPlayerMoney(money);
                 skinShop.SetInitialSkin(initialSkin, tryUnlock);
             }
         }
@@ -102,7 +108,7 @@ namespace CauldronCodebase
                 shopButton.onClick.AddListener(skinShop.OpenBook);
                 if (skinShop.ShouldHighlightButton(gameDataHandler.Money))
                 {
-                    shopButton.Select();
+                    shopButton.GetComponent<SpriteSwap>().Swap();
                 }
             }
         }
@@ -181,6 +187,7 @@ namespace CauldronCodebase
                 await UniTask.Delay(TimeSpan.FromSeconds(2));
                 OnEndingClick(tag);
             }
+            await UniTask.Delay(1000);
             closeButton.gameObject.SetActive(true);
             TryEnableSkinShop();
         }

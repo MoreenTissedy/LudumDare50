@@ -27,6 +27,11 @@ namespace CauldronCodebase
         public PlayerProgressProvider()
         {
             fileDataHandler  = new FileDataHandler<PlayerProgress>(fileName);
+            Update();
+        }
+        
+        public void Update()
+        {
             progress = GetPlayerProgress();
         }
 

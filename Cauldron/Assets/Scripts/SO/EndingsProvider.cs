@@ -23,6 +23,8 @@ namespace CauldronCodebase
         
         public Ending[] endings;
 
+        public bool Legacy { get; private set; }
+        
         private List<string> unlocked;
         private Dictionary<string, Ending> endingDict;
         private IAchievementManager achievements;
@@ -105,6 +107,7 @@ namespace CauldronCodebase
                 return false;
             }
 
+            Legacy = true;
             list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
             PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
             return true;  

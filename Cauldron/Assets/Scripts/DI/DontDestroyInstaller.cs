@@ -40,7 +40,6 @@ namespace CauldronCodebase
             
             Container.Bind<PlayerProgressProvider>().FromNew().AsSingle().NonLazy();
             Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();
-            recipeProvider.Load();            
 
             milestoneProvider = new MilestoneProvider();
             Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();

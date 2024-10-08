@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
-using static CauldronCodebase.GameStates.GameStateMachine;
 
 namespace CauldronCodebase
 {
@@ -12,25 +10,20 @@ namespace CauldronCodebase
         private int patience = 1;
         private List<Ingredients> freezed => gameData.ingredientsFreezed;
 
+        protected override string achievIdents => AchievIdents.SILVER_DAYS;
+
         private VisitorManager visitorManager;
         private TooltipManager ingredients;
 
         [Inject]
-        public void Construct(VisitorManager visitorManager, TooltipManager ingredients,
-                                GameDataHandler gameData, GameStateMachine gameStates,
-                                IAchievementManager achievement)
+        public void Construct(VisitorManager visitorManager, TooltipManager ingredients)
         {
-            Construct(gameStates, gameData, achievement);
-
             this.visitorManager = visitorManager;
             this.ingredients = ingredients;
         }
 
-        public override void Apply()
+        protected override void OnApply()
         {
-            base.Apply();
-            achievIdents = AchievIdents.SILVER_DAYS;
-
             visitorManager.VisitorEntering += () => visitorManager.attemptsLeft = patience;
 
             gameStates.OnNewDay += TryMorningReset;

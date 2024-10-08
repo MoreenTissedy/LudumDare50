@@ -5,10 +5,10 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class PrestigeGameMode : GameModeBase
+    public abstract class PrestigeGameMode : GameModeBase
     {
         [SerializeField] private int targetDays = 25;
-        protected string achievIdents;
+        protected abstract string achievIdents { get; }
         
         protected GameStateMachine gameStates;
         protected GameDataHandler gameData;
@@ -25,7 +25,10 @@ namespace CauldronCodebase
         public override void Apply()
         {
             gameStates.OnNewDay += TryUnlockAchivement;
+            OnApply();
         }
+
+        protected abstract void OnApply();
 
         private void TryUnlockAchivement()
         {

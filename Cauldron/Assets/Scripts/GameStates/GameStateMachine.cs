@@ -96,16 +96,15 @@ namespace CauldronCodebase.GameStates
  
         public void SwitchState(GamePhase phase)
         {
-            if (currentGamePhase == GamePhase.Night)
-            {
-                OnNewDay?.Invoke();
-            }
+            var isNewDay = currentGamePhase == GamePhase.Night;
+            
             currentGameState.Exit();
             currentGamePhase = phase;
             currentGameState = gameStates[phase];
             gameData.gamePhase = phase;
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
+            if (isNewDay) OnNewDay?.Invoke();
             dataPersistenceManager.SaveGame();
         }
 

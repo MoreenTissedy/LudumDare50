@@ -1,5 +1,3 @@
-using System.Linq;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 using static CauldronCodebase.GameStates.GameStateMachine;
@@ -10,26 +8,21 @@ namespace CauldronCodebase
     public class NightBookGameMode : PrestigeGameMode
     {
         private GamePhase lastPhase;
+        
+        protected override string achievIdents => AchievIdents.GOLD_DAYS;
 
         private RecipeBook book;
         private NightPanel nightPanel;
 
         [Inject]
-        public void Construct(RecipeBook book, NightPanel nightPanel,
-                                GameStateMachine gameStates, GameDataHandler gameData,
-                                IAchievementManager achievement)
+        public void Construct(RecipeBook book, NightPanel nightPanel)
         {
-            Construct(gameStates, gameData, achievement);
-
             this.book = book;
             this.nightPanel = nightPanel;
         }
 
-        public override void Apply()
+        protected override void OnApply()
         {
-            base.Apply();
-            achievIdents = AchievIdents.GOLD_DAYS;
-
             lastPhase = GamePhase.Night;
 
             var canvasNightPanel = nightPanel.gameObject.GetComponent<Canvas>();

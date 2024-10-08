@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Zenject;
 
 namespace CauldronCodebase
@@ -15,6 +16,13 @@ namespace CauldronCodebase
         private Vector3 initialScale;
         private RectTransform transf;
 
+        private Canvas canvas;
+        private GraphicRaycaster raycaster;
+        private RectTransform bgButtonTransf;
+        private float initialPosXButton;
+        private float offPosXButton;
+        public float openCloseAnimationTime = 0.4f;
+
         [Inject]
         private RecipeBook book;
 
@@ -22,9 +30,45 @@ namespace CauldronCodebase
         {
             transf = GetComponent<RectTransform>();
             initialScale = transf.sizeDelta;
+
+            canvas = GetComponentInParent<Canvas>();
+            raycaster = GetComponentInParent<GraphicRaycaster>();
+            bgButtonTransf = canvas.gameObject.GetComponent<RectTransform>();
+
+            initialPosXButton = bgButtonTransf.anchoredPosition.x;
+            offPosXButton = initialPosXButton + 210;
+        }
+
+        private void OnEnable()
+        {
             //start flashing to attract attention
-                transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
-                    SetLoops(-1, LoopType.Yoyo);
+            transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
+                SetLoops(-1, LoopType.Yoyo);
+        }
+
+        public void ChangeLayer(string name, int order)
+        {
+            canvas.sortingLayerName = name;            
+            canvas.sortingOrder = order;
+        }
+
+        public void ChangeBookAvailable(bool isAvailable)
+        {
+            Sequence mySequence = DOTween.Sequence();
+            if(isAvailable)
+            {
+                mySequence.AppendCallback(
+                    () => raycaster.enabled = true).
+                    Append(bgButtonTransf.DOAnchorPosX(initialPosXButton, openCloseAnimationTime)).
+                    Append(transf.DOSizeDelta(initialScale, openCloseAnimationTime * 2).SetEase(Ease.InOutBack));
+            }
+            else
+            {
+                mySequence.AppendCallback(
+                    () => raycaster.enabled = false).
+                    Append(transf.DOSizeDelta(Vector2.zero, openCloseAnimationTime * 2).SetEase(Ease.InOutBack)).
+                    Append(bgButtonTransf.DOAnchorPosX(offPosXButton, openCloseAnimationTime));
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -36,7 +80,6 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            
             //grow in size
             if (!clicked)
                 transf.DOPause();
@@ -45,7 +88,6 @@ namespace CauldronCodebase
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            
             //shrink in size
             if (clicked)
                 transf.DOSizeDelta((initialScale), sizeSpeed);

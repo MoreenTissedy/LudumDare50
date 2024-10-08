@@ -56,6 +56,8 @@ namespace CauldronCodebase
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         public event Action OnUnlockAutoCooking;
+
+        public RecipeBookButton hudButton;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;

@@ -33,22 +33,22 @@ namespace CauldronCodebase
             bookNightPanel.sortingLayerName = canvasNightPanel.sortingLayerName;
             bookNightPanel.sortingOrder = canvasNightPanel.sortingOrder + 1;
 
-            book.SetBookButtonLayer(canvasNightPanel.sortingLayerName, canvasNightPanel.sortingOrder + 1);
+            book.hudButton.ChangeLayer(canvasNightPanel.sortingLayerName, canvasNightPanel.sortingOrder + 1);
             
-            gameStates.OnChangeState += SetAviableBook;
+            gameStates.OnChangeState += SetAvailabileBook;
 
-            SetAviableBook(gameStates.currentGamePhase);
+            SetAvailabileBook(gameStates.currentGamePhase);
         }
         
-        private void SetAviableBook(GamePhase phase)
+        private void SetAvailabileBook(GamePhase phase)
         {
             if (phase == GamePhase.Night)
             {
-                book.SetAviableBook(true);
+                book.hudButton.ChangeBookAvailable(true);
             }
             else if (lastPhase == GamePhase.Night && phase != GamePhase.Night)
             {
-                book.SetAviableBook(false);
+                book.hudButton.ChangeBookAvailable(false);
                 book.CloseBook();
             }
             lastPhase = phase;

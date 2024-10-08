@@ -56,8 +56,8 @@ namespace CauldronCodebase
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         public event Action OnUnlockAutoCooking;
-        public event Action<bool> AvailableChange;
-        public event Action<string, int> ChangeBookButtonLayer;
+
+        public RecipeBookButton hudButton;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -114,16 +114,6 @@ namespace CauldronCodebase
                 InitTotalPages();
                 OpenPage(0);
             };
-        }
-
-        public void SetAviableBook(bool value)
-        {
-            AvailableChange?.Invoke(value);
-        }
-
-        public void SetBookButtonLayer(string layerName, int order)
-        {
-            ChangeBookButtonLayer?.Invoke(layerName, order);
         }
 
         private void InitEndingsMap()

@@ -36,12 +36,7 @@ namespace CauldronCodebase
             bgButtonTransf = canvas.gameObject.GetComponent<RectTransform>();
 
             initialPosXButton = bgButtonTransf.anchoredPosition.x;
-            Debug.Log(initialPosXButton);
             offPosXButton = initialPosXButton + 210;
-            Debug.Log(offPosXButton);
-
-            book.ChangeBookButtonLayer += ChangeLayer;
-            book.AvailableChange += ChangeBookAvailable;
         }
 
         private void OnEnable()
@@ -51,27 +46,28 @@ namespace CauldronCodebase
                 SetLoops(-1, LoopType.Yoyo);
         }
 
-        private void ChangeLayer(string name, int order)
+        public void ChangeLayer(string name, int order)
         {
             canvas.sortingLayerName = name;            
             canvas.sortingOrder = order;
         }
 
-        private void ChangeBookAvailable(bool isAvailable)
+        public void ChangeBookAvailable(bool isAvailable)
         {
+            Sequence mySequence = DOTween.Sequence();
             if(isAvailable)
             {
-                raycaster.enabled = true;
-                bgButtonTransf.DOAnchorPosX(initialPosXButton, openCloseAnimationTime).
-                    OnComplete(() =>
-                        transf.DOSizeDelta(initialScale, openCloseAnimationTime * 2).SetEase(Ease.InOutBack));
+                mySequence.AppendCallback(
+                    () => raycaster.enabled = true).
+                    Append(bgButtonTransf.DOAnchorPosX(initialPosXButton, openCloseAnimationTime)).
+                    Append(transf.DOSizeDelta(initialScale, openCloseAnimationTime * 2).SetEase(Ease.InOutBack));
             }
             else
             {
-                raycaster.enabled = false;
-                transf.DOSizeDelta(Vector2.zero, openCloseAnimationTime * 2).SetEase(Ease.InOutBack).
-                    OnComplete(() =>
-                        bgButtonTransf.DOAnchorPosX(offPosXButton, openCloseAnimationTime));
+                mySequence.AppendCallback(
+                    () => raycaster.enabled = false).
+                    Append(transf.DOSizeDelta(Vector2.zero, openCloseAnimationTime * 2).SetEase(Ease.InOutBack)).
+                    Append(bgButtonTransf.DOAnchorPosX(offPosXButton, openCloseAnimationTime));
             }
         }
 
@@ -99,12 +95,6 @@ namespace CauldronCodebase
             {
                 transf.DOPlay();
             }
-        }
-        
-        private void OnDestroy()
-        {
-            book.AvailableChange -= gameObject.SetActive;            
-            book.AvailableChange -= ChangeBookAvailable;
         }
     }
 }

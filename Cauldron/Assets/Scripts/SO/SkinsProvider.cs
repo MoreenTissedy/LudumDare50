@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NaughtyAttributes;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+
 namespace CauldronCodebase
 {
     [CreateAssetMenu(fileName = "Skins Provider", menuName = "Skins Provider", order = 10)]

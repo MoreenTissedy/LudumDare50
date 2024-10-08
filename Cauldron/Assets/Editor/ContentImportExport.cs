@@ -14,7 +14,7 @@ namespace Editor
         private static string CSVpath = "/Editor/SingleCards.csv";
 
         private static string eventFolder = "[Syomalod] Events";
-        private static string CSVpath4events = "/Editor/SkinEvents1.csv";
+        private static string CSVpath4events = "/Editor/SkinEvents2.csv";
 
         [MenuItem("Utilities/Find event by tag")]
         public static void FindEventByTag()

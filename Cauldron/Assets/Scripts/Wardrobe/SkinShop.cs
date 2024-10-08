@@ -63,6 +63,11 @@ namespace CauldronCodebase
             }
         }
 
+        public bool ShouldHighlightButton(int playerMoney)
+        {
+            return playerMoney >= skinsProvider.GetMinimumPrice() || initialSkinJustUnlocked;
+        }
+
         public bool CanBeOpened(int playerMoney)
         {
             return skinsProvider.GetUnlockedSkinsCount() > 1 || playerMoney >= skinsProvider.GetMinimumPrice();

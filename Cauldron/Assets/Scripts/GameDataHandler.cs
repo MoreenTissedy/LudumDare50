@@ -82,7 +82,7 @@ namespace CauldronCodebase
             
             currentRound = progressProvider.CurrentRound;
             
-            currentSkin = skinsProvider.initialSkin;
+            currentSkin = skinsProvider.GetLastUnlocked();
             this.skinsProvider = skinsProvider;
         }
 

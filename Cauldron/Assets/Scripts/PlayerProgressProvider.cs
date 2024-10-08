@@ -9,6 +9,7 @@ namespace CauldronCodebase
         public int CurrentRound = 0;
         public bool CovenIntroShown;
         public bool IsAutoCookingUnlocked;
+        public bool WardrobeUnlocked;
     }
 
     public class PlayerProgressProvider
@@ -21,6 +22,7 @@ namespace CauldronCodebase
         public int CurrentRound => progress.CurrentRound;    
         public bool CovenIntroShown => progress.CovenIntroShown;
         public bool IsAutoCookingUnlocked => progress.IsAutoCookingUnlocked;
+        public bool IsWardrobeUnlocked => progress.WardrobeUnlocked;
         
         public PlayerProgressProvider()
         {
@@ -40,6 +42,14 @@ namespace CauldronCodebase
         {
             progress.CovenIntroShown = true;
             Debug.Log($"CovenIntroShown saved");
+
+            SaveProgress();
+        }
+        
+        public void SaveWardrobeUnlocked()
+        {
+            progress.WardrobeUnlocked = true;
+            Debug.Log($"Wardrobe unlocked saved");
 
             SaveProgress();
         }

@@ -100,6 +100,10 @@ namespace CauldronCodebase
             {
                 shopButton.gameObject.SetActive(true);
                 shopButton.onClick.AddListener(skinShop.OpenBook);
+                if (skinShop.ShouldHighlightButton(gameDataHandler.Money))
+                {
+                    shopButton.Select();
+                }
             }
         }
 

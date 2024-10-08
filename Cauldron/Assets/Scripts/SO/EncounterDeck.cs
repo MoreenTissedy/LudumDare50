@@ -406,6 +406,11 @@ namespace CauldronCodebase
             }
             DealCards(2);
             gameDataHandler.storyTags = milestoneProvider.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            if (gameDataHandler.IsWardrobeUnlocked && !progressProvider.IsWardrobeUnlocked)
+            {
+                deck.AddFirst(introCards[7]);
+                return;
+            }
             if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !progressProvider.CovenIntroShown)
             {
                 deck.AddFirst(introCards[6]);

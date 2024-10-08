@@ -10,8 +10,6 @@ namespace CauldronCodebase
     [CreateAssetMenu(fileName = "Skins Provider", menuName = "Skins Provider", order = 10)]
     public class SkinsProvider : ScriptableObject
     {
-        public SkinSO initialSkin; 
-        
         [ReorderableList] public SkinSO[] skins;
 
         private List<string> unlocked;
@@ -48,6 +46,19 @@ namespace CauldronCodebase
         public int GetUnlockedSkinsCount()
         {
             return unlocked.Count;
+        }
+
+        public SkinSO GetLastUnlocked()
+        {
+            for (var i = unlocked.Count - 1; i >= 0; i--)
+            {
+                SkinSO skin = Get(unlocked[i]);
+                if (!skin.NeedsApprove)
+                {
+                    return skin;
+                }
+            }
+            return Get(unlocked[0]);
         }
 
         public int GetMinimumPrice()

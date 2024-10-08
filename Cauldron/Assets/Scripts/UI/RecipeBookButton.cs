@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Zenject;
 
 namespace CauldronCodebase
@@ -15,6 +16,13 @@ namespace CauldronCodebase
         private Vector3 initialScale;
         private RectTransform transf;
 
+        private Canvas canvas;
+        private GraphicRaycaster raycaster;
+        private RectTransform bgButtonTransf;
+        private float initialPosXButton;
+        private float offPosXButton;
+        public float openCloseAnimationTime = 0.4f;
+
         [Inject]
         private RecipeBook book;
 
@@ -22,9 +30,49 @@ namespace CauldronCodebase
         {
             transf = GetComponent<RectTransform>();
             initialScale = transf.sizeDelta;
+
+            canvas = GetComponentInParent<Canvas>();
+            raycaster = GetComponentInParent<GraphicRaycaster>();
+            bgButtonTransf = canvas.gameObject.GetComponent<RectTransform>();
+
+            initialPosXButton = bgButtonTransf.anchoredPosition.x;
+            Debug.Log(initialPosXButton);
+            offPosXButton = initialPosXButton + 210;
+            Debug.Log(offPosXButton);
+
+            book.ChangeBookButtonLayer += ChangeLayer;
+            book.AvailableChange += ChangeBookAvailable;
+        }
+
+        private void OnEnable()
+        {
             //start flashing to attract attention
-                transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
-                    SetLoops(-1, LoopType.Yoyo);
+            transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
+                SetLoops(-1, LoopType.Yoyo);
+        }
+
+        private void ChangeLayer(string name, int order)
+        {
+            canvas.sortingLayerName = name;            
+            canvas.sortingOrder = order;
+        }
+
+        private void ChangeBookAvailable(bool isAvailable)
+        {
+            if(isAvailable)
+            {
+                raycaster.enabled = true;
+                bgButtonTransf.DOAnchorPosX(initialPosXButton, openCloseAnimationTime).
+                    OnComplete(() =>
+                        transf.DOSizeDelta(initialScale, openCloseAnimationTime * 2).SetEase(Ease.InOutBack));
+            }
+            else
+            {
+                raycaster.enabled = false;
+                transf.DOSizeDelta(Vector2.zero, openCloseAnimationTime * 2).SetEase(Ease.InOutBack).
+                    OnComplete(() =>
+                        bgButtonTransf.DOAnchorPosX(offPosXButton, openCloseAnimationTime));
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -36,7 +84,6 @@ namespace CauldronCodebase
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            
             //grow in size
             if (!clicked)
                 transf.DOPause();
@@ -45,7 +92,6 @@ namespace CauldronCodebase
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            
             //shrink in size
             if (clicked)
                 transf.DOSizeDelta((initialScale), sizeSpeed);
@@ -53,6 +99,12 @@ namespace CauldronCodebase
             {
                 transf.DOPlay();
             }
+        }
+        
+        private void OnDestroy()
+        {
+            book.AvailableChange -= gameObject.SetActive;            
+            book.AvailableChange -= ChangeBookAvailable;
         }
     }
 }

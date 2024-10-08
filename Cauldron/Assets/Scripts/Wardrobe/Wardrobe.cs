@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -22,6 +24,11 @@ namespace CauldronCodebase
         [Header("Animation")]
         [SerializeField] private float descriptionPanelShowSpeed;
         [SerializeField] private float descriptionPanelHiddenYPos;
+        
+        [Header("Confirmation")]
+        [SerializeField] private ScrollTooltip tooltipPrefab;
+        [SerializeField] private Button rejectButton;
+        [SerializeField] private Button acceptButton;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
@@ -31,6 +38,8 @@ namespace CauldronCodebase
         private float initDescriptionPanelPos;
 
         private Action OnClosed;
+
+        public Func<UniTask<bool>> OnApplyCondition;
 
         public event Action<SkinSO> SkinApplied;
 
@@ -129,13 +138,21 @@ namespace CauldronCodebase
             if (!witchSkinChanger.SkinChangeAvailable) return;
             
             witchSkinChanger.ChangeSkin(selectedCell.Skin);
-            //HideDescriptionPanel();
         }
 
-        public void ApplySkin()
+        public async void ApplySkin()
         {
+            if (selectedCell.Skin.NeedsApprove && 
+                !await tooltipPrefab.ShowAsDialog(selectedCell.Skin.ApproveMessage, acceptButton, rejectButton))
+            {
+                return;
+            }
+            if (OnApplyCondition != null && !await OnApplyCondition.Invoke())
+            {
+                return;
+            }
+
             gameDataHandler.currentSkin = selectedCell.Skin;
-            //confirm message ? 
             SkinApplied?.Invoke(selectedCell.Skin);
             CloseBook();
         }

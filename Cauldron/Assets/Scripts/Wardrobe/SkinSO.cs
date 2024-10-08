@@ -22,6 +22,12 @@ namespace CauldronCodebase
         public int Price;
 
         public GameModeBase GameMode;
+
+        public bool NeedsApprove;
+
+        [ShowIf("NeedsApprove")]
+        [TextArea(5, 20)]
+        public string ApproveMessage;
         
         [Header("Legacy compatibility")]
         public string[] LastUnlockedEnding;

@@ -21,7 +21,6 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
     [Localize] [TextArea(5, 10)] public string RecipeHintTutorialText;
-    [Localize] [TextArea(5, 10)] public string ShopTutorialText;
     [Localize] [TextArea(5, 10)] public string WardrobeTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
@@ -34,17 +33,20 @@ public class TutorialManager : MonoBehaviour
     private GameStateMachine stateMachine;
     private RecipeHintsStorage recipeHintsStorage;
     private TutorialStorage tutorialStorage;
+    private Wardrobe wardrobe;
+    
     private HashSet<TutorialKeys> tutorials;
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
-                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings)
+                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings, Wardrobe wardrobe)
     {
         recipeBook = book;
         gameDataHandler = dataHandler;
         cauldron = witchCauldron;
         stateMachine = gameStateMachine;
         recipeHintsStorage = settings.recipeHintsStorage;
+        this.wardrobe = wardrobe;
         tutorialStorage = new TutorialStorage();
     }
 
@@ -58,6 +60,19 @@ public class TutorialManager : MonoBehaviour
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;
         recipeHintsStorage.HintAdded += ViewRecipeHintTutorial;
+
+        if (!tutorials.Contains(TutorialKeys.TUTORIAL_WARDROBE))
+        {
+            wardrobe.OnApplyCondition += OnWardrobeApply;
+        }
+    }
+
+    private async UniTask<bool> OnWardrobeApply()
+    {
+        var result = await tooltipPrefab.ShowAsDialog(WardrobeTutorialText, acceptButton, rejectButton);
+        SaveKey(TutorialKeys.TUTORIAL_WARDROBE);
+        wardrobe.OnApplyCondition -= OnWardrobeApply;
+        return result;
     }
 
     private void SaveKey(TutorialKeys key)
@@ -138,16 +153,6 @@ public class TutorialManager : MonoBehaviour
             SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
-    }
-
-    private void ViewShopTutorial()
-    {
-        //TODO: add shop tutorial
-    }
-
-    private void ViewWardrobeTutorial()
-    {
-        //TODO: add wardrobe tutorial
     }
     
     private void AcceptAutoCookingClickButton()

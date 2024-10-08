@@ -37,9 +37,11 @@ namespace CauldronCodebase
         public List<Potions> potionsTotal;
         public int wrongPotionsCount;
         public int wrongExperiments = 0;  //no need to save
+        public List<Ingredients> ingredientsFreezed;
 
         //TODO: separate entities
         public List<string> storyTags;
+        public bool milestonesDisable;
 
         public SkinSO currentSkin;
         public bool premiumSkin;
@@ -318,6 +320,7 @@ namespace CauldronCodebase
             cardsDrawnToday = data.CardDrawnToday;
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
+            milestonesDisable = data.milestonesDisable;
             fractionStatus.Load(data.FractionData);
             fractionEventTriggered = data.FractionEventTriggered;
             if (!string.IsNullOrEmpty(data.CurrentSkin))
@@ -345,6 +348,8 @@ namespace CauldronCodebase
 
             currentDayPotions = data.CurrentDayPotions;
             potionsBrewedInADays = data.PotionsBrewedInADays;
+
+            ingredientsFreezed = data.IngredientsFreezed;
         }
 
         public void SaveData(ref GameData data)
@@ -357,7 +362,8 @@ namespace CauldronCodebase
             data.Money = money;
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
-            data.StoryTags = storyTags;
+            data.StoryTags = storyTags;            
+            data.milestonesDisable = milestonesDisable;
             data.Phase = gamePhase;
             data.FractionData = fractionStatus.Save();
             data.FractionEventTriggered = fractionEventTriggered;
@@ -384,6 +390,8 @@ namespace CauldronCodebase
 
             data.CurrentSkin = currentSkin.name;
             data.PremiumSkin = premiumSkin;
+
+            data.IngredientsFreezed = ingredientsFreezed;
         }
     }
 }

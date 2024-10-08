@@ -63,6 +63,7 @@ namespace CauldronCodebase
         private IAchievementManager achievements;
         private EndingsProvider endingsProvider;
         private PlayerProgressProvider progressProvider;
+        private GameDataHandler gameData;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -89,7 +90,8 @@ namespace CauldronCodebase
                                 Cauldron cauldron, 
                                 IAchievementManager achievements, 
                                 EndingsProvider endingsProvider,
-                                PlayerProgressProvider progressProvider)
+                                PlayerProgressProvider progressProvider,
+                                GameDataHandler gameData)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -98,6 +100,7 @@ namespace CauldronCodebase
             this.cauldron = cauldron;
             this.endingsProvider = endingsProvider;
             this.progressProvider = progressProvider;
+            this.gameData = gameData;
         }
 
         private void Start()
@@ -481,6 +484,14 @@ namespace CauldronCodebase
                         TryHighlightIncorrectRecipe();
                         return;
                     }
+                }
+            }
+
+            foreach (var ingredient in recipeBookEntry.CurrentRecipe.RecipeIngredients)
+            {
+                if (gameData.ingredientsFreezed.Contains(ingredient))
+                {
+                    return;
                 }
             }
             

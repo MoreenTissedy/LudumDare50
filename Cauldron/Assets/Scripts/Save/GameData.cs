@@ -35,7 +35,8 @@ namespace CauldronCodebase
 
         public string CurrentEncounter;  // GameDataHandler
 
-        public List<string> StoryTags ;  // GameDataHandler
+        public List<string> StoryTags;  // GameDataHandler
+        public bool milestonesDisable; // GameDataHandler
         public int[] FractionData;
         public bool FractionEventTriggered;
         
@@ -49,6 +50,8 @@ namespace CauldronCodebase
         public GameStateMachine.GamePhase Phase;
         
         public bool DarkStrangerCame, WitchCame, InquisitorCame;
+
+        public List<Ingredients> IngredientsFreezed;
 
         public GameData(int initialValue, List<string> milestones)
         {
@@ -64,13 +67,16 @@ namespace CauldronCodebase
             CurrentEncounter = null;
 
             StoryTags = milestones;
-
+            milestonesDisable = false;
+            
             WrongPotionsCountOnRun = 0;
 
             CurrentDayPotions = new PotionsBrewedInADay();
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
+
+            IngredientsFreezed = new List<Ingredients>();
         }
 
         public void ValidateSave(SODictionary soDictionary)

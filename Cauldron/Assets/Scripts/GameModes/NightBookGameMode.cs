@@ -35,12 +35,12 @@ namespace CauldronCodebase
 
             book.hudButton.ChangeLayer(canvasNightPanel.sortingLayerName, canvasNightPanel.sortingOrder + 1);
             
-            gameStates.OnChangeState += SetAvailabileBook;
+            gameStates.OnChangeState += SetAvailableBook;
 
-            SetAvailabileBook(gameStates.currentGamePhase);
+            SetAvailableBook(gameStates.currentGamePhase);
         }
         
-        private void SetAvailabileBook(GamePhase phase)
+        private void SetAvailableBook(GamePhase phase)
         {
             if (phase == GamePhase.Night)
             {

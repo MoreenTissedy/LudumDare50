@@ -1,37 +1,32 @@
 using System.Collections.Generic;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
-using static CauldronCodebase.GameStates.GameStateMachine;
 
 namespace CauldronCodebase
 {
     [CreateAssetMenu(order = 50, menuName = "GameModes/LimitIngredients")]
-    public class LimitIngredientsGameMode : GameModeBase
+    public class LimitIngredientsGameMode : PrestigeGameMode
     {
         private int patience = 1;
         private List<Ingredients> freezed => gameData.ingredientsFreezed;
 
+        protected override string achievIdents => AchievIdents.SILVER_DAYS;
+
         private VisitorManager visitorManager;
         private TooltipManager ingredients;
-        private GameStateMachine gameStates;
-        private GameDataHandler gameData;
 
         [Inject]
-        public void Construct(VisitorManager visitorManager, TooltipManager ingredients,
-                                GameStateMachine gameStates, GameDataHandler gameData)
+        public void Construct(VisitorManager visitorManager, TooltipManager ingredients)
         {
             this.visitorManager = visitorManager;
             this.ingredients = ingredients;
-            this.gameStates = gameStates;
-            this.gameData = gameData;
         }
 
-        public override void Apply()
+        protected override void OnApply()
         {
             visitorManager.VisitorEntering += () => visitorManager.attemptsLeft = patience;
 
-            gameStates.OnChangeState += TryMorningReset;
+            gameStates.OnNewDay += TryMorningReset;
             LoadFreezedIngredients();            
         }
 
@@ -55,10 +50,8 @@ namespace CauldronCodebase
             freezed.Add(ingredient.ingredient);
         }
 
-        private void TryMorningReset(GamePhase phase)
+        private void TryMorningReset()
         {
-            if (phase != GamePhase.Night) return;
-
             foreach (var temp in ingredients.Dict)
             {
                 var ingredient = temp.Value;

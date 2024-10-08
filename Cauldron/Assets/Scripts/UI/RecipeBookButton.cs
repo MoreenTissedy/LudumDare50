@@ -28,6 +28,8 @@ namespace CauldronCodebase
 
         private void Start()
         {
+            book.hudButton = this;
+            
             transf = GetComponent<RectTransform>();
             initialScale = transf.sizeDelta;
 

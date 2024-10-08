@@ -1,5 +1,3 @@
-using System.Linq;
-using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 using static CauldronCodebase.GameStates.GameStateMachine;
@@ -7,23 +5,23 @@ using static CauldronCodebase.GameStates.GameStateMachine;
 namespace CauldronCodebase
 {
     [CreateAssetMenu(order = 50, menuName = "GameModes/NightBook")]
-    public class NightBookGameMode : GameModeBase
+    public class NightBookGameMode : PrestigeGameMode
     {
         private GamePhase lastPhase;
+        
+        protected override string achievIdents => AchievIdents.GOLD_DAYS;
 
         private RecipeBook book;
-        private GameStateMachine gameStates;
         private NightPanel nightPanel;
 
         [Inject]
-        public void Construct(RecipeBook book, GameStateMachine gameStates, NightPanel nightPanel)
+        public void Construct(RecipeBook book, NightPanel nightPanel)
         {
             this.book = book;
-            this.gameStates = gameStates;
             this.nightPanel = nightPanel;
         }
 
-        public override void Apply()
+        protected override void OnApply()
         {
             lastPhase = GamePhase.Night;
 

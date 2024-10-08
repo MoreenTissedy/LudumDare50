@@ -7,24 +7,29 @@ using static CauldronCodebase.GameStates.GameStateMachine;
 namespace CauldronCodebase
 {
     [CreateAssetMenu(order = 50, menuName = "GameModes/NightBook")]
-    public class NightBookGameMode : GameModeBase
+    public class NightBookGameMode : PrestigeGameMode
     {
         private GamePhase lastPhase;
 
         private RecipeBook book;
-        private GameStateMachine gameStates;
         private NightPanel nightPanel;
 
         [Inject]
-        public void Construct(RecipeBook book, GameStateMachine gameStates, NightPanel nightPanel)
+        public void Construct(RecipeBook book, NightPanel nightPanel,
+                                GameStateMachine gameStates, GameDataHandler gameData,
+                                IAchievementManager achievement)
         {
+            Construct(gameStates, gameData, achievement);
+
             this.book = book;
-            this.gameStates = gameStates;
             this.nightPanel = nightPanel;
         }
 
         public override void Apply()
         {
+            base.Apply();
+            achievIdents = AchievIdents.GOLD_DAYS;
+
             lastPhase = GamePhase.Night;
 
             var canvasNightPanel = nightPanel.gameObject.GetComponent<Canvas>();

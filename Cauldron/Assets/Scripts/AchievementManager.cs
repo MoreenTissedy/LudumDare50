@@ -22,6 +22,8 @@ namespace CauldronCodebase
         public const string FOOD_ALL = "food recipes";
         public const string EXPERIMENTS_ALL = "experiments";
         public const string VISITORS_ALL = "all visitors";
+        public const string SILVER_DAYS = "silver days";
+        public const string GOLD_DAYS = "gold days";
 
         public static readonly Dictionary<string, string> EVENT_NAMES_TO_ACHIEVEMENTS = new Dictionary<string, string>()
         {

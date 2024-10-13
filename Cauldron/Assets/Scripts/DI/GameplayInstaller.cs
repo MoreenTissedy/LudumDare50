@@ -12,6 +12,8 @@ namespace CauldronCodebase
         [SerializeField] private IngredientsData ingredientsData;
         [SerializeField] private PriorityLaneProvider priorityLane;
         [SerializeField] private SkinsProvider skinsProvider;
+        [SerializeField] private RecipeProvider recipeProvider;
+        [SerializeField] private EndingsProvider endings;
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
@@ -33,8 +35,6 @@ namespace CauldronCodebase
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
-        [Inject] private RecipeProvider recipeProvider;
-        [Inject] private EndingsProvider endings;
         [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private VillagerFamiliarityChecker villagerFamiliarityChecker;
@@ -55,7 +55,9 @@ namespace CauldronCodebase
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
             Container.Bind<PriorityLaneProvider>().FromInstance(priorityLane).AsSingle();
-            Container.Bind<SkinsProvider>().FromInstance(skinsProvider).AsSingle();
+            Container.Bind<SkinsProvider>().FromInstance(skinsProvider).AsSingle();            
+            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();            
+            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
         }
 
         private void BindUI()

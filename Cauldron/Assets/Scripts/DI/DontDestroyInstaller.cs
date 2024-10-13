@@ -14,8 +14,6 @@ namespace CauldronCodebase
         [SerializeField] private GameObject dataPersistenceManager;
         [SerializeField] private SODictionary soDictionary;
         [SerializeField] private CatTipsProvider catTipsProvider;
-        [SerializeField] private RecipeProvider recipeProvider;
-        [SerializeField] private EndingsProvider endings;
         [SerializeField] private VirtualMouseInput virtualMouseInput;
 
         [SerializeField] private SoundManager soundManager;
@@ -39,12 +37,9 @@ namespace CauldronCodebase
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
             
             Container.Bind<PlayerProgressProvider>().FromNew().AsSingle().NonLazy();
-            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();
 
             milestoneProvider = new MilestoneProvider();
             Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();
-            
-            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             
             visitorsProvider = new VillagerFamiliarityChecker();
             Container.Bind<VillagerFamiliarityChecker>().FromInstance(visitorsProvider).AsSingle();

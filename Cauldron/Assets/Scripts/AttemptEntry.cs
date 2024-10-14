@@ -25,6 +25,8 @@ namespace CauldronCodebase
         [Localize] public string failure;
         [Localize] public string notTried;
 
+        public AnimatedButton Button => button;
+
         private List<Ingredients> ingredients = new List<Ingredients>();
 
         private void Awake()

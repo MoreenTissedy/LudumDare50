@@ -12,7 +12,7 @@ namespace CauldronCodebase
         public bool clickable = true;
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (!clickable)
+            if (!clickable || book.isNightBook)
             {
                 return;
             }

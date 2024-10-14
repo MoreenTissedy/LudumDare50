@@ -58,6 +58,7 @@ namespace CauldronCodebase
         public event Action OnUnlockAutoCooking;
 
         public RecipeBookButton hudButton;
+        public bool isNightBook = false;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;

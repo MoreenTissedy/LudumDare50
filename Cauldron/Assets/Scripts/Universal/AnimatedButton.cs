@@ -23,5 +23,10 @@ namespace Universal
             sound.Play(Sounds.MenuClick);
             OnClick?.Invoke();
         }
+
+        public void BlockButtonClick()
+        {
+            OnClick = null;
+        }
     }
 }

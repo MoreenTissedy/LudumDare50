@@ -24,10 +24,16 @@ namespace CauldronCodebase
 
         protected override void OnApply()
         {
-            visitorManager.VisitorEntering += () => visitorManager.attemptsLeft = patience;
+            visitorManager.VisitorEntering += SetPatience;
 
             gameStates.OnNewDay += TryMorningReset;
             LoadFreezedIngredients();            
+        }
+
+        private void SetPatience()
+        {
+            visitorManager.attemptsLeft = patience;
+            visitorManager.VisitorTimer.ResetTimer(patience);
         }
 
         private void LoadFreezedIngredients()

@@ -22,6 +22,8 @@ namespace CauldronCodebase
         private Visitor currentVisitor;
         private Villager currentVillager;
         public Villager CurrentVillager => currentVillager;
+        public VisitorTimer VisitorTimer => visitorTimer;
+
         private bool ignoreSavedAttempts = false;
         
         private Cauldron cauldron;
@@ -92,16 +94,20 @@ namespace CauldronCodebase
                     ignoreSavedAttempts = true;
                     break;
             }
-            VisitorEntering?.Invoke();
-            visitorTimer.ResetTimer(villager.patience);
-            if (attemptsLeft != villager.patience)
+
+            if (VisitorEntering == null)
             {
-                for (int i = 0; i < villager.patience - attemptsLeft; i++)
+                visitorTimer.ResetTimer(villager.patience);
+                if (attemptsLeft != villager.patience)
                 {
-                    visitorTimer.ReduceTimer();
+                    for (int i = 0; i < villager.patience - attemptsLeft; i++)
+                    {
+                        visitorTimer.ReduceTimer();
+                    }
                 }
             }
-
+            else VisitorEntering?.Invoke();
+            
             currentVillager = villager;
             villagerFamiliarityChecker.TryAddVisitor(villager.name);
             

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
@@ -25,10 +24,7 @@ namespace CauldronCodebase
             data = ingredientsData.Get(ingredient);
             image.enabled = true;
             image.sprite = data.image;
-            if (gameData.ingredientsFreezed.Contains(ingredient))
-            {
-                image.material = material;
-            }
+            image.material = gameData.ingredientsFreezed.Contains(ingredient) ? material : null;
             interactable = false;
             scrollTooltip.Close();
             await scrollTooltip.SetText(data.friendlyName);

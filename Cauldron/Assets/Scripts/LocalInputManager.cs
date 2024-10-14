@@ -26,6 +26,8 @@ namespace CauldronCodebase
 
         private void ToggleBook(InputAction.CallbackContext input)
         {
+            if (recipeBook.isNightBook) return;
+            
             recipeBook.ToggleBook();
         }
         

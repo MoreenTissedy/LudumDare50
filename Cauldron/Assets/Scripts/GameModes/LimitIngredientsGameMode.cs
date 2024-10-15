@@ -24,7 +24,7 @@ namespace CauldronCodebase
 
         protected override void OnApply()
         {
-            visitorManager.VisitorEntering += () => visitorManager.attemptsLeft = patience;
+            visitorManager.overridePatience = patience;
 
             gameStates.OnNewDay += TryMorningReset;
             LoadFreezedIngredients();            

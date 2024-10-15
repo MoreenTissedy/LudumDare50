@@ -174,6 +174,7 @@ namespace CauldronCodebase
         {
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            IngredientAdded?.Invoke(this);
             Unsubscribe();
         }
 

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 using static CauldronCodebase.GameStates.GameStateMachine;
 
@@ -13,12 +14,14 @@ namespace CauldronCodebase
 
         private RecipeBook book;
         private NightPanel nightPanel;
+        private ExperimentController experimentController;
 
         [Inject]
-        public void Construct(RecipeBook book, NightPanel nightPanel)
+        public void Construct(RecipeBook book, NightPanel nightPanel, ExperimentController experimentController)
         {
             this.book = book;
             this.nightPanel = nightPanel;
+            this.experimentController = experimentController;
         }
 
         protected override void OnApply()
@@ -32,6 +35,11 @@ namespace CauldronCodebase
             bookNightPanel.sortingOrder = canvasNightPanel.sortingOrder + 1;
 
             book.hudButton.ChangeLayer(canvasNightPanel.sortingLayerName, canvasNightPanel.sortingOrder + 1);
+            book.isNightBook = true;
+            foreach (var temp in experimentController.attemptEntries)
+            {
+                temp.Button.RemoveAllSubscriptions();
+            }
             
             gameStates.OnChangeState += SetAvailableBook;
 

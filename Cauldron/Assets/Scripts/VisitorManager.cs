@@ -16,12 +16,14 @@ namespace CauldronCodebase
         [SerializeField] private ParticleSystem negativeReaction;
 
         public event Action VisitorLeft;
-        public event Action VisitorEntering;
+        public int? overridePatience;
 
         public int attemptsLeft;
         private Visitor currentVisitor;
         private Villager currentVillager;
         public Villager CurrentVillager => currentVillager;
+        public VisitorTimer VisitorTimer => visitorTimer;
+
         private bool ignoreSavedAttempts = false;
         
         private Cauldron cauldron;
@@ -85,23 +87,23 @@ namespace CauldronCodebase
             switch (ignoreSavedAttempts)
             {
                 case true:
-                    attemptsLeft = villager.patience;
+                    attemptsLeft = overridePatience ?? villager.patience;
                     break;
                 case false:
-                    attemptsLeft = gameData.AttemptsLeft;
+                    attemptsLeft = overridePatience ?? gameData.AttemptsLeft;
                     ignoreSavedAttempts = true;
                     break;
             }
-            VisitorEntering?.Invoke();
-            visitorTimer.ResetTimer(villager.patience);
-            if (attemptsLeft != villager.patience)
+
+            visitorTimer.ResetTimer(overridePatience ?? villager.patience);
+            if (overridePatience == null && attemptsLeft != villager.patience)
             {
                 for (int i = 0; i < villager.patience - attemptsLeft; i++)
                 {
                     visitorTimer.ReduceTimer();
                 }
             }
-
+            
             currentVillager = villager;
             villagerFamiliarityChecker.TryAddVisitor(villager.name);
             

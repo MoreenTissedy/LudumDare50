@@ -74,7 +74,6 @@ namespace CauldronCodebase
             if (ingredient1 && ingredient2 && ingredient3)
             {
                 ingredient1.Set(recipe.RecipeIngredients[0]);
-
                 ingredient2.Set(recipe.RecipeIngredients[1]);
                 ingredient3.Set(recipe.RecipeIngredients[2]);
             }

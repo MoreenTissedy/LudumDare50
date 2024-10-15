@@ -58,6 +58,7 @@ namespace CauldronCodebase
         public event Action OnUnlockAutoCooking;
 
         public RecipeBookButton hudButton;
+        public bool isNightBook = false;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
@@ -491,7 +492,7 @@ namespace CauldronCodebase
 
             foreach (var ingredient in recipeBookEntry.CurrentRecipe.RecipeIngredients)
             {
-                if (gameData.ingredientsFreezed.Contains(ingredient))
+                if (gameData.ingredientsFreezed.Contains(ingredient) && !cauldron.Mix.Contains(ingredient))
                 {
                     return;
                 }

@@ -93,7 +93,7 @@ namespace CauldronCodebase
             recipeProvider.Load();
             endings.Init(achievementManager);
             skinsProvider.Init(achievementManager, endings);
-            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider, skinsProvider);
+            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider, skinsProvider, achievementManager);
             encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings,
                             recipeProvider, recipeBook, milestoneProvider, progressProvider);
             nightEvents.Init(dataPersistenceManager, soDictionary, progressProvider);

@@ -65,9 +65,11 @@ namespace CauldronCodebase
 
         private SODictionary soDictionary;
         private SkinsProvider skinsProvider;
+        private IAchievementManager achievementManager;
         
         public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager,
-                         SODictionary dictionary, PlayerProgressProvider progressProvider, SkinsProvider skinsProvider)
+                         SODictionary dictionary, PlayerProgressProvider progressProvider, SkinsProvider skinsProvider,
+                         IAchievementManager achievementManager)
         {
             soDictionary = dictionary;
             
@@ -84,6 +86,7 @@ namespace CauldronCodebase
             
             currentSkin = skinsProvider.GetLastUnlocked();
             this.skinsProvider = skinsProvider;
+            this.achievementManager = achievementManager;
         }
 
         public bool IsWardrobeButtonAvailable()
@@ -255,12 +258,28 @@ namespace CauldronCodebase
         public void AddPotion(Potions potion, bool wrong)
         {
             potionsTotal.Add(potion); // for global statistic
+            CheckAndUnlockUsedPotionsAchiv(potion);
             currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
                 Debug.Log("wrong potion");
                 wrongPotionsCount++; // for global statistic
                 currentDayPotions.WrongPotions++;
+            }
+        }
+
+        private void CheckAndUnlockUsedPotionsAchiv(Potions potion)
+        {
+            var achivList = AchievIdents.USED_POTION.FindAll(x => x.potion == potion);
+            if (achivList.Count == 0) return;
+            
+            var tempCount = potionsTotal.FindAll(x => x == potion).Count;
+            foreach (var achiv in achivList)
+            {
+                if (tempCount >= achiv.count)
+                {
+                    achievementManager.TryUnlock(achiv.key);
+                }
             }
         }
 

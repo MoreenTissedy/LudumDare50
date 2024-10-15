@@ -14,6 +14,20 @@ namespace CauldronCodebase
         void ClearAll();
     }
 
+    public struct PotionsUsedAchiv
+    {
+        public Potions potion;
+        public int count;
+        public string key;
+
+        public PotionsUsedAchiv(Potions potion, int count, string key)
+        {
+            this.potion = potion;
+            this.count = count;
+            this.key = key;
+        }
+    }
+
     public static class AchievIdents
     {
         public const string FIRST_POTION = "first potion";
@@ -51,6 +65,12 @@ namespace CauldronCodebase
             {"moonshine-stealing-fairies-caught","pixies"},
             {"Doctor_4_Rejuvenation","doctor"},
             {"mary.91","Mary"},
+        };
+
+        public static readonly List<PotionsUsedAchiv> USED_POTION = new List<PotionsUsedAchiv>()
+        {
+            new PotionsUsedAchiv(Potions.Poison, 10, "poison-1"),
+            new PotionsUsedAchiv(Potions.Poison, 25, "poison-2"),
         };
     }
 

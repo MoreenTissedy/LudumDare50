@@ -24,7 +24,7 @@ namespace Universal
             OnClick?.Invoke();
         }
 
-        public void BlockButtonClick()
+        public void RemoveAllSubscriptions()
         {
             OnClick = null;
         }

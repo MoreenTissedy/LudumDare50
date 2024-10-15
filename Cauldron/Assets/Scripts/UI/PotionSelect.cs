@@ -10,9 +10,11 @@ namespace CauldronCodebase
         [Inject] private SoundManager soundManager;
 
         public bool clickable = true;
+        public bool interactable => clickable && !book.isNightBook;
+
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (!clickable || book.isNightBook)
+            if (!interactable)
             {
                 return;
             }
@@ -22,7 +24,7 @@ namespace CauldronCodebase
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
-            if (!clickable)
+            if (!interactable)
             {
                 return;
             }
@@ -32,7 +34,7 @@ namespace CauldronCodebase
 
         public override void OnPointerExit(PointerEventData eventData)
         {
-            if (!clickable)
+            if (!interactable)
             {
                 return;
             }

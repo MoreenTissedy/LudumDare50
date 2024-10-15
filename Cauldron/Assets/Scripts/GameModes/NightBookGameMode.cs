@@ -38,7 +38,7 @@ namespace CauldronCodebase
             book.isNightBook = true;
             foreach (var temp in experimentController.attemptEntries)
             {
-                temp.Button.BlockButtonClick();
+                temp.Button.RemoveAllSubscriptions();
             }
             
             gameStates.OnChangeState += SetAvailableBook;

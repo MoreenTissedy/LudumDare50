@@ -2,30 +2,24 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class PremiumSkinButton : MonoBehaviour, IPointerClickHandler
+    public class PremiumSkinButton : AnimatedButton
     {
         [SerializeField] private float animationDelay = 0.15f;
         [SerializeField] private Sprite activeButton;
         [SerializeField] private Sprite notActiveButton;
         [SerializeField] private GameObject cauldronStandart;
         [SerializeField] private GameObject cauldronPremium;
-        [SerializeField] private SkinSO skinPremium;
-
-        private Image image;
+        [SerializeField] private Image image;
 
         [Inject] private GameDataHandler gameData;
         [Inject] private Cauldron cauldron;
         [Inject] private WitchSkinChanger witch;
         [Inject] private CatAnimations cat;
-        
-        private void Awake()
-        {
-            image = GetComponent<Image>();
-        }
 
         public void Start()
         {
@@ -61,8 +55,9 @@ namespace CauldronCodebase
             cat.SetSkin(gameData.premiumSkin ? "ArchCat" : "Cat_default");
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public override void OnPointerClick(PointerEventData eventData)
         {
+            base.OnPointerClick(eventData);
             gameData.premiumSkin = !gameData.premiumSkin;
             StopAllCoroutines();
             StartCoroutine(UpdateSkins());

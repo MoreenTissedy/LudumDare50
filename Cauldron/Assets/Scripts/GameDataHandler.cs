@@ -281,7 +281,8 @@ namespace CauldronCodebase
             var achivList = AchievIdents.USED_POTION.FindAll(x => x.potion == potion);
             if (achivList.Count == 0) return;
             
-            potionsTotal.TryGetValue(potion, out var tempCount);
+            if(!potionsTotal.TryGetValue(potion, out var tempCount)) return;
+             
             foreach (var achiv in achivList)
             {
                 if (tempCount >= achiv.count)

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ namespace CauldronCodebase
 {
     public class PremiumSkinButton : MonoBehaviour, IPointerClickHandler
     {
+        [SerializeField] private float animationDelay = 0.15f;
         [SerializeField] private Sprite activeButton;
         [SerializeField] private Sprite notActiveButton;
         [SerializeField] private GameObject cauldronStandart;
@@ -18,6 +20,7 @@ namespace CauldronCodebase
         [Inject] private GameDataHandler gameData;
         [Inject] private Cauldron cauldron;
         [Inject] private WitchSkinChanger witch;
+        [Inject] private CatAnimations cat;
         
         private void Awake()
         {
@@ -26,14 +29,16 @@ namespace CauldronCodebase
 
         public void Start()
         {
-            UpdateSkins();
+            StartCoroutine(UpdateSkins());
         }
         
-        private void UpdateSkins()
+        private IEnumerator UpdateSkins()
         {
             UpdateButton();
-            UpdateCauldron();
             UpdateWitch();
+            UpdateCat();
+            yield return new WaitForSeconds(animationDelay);
+            UpdateCauldron();
         }
 
         private void UpdateButton()
@@ -48,13 +53,19 @@ namespace CauldronCodebase
         
         private void UpdateWitch()
         {
-            witch.ChangeSkin(gameData.premiumSkin ? skinPremium : gameData.currentSkin);
+            witch.ChangeSkin(gameData.premiumSkin ? "Premium" : gameData.currentSkin.SpineName);
+        }
+
+        private void UpdateCat()
+        {            
+            cat.SetSkin(gameData.premiumSkin ? "ArchCat" : "Cat_default");
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             gameData.premiumSkin = !gameData.premiumSkin;
-            UpdateSkins();
+            StopAllCoroutines();
+            StartCoroutine(UpdateSkins());
         }
     }
 }

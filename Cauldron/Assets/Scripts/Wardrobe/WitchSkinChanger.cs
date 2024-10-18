@@ -19,12 +19,12 @@ namespace CauldronCodebase
         public SkinSO CurrentSkin => currentSkin;
         public bool SkinChangeAvailable { get; } = true;
 
-        [Inject] private SkinsProvider skinsProvider;
+        [Inject] private GameDataHandler gameDataHandler;
         [Inject] private SoundManager soundManager;
 
         private void Start()
         {
-            currentSkin = skinsProvider.GetLastUnlocked();
+            currentSkin = gameDataHandler.currentSkin;
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
         }
 

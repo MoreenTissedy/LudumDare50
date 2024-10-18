@@ -34,7 +34,7 @@ namespace CauldronCodebase
         public int currentRound;
         public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
-        public List<Potions> potionsTotal;
+        public Dictionary<Potions, int> potionsTotal;
         public int wrongPotionsCount;
         public int wrongExperiments = 0;  //no need to save
         public List<Ingredients> ingredientsFreezed;
@@ -257,8 +257,16 @@ namespace CauldronCodebase
 
         public void AddPotion(Potions potion, bool wrong)
         {
-            potionsTotal.Add(potion); // for global statistic
+            if(potionsTotal.ContainsKey(potion))
+            {
+                potionsTotal[potion] += 1;
+            }
+            else
+            {
+                potionsTotal.Add(potion, 1);
+            }
             CheckAndUnlockUsedPotionsAchiv(potion);
+
             currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
@@ -273,7 +281,8 @@ namespace CauldronCodebase
             var achivList = AchievIdents.USED_POTION.FindAll(x => x.potion == potion);
             if (achivList.Count == 0) return;
             
-            var tempCount = potionsTotal.FindAll(x => x == potion).Count;
+            if(!potionsTotal.TryGetValue(potion, out var tempCount)) return;
+             
             foreach (var achiv in achivList)
             {
                 if (tempCount >= achiv.count)
@@ -357,10 +366,12 @@ namespace CauldronCodebase
                 currentCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
             }
 
-            potionsTotal = new List<Potions>();
-            foreach (var potion in data.PotionsTotalOnRun)
+            potionsTotal = new Dictionary<Potions, int>();
+            foreach (var temp in data.PotionsTotalOnRun)
             {
-                potionsTotal.Add((Potions)Enum.Parse(typeof(Potions), potion));
+                var potion = (Potions)Enum.Parse(typeof(Potions), temp.Split(':')[0]);
+                var value = int.Parse(temp.Split(':')[1]);
+                potionsTotal.Add(potion, value);
             }
             
             wrongPotionsCount = data.WrongPotionsCountOnRun;
@@ -399,7 +410,7 @@ namespace CauldronCodebase
             data.PotionsTotalOnRun.Clear();
             foreach (var potion in potionsTotal)
             {
-                data.PotionsTotalOnRun.Add(potion.ToString());
+                data.PotionsTotalOnRun.Add($"{potion.Key}:{potion.Value}");
             }
             
             data.WrongPotionsCountOnRun = wrongPotionsCount;

@@ -33,9 +33,14 @@ namespace CauldronCodebase
 
             currentSkin = newSkin;
             
+            ChangeSkin(currentSkin.SpineName);
+        }
+        
+        public void ChangeSkin(string skinName)
+        {            
             skinChangeVFX.Play();
             witchSkeleton.AnimationState.SetAnimation(0, activeAnimation, false);
-            witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
+            witchSkeleton.Skeleton.SetSkin(skinName);
             witchSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0);
         }
     }

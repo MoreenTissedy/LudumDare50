@@ -16,6 +16,8 @@ namespace CauldronCodebase
         public TooltipManager tooltipManager;
         public GameObject dropZone;
         public bool IsActive => dropZone.activeInHierarchy;
+        public GameObject visual;
+        public ParticleSystem skinChangeVFX;
         private List<Ingredients> mix = new List<Ingredients>();
 
         public List<Ingredients> Mix => mix;
@@ -147,6 +149,13 @@ namespace CauldronCodebase
         public void PointerEntered()
         {
             MouseEnterCauldronZone?.Invoke();
+        }
+
+        public void ChangeVisual(GameObject visualPrefab)
+        {
+            skinChangeVFX.Play();
+            if (visual != null) Destroy(visual);
+            visual = Instantiate(visualPrefab, gameObject.transform);
         }
     }
 }

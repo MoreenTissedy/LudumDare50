@@ -18,6 +18,7 @@ namespace CauldronCodebase
     public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
     {
         [SerializeField] private SkeletonAnimation catSkeleton;
+        public SkeletonAnimation CatSkeleton => catSkeleton;
         [FormerlySerializedAs("idleAnimations")] [SpineAnimation] public string[] randomActions;
         [SpineAnimation] public string strokeAnimation;
         [SerializeField] private float strokeAnimationSpeedMultiplier;
@@ -98,6 +99,11 @@ namespace CauldronCodebase
             {
                 randomAction = StartCoroutine(RandomActionsRoutine());
             }
+        }
+
+        public void SetSkin(string newSkin)
+        {
+            catSkeleton.Skeleton.SetSkin(newSkin);
         }
 
         // the method was chosen for correct behavior when the player released the cat directly inside the cauldron

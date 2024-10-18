@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Universal;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -32,6 +33,8 @@ namespace CauldronCodebase
         
         private SkinSO skin;
         public SkinSO Skin => skin;
+        
+        [Inject] private SoundManager sound;
 
         public event Action<WardrobeCell> OnClick; 
 
@@ -86,7 +89,7 @@ namespace CauldronCodebase
             }
             
             base.OnPointerClick(eventData);
-            
+            sound.Play(Sounds.MenuClick);
             OnClick?.Invoke(this);
         }
 

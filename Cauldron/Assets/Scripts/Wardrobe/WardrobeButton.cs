@@ -1,4 +1,6 @@
-﻿using CauldronCodebase.GameStates;
+﻿using System;
+using CauldronCodebase.GameStates;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
@@ -17,7 +19,7 @@ namespace CauldronCodebase
         [Inject] private Wardrobe wardrobe;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine stateMachine;
-        [Inject] private SkinsProvider skinsProvider;
+        [Inject] private SoundManager soundManager;
 
         private bool hidden;
 
@@ -52,13 +54,14 @@ namespace CauldronCodebase
         }
         
         [Button("Show")]
-        private void Show()
+        private async void Show()
         {
+            await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
             gameObject.SetActive(true);
+            soundManager.Play(Sounds.WardrobeMove);
             transform.DOLocalMoveX(initialXPos, moveDuration)
                 .From(offScreenXPos)
-                .SetEase(Ease.OutBack)
-                .SetDelay(1.5f);
+                .SetEase(Ease.OutBack);
         }
 
         private void Hide(GameStateMachine.GamePhase phase)
@@ -74,6 +77,7 @@ namespace CauldronCodebase
         [Button()]
         private void Hide()
         {
+            soundManager.Play(Sounds.WardrobeMove);
             hidden = true;
             transform.DOLocalMoveX(offScreenXPos, moveDuration).SetEase(Ease.InBack)
                 .OnComplete(()=> Destroy(gameObject));

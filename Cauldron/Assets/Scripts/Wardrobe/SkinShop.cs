@@ -5,6 +5,7 @@ using EasyLoc;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using Zenject;
 using Button = UnityEngine.UI.Button;
 
 namespace CauldronCodebase
@@ -39,6 +40,8 @@ namespace CauldronCodebase
         private WardrobeCell selectedCell;
 
         private string defaultColorHex, unavailableColorHex;
+
+        [Inject] private SoundManager soundManager;
 
         private void Start()
         {
@@ -190,6 +193,7 @@ namespace CauldronCodebase
         {
             if (selectedCell != null && playersMoney >= selectedCell.Skin.Price && !skinsProvider.Unlocked(selectedCell.Skin.name))
             {
+                soundManager.Play(Sounds.CoinSpend);
                 playersMoney -= selectedCell.Skin.Price;
                 
                 skinsProvider.TryUnlock(selectedCell.Skin);

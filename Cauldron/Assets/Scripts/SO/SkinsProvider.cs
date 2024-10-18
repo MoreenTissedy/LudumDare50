@@ -68,7 +68,11 @@ namespace CauldronCodebase
                 throw new InvalidOperationException("The list is empty or null");
             }
 
-            var positivePrices = skins.Where(skin => skin.Price > 0).Select(skin => skin.Price).ToList();
+            var positivePrices = new List<int>();
+            foreach (var skin in skins)
+            {
+                if (!unlocked.Contains(skin.name) && skin.Price > 0) positivePrices.Add(skin.Price);
+            }
 
             if (!positivePrices.Any())
             {

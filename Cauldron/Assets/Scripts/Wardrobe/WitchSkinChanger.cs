@@ -20,6 +20,7 @@ namespace CauldronCodebase
         public bool SkinChangeAvailable { get; } = true;
 
         [Inject] private SkinsProvider skinsProvider;
+        [Inject] private SoundManager soundManager;
 
         private void Start()
         {
@@ -37,6 +38,8 @@ namespace CauldronCodebase
             witchSkeleton.AnimationState.SetAnimation(0, activeAnimation, false);
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);
             witchSkeleton.AnimationState.AddAnimation(0, idleAnimation, true, 0);
+            
+            soundManager.Play(Sounds.SkinChange);
         }
     }
 }

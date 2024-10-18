@@ -23,7 +23,11 @@ namespace CauldronCodebase
 
         public void Start()
         {
-            StartCoroutine(UpdateSkins());
+            gameObject.SetActive(SteamConnector.HasPremium);
+            if (gameData.premiumSkin)
+            {
+                StartCoroutine(UpdateSkins());
+            }
         }
         
         private IEnumerator UpdateSkins()

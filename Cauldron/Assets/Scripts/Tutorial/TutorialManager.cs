@@ -1,5 +1,7 @@
-﻿using CauldronCodebase;
+﻿using System;
+using CauldronCodebase;
 using System.Collections.Generic;
+using System.Threading;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
@@ -22,6 +24,7 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
     [Localize] [TextArea(5, 10)] public string RecipeHintTutorialText;
     [Localize] [TextArea(5, 10)] public string WardrobeTutorialText;
+    [Localize] [TextArea(5, 10)] public string PremiumTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     [SerializeField] private Button rejectButton;
@@ -36,6 +39,7 @@ public class TutorialManager : MonoBehaviour
     private Wardrobe wardrobe;
     
     private HashSet<TutorialKeys> tutorials;
+    private CancellationTokenSource cts = new CancellationTokenSource();
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
@@ -64,6 +68,25 @@ public class TutorialManager : MonoBehaviour
         if (!tutorials.Contains(TutorialKeys.TUTORIAL_WARDROBE))
         {
             wardrobe.OnApplyCondition += OnWardrobeApply;
+        }
+
+        TryShowTutorialForPremium();
+    }
+
+    private async void TryShowTutorialForPremium()
+    {
+        if (tutorials.Contains(TutorialKeys.TUTORIAL_PREMIUM))
+        {
+            return;
+        }
+        if (await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cts.Token).SuppressCancellationThrow())
+        {
+            return;
+        }
+        if (SteamConnector.HasPremium)
+        {
+            SaveKey(TutorialKeys.TUTORIAL_PREMIUM);
+            tooltipPrefab.Open(PremiumTutorialText).Forget();
         }
     }
 
@@ -173,5 +196,11 @@ public class TutorialManager : MonoBehaviour
         rejectButton.onClick.RemoveListener(RejectAutoCookingClickButton);
         acceptButton.gameObject.SetActive(false);
         rejectButton.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        cts.Cancel();
+        cts.Dispose();
     }
 }

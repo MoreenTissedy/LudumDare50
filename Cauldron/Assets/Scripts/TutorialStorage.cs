@@ -12,7 +12,8 @@ namespace CauldronCodebase
         TUTORIAL_CHANGE_SCALE,
         TUTORIAL_POTION_DENIED,
         TUTORIAL_RECIPE_HINTS,
-        TUTORIAL_WARDROBE
+        TUTORIAL_WARDROBE,
+        TUTORIAL_PREMIUM
     }
 
     public class TutorialStorage

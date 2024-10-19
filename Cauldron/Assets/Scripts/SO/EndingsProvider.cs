@@ -46,7 +46,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            unlocked = LoadUnlockedEndings();
+            LoadUnlockedEndings();
         }
 
         public int GetUnlockedEndingsCount()
@@ -92,23 +92,28 @@ namespace CauldronCodebase
             fileDataHandler.Save(new ListToSave<string>(unlocked));
         }
 
-        private List<string> LoadUnlockedEndings()
+        private void LoadUnlockedEndings()
         {
-            if (TryLoadLegacy(out var list)) return list;
+            if (TryLoadLegacy())
+            {
+                Save();
+                return;
+            }
 
-            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+            unlocked = fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
         }
 
-        private bool TryLoadLegacy(out List<string> list)
+        private bool TryLoadLegacy()
         {
             if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
             {
-                list = null;
                 return false;
             }
 
+            var endingString = PlayerPrefs.GetString(PrefKeys.UnlockedEndings);
+            Debug.LogError("load legacy endings: "+endingString);
             Legacy = true;
-            list = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
+            unlocked = endingString.Split(',').ToList();
             PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
             return true;  
         }

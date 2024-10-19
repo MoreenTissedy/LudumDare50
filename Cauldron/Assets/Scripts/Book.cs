@@ -3,7 +3,6 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase

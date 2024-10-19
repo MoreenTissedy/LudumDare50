@@ -21,7 +21,7 @@ namespace CauldronCodebase
         public void Load()
         {
             fileDataHandler  = new FileDataHandler<ListToSave<int>>(fileName);
-            unlockedRecipes = LoadUnlockedRecipes();
+            LoadUnlockedRecipes();
         }
 
         public void SaveRecipes(IEnumerable<Recipe> set)
@@ -81,22 +81,25 @@ namespace CauldronCodebase
             return null;
         }
         
-        private List<int> LoadUnlockedRecipes()
+        private void LoadUnlockedRecipes()
         {
-            if (TryLoadLegacy(out var list)) return list;
+            if (TryLoadLegacy())
+            {
+                Save();
+                return;
+            }
             
-            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<int>();
+            unlockedRecipes = fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<int>();
         }
 
-        private bool TryLoadLegacy(out List<int> list)
+        private bool TryLoadLegacy()
         {
             if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
             {
-                list = null;
                 return false;
             }
 
-            list = new List<int>();
+            unlockedRecipes = new List<int>();
             string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
             foreach (var potion in data.Split(','))
             {
@@ -104,9 +107,10 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                list.Add(int.Parse(potion));
+                unlockedRecipes.Add(int.Parse(potion));
             }
             PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+            Debug.LogError("load legacy potions: "+string.Join(",",unlockedRecipes));
 
             return true;
         }

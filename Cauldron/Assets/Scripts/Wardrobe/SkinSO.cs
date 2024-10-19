@@ -71,6 +71,10 @@ namespace CauldronCodebase
                 {
                     DescriptionText = data[requiredColumn];
                 }
+                else if (data[0] == $"{name}.confirm")
+                {
+                    ApproveMessage = data[requiredColumn];
+                }
             }
             return found;
         }

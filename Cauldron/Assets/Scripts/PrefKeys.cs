@@ -22,5 +22,6 @@
         public const string PointerSpeed = "PointerSpeed";
         public const string IsAutoCookingUnlocked = "IsAutoCookingUnlocked";
         public const string LanguageKey = "LanguageSettings";
+        public const string VideoWatched = "VideoWatched";
     }
 }

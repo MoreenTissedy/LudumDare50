@@ -1,6 +1,9 @@
 using System.IO;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using EasyLoc;
 using UnityEngine;
+using UnityEngine.Video;
 using Universal;
 using Zenject;
 
@@ -21,6 +24,8 @@ namespace CauldronCodebase
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
+
+        public Canvas menuHud;
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
@@ -111,8 +116,29 @@ namespace CauldronCodebase
         private async void StartNewGame()
         {
             await fadeController.FadeIn(duration: fadeNewGameDuration);
+            await TryPlayIntroVideo();
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
+        }
+
+        private async UniTask TryPlayIntroVideo()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.VideoWatched))
+            {
+                return;
+            }
+
+            soundManager.StopMusic();
+            menuHud.enabled = false;
+            
+            var video = Instantiate(Resources.Load("Video")) as GameObject;
+            var player = video.GetComponentInChildren<VideoPlayer>();
+            
+            await fadeController.FadeOut(0.3f);
+            await UniTask.WaitWhile(() => player.isPlaying);
+            await fadeController.FadeIn(0.3f);
+            
+            PlayerPrefs.SetInt(PrefKeys.VideoWatched, 1);
         }
     }
 }

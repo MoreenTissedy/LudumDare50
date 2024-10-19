@@ -65,12 +65,24 @@ namespace CauldronCodebase
             {"moonshine-stealing-fairies-caught","pixies"},
             {"Doctor_4_Rejuvenation","doctor"},
             {"mary.91","Mary"},
+            {"Lamps-numbness", "lamps"},
+            {"Succub-default", "succubus"},
+            {"Recipe_for_revenge-surprise_mushrooms", "culinary"}
         };
 
         public static readonly List<PotionsUsedAchiv> USED_POTION = new List<PotionsUsedAchiv>()
         {
-            new PotionsUsedAchiv(Potions.Poison, 10, "poison-1"),
-            new PotionsUsedAchiv(Potions.Poison, 25, "poison-2"),
+            new PotionsUsedAchiv(Potions.Poison, 10, "potion poison 1"),
+            new PotionsUsedAchiv(Potions.Poison, 25, "potion poison 2"),
+            new PotionsUsedAchiv(Potions.Love, 10, "potion love 1"),
+            new PotionsUsedAchiv(Potions.Love, 25, "potion love 2"),
+            new PotionsUsedAchiv(Potions.Memory, 10, "potion memory 1"),
+            new PotionsUsedAchiv(Potions.Memory, 25, "potion memory 2"),
+            new PotionsUsedAchiv(Potions.Flying, 10, "potion flight 1"),
+            new PotionsUsedAchiv(Potions.Flying, 25, "potion flight 2"),
+            new PotionsUsedAchiv(Potions.Perception, 10, "potion perception 1"),
+            new PotionsUsedAchiv(Potions.VoiceChange, 10, "potion voice 1"),
+            new PotionsUsedAchiv(Potions.Laughter, 10, "potion laughter 1"),
         };
     }
 

@@ -47,8 +47,7 @@ namespace CauldronCodebase
             
             bookObject.enabled = false;
             UpdateBookButtons();
-            
-            controls.General.Exit.performed += (_) => CloseBook();
+
             if (keyboardControl)
             {
                 controls.General.BookNavigate.performed += ProcessNavigate;

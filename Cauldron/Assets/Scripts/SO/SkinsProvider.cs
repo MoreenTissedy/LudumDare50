@@ -76,7 +76,7 @@ namespace CauldronCodebase
 
             if (!positivePrices.Any())
             {
-                throw new InvalidOperationException("No positive prices found in the list");
+                return int.MaxValue;
             }
 
             return positivePrices.Min();

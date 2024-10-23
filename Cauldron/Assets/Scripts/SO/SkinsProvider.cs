@@ -134,6 +134,7 @@ namespace CauldronCodebase
                     if (!list.Contains(skin.name))
                     {
                         list.Add(skin.name);
+                        achievements.TryUnlock("skin "+skin.name.ToLowerInvariant());
                     }
                 }
             }

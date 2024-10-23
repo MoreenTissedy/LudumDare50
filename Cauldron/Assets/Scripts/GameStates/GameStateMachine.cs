@@ -69,15 +69,16 @@ namespace CauldronCodebase.GameStates
 
         public async void RunStateMachine(CancellationToken cancellationToken)
         {
-            dataPersistenceManager.LoadDataPersistenceObj();
-            currentGamePhase = gameData.gamePhase;
-            currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {
                 if (GameLoader.IsMenuOpen())
                 {
                     return;
                 }
+                dataPersistenceManager.LoadDataPersistenceObj();
+                currentGamePhase = gameData.gamePhase;
+                currentGameState = gameStates[gameData.gamePhase];
+                
                 fadeController.FadeOut(0, 1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
@@ -88,6 +89,10 @@ namespace CauldronCodebase.GameStates
                 {
                     await UniTask.NextFrame(cancellationToken); 
                 }
+                
+                dataPersistenceManager.LoadDataPersistenceObj();
+                currentGamePhase = gameData.gamePhase;
+                currentGameState = gameStates[gameData.gamePhase];
             }
             OnGameStarted?.Invoke();
             dataPersistenceManager.SaveGame();

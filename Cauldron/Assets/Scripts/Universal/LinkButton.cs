@@ -12,8 +12,9 @@ namespace Universal
     public class LinkButton: GrowOnMouseEnter
     {
         public string link = "https://vk.com/theironhearthg";
-        [SerializeField] private ScrollTooltip tooltip;        
+        [SerializeField] private ScrollTooltip tooltip;
         [SerializeField] private RectTransform icon;
+        [SerializeField] private float delay = 2f;
 
         private bool isClicked = false;
 
@@ -56,8 +57,8 @@ namespace Universal
         {
             isClicked = true;
             tooltip.Close();
-            icon.DORotate(new Vector3(0, 360, 0), 2f, RotateMode.LocalAxisAdd).SetUpdate(true);
-            yield return new WaitForSecondsRealtime(2f);
+            icon.DORotate(new Vector3(0, 360, 0), delay, RotateMode.LocalAxisAdd).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(delay);
 
             icon.DOKill();
             icon.localRotation = Quaternion.Euler(0, 0, 0);

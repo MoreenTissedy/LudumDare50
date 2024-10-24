@@ -1,5 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
 using UnityEngine;
@@ -45,6 +44,7 @@ namespace CauldronCodebase
             {
                 HideContinueButton();
             }
+            newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
 
             continueGame.OnClick += ContinueClick;
             quit.OnClick += GameLoader.Exit;
@@ -52,16 +52,6 @@ namespace CauldronCodebase
             settings.OnClick += settingsMenu.Open;
             authorsButton.OnClick += authorsMenu.Open;
         }
-
-        // private void Update()
-        // {
-        //     //for playtests
-        //     Controls controls = new Controls();
-        //     if (controls.controlSchemes.KeyCode.Delete))
-        //     {
-        //         ResetGameData(false);
-        //     }
-        // }
 
         public void ResetGameData(bool saveLanguage = true)
         {

@@ -1,21 +1,24 @@
-﻿using UnityEngine;
-using Zenject;
+﻿using System;
+using CauldronCodebase;
+using UnityEngine;
 
 public class NewGameButton : MonoBehaviour
 {
     [SerializeField] private GameObject startGameText;
     [SerializeField] private GameObject newRoundText;
-
-    [Inject] private VillagerFamiliarityChecker villagerChecker;
     
-    public void Start()
+    //Fix me:/
+    private readonly string fileName = "UnlockedVillager";
+    private FileDataHandler<ListToSave<string>> fileDataHandler;
+
+    private void Start()
     {
-        UpdateButton();
+        fileDataHandler = new FileDataHandler<ListToSave<string>>(fileName);
     }
 
     public void UpdateButton()
     {
-        if(villagerChecker.GetFamiliarityCount == 0)
+        if(!fileDataHandler.IsFileValid())
         {
             startGameText.SetActive(true);
             newRoundText.SetActive(false);

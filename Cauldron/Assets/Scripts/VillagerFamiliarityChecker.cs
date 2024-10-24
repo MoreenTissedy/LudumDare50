@@ -11,11 +11,22 @@ public class VillagerFamiliarityChecker
     private readonly string fileName = "UnlockedVillager";
     private FileDataHandler<ListToSave<string>> fileDataHandler;
 
+    public int GetFamiliarityCount => unlocked.Count;
+
+    private SODictionary soDictionary;
+
     public void Init(IAchievementManager achievements, SODictionary soDictionary)
     {
         this.achievements = achievements;
+        this.soDictionary = soDictionary;
 
         fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
+
+        Update();        
+    }
+
+    public void Update()
+    {
         unlocked = LoadUnlockedVillager();
 
         locked = new List<string>();

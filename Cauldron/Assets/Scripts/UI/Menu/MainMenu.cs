@@ -33,6 +33,7 @@ namespace CauldronCodebase
         [Inject] private LocalizationTool localizationTool;        
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private PlayerProgressProvider playerProgressProvider;
+        [Inject] private VillagerFamiliarityChecker villagerChecker;
 
         private void Start()
         {
@@ -70,6 +71,7 @@ namespace CauldronCodebase
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
+            newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
             Debug.LogWarning("All data cleared!");
         }
 
@@ -85,6 +87,7 @@ namespace CauldronCodebase
             }
             milestoneProvider.Update();
             playerProgressProvider.Update();
+            villagerChecker.Update();
         }
 
         private void HideContinueButton()

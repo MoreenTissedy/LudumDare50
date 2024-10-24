@@ -12,6 +12,7 @@ namespace CauldronCodebase
         bool TryUnlock(string id);
         bool TryUnlock(NightEvent nightEvent);
         void ClearAll();
+        bool SetStat(string id, int stat);
     }
 
     public struct PotionsUsedAchiv
@@ -132,6 +133,12 @@ namespace CauldronCodebase
             }
             SteamUserStats.StoreStats();
             Debug.LogError("Achievements cleared!");
+        }
+
+        public bool SetStat(string id, int stat)
+        {
+            SteamUserStats.SetStat(id, stat);
+            return true;
         }
     }
 }

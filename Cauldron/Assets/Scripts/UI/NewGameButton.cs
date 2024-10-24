@@ -8,16 +8,9 @@ public class NewGameButton : MonoBehaviour
     [SerializeField] private GameObject newRoundText;
     
     //Fix me:/
-    private readonly string fileName = "UnlockedVillager";
-    private FileDataHandler<ListToSave<string>> fileDataHandler;
-
-    private void Start()
-    {
-        fileDataHandler = new FileDataHandler<ListToSave<string>>(fileName);
-    }
-
     public void UpdateButton()
     {
+        var fileDataHandler = new FileDataHandler<ListToSave<string>>("UnlockedVillager");
         if(!fileDataHandler.IsFileValid())
         {
             startGameText.SetActive(true);

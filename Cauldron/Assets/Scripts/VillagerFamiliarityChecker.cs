@@ -11,7 +11,7 @@ public class VillagerFamiliarityChecker
     private readonly string fileName = "UnlockedVillager";
     private FileDataHandler<ListToSave<string>> fileDataHandler;
 
-    public int GetFamiliarityCount => unlocked.Count;
+    public int FamiliarsCount => unlocked.Count;
 
     private SODictionary soDictionary;
 
@@ -47,13 +47,9 @@ public class VillagerFamiliarityChecker
         locked.Remove(tag);
         Save();
 
-        Debug.Log($"Visitor add: {tag}. Count unfamiliars is {locked.Count}");
+        achievements.SetStat("visitors", FamiliarsCount);
         
-        if (locked.Count == 0)
-        {
-            achievements.TryUnlock(AchievIdents.VISITORS_ALL);
-            Debug.Log("ACHIEVEMENT ALL_VISITORS GET!");
-        }
+        Debug.Log($"Visitor add: {tag}. Count unfamiliars is {locked.Count}");
     }
 
     private List<string> LoadUnlockedVillager()

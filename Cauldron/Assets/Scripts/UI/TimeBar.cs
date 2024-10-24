@@ -1,6 +1,5 @@
 using CauldronCodebase.GameStates;
 using DG.Tweening;
-using EasyLoc;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -29,9 +28,10 @@ namespace CauldronCodebase
             this.settings = settings;
             this.gameStateMachine = gameStateMachine;
             this.gameDataHandler = gameDataHandler;
+            this.gameStateMachine.OnGameStarted += StartGame;
         }
 
-        private void Start()
+        private void StartGame()
         {
             rectWidth = fullCycleSample.rect.width;
             currentDay = gameDataHandler.currentDay + 1;

@@ -1,4 +1,5 @@
-﻿using Spine.Unity;
+﻿using CauldronCodebase.GameStates;
+using Spine.Unity;
 using UnityEngine;
 using Zenject;
 
@@ -19,10 +20,21 @@ namespace CauldronCodebase
         public SkinSO CurrentSkin => currentSkin;
         public bool SkinChangeAvailable { get; } = true;
 
-        [Inject] private GameDataHandler gameDataHandler;
-        [Inject] private SoundManager soundManager;
+        private GameDataHandler gameDataHandler;
+        private SoundManager soundManager;
 
-        private void Start()
+        [Inject]
+        private void Construct(GameStateMachine gameStateMachine, GameDataHandler gameDataHandler, SoundManager soundManager, SkinsProvider skinsProvider)
+        {
+            this.gameDataHandler = gameDataHandler;
+            this.soundManager = soundManager;
+            
+            witchSkeleton.Skeleton.SetSkin(skinsProvider.GetLastUnlocked().SpineName);
+
+            gameStateMachine.OnGameStarted += StartGame;
+        }
+
+        private void StartGame()
         {
             currentSkin = gameDataHandler.currentSkin;
             witchSkeleton.Skeleton.SetSkin(currentSkin.SpineName);

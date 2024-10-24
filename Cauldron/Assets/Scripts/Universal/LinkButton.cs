@@ -31,11 +31,8 @@ namespace Universal
             if (isClicked) return;
 
             base.OnPointerClick(eventData);
-            if (!string.IsNullOrEmpty(link))
-            {
-                Application.OpenURL(link);
-                StartCoroutine(Animation());
-            }
+            StartCoroutine(AnimationAndOpenLink());
+            
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -53,12 +50,18 @@ namespace Universal
             tooltip.Close();
         }
 
-        private IEnumerator Animation()
+        private IEnumerator AnimationAndOpenLink()
         {
             isClicked = true;
             tooltip.Close();
             icon.DORotate(new Vector3(0, 360, 0), delay, RotateMode.LocalAxisAdd).SetUpdate(true);
-            yield return new WaitForSecondsRealtime(delay);
+            yield return new WaitForSecondsRealtime(delay * 0.25f);
+
+            if (!string.IsNullOrEmpty(link))
+            {
+                Application.OpenURL(link);
+            }          
+            yield return new WaitForSecondsRealtime(delay * 0.75f);
 
             icon.DOKill();
             icon.localRotation = Quaternion.Euler(0, 0, 0);

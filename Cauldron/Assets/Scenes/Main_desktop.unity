@@ -216,6 +216,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CheatManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5537417363755299246, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5537417363755299247, guid: 6cc13849fefd42b41a0feb40850b0e67, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -819,7 +823,6 @@ MonoBehaviour:
   currentRound: 0
   gamePhase: 0
   currentCard: {fileID: 0}
-  potionsTotal: 
   wrongPotionsCount: 0
   wrongExperiments: 0
   ingredientsFreezed: 
@@ -942,6 +945,7 @@ MonoBehaviour:
     \u043E\u043A\u043D\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A."
   RecipeHintTutorialText: 
   WardrobeTutorialText: 
+  PremiumTutorialText: 
   targetTutorialVisitor: {fileID: 11400000, guid: a3dcc0c0b455b334b970f95fdc1d5eb1, type: 2}
   rejectButton: {fileID: 2081822735}
   acceptButton: {fileID: 2111439485}
@@ -1093,11 +1097,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1175652704255791534, guid: 54e6ef31f79d877409ae8f6625678bb2, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 424
+      value: 348.99982
       objectReference: {fileID: 0}
     - target: {fileID: 1175652704255791534, guid: 54e6ef31f79d877409ae8f6625678bb2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -192
+      value: -117
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54e6ef31f79d877409ae8f6625678bb2, type: 3}
@@ -1621,7 +1625,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1779255451
   m_SortingLayer: -1
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: f73ca68ba10a87c429a036371325880b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2429,7 +2433,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1779255451
   m_SortingLayer: -1
-  m_SortingOrder: 2
+  m_SortingOrder: 5
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1959972234
 MeshFilter:

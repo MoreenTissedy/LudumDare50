@@ -44,7 +44,8 @@ namespace CauldronCodebase
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
         [SerializeField] private ExperimentController experimentController;
-        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
+        
+        private readonly WrongRecipeProvider wrongRecipeProvider = new WrongRecipeProvider();
         public List<Recipe> LockedRecipes { get; private set; }
         public List<Recipe> UnlockedRecipes => unlockedRecipes;
         [SerializeField] protected Text prevPageNum, nextPageNum;
@@ -580,7 +581,7 @@ namespace CauldronCodebase
 
         public void SaveData(ref GameData data)
         {
-            wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
+            wrongRecipeProvider.WrongPotions = experimentController.wrongPotions;
             wrongRecipeProvider.SaveWrongRecipes();
         }
 

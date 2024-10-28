@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    [CreateAssetMenu(fileName = "WrongRecipeProvider", menuName = "WrongRecipeProvider")]
-    public class WrongRecipeProvider : ScriptableObject
+    public class WrongRecipeProvider
     {
         private const string WrongRecipeKey = "WrongRecipe";
         private FileDataHandler<WrongRecipeProvider> fileDataHandler;
 
-        public List<WrongPotion> wrongPotions = new List<WrongPotion>();
+        public List<WrongPotion> WrongPotions = new List<WrongPotion>();
 
         private void TryInitDataHandler()
         {
@@ -32,9 +31,9 @@ namespace CauldronCodebase
             TryInitDataHandler();
             if (fileDataHandler.IsFileValid())
             {
-                fileDataHandler.LoadWithOverwrite(this);
+                return fileDataHandler.Load().WrongPotions;
             }
-            return wrongPotions;
+            return new List<WrongPotion>();
         }
 
         private bool TryLoadLegacy(out List<WrongPotion> list)
@@ -48,7 +47,7 @@ namespace CauldronCodebase
                 fileDataHandler.Save(this);
                 File.Delete(Application.persistentDataPath + WrongRecipeKey);
                 
-                list = wrongPotions;
+                list = WrongPotions;
                 return true;
             }
 

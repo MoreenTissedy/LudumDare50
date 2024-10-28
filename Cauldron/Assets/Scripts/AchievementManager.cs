@@ -137,6 +137,10 @@ namespace CauldronCodebase
 
         public bool SetStat(string id, int stat)
         {
+            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
+            {
+                return false;
+            }
             SteamUserStats.SetStat(id, stat);
             return true;
         }

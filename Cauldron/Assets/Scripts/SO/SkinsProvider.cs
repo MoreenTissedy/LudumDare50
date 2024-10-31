@@ -101,14 +101,19 @@ namespace CauldronCodebase
 
         public bool TryUnlock(SkinSO skin)
         {
-            if (!Unlocked(skin.name))
+            return TryUnlock(skin.name);
+        }
+
+        public bool TryUnlock(string name)
+        {
+            if (!Unlocked(name))
             {
-                unlocked.Add(skin.name);
-                Debug.Log("Skin unlocked "+skin.name);
+                unlocked.Add(name);
+                Debug.Log("Skin unlocked "+ name);
                 Save();
                 return true;
             }
-            achievements.TryUnlock("skin "+skin.name.ToLowerInvariant());
+            achievements.TryUnlock("skin "+ name.ToLowerInvariant());
             return false;
         }
         

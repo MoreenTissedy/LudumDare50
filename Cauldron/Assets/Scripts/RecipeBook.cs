@@ -67,6 +67,7 @@ namespace CauldronCodebase
         private EndingsProvider endingsProvider;
         private PlayerProgressProvider progressProvider;
         private GameDataHandler gameData;
+        private SkinsProvider skinsProvider;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -94,7 +95,8 @@ namespace CauldronCodebase
                                 IAchievementManager achievements, 
                                 EndingsProvider endingsProvider,
                                 PlayerProgressProvider progressProvider,
-                                GameDataHandler gameData)
+                                GameDataHandler gameData,
+                                SkinsProvider skinsProvider)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -104,6 +106,7 @@ namespace CauldronCodebase
             this.endingsProvider = endingsProvider;
             this.progressProvider = progressProvider;
             this.gameData = gameData;
+            this.skinsProvider = skinsProvider;
         }
 
         private void Start()
@@ -201,6 +204,7 @@ namespace CauldronCodebase
                 if (unlockedRecipes.Count(x => !x.magical) == allHerbalRecipes.Count)
                 {
                     achievements.TryUnlock(AchievIdents.FOOD_ALL);
+                    skinsProvider.TryUnlock("Sweet");                    
                 }
             }
             

@@ -15,6 +15,7 @@ namespace CauldronCodebase
         
         [SerializeField]
         private EndingsProvider endings;
+        [SerializeField] private SkinsProvider skins;
 
         [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
@@ -180,6 +181,7 @@ namespace CauldronCodebase
                 button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
             endings.TryUnlock(tag);
+            skins.TryUnlock(endings.Get(tag).unlocksSkin);
             if (buttonToUnlock != null)
             {
                 await UniTask.Delay(250);

@@ -181,7 +181,11 @@ namespace CauldronCodebase
                 button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
             endings.TryUnlock(tag);
-            skins.TryUnlock(endings.Get(tag).unlocksSkin);
+            var unlocksSkin = endings.Get(tag).unlocksSkin;
+            if (unlocksSkin != null)
+            {
+                skins.TryUnlock(unlocksSkin);
+            }
             if (buttonToUnlock != null)
             {
                 await UniTask.Delay(250);

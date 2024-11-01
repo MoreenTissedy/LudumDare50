@@ -39,7 +39,16 @@ namespace CauldronCodebase
             
             foreach (var skin in skins)
             {
+                OverridePriceForFrogSkin(skin);
                 skinsDictionary.Add(skin.name, skin);
+            }
+
+            void OverridePriceForFrogSkin(SkinSO skin)
+            {
+                if ((skin.name == "Frog") && endingsProvider.Unlocked(EndingsProvider.ENOUGH_MONEY))
+                {
+                    skin.Price = 100;
+                }
             }
         }
 
@@ -106,9 +115,9 @@ namespace CauldronCodebase
                 unlocked.Add(skin.name);
                 Debug.Log("Skin unlocked "+skin.name);
                 Save();
+                achievements.TryUnlock("skin "+skin.name.ToLowerInvariant());
                 return true;
             }
-            achievements.TryUnlock("skin "+skin.name.ToLowerInvariant());
             return false;
         }
         

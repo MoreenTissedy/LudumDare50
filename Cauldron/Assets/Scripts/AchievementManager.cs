@@ -142,6 +142,7 @@ namespace CauldronCodebase
                 return false;
             }
             SteamUserStats.SetStat(id, stat);
+            SteamUserStats.StoreStats();
             return true;
         }
     }

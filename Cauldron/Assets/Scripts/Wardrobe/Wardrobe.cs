@@ -33,6 +33,7 @@ namespace CauldronCodebase
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
         [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private IAchievementManager achievements;
 
         private WardrobeCell selectedCell;
         private float initDescriptionPanelPos;
@@ -135,6 +136,7 @@ namespace CauldronCodebase
 
         private void TrySkin()
         {
+            achievements.TryUnlock("skin "+selectedCell.Skin.name.ToLowerInvariant());
             if (!witchSkinChanger.SkinChangeAvailable) return;
             
             witchSkinChanger.ChangeSkin(selectedCell.Skin);

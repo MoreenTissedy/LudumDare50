@@ -81,7 +81,7 @@ namespace CauldronCodebase
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
-            Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
+            Container.BindInterfacesAndSelfTo<AchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
             Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
             Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();

@@ -75,7 +75,7 @@ namespace CauldronCodebase
             {
                 file.Delete();
             }
-            milestoneProvider.Update();
+            milestoneProvider.LoadMilestones();
             playerProgressProvider.Update();
             villagerChecker.Update();
         }

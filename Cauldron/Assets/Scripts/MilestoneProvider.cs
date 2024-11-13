@@ -6,44 +6,39 @@ namespace CauldronCodebase
 {
     public class MilestoneProvider
     {
-        public List<string> milestones;
-        
+        public List<string> Milestones;
+
         private readonly string fileName = "Milestones";
-        private FileDataHandler<ListToSave<string>> fileDataHandler;
+        private readonly FileDataHandler<ListToSave<string>> fileDataHandler;
 
         public MilestoneProvider()
         {
-            fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
-            milestones = LoadMilestones();
-        }
-
-        public void Update()
-        {
-            milestones = LoadMilestones();
+            fileDataHandler = new FileDataHandler<ListToSave<string>>(fileName);
         }
 
         public void SaveMilestone(string tag)
         {
-            if (!milestones.Contains(tag))
+            if (!Milestones.Contains(tag))
             {
-                milestones.Add(tag);
+                Milestones.Add(tag);
                 Save();
             }
         }
 
         private void Save()
         {
-            fileDataHandler.Save(new ListToSave<string>(milestones));
+            fileDataHandler.Save(new ListToSave<string>(Milestones));
         }
 
         public List<string> GetMilestones()
         {
-            if (milestones.Count > 0)
+            if (Milestones.Count > 0)
             {
                 RunCompatibilityUpdate();
-                
-                return milestones;
+
+                return Milestones;
             }
+
             return new List<string>();
         }
 
@@ -57,11 +52,12 @@ namespace CauldronCodebase
 
         public bool RemoveMilestone(string tag)
         {
-            if (milestones.Count == 0)
+            if (Milestones.Count == 0)
             {
                 return false;
             }
-            if (milestones.Remove(tag))
+
+            if (Milestones.Remove(tag))
             {
                 Save();
                 return true;
@@ -70,13 +66,15 @@ namespace CauldronCodebase
             return false;
         }
 
-        private List<string> LoadMilestones()
+        public void LoadMilestones()
         {
             if (TryLoadLegacy(out var legacyProgress))
             {
-                return legacyProgress;
+                Milestones = legacyProgress;
+                Save();
             }
-            return fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+
+            Milestones = fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
         }
 
         private bool TryLoadLegacy(out List<string> list)

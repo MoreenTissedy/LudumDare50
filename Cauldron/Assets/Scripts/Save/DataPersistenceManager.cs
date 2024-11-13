@@ -52,8 +52,8 @@ namespace CauldronCodebase
         public void NewGame()
         {
             fileDataHandler.Delete();
-            milestones.Update();
-            gameData = new GameData(settings.statusBars.InitialValue, milestones.milestones);
+            milestones.LoadMilestones();
+            gameData = new GameData(settings.statusBars.InitialValue, milestones.Milestones);
             IsNewGame = true;
         }
 

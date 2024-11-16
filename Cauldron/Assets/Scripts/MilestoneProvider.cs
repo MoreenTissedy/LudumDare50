@@ -14,6 +14,7 @@ namespace CauldronCodebase
         public MilestoneProvider()
         {
             fileDataHandler = new FileDataHandler<ListToSave<string>>(fileName);
+            LoadMilestones();
         }
 
         public void SaveMilestone(string tag)

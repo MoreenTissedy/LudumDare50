@@ -59,9 +59,9 @@ namespace CauldronCodebase
             await UniTask.Delay(TimeSpan.FromSeconds(1.5f));
             gameObject.SetActive(true);
             soundManager.Play(Sounds.WardrobeMove);
-            transform.DOLocalMoveX(initialXPos, moveDuration)
+            await transform.DOLocalMoveX(initialXPos, moveDuration)
                 .From(offScreenXPos)
-                .SetEase(Ease.OutBack);
+                .SetEase(Ease.OutBack).ToUniTask();
         }
 
         private void Hide(GameStateMachine.GamePhase phase)

@@ -57,8 +57,10 @@ namespace CauldronCodebase
             return unlocked.Count;
         }
 
-        public SkinSO GetLastUnlocked()
+        public SkinSO GetInitialSkin()
         {
+            if (PlayerPrefs.HasKey(PrefKeys.LastPlayerSkin))
+                return Get(PlayerPrefs.GetString(PrefKeys.LastPlayerSkin)); 
             for (var i = unlocked.Count - 1; i >= 0; i--)
             {
                 SkinSO skin = Get(unlocked[i]);

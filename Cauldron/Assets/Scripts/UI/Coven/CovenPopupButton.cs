@@ -24,7 +24,7 @@ namespace CauldronCodebase
             gameDataHandler = dataHandler;
         }
 
-        private void OnEnable()
+        public void Show()
         {
             if (gameDataHandler)
             {
@@ -33,7 +33,8 @@ namespace CauldronCodebase
                 //start flashing to attract attention
                 if (gameDataHandler.IsEnoughMoneyForRumours() && !flashedOnce)
                 {
-                    trans.DOSizeDelta(Vector3.one*sizeCoef, sizeSpeed)
+                    trans.DOScale(Vector3.one*sizeCoef, 2)
+                        .SetEase(Ease.InOutSine)
                         .SetLoops(-1, LoopType.Yoyo);
                     flashedOnce = true;
                 }

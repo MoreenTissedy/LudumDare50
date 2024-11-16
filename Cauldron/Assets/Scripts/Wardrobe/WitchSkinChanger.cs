@@ -29,7 +29,7 @@ namespace CauldronCodebase
             this.gameDataHandler = gameDataHandler;
             this.soundManager = soundManager;
             
-            witchSkeleton.Skeleton.SetSkin(skinsProvider.GetLastUnlocked().SpineName);
+            witchSkeleton.Skeleton.SetSkin(skinsProvider.GetInitialSkin().SpineName);
 
             gameStateMachine.OnGameStarted += StartGame;
         }

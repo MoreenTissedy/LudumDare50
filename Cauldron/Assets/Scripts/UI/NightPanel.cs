@@ -120,6 +120,7 @@ namespace CauldronCodebase
             UnlockCircleFeature();
             base.OpenBook();
             StartCoroutine(DealCards());
+            covenButton.Show();
         }
 
         private void UnlockCircleFeature()

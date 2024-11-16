@@ -165,6 +165,9 @@ namespace CauldronCodebase
             CloseBook();
         }
 
+        /// <summary>
+        /// Don't use this one
+        /// </summary>
         public override void CloseBook()
         {
             HideDescriptionPanel();

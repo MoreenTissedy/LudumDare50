@@ -60,7 +60,7 @@ namespace CauldronCodebase
             }
             else if (wardrobe.IsOpen)
             {
-                wardrobe.CloseBook();
+                wardrobe.CloseWithoutApply();
             }
             else
             {

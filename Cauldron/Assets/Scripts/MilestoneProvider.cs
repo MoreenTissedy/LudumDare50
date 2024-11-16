@@ -85,7 +85,7 @@ namespace CauldronCodebase
                 return false;
             }
 
-            list = PlayerPrefs.GetString(PrefKeys.Milestones).Split(',').ToList();
+            list = JsonUtility.FromJson<StringListWrapper>(PlayerPrefs.GetString(PrefKeys.Milestones)).list;
             PlayerPrefs.DeleteKey(PrefKeys.Milestones);
             return true;
         }

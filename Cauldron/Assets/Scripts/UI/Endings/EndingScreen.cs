@@ -73,6 +73,7 @@ namespace CauldronCodebase
                 int money = gameDataHandler.Money;
                 
                 SkinSO initialSkin = gameDataHandler.currentSkin;
+
                 bool tryUnlock = false;
                 if (endingTag != "none")
                 {

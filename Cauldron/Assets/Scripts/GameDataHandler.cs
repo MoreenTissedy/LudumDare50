@@ -84,7 +84,10 @@ namespace CauldronCodebase
             
             currentRound = progressProvider.CurrentRound;
             
-            currentSkin = skinsProvider.GetLastUnlocked();
+            currentSkin = PlayerPrefs.HasKey(PrefKeys.LastPlayerSkin) 
+                ? skinsProvider.Get(PlayerPrefs.GetString(PrefKeys.LastPlayerSkin)) 
+                : skinsProvider.GetLastUnlocked();
+            
             this.skinsProvider = skinsProvider;
             this.achievementManager = achievementManager;
         }

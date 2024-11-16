@@ -5,6 +5,7 @@
         //Player flow modifiers - not needed in the cloud
         public const string UniqueCards = "RememberedCards";
         public const string Freezes = "Cooldowns";
+        public const string LastPlayerSkin = "LastPlayedSkin";
         
         //Legacy progress load keys
         public const string UnlockedRecipes = "Recipes";

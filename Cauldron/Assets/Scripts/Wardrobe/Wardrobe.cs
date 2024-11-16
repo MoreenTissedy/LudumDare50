@@ -155,6 +155,7 @@ namespace CauldronCodebase
             }
 
             gameDataHandler.currentSkin = selectedCell.Skin;
+            PlayerPrefs.SetString(PrefKeys.LastPlayerSkin, selectedCell.Skin.name);
             SkinApplied?.Invoke(selectedCell.Skin);
             CloseBook();
         }

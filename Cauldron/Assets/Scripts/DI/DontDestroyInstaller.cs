@@ -1,6 +1,5 @@
 using EasyLoc;
 using FMODUnity;
-using Save;
 using UnityEngine;
 using Universal;
 using UnityEngine.InputSystem.UI;
@@ -19,6 +18,10 @@ namespace CauldronCodebase
 
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
+
+        private MilestoneProvider milestoneProvider;        
+        private VillagerFamiliarityChecker visitorsProvider;
+
         public override void InstallBindings()
         {
             GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
@@ -32,6 +35,14 @@ namespace CauldronCodebase
             soDictionary.LoadDictionary();
 
             Container.Bind<MainSettings>().FromInstance(mainSettings).AsSingle().NonLazy();
+            
+            Container.Bind<PlayerProgressProvider>().FromNew().AsSingle().NonLazy();
+
+            milestoneProvider = new MilestoneProvider();
+            Container.Bind<MilestoneProvider>().FromInstance(milestoneProvider).AsSingle();
+            
+            visitorsProvider = new VillagerFamiliarityChecker();
+            Container.Bind<VillagerFamiliarityChecker>().FromInstance(visitorsProvider).AsSingle();
             
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();

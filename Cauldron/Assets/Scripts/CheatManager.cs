@@ -14,7 +14,18 @@ namespace CauldronCodebase
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private MainSettings settings;
         [Inject] private EndingsProvider endingsProvider;
+        [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private IAchievementManager achievementManager;
+        [Inject] private SkinsProvider skinsProvider;
+
+        [Button("Unlock all skins")]
+        public void UnlockAllSkins()
+        {
+            foreach (SkinSO skin in skinsProvider.skins)
+            {
+                skinsProvider.TryUnlock(skin);
+            }
+        }
 
         [Button("Unlock all endings")]
         public void UnlockAllEndings()
@@ -52,11 +63,12 @@ namespace CauldronCodebase
             gameDataHandler.Fame = settings.statusBars.InitialValue;
             gameDataHandler.Fear = settings.statusBars.InitialValue;
         }
+        
 
         [Button("Unlock coven & get rich")]
         public void UnlockCoven()
         {
-            StoryTagHelper.SaveMilestone("circle");
+            milestoneProvider.SaveMilestone("circle");
             gameDataHandler.AddTag("circle");
             gameDataHandler.Money += 1000;
         }

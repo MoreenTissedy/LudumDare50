@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,17 +9,19 @@ namespace CauldronCodebase.GameStates
         private readonly DataPersistenceManager dataPersistenceManager;
         private readonly GameFXManager gameFXManager;
         private readonly RecipeBook recipeBook;
+        private readonly GameDataHandler gameDataHandler;
 
         private string currentEnding;
         private Transform root;
         private EndingScreen endingScreen;
 
         public EndGameState(DataPersistenceManager persistenceManager,
-                            GameFXManager fxManager, RecipeBook recipeBook)
+                            GameFXManager fxManager, RecipeBook recipeBook, GameDataHandler gameDataHandler)
         {
             dataPersistenceManager = persistenceManager;
             gameFXManager = fxManager;
             this.recipeBook = recipeBook;
+            this.gameDataHandler = gameDataHandler;
         }
         public override void Enter()
         {

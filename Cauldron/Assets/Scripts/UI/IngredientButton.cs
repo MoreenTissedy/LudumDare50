@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
@@ -11,18 +10,21 @@ namespace CauldronCodebase
     {
         [SerializeField] private ScrollTooltip scrollTooltip;
         [SerializeField] private Image image;
+        [SerializeField] private Material material;
         
         private IngredientsData.Ingredient data;
         private bool interactable;
 
         [Inject] private IngredientsData ingredientsData;
         [Inject] private RecipeBook recipeBook;
+        [Inject] private GameDataHandler gameData;
 
         public async void Set(Ingredients ingredient)
         {
             data = ingredientsData.Get(ingredient);
             image.enabled = true;
             image.sprite = data.image;
+            image.material = gameData.ingredientsFreezed.Contains(ingredient) ? material : null;
             interactable = false;
             scrollTooltip.Close();
             await scrollTooltip.SetText(data.friendlyName);

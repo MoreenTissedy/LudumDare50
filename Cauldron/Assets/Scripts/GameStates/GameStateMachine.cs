@@ -2,7 +2,6 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Save;
 using UnityEngine;
 using Zenject;
 
@@ -34,6 +33,7 @@ namespace CauldronCodebase.GameStates
 
         public event Action<GamePhase> OnChangeState;
         public event Action OnGameStarted;
+        public event Action OnNewDay;
         
         private CancellationTokenSource cancellationTokenSource;
 
@@ -69,15 +69,16 @@ namespace CauldronCodebase.GameStates
 
         public async void RunStateMachine(CancellationToken cancellationToken)
         {
-            dataPersistenceManager.LoadDataPersistenceObj();
-            currentGamePhase = gameData.gamePhase;
-            currentGameState = gameStates[gameData.gamePhase];
             if (dataPersistenceManager.IsNewGame)
             {
                 if (GameLoader.IsMenuOpen())
                 {
                     return;
                 }
+                dataPersistenceManager.LoadDataPersistenceObj();
+                currentGamePhase = gameData.gamePhase;
+                currentGameState = gameStates[gameData.gamePhase];
+                
                 fadeController.FadeOut(0, 1f).Forget();
                 await gameFXManager.ShowStartGame();
             }
@@ -88,6 +89,10 @@ namespace CauldronCodebase.GameStates
                 {
                     await UniTask.NextFrame(cancellationToken); 
                 }
+                
+                dataPersistenceManager.LoadDataPersistenceObj();
+                currentGamePhase = gameData.gamePhase;
+                currentGameState = gameStates[gameData.gamePhase];
             }
             OnGameStarted?.Invoke();
             dataPersistenceManager.SaveGame();
@@ -96,12 +101,15 @@ namespace CauldronCodebase.GameStates
  
         public void SwitchState(GamePhase phase)
         {
+            var isNewDay = currentGamePhase == GamePhase.Night;
+            
             currentGameState.Exit();
             currentGamePhase = phase;
             currentGameState = gameStates[phase];
             gameData.gamePhase = phase;
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
+            if (isNewDay) OnNewDay?.Invoke();
             dataPersistenceManager.SaveGame();
         }
 

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Spine.Unity;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
@@ -18,7 +19,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
-        [SerializeField] private Button closeButton; 
+        [SerializeField] private Button closeButton;
         [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
         [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
         
@@ -29,6 +30,10 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
         [SerializeField] private Transform root;
+        
+        [Header("Skin shop")]
+        [SerializeField] private Button shopButton;
+        [SerializeField] private SkinShop skinShop;
 
         public event Action OnClose;
         private bool active;
@@ -36,10 +41,13 @@ namespace CauldronCodebase
         public bool IsOpened => active;
 
         private bool final;
+        private bool skinShopEnabled;
         private GameObject currentCartoon;
 
         [Inject] private SoundManager soundManager;
         [Inject] private InputManager inputManager;
+        [Inject] private GameDataHandler gameDataHandler;
+        [Inject] private RecipeBook recipeBook;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -55,6 +63,55 @@ namespace CauldronCodebase
                 buttons[i].OnClick += OnEndingClick;
             }
             closeButton.onClick.AddListener(Close);
+        }
+
+        private void InitSkinShop(bool inBook, string endingTag)
+        {
+            if (!inBook && skinShop.CanBeOpened(gameDataHandler.Money))
+            {
+                skinShopEnabled = true;
+                int money = gameDataHandler.Money;
+                
+                SkinSO initialSkin = gameDataHandler.currentSkin;
+
+                bool tryUnlock = false;
+                if (endingTag != "none")
+                {
+                    var unlockedEnding = endings.Get(endingTag);
+                    if (unlockedEnding.unlocksSkin != null)
+                    {
+                        initialSkin = unlockedEnding.unlocksSkin;
+                        if (endingTag == "circle")
+                        {
+                            money -= 150; //crutch
+                        }
+                        tryUnlock = true;
+                    }
+                }
+                if (!tryUnlock)
+                {
+                    if (recipeBook.AllHerbalRecipesUnlocked(out var skin))
+                    {
+                        initialSkin = skin;
+                        tryUnlock = true;
+                    }
+                }
+                skinShop.SetPlayerMoney(money);
+                skinShop.SetInitialSkin(initialSkin, tryUnlock);
+            }
+        }
+        
+        private void TryEnableSkinShop()
+        {
+            if (skinShopEnabled)
+            {
+                shopButton.gameObject.SetActive(true);
+                shopButton.onClick.AddListener(skinShop.OpenBook);
+                if (skinShop.ShouldHighlightButton(gameDataHandler.Money))
+                {
+                    shopButton.GetComponent<SpriteSwap>().Swap();
+                }
+            }
         }
 
         private async void OnEndingClick(string tag)
@@ -100,7 +157,11 @@ namespace CauldronCodebase
             {
                 soundManager.SetMusic(Music.Ending, false);
             }
+            
+            InitSkinShop(inBook, endingTag);
+            
             gameObject.SetActive(true);
+            shopButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(false);
             active = true;
             soundManager.Play(Sounds.EndingPanelFold);
@@ -127,7 +188,9 @@ namespace CauldronCodebase
                 await UniTask.Delay(TimeSpan.FromSeconds(2));
                 OnEndingClick(tag);
             }
+            await UniTask.Delay(1000);
             closeButton.gameObject.SetActive(true);
+            TryEnableSkinShop();
         }
 
         public void Close()
@@ -145,6 +208,7 @@ namespace CauldronCodebase
             active = false;
             screen.SetActive(false);
             closeButton.gameObject.SetActive(false);
+            shopButton.gameObject.SetActive(false);
             soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {

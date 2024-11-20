@@ -1,4 +1,7 @@
-﻿using CauldronCodebase;
+﻿using System;
+using CauldronCodebase;
+using System.Collections.Generic;
+using System.Threading;
 using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using EasyLoc;
@@ -20,6 +23,8 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea (5, 10)] public string PotionDeniedTutorialText;
     [Localize] [TextArea (5, 10)] public string DescriptionTutorialAutoCooking;
     [Localize] [TextArea(5, 10)] public string RecipeHintTutorialText;
+    [Localize] [TextArea(5, 10)] public string WardrobeTutorialText;
+    [Localize] [TextArea(5, 10)] public string PremiumTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
     [SerializeField] private Button rejectButton;
@@ -30,34 +35,82 @@ public class TutorialManager : MonoBehaviour
     private Cauldron cauldron;
     private GameStateMachine stateMachine;
     private RecipeHintsStorage recipeHintsStorage;
+    private TutorialStorage tutorialStorage;
+    private Wardrobe wardrobe;
+    
+    private HashSet<TutorialKeys> tutorials;
+    private CancellationTokenSource cts = new CancellationTokenSource();
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
-                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings)
+                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings, Wardrobe wardrobe)
     {
         recipeBook = book;
         gameDataHandler = dataHandler;
         cauldron = witchCauldron;
         stateMachine = gameStateMachine;
         recipeHintsStorage = settings.recipeHintsStorage;
+        this.wardrobe = wardrobe;
+        tutorialStorage = new TutorialStorage();
     }
 
     private void Start()
     {
+        tutorials = tutorialStorage.GetTutorials();
+        
         recipeBook.OnOpenBook += ViewBookTutorial;
         recipeBook.OnUnlockAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
         cauldron.PotionDeclined += ViewPotionDeniedTutorial;
         recipeHintsStorage.HintAdded += ViewRecipeHintTutorial;
+
+        if (!tutorials.Contains(TutorialKeys.TUTORIAL_WARDROBE))
+        {
+            wardrobe.OnApplyCondition += OnWardrobeApply;
+        }
+
+        TryShowTutorialForPremium();
+    }
+
+    private async void TryShowTutorialForPremium()
+    {
+        if (tutorials.Contains(TutorialKeys.TUTORIAL_PREMIUM))
+        {
+            return;
+        }
+        if (await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cts.Token).SuppressCancellationThrow())
+        {
+            return;
+        }
+        if (SteamConnector.HasPremium)
+        {
+            SaveKey(TutorialKeys.TUTORIAL_PREMIUM);
+            tooltipPrefab.Open(PremiumTutorialText).Forget();
+        }
+    }
+
+    private async UniTask<bool> OnWardrobeApply()
+    {
+        var result = await tooltipPrefab.ShowAsDialog(WardrobeTutorialText, acceptButton, rejectButton);
+        SaveKey(TutorialKeys.TUTORIAL_WARDROBE);
+        wardrobe.OnApplyCondition -= OnWardrobeApply;
+        return result;
+    }
+
+    private void SaveKey(TutorialKeys key)
+    {
+        tutorials.Add(key);
+        tutorialStorage.SaveTutorial(key);
     }
 
     private void ViewRecipeHintTutorial(RecipeHint hint)
     {
         recipeHintsStorage.HintAdded -= ViewRecipeHintTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 0) == 0)
+       
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_RECIPE_HINTS))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.RECIPE_HINT_ADDED, 1);
+            SaveKey(TutorialKeys.TUTORIAL_RECIPE_HINTS);
             tooltipPrefab.Open(RecipeHintTutorialText).Forget();
         }
     }
@@ -66,9 +119,9 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewBookTutorial;
         
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 0) == 0)
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_BOOK_OPENED))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_OPENED_KEY, 1);
+            SaveKey(TutorialKeys.TUTORIAL_BOOK_OPENED);
             string tutorialText = string.Format(BookTutorialText,
                 Gamepad.current != null ? BookTutorialGamepadControls : BookTutorialKeyboardControls);
             tooltipPrefab.Open(tutorialText).Forget();
@@ -79,7 +132,7 @@ public class TutorialManager : MonoBehaviour
     {
         recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
         
-        PlayerPrefs.SetInt(PrefKeys.Tutorial.BOOK_AUTOCOOKING_KEY, 1);
+        SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
         acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
         rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
         tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
@@ -92,20 +145,22 @@ public class TutorialManager : MonoBehaviour
         if (gameDataHandler.currentCard == targetTutorialVisitor)
         {
             cauldron.PotionAccepted -= ViewVisitorTutorial;
-            if (PlayerPrefs.GetInt(PrefKeys.Tutorial.VISITOR_KEY, 0) == 0)
+            
+            if(!tutorials.Contains(TutorialKeys.TUTORIAL_VISITOR))
             {
-                PlayerPrefs.SetInt(PrefKeys.Tutorial.VISITOR_KEY, 1);
+                SaveKey(TutorialKeys.TUTORIAL_VISITOR);
                 tooltipPrefab.Open(VisitorTutorialText).Forget();
             }
         }
     }
 
-    private void ViewScaleChangeTutorial()
+    private void ViewScaleChangeTutorial(Statustype statustype, int i)
     {
         gameDataHandler.StatusChanged -= ViewScaleChangeTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 0) == 0)
-        {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.SCALE_CHANGE_KEY, 1);
+        
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_CHANGE_SCALE))
+        {            
+            SaveKey(TutorialKeys.TUTORIAL_CHANGE_SCALE);
             tooltipPrefab.Open(ScaleTutorialText).Forget();
         }
     }
@@ -115,9 +170,10 @@ public class TutorialManager : MonoBehaviour
         if(stateMachine.currentGamePhase == GameStateMachine.GamePhase.Night) return;
         
         cauldron.PotionDeclined -= ViewPotionDeniedTutorial;
-        if (PlayerPrefs.GetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 0) == 0)
+        
+        if(!tutorials.Contains(TutorialKeys.TUTORIAL_POTION_DENIED))
         {
-            PlayerPrefs.SetInt(PrefKeys.Tutorial.POTION_DENIED_KEY, 1);
+            SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
             tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
         }
     }
@@ -140,5 +196,11 @@ public class TutorialManager : MonoBehaviour
         rejectButton.onClick.RemoveListener(RejectAutoCookingClickButton);
         acceptButton.gameObject.SetActive(false);
         rejectButton.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        cts.Cancel();
+        cts.Dispose();
     }
 }

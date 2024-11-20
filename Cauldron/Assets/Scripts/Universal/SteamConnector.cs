@@ -7,6 +7,7 @@ namespace Universal
     public class SteamConnector: MonoBehaviour
     {
         public static bool LoggedIn = true;
+        public static bool HasPremium = false;
         private void Awake()
         {
             try
@@ -14,6 +15,7 @@ namespace Universal
                 SteamClient.Init(2027434);
                 Debug.Log("Steam connected to "+SteamClient.Name);
                 LoggedIn = true;
+                //HasPremium = SteamApps.IsSubscribedToApp(2955860);
                 SteamUserStats.RequestCurrentStats();
             }
             catch (Exception e)

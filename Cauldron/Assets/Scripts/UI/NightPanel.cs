@@ -76,9 +76,9 @@ namespace CauldronCodebase
         }
 
         [Inject]
-        private void Construct(MainSettings settings, GameDataHandler gameDataHandler, EncounterDeck deck)
+        private void Construct(MainSettings settings, GameDataHandler gameDataHandler, EncounterDeck deck, MilestoneProvider milestoneProvider)
         {
-            resolver = new EventResolver(settings, gameDataHandler, deck);
+            resolver = new EventResolver(settings, gameDataHandler, deck, milestoneProvider);
             this.gameDataHandler = gameDataHandler;
         }
 
@@ -120,6 +120,7 @@ namespace CauldronCodebase
             UnlockCircleFeature();
             base.OpenBook();
             StartCoroutine(DealCards());
+            covenButton.Show();
         }
 
         private void UnlockCircleFeature()

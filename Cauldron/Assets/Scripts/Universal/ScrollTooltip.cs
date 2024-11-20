@@ -1,5 +1,6 @@
 using CauldronCodebase;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -32,7 +33,6 @@ namespace Universal
         private ContentSizeFitter fitter;
         private float targetWidth;
 
-        [Inject] private CatAnimations catAnimations;
         private void Start()
         {
             canvas.enabled = false;
@@ -52,18 +52,10 @@ namespace Universal
         }
 
         public async UniTask Open(string text)
-        {
-            if(catAnimations.IsDragged) return;
-            
+        {            
             canvas.enabled = false;
             await SetText(text);
-            OpenAnimation();
-        }
-
-        public void Open()
-        {
-            if(catAnimations.IsDragged) return;
-            OpenAnimation();
+            Open();
         }
 
         public async UniTask SetText(string text)
@@ -81,7 +73,7 @@ namespace Universal
             }
         }
 
-        private void OpenAnimation()
+        public void Open()
         {
             if (!fitter)
             {
@@ -94,7 +86,7 @@ namespace Universal
             tweenSequence
                 .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
                     .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
-                    .SetEase(scrollOutEase))
+                    .SetEase(scrollOutEase)).SetUpdate(true)
                 .SetSpeedBased()
                 .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
                 .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
@@ -115,7 +107,7 @@ namespace Universal
                 return;
             }
 
-            tweenSequence = DOTween.Sequence();
+            tweenSequence = DOTween.Sequence().SetUpdate(true);
             float delay = 0;
             if (textFader.alpha > 0)
             {
@@ -140,6 +132,26 @@ namespace Universal
         private void OnDestroy()
         {
             tweenSequence?.Kill();
+        }
+        
+        public async UniTask<bool> ShowAsDialog(string text, Button acceptButton, Button rejectButton)
+        {
+            bool accepted = false;
+            bool rejected = false;
+            acceptButton.onClick.AddListener(() => accepted = true);
+            rejectButton.onClick.AddListener(() => rejected = true);
+            acceptButton.gameObject.SetActive(true);
+            rejectButton.gameObject.SetActive(true);
+            
+            await Open(text);
+            await UniTask.WaitUntil(() => accepted || rejected);
+            
+            acceptButton.onClick.RemoveAllListeners();
+            rejectButton.onClick.RemoveAllListeners();
+            Close();
+            acceptButton.gameObject.SetActive(false);
+            rejectButton.gameObject.SetActive(false);
+            return accepted;
         }
     }
 }

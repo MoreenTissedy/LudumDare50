@@ -13,6 +13,7 @@ namespace CauldronCodebase
         public string shortTextForEndingAnimation;
         public Sprite image;
         public Sprite endIconImage;
+        public SkinSO unlocksSkin;
         public override bool Localize(Language language)
         {
             if (localizationCSV == null)

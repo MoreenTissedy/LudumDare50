@@ -32,7 +32,8 @@ namespace CauldronCodebase.GameStates
                           RecipeBook recipeBook,
                           GameFXManager gameFXManager,
                           StatusChecker statusChecker, 
-                          IAchievementManager achievements)
+                          IAchievementManager achievements,
+                          MilestoneProvider milestoneProvider)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -45,7 +46,7 @@ namespace CauldronCodebase.GameStates
             this.statusChecker = statusChecker;
             this.achievements = achievements;
 
-            eventResolver = new EventResolver(settings, gameDataHandler, cardDeck);
+            eventResolver = new EventResolver(settings, gameDataHandler, cardDeck, milestoneProvider);
             storyCards = new List<Encounter>(2);
         }
         

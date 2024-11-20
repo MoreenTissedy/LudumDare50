@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.Serialization;
 using Universal;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -22,7 +22,7 @@ namespace CauldronCodebase
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
         public IngredientsData dataList;
-        public Collider2D collider;
+        [FormerlySerializedAs("collider")] public Collider2D theCollider;
         
         [SerializeField, HideInInspector]
         private ScrollTooltip tooltip;
@@ -42,6 +42,8 @@ namespace CauldronCodebase
         private TooltipManager ingredientManager;
         private float initialRotation;
         private CancellationTokenSource cancellationTokenSource;
+
+        public event Action<IngredientDroppable> IngredientAdded;
         
 #if UNITY_EDITOR
         private void OnValidate()
@@ -152,7 +154,7 @@ namespace CauldronCodebase
         private void SetMovementVisuals()
         {
             image.sortingLayerName = "Hints";
-            collider.enabled = false;
+            theCollider.enabled = false;
             tooltip?.Close();
             dragging = true;
             image.transform.DOKill(true);
@@ -172,6 +174,7 @@ namespace CauldronCodebase
         {
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            IngredientAdded?.Invoke(this);
             Unsubscribe();
         }
 
@@ -206,7 +209,7 @@ namespace CauldronCodebase
         private void ResetVisuals()
         {
             image.sortingLayerName = "Interactables";
-            collider.enabled = true;
+            theCollider.enabled = true;
             dragging = false;
             dragTrail?.SetActive(false);
         }
@@ -249,7 +252,7 @@ namespace CauldronCodebase
             if(!useDoubleClick)
                 return;
             
-            if (cauldron.Mix.Contains(ingredient))
+            if (cauldron.Mix.Contains(ingredient) || !cauldron.IsActive)
                  return;
             
             const float timeMoveDoubleClick = 0.5f;
@@ -258,6 +261,7 @@ namespace CauldronCodebase
             await transform.DOPath(GetRandomBezierPath(), timeMoveDoubleClick, PathType.CubicBezier).SetEase(Ease.Flash).ToUniTask();
             ReturnToStartSpot();
             cauldron.AddToMix(ingredient);
+            IngredientAdded?.Invoke(this);
         }
 
         private Vector3[] GetRandomBezierPath()

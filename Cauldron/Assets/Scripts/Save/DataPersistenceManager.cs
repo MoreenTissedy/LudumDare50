@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
 using Zenject;
 
-namespace Save
+namespace CauldronCodebase
 {
     public class DataPersistenceManager : MonoBehaviour
     {
@@ -14,24 +13,26 @@ namespace Save
         private GameData gameData;
         
         private List<IDataPersistence> iDataPersistenceObj;
-        private FileDataHandler fileDataHandler;
+        private FileDataHandler<GameData> fileDataHandler;
 
         private MainSettings settings;
         private SODictionary soDictionary;
+        private MilestoneProvider milestones;
 
         public bool IsNewGame { get; private set; }
 
         [Inject]
-        private void Construct(MainSettings mainSettings, SODictionary dictionary)
+        private void Construct(MainSettings mainSettings, SODictionary dictionary, MilestoneProvider milestones)
         {
             settings = mainSettings;
             soDictionary = dictionary;
-            fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+            fileDataHandler = new FileDataHandler<GameData>(fileName, false);
+            this.milestones = milestones;
         }
 
         private void Awake()
         {
-            if (CheckForGameSave())
+            if (IsSaveFound())
             {
                 gameData = fileDataHandler.Load();
                 gameData.ValidateSave(soDictionary);
@@ -51,7 +52,8 @@ namespace Save
         public void NewGame()
         {
             fileDataHandler.Delete();
-            gameData = new GameData(settings.statusBars.InitialValue);
+            milestones.LoadMilestones();
+            gameData = new GameData(settings.statusBars.InitialValue, milestones.Milestones);
             IsNewGame = true;
         }
 
@@ -78,9 +80,9 @@ namespace Save
             iDataPersistenceObj.Add(obj);
         }
 
-        private bool CheckForGameSave()
+        public bool IsSaveFound()
         {
-            return PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey) && fileDataHandler.IsSaveValid();
+            return fileDataHandler.IsFileValid();
         }
 
         public void LoadDataPersistenceObj()

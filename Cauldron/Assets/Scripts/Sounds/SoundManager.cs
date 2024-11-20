@@ -33,7 +33,11 @@ namespace CauldronCodebase
         EndingUnlock,
         SpecialEndingUnlock,
         EndingPanelFold,
-        EndingButtonAppear
+        EndingButtonAppear,
+        CoinSpend,
+        WardrobeMove,
+        WardrobeOpen,
+        SkinChange
     }
 
     public enum Music

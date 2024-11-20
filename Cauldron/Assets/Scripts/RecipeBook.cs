@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Save;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
@@ -34,6 +32,7 @@ namespace CauldronCodebase
         [SerializeField] private AnimatedButton endingBookmarkButton;
         [SerializeField] private Transform endingRoot;
         private EndingScreen endingScreen;
+        public SkinSO culinarySkin;
 
         [Header("Recipe Book")]
         [SerializeField] protected RecipeBookEntryHolder[] recipeEntries;
@@ -45,7 +44,8 @@ namespace CauldronCodebase
         public List<Recipe> allHerbalRecipes;
         [SerializeField] private List<Recipe> unlockedRecipes;
         [SerializeField] private ExperimentController experimentController;
-        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
+        
+        private readonly WrongRecipeProvider wrongRecipeProvider = new WrongRecipeProvider();
         public List<Recipe> LockedRecipes { get; private set; }
         public List<Recipe> UnlockedRecipes => unlockedRecipes;
         [SerializeField] protected Text prevPageNum, nextPageNum;
@@ -57,12 +57,17 @@ namespace CauldronCodebase
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         public event Action OnUnlockAutoCooking;
+
+        public RecipeBookButton hudButton;
+        public bool isNightBook = false;
         
         private TooltipManager tooltipManager;
         private RecipeProvider recipeProvider;
         private Cauldron cauldron;
         private IAchievementManager achievements;
         private EndingsProvider endingsProvider;
+        private PlayerProgressProvider progressProvider;
+        private GameDataHandler gameData;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -88,7 +93,9 @@ namespace CauldronCodebase
                                 RecipeProvider recipeProvider,
                                 Cauldron cauldron, 
                                 IAchievementManager achievements, 
-                                EndingsProvider endingsProvider)
+                                EndingsProvider endingsProvider,
+                                PlayerProgressProvider progressProvider,
+                                GameDataHandler gameData)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -96,6 +103,8 @@ namespace CauldronCodebase
             this.recipeProvider = recipeProvider;
             this.cauldron = cauldron;
             this.endingsProvider = endingsProvider;
+            this.progressProvider = progressProvider;
+            this.gameData = gameData;
         }
 
         private void Start()
@@ -165,6 +174,15 @@ namespace CauldronCodebase
             return unlockedRecipes.Contains(recipe);
         }
 
+        
+        public void CheckExperimentsCompletion()
+        {
+            if (unlockedRecipes.Count + experimentController.wrongPotions.Count == MAX_COMBINATIONS_COUNT)
+            {
+                achievements.TryUnlock(AchievIdents.EXPERIMENTS_ALL);
+            }
+        }
+
         public void RecordRecipe(Recipe recipe)
         {
             unlockedRecipes.Add(recipe);
@@ -187,13 +205,18 @@ namespace CauldronCodebase
                 }
             }
             
-            int eightyPercent = (int)((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
-            if (unlockedRecipes.Count < eightyPercent || PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1)
+            TryUnlockAutoCooking();
+        }
+
+        private void TryUnlockAutoCooking()
+        {
+            int targetPercent = (int) ((allMagicalRecipes.Count + allHerbalRecipes.Count) * TargetPercentEnoughRecipesUnlocked);
+            if (unlockedRecipes.Count < targetPercent || progressProvider.IsAutoCookingUnlocked)
             {
                 return;
             }
 
-            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            progressProvider.SaveAutoCookingUnlocked();
             OnUnlockAutoCooking?.Invoke();
         }
 
@@ -201,10 +224,16 @@ namespace CauldronCodebase
         {
             return unlockedRecipes.Count(x => x.magical) == allMagicalRecipes.Count;
         }
+        
+        public bool AllHerbalRecipesUnlocked(out SkinSO skin)
+        {
+            skin = culinarySkin;
+            return unlockedRecipes.Count(x => !x.magical) == allHerbalRecipes.Count;
+        }
 
         public void CheatUnlockAutoCooking()
         {
-            PlayerPrefs.SetInt(PrefKeys.IsAutoCookingUnlocked, 1);
+            progressProvider.SaveAutoCookingUnlocked();
             OnUnlockAutoCooking?.Invoke();
         }
 
@@ -461,6 +490,14 @@ namespace CauldronCodebase
                     }
                 }
             }
+
+            foreach (var ingredient in recipeBookEntry.CurrentRecipe.RecipeIngredients)
+            {
+                if (gameData.ingredientsFreezed.Contains(ingredient) && !cauldron.Mix.Contains(ingredient))
+                {
+                    return;
+                }
+            }
             
             CloseBook();
 
@@ -544,8 +581,8 @@ namespace CauldronCodebase
 
         public void SaveData(ref GameData data)
         {
-            wrongRecipeProvider.wrongPotions = experimentController.wrongPotions;
-            wrongRecipeProvider.SaveWrongRecipe();
+            wrongRecipeProvider.WrongPotions = experimentController.wrongPotions;
+            wrongRecipeProvider.SaveWrongRecipes();
         }
 
         public override void CloseBook()

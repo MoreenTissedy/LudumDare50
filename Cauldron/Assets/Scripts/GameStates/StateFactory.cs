@@ -1,5 +1,4 @@
-﻿using Save;
-using Zenject;
+﻿using Zenject;
 
 namespace CauldronCodebase.GameStates
 {
@@ -15,7 +14,8 @@ namespace CauldronCodebase.GameStates
         GameDataHandler gameDataHandler;
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
-
+        MilestoneProvider milestoneProvider;
+        
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
         private readonly StatusChecker statusChecker;
@@ -38,7 +38,8 @@ namespace CauldronCodebase.GameStates
                             SoundManager soundManager,
                             GameFXManager fxManager, 
                             StatusChecker statusChecker, 
-                            IAchievementManager achievementManager)
+                            IAchievementManager achievementManager,
+                            MilestoneProvider milestoneProvider)
 
         {
             this.deck = deck;
@@ -57,6 +58,7 @@ namespace CauldronCodebase.GameStates
             gameFXManager = fxManager;
             this.statusChecker = statusChecker;
             this.achievementManager = achievementManager;
+            this.milestoneProvider = milestoneProvider;
         }
 
         public VisitorState CreateVisitorState()
@@ -74,12 +76,12 @@ namespace CauldronCodebase.GameStates
         public NightState CreateNightState()
         {
             return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
-                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager);
+                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager, milestoneProvider);
         }
 
         public EndGameState CreateEndGameState()
         {
-            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook);
+            return new EndGameState(dataPersistenceManager, gameFXManager, recipeBook, gameDataHandler);
         }
 
     }

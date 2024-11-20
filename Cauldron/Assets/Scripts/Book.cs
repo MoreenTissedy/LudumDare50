@@ -3,7 +3,6 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace CauldronCodebase
@@ -48,8 +47,7 @@ namespace CauldronCodebase
             
             bookObject.enabled = false;
             UpdateBookButtons();
-            
-            controls.General.Exit.performed += (_) => CloseBook();
+
             if (keyboardControl)
             {
                 controls.General.BookNavigate.performed += ProcessNavigate;

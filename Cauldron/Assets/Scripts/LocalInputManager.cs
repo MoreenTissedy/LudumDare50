@@ -8,13 +8,15 @@ namespace CauldronCodebase
     public class LocalInputManager : MonoBehaviour
     {
         private RecipeBook recipeBook;
+        private Wardrobe wardrobe;
         private int recipeBookModeTotal;
         private Controls controls;
 
         [Inject]
-        private void Construct(RecipeBook recipeBook, InputManager inputManager)
+        private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe)
         {
             this.recipeBook = recipeBook;
+            this.wardrobe = wardrobe;
             recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length;
             
             controls = inputManager.Controls;
@@ -26,6 +28,8 @@ namespace CauldronCodebase
 
         private void ToggleBook(InputAction.CallbackContext input)
         {
+            if (recipeBook.isNightBook) return;
+            
             recipeBook.ToggleBook();
         }
         
@@ -45,11 +49,20 @@ namespace CauldronCodebase
 
         private void ProcessExit(InputAction.CallbackContext context)
         {
-            if (recipeBook.IsOpen)
+            if (GameLoader.IsMenuOpen())
             {
                 return;
             }
-            else if (!GameLoader.IsMenuOpen())
+            
+            if (recipeBook.IsOpen)
+            {
+                recipeBook.CloseBook();
+            }
+            else if (wardrobe.IsOpen)
+            {
+                wardrobe.CloseWithoutApply();
+            }
+            else
             {
                 GameLoader.LoadMenu();
             }

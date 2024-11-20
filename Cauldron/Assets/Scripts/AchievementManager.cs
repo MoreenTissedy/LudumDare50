@@ -12,6 +12,21 @@ namespace CauldronCodebase
         bool TryUnlock(string id);
         bool TryUnlock(NightEvent nightEvent);
         void ClearAll();
+        bool SetStat(string id, int stat);
+    }
+
+    public struct PotionsUsedAchiv
+    {
+        public Potions potion;
+        public int count;
+        public string key;
+
+        public PotionsUsedAchiv(Potions potion, int count, string key)
+        {
+            this.potion = potion;
+            this.count = count;
+            this.key = key;
+        }
     }
 
     public static class AchievIdents
@@ -22,8 +37,8 @@ namespace CauldronCodebase
         public const string FOOD_ALL = "food recipes";
         public const string EXPERIMENTS_ALL = "experiments";
         public const string VISITORS_ALL = "all visitors";
-        public const string SPEND_COINS = "in circulation";
-        public const int SPEND_TARGET = 200;
+        public const string SILVER_DAYS = "silver days";
+        public const string GOLD_DAYS = "gold days";
 
         public static readonly Dictionary<string, string> EVENT_NAMES_TO_ACHIEVEMENTS = new Dictionary<string, string>()
         {
@@ -51,6 +66,24 @@ namespace CauldronCodebase
             {"moonshine-stealing-fairies-caught","pixies"},
             {"Doctor_4_Rejuvenation","doctor"},
             {"mary.91","Mary"},
+            {"Lamps-numbness", "lamps"},
+            {"Succub-default", "succubus"},
+            {"Recipe_for_revenge-surprise_mushrooms", "culinary"}
+        };
+
+        public static readonly List<PotionsUsedAchiv> USED_POTION = new List<PotionsUsedAchiv>()
+        {
+            new PotionsUsedAchiv(Potions.Poison, 10, "potion poison 1"),
+            new PotionsUsedAchiv(Potions.Poison, 25, "potion poison 2"),
+            new PotionsUsedAchiv(Potions.Love, 10, "potion love 1"),
+            new PotionsUsedAchiv(Potions.Love, 25, "potion love 2"),
+            new PotionsUsedAchiv(Potions.Memory, 10, "potion memory 1"),
+            new PotionsUsedAchiv(Potions.Memory, 25, "potion memory 2"),
+            new PotionsUsedAchiv(Potions.Flying, 10, "potion flight 1"),
+            new PotionsUsedAchiv(Potions.Flying, 25, "potion flight 2"),
+            new PotionsUsedAchiv(Potions.Perception, 10, "potion perception 1"),
+            new PotionsUsedAchiv(Potions.VoiceChange, 10, "potion voice 1"),
+            new PotionsUsedAchiv(Potions.Laughter, 10, "potion laughter 1"),
         };
     }
 
@@ -100,6 +133,17 @@ namespace CauldronCodebase
             }
             SteamUserStats.StoreStats();
             Debug.LogError("Achievements cleared!");
+        }
+
+        public bool SetStat(string id, int stat)
+        {
+            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
+            {
+                return false;
+            }
+            SteamUserStats.SetStat(id, stat);
+            SteamUserStats.StoreStats();
+            return true;
         }
     }
 }

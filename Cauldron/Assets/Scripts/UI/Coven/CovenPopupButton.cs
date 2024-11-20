@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Universal;
@@ -10,9 +11,12 @@ namespace CauldronCodebase
     {
         [SerializeField] private ScrollTooltip scrollTooltip;
         [SerializeField] private GameObject activeGlow;
+        [SerializeField] private RectTransform trans;
         
         private GameDataHandler gameDataHandler;
         public event Action OnClick;
+
+        private bool flashedOnce;
         
         [Inject]
         private void Construct(GameDataHandler dataHandler)
@@ -20,11 +24,24 @@ namespace CauldronCodebase
             gameDataHandler = dataHandler;
         }
 
-        private void OnEnable()
+        public void Show()
         {
             if (gameDataHandler)
             {
                 activeGlow.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
+                
+                //start flashing to attract attention
+                if (gameDataHandler.IsEnoughMoneyForRumours() && !flashedOnce)
+                {
+                    trans.DOScale(Vector3.one*sizeCoef, 2)
+                        .SetEase(Ease.InOutSine)
+                        .SetLoops(-1, LoopType.Yoyo);
+                    flashedOnce = true;
+                }
+                else
+                {
+                    trans.localScale = Vector3.one;
+                }
             }
         }
 
@@ -32,12 +49,14 @@ namespace CauldronCodebase
         {
             base.OnPointerClick(eventData);
             OnClick?.Invoke();
+            trans.DOKill(true);
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
         {
             base.OnPointerEnter(eventData);
             scrollTooltip?.Open();
+            
         }
 
         public override void OnPointerExit(PointerEventData eventData)

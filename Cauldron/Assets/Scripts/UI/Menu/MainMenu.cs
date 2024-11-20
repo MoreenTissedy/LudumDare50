@@ -1,6 +1,8 @@
+using System.IO;
+using Cysharp.Threading.Tasks;
 using EasyLoc;
-using Save;
 using UnityEngine;
+using UnityEngine.Video;
 using Universal;
 using Zenject;
 
@@ -19,16 +21,18 @@ namespace CauldronCodebase
         [SerializeField] private AnimatedButton authorsButton;
         [SerializeField] private AuthorsMenu authorsMenu;
 
-        [Header("WrongRecipeProvider")]
-        [SerializeField] private WrongRecipeProvider wrongRecipeProvider;
-
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
+
+        public Canvas menuHud;
 
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
-        [Inject] private LocalizationTool localizationTool;
+        [Inject] private LocalizationTool localizationTool;        
+        [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private PlayerProgressProvider playerProgressProvider;
+        [Inject] private VillagerFamiliarityChecker villagerChecker;
 
         private void Start()
         {
@@ -36,10 +40,11 @@ namespace CauldronCodebase
             {
                 soundManager.SetMusic(Music.Menu, false);
             }
-            if (!PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
+            if (!dataPersistenceManager.IsSaveFound())
             {
                 HideContinueButton();
             }
+            newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
 
             continueGame.OnClick += ContinueClick;
             quit.OnClick += GameLoader.Exit;
@@ -48,25 +53,31 @@ namespace CauldronCodebase
             authorsButton.OnClick += authorsMenu.Open;
         }
 
-        // private void Update()
-        // {
-        //     //for playtests
-        //     Controls controls = new Controls();
-        //     if (controls.controlSchemes.KeyCode.Delete))
-        //     {
-        //         ResetGameData(false);
-        //     }
-        // }
-
         public void ResetGameData(bool saveLanguage = true)
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
             PlayerPrefs.DeleteAll();
-            wrongRecipeProvider.ResetWrongRecipe();
+            ClearAllSaveFiles();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
+            newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
             Debug.LogWarning("All data cleared!");
+        }
+
+        private void ClearAllSaveFiles()
+        {
+            string dataDirPath = Application.persistentDataPath;
+            string SubFolder = "Saves";
+            string subDirPath = Path.Combine(dataDirPath, SubFolder);
+            DirectoryInfo di = new DirectoryInfo(subDirPath);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            milestoneProvider.LoadMilestones();
+            playerProgressProvider.Update();
+            villagerChecker.Update();
         }
 
         private void HideContinueButton()
@@ -76,7 +87,7 @@ namespace CauldronCodebase
 
         private void NewGameClick()
         {
-            switch (PlayerPrefs.HasKey(FileDataHandler.PrefSaveKey))
+            switch (dataPersistenceManager.IsSaveFound())
             {
                 case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
@@ -98,8 +109,29 @@ namespace CauldronCodebase
         private async void StartNewGame()
         {
             await fadeController.FadeIn(duration: fadeNewGameDuration);
+            await TryPlayIntroVideo();
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
+        }
+
+        private async UniTask TryPlayIntroVideo()
+        {
+            if (PlayerPrefs.HasKey(PrefKeys.VideoWatched))
+            {
+                return;
+            }
+
+            soundManager.StopMusic();
+            menuHud.enabled = false;
+            
+            var video = Instantiate(Resources.Load("Video")) as GameObject;
+            var player = video.GetComponentInChildren<VideoPlayer>();
+            
+            await fadeController.FadeOut(0.3f);
+            await UniTask.WaitWhile(() => player.isPlaying);
+            await fadeController.FadeIn(0.3f);
+            
+            PlayerPrefs.SetInt(PrefKeys.VideoWatched, 1);
         }
     }
 }

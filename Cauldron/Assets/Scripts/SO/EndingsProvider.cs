@@ -23,13 +23,22 @@ namespace CauldronCodebase
         
         public Ending[] endings;
 
+        public bool Legacy { get; private set; }
+        
         private List<string> unlocked;
         private Dictionary<string, Ending> endingDict;
         private IAchievementManager achievements;
+        
+        private readonly string fileName = "UnlockedEndings";
+        private FileDataHandler<ListToSave<string>> fileDataHandler;
+
+        public IReadOnlyList<string> UnlockedEndings => unlocked.AsReadOnly();
 
         public void Init(IAchievementManager achievements)
         {
             this.achievements = achievements;
+
+            fileDataHandler  = new FileDataHandler<ListToSave<string>>(fileName);
             
             endingDict = new Dictionary<string, Ending>(12);
             foreach (var ending in endings)
@@ -37,14 +46,7 @@ namespace CauldronCodebase
                 endingDict.Add(ending.tag, ending);
             }
 
-            if (PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
-            {
-                unlocked = PlayerPrefs.GetString(PrefKeys.UnlockedEndings).Split(',').ToList();
-            }
-            else
-            {
-                unlocked = new List<string>();
-            }
+            LoadUnlockedEndings();
         }
 
         public int GetUnlockedEndingsCount()
@@ -79,9 +81,41 @@ namespace CauldronCodebase
             if (tag != "none" && !Unlocked(tag))
             {
                 unlocked.Add(tag);
-                PlayerPrefs.SetString(PrefKeys.UnlockedEndings, string.Join(",", unlocked));
+                Save();
             }
             achievements.TryUnlock(tag);
+        }
+        
+        
+        private void Save()
+        {
+            fileDataHandler.Save(new ListToSave<string>(unlocked));
+        }
+
+        private void LoadUnlockedEndings()
+        {
+            if (TryLoadLegacy())
+            {
+                Save();
+                return;
+            }
+
+            unlocked = fileDataHandler.IsFileValid() ? fileDataHandler.Load().list : new List<string>();
+        }
+
+        private bool TryLoadLegacy()
+        {
+            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            {
+                return false;
+            }
+
+            var endingString = PlayerPrefs.GetString(PrefKeys.UnlockedEndings);
+            Debug.LogError("load legacy endings: "+endingString);
+            Legacy = true;
+            unlocked = endingString.Split(',').ToList();
+            PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+            return true;  
         }
 
         [ContextMenu("Export Endings to CSV")]

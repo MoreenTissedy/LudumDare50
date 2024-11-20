@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CauldronCodebase.GameStates;
-using Save;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -35,12 +34,17 @@ namespace CauldronCodebase
         public int currentRound;
         public GameStateMachine.GamePhase gamePhase;
         public Encounter currentCard;
-        public List<Potions> potionsTotal;
+        public Dictionary<Potions, int> potionsTotal;
         public int wrongPotionsCount;
         public int wrongExperiments = 0;  //no need to save
+        public List<Ingredients> ingredientsFreezed;
 
         //TODO: separate entities
         public List<string> storyTags;
+        public bool milestonesDisable;
+
+        public SkinSO currentSkin;
+        public bool premiumSkin;
         
         public FractionStatus fractionStatus;
         public bool fractionEventTriggered;
@@ -49,8 +53,8 @@ namespace CauldronCodebase
 
         public MainSettings.StatusBars statusSettings;
         private MainSettings.Gameplay gameplaySettings;
-
-        public event Action StatusChanged;
+        PlayerProgressProvider progressProvider;
+        public event Action<Statustype, int> StatusChanged;
 
         private PotionsBrewedInADay currentDayPotions;
         private List<PotionsBrewedInADay> potionsBrewedInADays;
@@ -60,8 +64,12 @@ namespace CauldronCodebase
         public int DayCountThreshold = 2;
 
         private SODictionary soDictionary;
+        private SkinsProvider skinsProvider;
+        private IAchievementManager achievementManager;
         
-        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager, SODictionary dictionary)
+        public void Init(MainSettings settings, EncounterDeck deck, DataPersistenceManager dataManager,
+                         SODictionary dictionary, PlayerProgressProvider progressProvider, SkinsProvider skinsProvider,
+                         IAchievementManager achievementManager)
         {
             soDictionary = dictionary;
             
@@ -72,16 +80,30 @@ namespace CauldronCodebase
             currentDeck = deck;
 
             fractionStatus = new FractionStatus();
+            this.progressProvider = progressProvider;
             
-            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
-            {
-                PlayerPrefs.SetInt(PrefKeys.CurrentRound, 0);
-            }
-            else
-            {
-                currentRound = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-            }
+            currentRound = progressProvider.CurrentRound;
+            
+            currentSkin = skinsProvider.GetInitialSkin();
+            
+            this.skinsProvider = skinsProvider;
+            this.achievementManager = achievementManager;
         }
+
+        public bool IsWardrobeButtonAvailable()
+        {
+            return currentDay == 0 &&
+                   cardsDrawnToday == 0 &&
+                   IsWardrobeUnlocked;
+        }
+        
+        public bool ShouldApplyGameMode()
+        {
+            return currentDay == 0 &&
+                   cardsDrawnToday == 1;
+        }
+        
+        public bool IsWardrobeUnlocked => skinsProvider.GetUnlockedSkinsCount() > 1;
 
         public bool IsEnoughMoneyForRumours()
         {
@@ -91,6 +113,7 @@ namespace CauldronCodebase
         public void BuyRumour()
         {
             money -= statusSettings.CovenCost;
+            StatusChanged?.Invoke(Statustype.Money, -statusSettings.CovenCost);
         }
 
         public void AddTag(string tag)
@@ -153,7 +176,7 @@ namespace CauldronCodebase
                     fame = statValue;
                     break;
             }
-            StatusChanged?.Invoke();
+            StatusChanged?.Invoke(type, num);
             return statValue;
         }
 
@@ -235,13 +258,38 @@ namespace CauldronCodebase
 
         public void AddPotion(Potions potion, bool wrong)
         {
-            potionsTotal.Add(potion); // for global statistic
+            if(potionsTotal.ContainsKey(potion))
+            {
+                potionsTotal[potion] += 1;
+            }
+            else
+            {
+                potionsTotal.Add(potion, 1);
+            }
+            CheckAndUnlockUsedPotionsAchiv(potion);
+
             currentDayPotions.PotionsList.Add(potion.ToString());
             if (wrong)
             {
                 Debug.Log("wrong potion");
                 wrongPotionsCount++; // for global statistic
                 currentDayPotions.WrongPotions++;
+            }
+        }
+
+        private void CheckAndUnlockUsedPotionsAchiv(Potions potion)
+        {
+            var achivList = AchievIdents.USED_POTION.FindAll(x => x.potion == potion);
+            if (achivList.Count == 0) return;
+            
+            if(!potionsTotal.TryGetValue(potion, out var tempCount)) return;
+             
+            foreach (var achiv in achivList)
+            {
+                if (tempCount >= achiv.count)
+                {
+                    achievementManager.TryUnlock(achiv.key);
+                }
             }
         }
 
@@ -261,7 +309,7 @@ namespace CauldronCodebase
         public void RememberRound()
         {
             currentRound += 1;
-            PlayerPrefs.SetInt(PrefKeys.CurrentRound, currentRound);
+            progressProvider.SaveCurrentRound(currentRound);
         }
         
         public void CalculatePotionsOnLastDays()
@@ -301,8 +349,14 @@ namespace CauldronCodebase
             cardsDrawnToday = data.CardDrawnToday;
             gamePhase = data.Phase;
             storyTags = data.StoryTags;
+            milestonesDisable = data.milestonesDisable;
             fractionStatus.Load(data.FractionData);
             fractionEventTriggered = data.FractionEventTriggered;
+            if (!string.IsNullOrEmpty(data.CurrentSkin))
+            {
+                currentSkin = skinsProvider.Get(data.CurrentSkin);
+            }
+            premiumSkin = data.PremiumSkin;
 
             if (string.IsNullOrEmpty(data.CurrentEncounter))
             {
@@ -313,16 +367,20 @@ namespace CauldronCodebase
                 currentCard = (Encounter)soDictionary.AllScriptableObjects[data.CurrentEncounter];
             }
 
-            potionsTotal = new List<Potions>();
-            foreach (var potion in data.PotionsTotalOnRun)
+            potionsTotal = new Dictionary<Potions, int>();
+            foreach (var temp in data.PotionsTotalOnRun)
             {
-                potionsTotal.Add((Potions)Enum.Parse(typeof(Potions), potion));
+                var potion = (Potions)Enum.Parse(typeof(Potions), temp.Split(':')[0]);
+                var value = int.Parse(temp.Split(':')[1]);
+                potionsTotal.Add(potion, value);
             }
             
             wrongPotionsCount = data.WrongPotionsCountOnRun;
 
             currentDayPotions = data.CurrentDayPotions;
             potionsBrewedInADays = data.PotionsBrewedInADays;
+
+            ingredientsFreezed = data.IngredientsFreezed;
         }
 
         public void SaveData(ref GameData data)
@@ -335,7 +393,8 @@ namespace CauldronCodebase
             data.Money = money;
             data.CurrentDay = currentDay;
             data.CardDrawnToday = cardsDrawnToday;
-            data.StoryTags = storyTags;
+            data.StoryTags = storyTags;            
+            data.milestonesDisable = milestonesDisable;
             data.Phase = gamePhase;
             data.FractionData = fractionStatus.Save();
             data.FractionEventTriggered = fractionEventTriggered;
@@ -352,13 +411,18 @@ namespace CauldronCodebase
             data.PotionsTotalOnRun.Clear();
             foreach (var potion in potionsTotal)
             {
-                data.PotionsTotalOnRun.Add(potion.ToString());
+                data.PotionsTotalOnRun.Add($"{potion.Key}:{potion.Value}");
             }
             
             data.WrongPotionsCountOnRun = wrongPotionsCount;
 
             data.CurrentDayPotions = currentDayPotions;
             data.PotionsBrewedInADays = potionsBrewedInADays;
+
+            data.CurrentSkin = currentSkin.name;
+            data.PremiumSkin = premiumSkin;
+
+            data.IngredientsFreezed = ingredientsFreezed;
         }
     }
 }

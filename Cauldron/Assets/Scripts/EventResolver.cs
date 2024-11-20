@@ -9,12 +9,14 @@ namespace CauldronCodebase
         private readonly GameDataHandler game;
         private readonly MainSettings settings;
         private readonly EncounterDeck deck;
+        private readonly MilestoneProvider milestoneProvider;
 
-        public EventResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck)
+        public EventResolver(MainSettings settings, GameDataHandler game, EncounterDeck deck, MilestoneProvider milestoneProvider)
         {
             this.game = game;
             this.deck = deck;
             this.settings = settings;
+            this.milestoneProvider = milestoneProvider;
         }
         
         public void ApplyModifiers(NightEvent nightEvent)
@@ -34,23 +36,24 @@ namespace CauldronCodebase
                 if (storyTag.StartsWith("-"))
                 {
                     storyTag = storyTag.TrimStart('-');
-                    if (storyTag.StartsWith("*"))
+                    
+                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
-                        StoryTagHelper.RemoveMilestone(storyTag);
+                        milestoneProvider.RemoveMilestone(storyTag);
                     }
                     game.storyTags.Remove(storyTag);
                 }
                 else if (!string.IsNullOrEmpty(storyTag))
                 {
-                    if (storyTag.StartsWith("*"))
+                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
-                        StoryTagHelper.SaveMilestone(storyTag);
+                        milestoneProvider.SaveMilestone(storyTag);
                     }
-                    else if (storyTag.StartsWith("%"))
+                    else if (storyTag.StartsWith("%") && !game.milestonesDisable)
                     {
-                        StoryTagHelper.SaveFreeze(storyTag.Trim('%'));
+                        Freezes.SaveFreeze(storyTag.Trim('%'));
                     }
                     game.AddTag(storyTag);
                 }

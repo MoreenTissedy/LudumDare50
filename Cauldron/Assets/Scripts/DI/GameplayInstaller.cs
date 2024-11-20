@@ -1,5 +1,4 @@
 using CauldronCodebase.GameStates;
-using Save;
 using UnityEngine;
 using Zenject;
 
@@ -8,12 +7,13 @@ namespace CauldronCodebase
     public class GameplayInstaller : MonoInstaller
     {
         [Header("Data Providers")]
-        [SerializeField] private RecipeProvider recipeProvider;
         [SerializeField] private NightEventProvider nightEvents;
         [SerializeField] private EncounterDeck encounterDeck;
         [SerializeField] private IngredientsData ingredientsData;
-        [SerializeField] private EndingsProvider endings;
         [SerializeField] private PriorityLaneProvider priorityLane;
+        [SerializeField] private SkinsProvider skinsProvider;
+        [SerializeField] private RecipeProvider recipeProvider;
+        [SerializeField] private EndingsProvider endings;
 
         [Header("Gameplay")]
         [SerializeField] private RecipeBook recipeBook;
@@ -23,6 +23,8 @@ namespace CauldronCodebase
         [SerializeField] private GameStateMachine stateMachine;
         [SerializeField] private GameDataHandler gameDataHandler;
         [SerializeField] private CatTipsValidator catTipsValidator;
+        [SerializeField] private Wardrobe wardrobe;
+        [SerializeField] private WitchSkinChanger witchSkinChanger;
 
         [Header("UI")]
         [SerializeField] private GameFXManager fxManager;
@@ -33,6 +35,9 @@ namespace CauldronCodebase
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private SODictionary soDictionary;
+        [Inject] private PlayerProgressProvider progressProvider;
+        [Inject] private MilestoneProvider milestoneProvider;
+        [Inject] private VillagerFamiliarityChecker villagerFamiliarityChecker;
 
         private IAchievementManager achievementManager;
 
@@ -48,10 +53,11 @@ namespace CauldronCodebase
         {
             Container.Bind<IngredientsData>().FromInstance(ingredientsData).AsSingle();
             Container.Bind<EncounterDeck>().FromInstance(encounterDeck).AsSingle().NonLazy();
-            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle();
             Container.Bind<NightEventProvider>().FromInstance(nightEvents).AsSingle();
-            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
             Container.Bind<PriorityLaneProvider>().FromInstance(priorityLane).AsSingle();
+            Container.Bind<SkinsProvider>().FromInstance(skinsProvider).AsSingle();            
+            Container.Bind<RecipeProvider>().FromInstance(recipeProvider).AsSingle().NonLazy();            
+            Container.Bind<EndingsProvider>().FromInstance(endings).AsSingle();
         }
 
         private void BindUI()
@@ -75,17 +81,24 @@ namespace CauldronCodebase
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
-            Container.Bind<IAchievementManager>().FromInstance(achievementManager).AsSingle();
+            Container.BindInterfacesAndSelfTo<AchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
+            Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
+            Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();
+            Container.Bind<GameModeFactory>().FromNew().AsSingle().NonLazy();
         }
 
         private void Initialize()
         {
-            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary);
-            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings, recipeProvider, recipeBook);
-            nightEvents.Init(dataPersistenceManager, soDictionary);
-            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
+            recipeProvider.Load();
             endings.Init(achievementManager);
+            skinsProvider.Init(achievementManager, endings);
+            gameDataHandler.Init(mainSettings, encounterDeck, dataPersistenceManager, soDictionary, progressProvider, skinsProvider, achievementManager);
+            encounterDeck.Init(gameDataHandler, dataPersistenceManager, soDictionary, mainSettings,
+                            recipeProvider, recipeBook, milestoneProvider, progressProvider);
+            nightEvents.Init(dataPersistenceManager, soDictionary, progressProvider);
+            priorityLane.Init(encounterDeck, soDictionary, dataPersistenceManager, gameDataHandler, recipeBook);
+            villagerFamiliarityChecker.Init(achievementManager, soDictionary);
         }
 
     }

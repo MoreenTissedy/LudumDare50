@@ -4,8 +4,9 @@ using System.Linq;
 using CauldronCodebase;
 using CauldronCodebase.GameStates;
 using UnityEngine;
+using Zenject;
 
-namespace Save
+namespace CauldronCodebase
 {
     [Serializable]
     public class GameData
@@ -29,10 +30,13 @@ namespace Save
         public int Fear, Fame, Money; // GameDataHandler
         public int CurrentDay; // GameDataHandler
         public int CardDrawnToday; // GameDataHandler
+        public string CurrentSkin;
+        public bool PremiumSkin;
 
         public string CurrentEncounter;  // GameDataHandler
 
-        public List<string> StoryTags ;  // GameDataHandler
+        public List<string> StoryTags;  // GameDataHandler
+        public bool milestonesDisable; // GameDataHandler
         public int[] FractionData;
         public bool FractionEventTriggered;
         
@@ -47,7 +51,9 @@ namespace Save
         
         public bool DarkStrangerCame, WitchCame, InquisitorCame;
 
-        public GameData(int initialValue)
+        public List<Ingredients> IngredientsFreezed;
+
+        public GameData(int initialValue, List<string> milestones)
         {
             AttemptsLeft = 3;
             
@@ -60,14 +66,17 @@ namespace Save
 
             CurrentEncounter = null;
 
-            StoryTags = StoryTagHelper.GetMilestones().ToList();
-
+            StoryTags = milestones;
+            milestonesDisable = false;
+            
             WrongPotionsCountOnRun = 0;
 
             CurrentDayPotions = new PotionsBrewedInADay();
             PotionsBrewedInADays = new List<PotionsBrewedInADay> {CurrentDayPotions};
 
             Status = new Status();
+
+            IngredientsFreezed = new List<Ingredients>();
         }
 
         public void ValidateSave(SODictionary soDictionary)

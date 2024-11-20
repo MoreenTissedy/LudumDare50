@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using NaughtyAttributes;
-using Save;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -45,6 +44,8 @@ namespace CauldronCodebase
         private Encounter loadedCard;
         private MainSettings mainSettings;
         private RecipeBook recipeBook;
+        private MilestoneProvider milestoneProvider;
+        private PlayerProgressProvider progressProvider;
         private int lastExtendedRoundNumber;
 
         private List<string> freezeList;
@@ -73,7 +74,8 @@ namespace CauldronCodebase
         /// Form new deck and starting card pool.
         /// </summary>
         public void Init(GameDataHandler game, DataPersistenceManager dataPersistenceManager,
-            SODictionary dictionary, MainSettings settings, RecipeProvider recipes, RecipeBook recipeBook)
+            SODictionary dictionary, MainSettings settings, RecipeProvider recipes,
+            RecipeBook recipeBook, MilestoneProvider milestoneProvider, PlayerProgressProvider progressProvider)
         {
             gameDataHandler = game;
             soDictionary = dictionary;
@@ -81,9 +83,10 @@ namespace CauldronCodebase
             recipeProvider = recipes;
             this.recipeBook = recipeBook;
             dataPersistenceManager.AddToDataPersistenceObjList(this);
-
+            this.milestoneProvider = milestoneProvider;
+            this.progressProvider = progressProvider;
             InitRememberedCards();
-            freezeList = StoryTagHelper.GetFreezes();
+            freezeList = Freezes.GetFreezes();
         }
 
         /// <summary>
@@ -264,7 +267,7 @@ namespace CauldronCodebase
             if (freezeList.Contains(card.villager.name))
             {
                 freezeList.Remove(card.villager.name);
-                StoryTagHelper.RemoveFreeze(card.villager.name);
+                Freezes.RemoveFreeze(card.villager.name);
                 return true;
             }
 
@@ -392,7 +395,7 @@ namespace CauldronCodebase
 
         private void SetStartingDecks()
         {
-            int round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
+            int round = progressProvider.CurrentRound;
             InitCardPool(round);
             if (round == 0)
             {
@@ -402,11 +405,17 @@ namespace CauldronCodebase
                 return;
             }
             DealCards(2);
-            gameDataHandler.storyTags = StoryTagHelper.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
-            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            gameDataHandler.storyTags = milestoneProvider.GetMilestones();  //TODO: crutch fix, remove after loading refactoring
+            if (gameDataHandler.IsWardrobeUnlocked && !progressProvider.IsWardrobeUnlocked)
+            {
+                deck.AddFirst(introCards[7]);
+                progressProvider.SaveWardrobeUnlocked();
+                return;
+            }
+            if (StoryTagHelper.CovenFeatureUnlocked(gameDataHandler) && !progressProvider.CovenIntroShown)
             {
                 deck.AddFirst(introCards[6]);
-                PlayerPrefs.SetInt(PrefKeys.CovenIntroShown, 1);
+                progressProvider.SaveCovenIntroShown();
                 return;
             }
             if (StoryTagHelper.CovenSavingsEnabled(gameDataHandler))

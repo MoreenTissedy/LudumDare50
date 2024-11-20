@@ -1,4 +1,5 @@
 using System;
+using CauldronCodebase.GameStates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -29,30 +30,35 @@ namespace CauldronCodebase
 
         private GameDataHandler gameDataHandler;
         private MainSettings settings;
+
         private int currentValue = Int32.MinValue;
 
         private float gameMaskLength;
 
         [Inject]
-        private void Construct(MainSettings mainSettings, GameDataHandler dataHandler)
+        private void Construct(MainSettings mainSettings, GameDataHandler dataHandler, GameStateMachine gameStateMachine)
         { 
            gameDataHandler = dataHandler;
            settings = mainSettings;
+           gameStateMachine.OnGameStarted += StartGame;
 
            initialDimension = vertical ? mask.rect.height : mask.rect.width;
            gameMaskLength = initialDimension - initialDimension * maskTailPercent / 100;
-           gameDataHandler.StatusChanged += UpdateValue;
-
            signCritical.SetActive(false);
         }
 
-        private void Start()
+        private void StartGame()
         {
             SetValue(this.gameDataHandler.Get(type), false);
+            gameDataHandler.StatusChanged += UpdateValue;
         }
 
-        private void UpdateValue()
+        private void UpdateValue(Statustype statusType, int i)
         {
+            if (statusType != type || i == 0)
+            {
+                return;
+            }
             SetValue(gameDataHandler.Get(type));
         }
 

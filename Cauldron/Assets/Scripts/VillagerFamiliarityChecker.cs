@@ -47,7 +47,7 @@ public class VillagerFamiliarityChecker
         locked.Remove(tag);
         Save();
 
-        achievements.SetStat("visitors", FamiliarsCount);
+        achievements.SetStat(AchievIdents.VISITORS_ALL, FamiliarsCount);
         
         Debug.Log($"Visitor add: {tag}. Count unfamiliars is {locked.Count}");
     }

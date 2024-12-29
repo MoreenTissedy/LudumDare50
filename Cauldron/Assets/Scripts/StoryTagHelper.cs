@@ -1,3 +1,5 @@
+using System;
+
 namespace CauldronCodebase
 {
     public static class StoryTagHelper
@@ -24,7 +26,7 @@ namespace CauldronCodebase
                 {
                     continue;
                 }
-                if (trim.StartsWith("!"))
+                if (trim.StartsWith("!", StringComparison.InvariantCulture))
                 {
                     valid = valid && !gameDataHandler.storyTags.Contains(trim.TrimStart('!'));
                 }

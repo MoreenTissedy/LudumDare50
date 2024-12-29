@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -33,11 +34,11 @@ namespace CauldronCodebase
             {
                 string storyTag = tag;
                 storyTag = storyTag.TrimStart('^');
-                if (storyTag.StartsWith("-"))
+                if (storyTag.StartsWith("-", StringComparison.InvariantCulture))
                 {
                     storyTag = storyTag.TrimStart('-');
                     
-                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
+                    if (storyTag.StartsWith("*", StringComparison.InvariantCulture) && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.RemoveMilestone(storyTag);
@@ -46,14 +47,15 @@ namespace CauldronCodebase
                 }
                 else if (!string.IsNullOrEmpty(storyTag))
                 {
-                    if (storyTag.StartsWith("*") && !game.milestonesDisable)
+                    if (storyTag.StartsWith("*", StringComparison.InvariantCulture) && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.SaveMilestone(storyTag);
                     }
-                    else if (storyTag.StartsWith("%") && !game.milestonesDisable)
+                    else if (storyTag.StartsWith("%", StringComparison.InvariantCulture) && !game.milestonesDisable)
                     {
                         Freezes.SaveFreeze(storyTag.Trim('%'));
+                        continue;
                     }
                     game.AddTag(storyTag);
                 }

@@ -54,8 +54,8 @@ namespace CauldronCodebase
             inGameConditionals.AddRange(conditionalEvents);
             inGameRandoms = new List<RandomNightEvent>(randomEvents.Count);
             inGameRandoms.AddRange(randomEvents);
-            storyEvents.Clear();
-            joinedEvents.Clear();
+            storyEvents?.Clear();
+            joinedEvents?.Clear();
             soDictionary = dictionary;
             this.dataPersistenceManager = dataPersistenceManager;
             dataPersistenceManager.AddToDataPersistenceObjList(this);

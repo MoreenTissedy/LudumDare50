@@ -34,11 +34,11 @@ namespace CauldronCodebase
             {
                 string storyTag = tag;
                 storyTag = storyTag.TrimStart('^');
-                if (storyTag.StartsWith("-", StringComparison.InvariantCulture))
+                if (storyTag.StartsWith("-", StringComparison.Ordinal))
                 {
                     storyTag = storyTag.TrimStart('-');
                     
-                    if (storyTag.StartsWith("*", StringComparison.InvariantCulture) && !game.milestonesDisable)
+                    if (storyTag.StartsWith("*", StringComparison.Ordinal) && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.RemoveMilestone(storyTag);
@@ -47,12 +47,12 @@ namespace CauldronCodebase
                 }
                 else if (!string.IsNullOrEmpty(storyTag))
                 {
-                    if (storyTag.StartsWith("*", StringComparison.InvariantCulture) && !game.milestonesDisable)
+                    if (storyTag.StartsWith("*", StringComparison.Ordinal) && !game.milestonesDisable)
                     {
                         storyTag = storyTag.TrimStart('*');
                         milestoneProvider.SaveMilestone(storyTag);
                     }
-                    else if (storyTag.StartsWith("%", StringComparison.InvariantCulture) && !game.milestonesDisable)
+                    else if (storyTag.StartsWith("%", StringComparison.Ordinal) && !game.milestonesDisable)
                     {
                         Freezes.SaveFreeze(storyTag.Trim('%'));
                         continue;

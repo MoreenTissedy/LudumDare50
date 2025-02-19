@@ -1,29 +1,31 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using NaughtyAttributes;
 
 namespace Universal
 {
     public class PointerMediator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-        private AnimatedButtonContainer _animatedButton;
+        [ReadOnly]
+        [SerializeField] private FlexibleButton _animatedButton;
 
-        private void Awake()
+        private void Reset()
         {
-            _animatedButton = GetComponent<AnimatedButtonContainer>();
+            _animatedButton = GetComponent<FlexibleButton>();
         }
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
             if (!_animatedButton.IsInteractive) return;
 
-            _animatedButton.Selected();
+            _animatedButton.Select();
         }
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
             if (!_animatedButton.IsInteractive) return;
 
-            _animatedButton.Unselected();
+            _animatedButton.Unselect();
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)

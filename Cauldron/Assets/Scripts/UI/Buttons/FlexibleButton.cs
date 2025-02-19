@@ -1,14 +1,15 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Universal
 {
-    public class AnimatedButtonContainer : MonoBehaviour
+    public class FlexibleButton : MonoBehaviour
     {
         [SerializeField] private IAnimatedButtonComponent[] _animationComponents;
-        private bool _interactive = true;
+        [SerializeField] private bool _interactive = true;
 
-        [SerializeField] public event Action OnClick;
+        public event Action OnClick;
         
         public bool IsInteractive
         {
@@ -22,7 +23,7 @@ namespace Universal
                 }
         }
 
-        private void OnValidate()
+        private void Reset()
         {
             _animationComponents = GetComponents<IAnimatedButtonComponent>();
         }
@@ -32,7 +33,7 @@ namespace Universal
             IsInteractive = _interactive;
         }
 
-        public void Selected()
+        public void Select()
         {
             foreach (var component in _animationComponents)
             {
@@ -40,7 +41,7 @@ namespace Universal
             }
         }
 
-        public void Unselected()
+        public void Unselect()
         {
             foreach (var component in _animationComponents)
             {

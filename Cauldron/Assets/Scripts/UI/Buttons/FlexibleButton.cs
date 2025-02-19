@@ -1,5 +1,4 @@
 using System;
-using NaughtyAttributes;
 using UnityEngine;
 
 namespace Universal
@@ -18,7 +17,7 @@ namespace Universal
                     _interactive = value;
                     foreach (var component in _animationComponents)
                     {
-                        component.ChangeInteractive(value);
+                        component?.ChangeInteractive(value);
                     }
                 }
         }
@@ -37,7 +36,7 @@ namespace Universal
         {
             foreach (var component in _animationComponents)
             {
-                component.Select();
+                component?.Select();
             }
         }
 
@@ -45,16 +44,17 @@ namespace Universal
         {
             foreach (var component in _animationComponents)
             {
-                component.Unselect();
+                component?.Unselect();
             }
         }
 
         public void Activate()
         {
-            foreach (var component in _animationComponents)
-            {
-                component.Activate();
-            }
+           foreach (var component in _animationComponents)
+                {
+                    component?.Activate();
+                }
+
             OnClick?.Invoke();
         }
 

@@ -19,13 +19,13 @@ namespace CauldronCodebase
         [SerializeField] private Image negativeResultImage;
         [SerializeField] private Image unknownResultImage;
         [SerializeField] private Image potionResultImage;
-        [SerializeField] private AnimatedButton button;
+        [SerializeField] private FlexibleButton button;
         [SerializeField] private Material lockedMaterial;
         [SerializeField] private TextMeshProUGUI titleText;
         [Localize] public string failure;
         [Localize] public string notTried;
 
-        public AnimatedButton Button => button;
+        public FlexibleButton Button => button;
 
         private List<Ingredients> ingredients = new List<Ingredients>();
 

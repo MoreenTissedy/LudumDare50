@@ -1,7 +1,7 @@
-using CauldronCodebase;
+using Universal;
 using Zenject;
 
-namespace Universal
+namespace CauldronCodebase
 {
     public class ButtonSound : IAnimatedButtonComponent
     {

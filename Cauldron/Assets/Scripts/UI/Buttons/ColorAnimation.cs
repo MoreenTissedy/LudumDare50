@@ -6,6 +6,7 @@ namespace Universal
     public class ColorAnimation : IAnimatedButtonComponent
     {
         [SerializeField] private Image _image;
+        [Space]
         [SerializeField] private Color _enabled;
         [SerializeField] private Color _disabled;
         [SerializeField] private Color _selected;

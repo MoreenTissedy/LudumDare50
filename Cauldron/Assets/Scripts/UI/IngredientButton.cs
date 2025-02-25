@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace CauldronCodebase
 {
-    public class IngredientButton : GrowOnMouseEnter
+    public class IngredientButton : MonoBehaviour
     {
         [SerializeField] private ScrollTooltip scrollTooltip;
         [SerializeField] private Image image;
         [SerializeField] private Material material;
+        [SerializeField] private FlexibleButton button;
         
         private IngredientsData.Ingredient data;
-        private bool interactable;
 
         [Inject] private IngredientsData ingredientsData;
         [Inject] private RecipeBook recipeBook;
@@ -25,47 +25,33 @@ namespace CauldronCodebase
             image.enabled = true;
             image.sprite = data.image;
             image.material = gameData.ingredientsFreezed.Contains(ingredient) ? material : null;
-            interactable = false;
+            button.IsInteractive = false;
             scrollTooltip.Close();
             await scrollTooltip.SetText(data.friendlyName);
-            interactable = true;
+            button.IsInteractive = true;
+        }
+
+        private void Awake()
+        {
+            button.OnClick += OnClick;
         }
 
         public void Clear()
         {
-            interactable = false;
+            button.IsInteractive = false;
             image.enabled = false;
             scrollTooltip.Close();
         }
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerEnter(eventData);
-            scrollTooltip.Open();
-        }
 
-        public override void OnPointerExit(PointerEventData eventData)
+        public void OnClick()
         {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerExit(eventData);
-            scrollTooltip.Close();
-        }
-
-        public override void OnPointerClick(PointerEventData eventData)
-        {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerClick(eventData);
             recipeBook.ChangeMode(RecipeBook.Mode.Ingredients);
             recipeBook.OpenPage(ingredientsData.IndexOf(data)/2);
+        }
+
+        private void OnDestroy()
+        {
+            button.OnClick -= OnClick;
         }
     }
 }

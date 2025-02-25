@@ -10,6 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3965744209019928652}
   - component: {fileID: 466122368617101374}
+  - component: {fileID: 6666195769326125283}
+  - component: {fileID: 4081196782486642938}
+  - component: {fileID: 7191048648274374180}
+  - component: {fileID: 4100050071193363007}
   m_Layer: 0
   m_Name: BookIngredientButton
   m_TagString: Untagged
@@ -51,11 +55,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60547b7ac1154e4b9e85727ae4bbcc29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeCoef: 1.2
-  sizeSpeed: 0.2
   scrollTooltip: {fileID: 1419488943171163377}
   image: {fileID: 5207083256258925638}
   material: {fileID: 2100000, guid: 3826ae84d5480c04891d2409c7623342, type: 2}
+  button: {fileID: 7191048648274374180}
+--- !u!114 &6666195769326125283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960416176434459795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b5c5d4843f9c4d8ce6e4d83684d90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.2
+--- !u!114 &4081196782486642938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960416176434459795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b33b299d5667cc49a9ae0a7d250f5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltip: {fileID: 1419488943171163377}
+--- !u!114 &7191048648274374180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960416176434459795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationComponents:
+  - {fileID: 6666195769326125283}
+  - {fileID: 4081196782486642938}
+  _interactive: 1
+--- !u!114 &4100050071193363007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960416176434459795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d477291b9e775c498c6df0e7411761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatedButton: {fileID: 7191048648274374180}
 --- !u!1 &5599818308387272631
 GameObject:
   m_ObjectHideFlags: 0

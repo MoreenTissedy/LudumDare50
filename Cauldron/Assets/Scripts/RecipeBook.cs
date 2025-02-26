@@ -29,7 +29,7 @@ namespace CauldronCodebase
         
         [Header("Ending map")] 
         [SerializeField] private GameObject endingBookmarkBlock;
-        [SerializeField] private AnimatedButton endingBookmarkButton;
+        [SerializeField] private FlexibleButton endingBookmarkButton;
         [SerializeField] private Transform endingRoot;
         private EndingScreen endingScreen;
         public SkinSO culinarySkin;

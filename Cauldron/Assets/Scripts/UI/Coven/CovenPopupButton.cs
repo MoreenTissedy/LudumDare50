@@ -7,14 +7,13 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class CovenPopupButton: GrowOnMouseEnter
+    public class CovenPopupButton: MonoBehaviour
     {
-        [SerializeField] private ScrollTooltip scrollTooltip;
+        [SerializeField] private float sizeCoef = 1.2f;
         [SerializeField] private GameObject activeGlow;
         [SerializeField] private RectTransform trans;
         
         private GameDataHandler gameDataHandler;
-        public event Action OnClick;
 
         private bool flashedOnce;
         
@@ -33,7 +32,7 @@ namespace CauldronCodebase
                 //start flashing to attract attention
                 if (gameDataHandler.IsEnoughMoneyForRumours() && !flashedOnce)
                 {
-                    trans.DOScale(Vector3.one*sizeCoef, 2)
+                    trans.DOScale(Vector3.one * sizeCoef, 2)
                         .SetEase(Ease.InOutSine)
                         .SetLoops(-1, LoopType.Yoyo);
                     flashedOnce = true;
@@ -43,26 +42,6 @@ namespace CauldronCodebase
                     trans.localScale = Vector3.one;
                 }
             }
-        }
-
-        public override void OnPointerClick(PointerEventData eventData)
-        {
-            base.OnPointerClick(eventData);
-            OnClick?.Invoke();
-            trans.DOKill(true);
-        }
-
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            base.OnPointerEnter(eventData);
-            scrollTooltip?.Open();
-            
-        }
-
-        public override void OnPointerExit(PointerEventData eventData)
-        {
-            base.OnPointerExit(eventData);
-            scrollTooltip?.Close();
         }
     }
 }

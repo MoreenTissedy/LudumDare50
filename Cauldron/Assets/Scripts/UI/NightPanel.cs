@@ -33,7 +33,7 @@ namespace CauldronCodebase
 
         [Header("Coven features")] 
         public GameObject covenBlock;
-        public CovenPopupButton covenButton;
+        public FlexibleButton covenButton;
         public GameObject covenPopup;
         
         [Header("Interval between incoming cards in sec")] 
@@ -122,7 +122,7 @@ namespace CauldronCodebase
             nextPageButton.GetComponent<FlexibleButton>().OnClick += OnNextCard;
             base.OpenBook();
             StartCoroutine(DealCards());
-            covenButton.Show();
+            covenButton.GetComponent<CovenPopupButton>().Show();
         }
 
         private void UnlockCircleFeature()

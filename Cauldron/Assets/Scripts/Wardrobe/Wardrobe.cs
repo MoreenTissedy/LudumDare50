@@ -27,8 +27,8 @@ namespace CauldronCodebase
         
         [Header("Confirmation")]
         [SerializeField] private ScrollTooltip tooltipPrefab;
-        [SerializeField] private Button rejectButton;
-        [SerializeField] private Button acceptButton;
+        [SerializeField] private FlexibleButton rejectButton;
+        [SerializeField] private FlexibleButton acceptButton;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;

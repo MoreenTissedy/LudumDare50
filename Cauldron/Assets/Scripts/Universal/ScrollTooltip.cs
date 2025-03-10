@@ -134,20 +134,20 @@ namespace Universal
             tweenSequence?.Kill();
         }
         
-        public async UniTask<bool> ShowAsDialog(string text, Button acceptButton, Button rejectButton)
+        public async UniTask<bool> ShowAsDialog(string text, FlexibleButton acceptButton, FlexibleButton rejectButton)
         {
             bool accepted = false;
             bool rejected = false;
-            acceptButton.onClick.AddListener(() => accepted = true);
-            rejectButton.onClick.AddListener(() => rejected = true);
+            acceptButton.OnClick += () => accepted = true;
+            rejectButton.OnClick += () => rejected = true;
             acceptButton.gameObject.SetActive(true);
             rejectButton.gameObject.SetActive(true);
             
             await Open(text);
             await UniTask.WaitUntil(() => accepted || rejected);
             
-            acceptButton.onClick.RemoveAllListeners();
-            rejectButton.onClick.RemoveAllListeners();
+            acceptButton.RemoveAllSubscriptions();
+            rejectButton.RemoveAllSubscriptions();
             Close();
             acceptButton.gameObject.SetActive(false);
             rejectButton.gameObject.SetActive(false);

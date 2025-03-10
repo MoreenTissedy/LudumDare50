@@ -50,7 +50,7 @@ namespace CauldronCodebase
         [SerializeField] private Button declineResetButton;
 
         [Header("Other")]
-        [SerializeField] private AnimatedButton closeSettingsButton;
+        [SerializeField] private FlexibleButton closeSettingsButton;
 
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;

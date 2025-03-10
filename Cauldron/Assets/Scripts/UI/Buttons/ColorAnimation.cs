@@ -12,6 +12,18 @@ namespace Universal
         [SerializeField] private Color _selected;
         [SerializeField] private Color _pressed;
 
+        private Color _default;
+        
+        private void Awake()
+        {
+            _default = _enabled;
+        }
+
+        private void OnEnable()
+        {
+            _image.color = _default;
+        }
+
         public override void Select()
         {
             _image.color = _selected;

@@ -7,7 +7,7 @@ namespace CauldronCodebase
 {
     public class AuthorsMenu : MonoBehaviour
     {
-        [SerializeField] private AnimatedButton closePanelButton;
+        [SerializeField] private FlexibleButton closePanelButton;
 
         [Header("Fade")]
         [SerializeField] [Range(0f, 1f)] private float fadeInTargetAlpha;

@@ -5,6 +5,7 @@ using EasyLoc;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using Universal;
 using Zenject;
 using Button = UnityEngine.UI.Button;
 
@@ -28,7 +29,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject priceBlock;
         [SerializeField] private TMP_Text headerTMP;
         [SerializeField] private Button buyButton;
-        [SerializeField] private Button closeButton;
+        [SerializeField] private FlexibleButton closeButton;
 
         [SerializeField] private List<WardrobeCell> cells;
 
@@ -46,7 +47,7 @@ namespace CauldronCodebase
         private void Start()
         {
             buyButton.onClick.AddListener(OnBuyButtonClicked);
-            closeButton.onClick.AddListener(CloseBook);
+            closeButton.OnClick += CloseBook;
             
             defaultColorHex = ColorUtility.ToHtmlStringRGB(defaultTextColor);
             unavailableColorHex = ColorUtility.ToHtmlStringRGB(unavailableTextColor);

@@ -86,6 +86,9 @@ GameObject:
   - component: {fileID: 5655507878067369784}
   - component: {fileID: 5655507878067369787}
   - component: {fileID: 7937000080682488666}
+  - component: {fileID: 8561820104642290297}
+  - component: {fileID: 421976057526999348}
+  - component: {fileID: 8344379099042187197}
   m_Layer: 5
   m_Name: LinkButton
   m_TagString: Untagged
@@ -134,11 +137,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef99c18c06e4f2d996b0627c5b695da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeCoef: 1.2
-  sizeSpeed: 0.2
   link: https://vk.com/theironhearthg
   tooltip: {fileID: 74620064950806531}
   icon: {fileID: 3553230161929609219}
+  delay: 2
+--- !u!114 &8561820104642290297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655507878067369791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b5c5d4843f9c4d8ce6e4d83684d90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.2
+--- !u!114 &421976057526999348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655507878067369791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationComponents:
+  - {fileID: 7937000080682488666}
+  - {fileID: 8561820104642290297}
+  _interactive: 1
+--- !u!114 &8344379099042187197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5655507878067369791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d477291b9e775c498c6df0e7411761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatedButton: {fileID: 421976057526999348}
 --- !u!1001 &4003846867804936404
 PrefabInstance:
   m_ObjectHideFlags: 0

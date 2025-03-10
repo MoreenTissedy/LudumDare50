@@ -10,15 +10,15 @@ namespace CauldronCodebase
 {
     public class MainMenu : MonoBehaviour
     {
-        public AnimatedButton continueGame;
-        public AnimatedButton quit;
-        public AnimatedButton newGame;
+        public FlexibleButton continueGame;
+        public FlexibleButton quit;
+        public FlexibleButton newGame;
 
-        [Header("Settings")] public AnimatedButton settings;
+        [Header("Settings")] public FlexibleButton settings;
         public SettingsMenu settingsMenu;
 
         [Header("Authors")] 
-        [SerializeField] private AnimatedButton authorsButton;
+        [SerializeField] private FlexibleButton authorsButton;
         [SerializeField] private AuthorsMenu authorsMenu;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]

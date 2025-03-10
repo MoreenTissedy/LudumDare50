@@ -44,7 +44,7 @@ namespace CauldronCodebase
         [Header("Reset data")] 
         [SerializeField] private MainMenu mainMenu;
 
-        [SerializeField] private AnimatedButton openResetButton;
+        [SerializeField] private FlexibleButton openResetButton;
         [SerializeField] private GameObject dialogueReset;
         [SerializeField] private Button acceptResetButton;
         [SerializeField] private Button declineResetButton;

@@ -46,8 +46,8 @@ namespace CauldronCodebase
 
         [SerializeField] private FlexibleButton openResetButton;
         [SerializeField] private GameObject dialogueReset;
-        [SerializeField] private Button acceptResetButton;
-        [SerializeField] private Button declineResetButton;
+        [SerializeField] private FlexibleButton acceptResetButton;
+        [SerializeField] private FlexibleButton declineResetButton;
 
         [Header("Other")]
         [SerializeField] private FlexibleButton closeSettingsButton;
@@ -86,8 +86,8 @@ namespace CauldronCodebase
             autoCooking.onValueChanged.AddListener(ChangeAutoCooking);
             openResetButton.OnClick += OpenResetDialogue;
             closeSettingsButton.OnClick += Close;
-            acceptResetButton.onClick.AddListener(ResetGameData);
-            declineResetButton.onClick.AddListener(CloseResetDialogue);
+            acceptResetButton.OnClick += ResetGameData;
+            declineResetButton.OnClick += CloseResetDialogue;
         }
 
         private void LoadPointerSpeed()

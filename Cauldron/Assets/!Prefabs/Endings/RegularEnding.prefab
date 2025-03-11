@@ -162,6 +162,9 @@ GameObject:
   - component: {fileID: 175278538312482726}
   - component: {fileID: 2429951563066547836}
   - component: {fileID: 3627350148762264522}
+  - component: {fileID: 946536917394472313}
+  - component: {fileID: 67510177955158530}
+  - component: {fileID: 6229692347715443720}
   m_Layer: 0
   m_Name: RegularEnding
   m_TagString: Untagged
@@ -203,12 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9c0ad335b7c4a8993cdce5388f95c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeCoef: 1.2
-  sizeSpeed: 0.3
   canvasGroup: {fileID: 3627350148762264522}
   effect: {fileID: 2896673780724409005}
   background: {fileID: 1068142713540292624}
   animator: {fileID: 5322282981088699525}
+  sound: 20
+  button: {fileID: 67510177955158530}
   Tag: 
 --- !u!225 &3627350148762264522
 CanvasGroup:
@@ -222,6 +225,48 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &946536917394472313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331931673904145059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b5c5d4843f9c4d8ce6e4d83684d90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.3
+--- !u!114 &67510177955158530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331931673904145059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationComponents:
+  - {fileID: 946536917394472313}
+  _interactive: 1
+--- !u!114 &6229692347715443720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331931673904145059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d477291b9e775c498c6df0e7411761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatedButton: {fileID: 67510177955158530}
 --- !u!1 &2896673780724409005
 GameObject:
   m_ObjectHideFlags: 0

@@ -235,6 +235,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6609293535477052260}
   - component: {fileID: 4136283061408658150}
+  - component: {fileID: 8600268869260207650}
+  - component: {fileID: 6842845742429938703}
+  - component: {fileID: 3912563129246179071}
   m_Layer: 5
   m_Name: WardrobeCell
   m_TagString: Untagged
@@ -277,8 +280,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98402991197126c4e905e71483815fde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sizeCoef: 1.2
-  sizeSpeed: 0.2
   skinPreview: {fileID: 6609293534311041753}
   background: {fileID: 6609293534058540060}
   Highlight: {fileID: 6609293535087753658}
@@ -286,6 +287,49 @@ MonoBehaviour:
   lockedMaterial: {fileID: 2100000, guid: 3826ae84d5480c04891d2409c7623342, type: 2}
   availableSkinBackground: {fileID: 21300000, guid: 19f36480d06e47649b0aad23e02aedb4, type: 3}
   lockedSkinBackground: {fileID: 21300000, guid: 940896116e243fa4ab131e865fe32acd, type: 3}
+  button: {fileID: 6842845742429938703}
+--- !u!114 &8600268869260207650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6609293535477052261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 680b5c5d4843f9c4d8ce6e4d83684d90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeCoef: 1.2
+  sizeSpeed: 0.2
+--- !u!114 &6842845742429938703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6609293535477052261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animationComponents:
+  - {fileID: 8600268869260207650}
+  _interactive: 1
+--- !u!114 &3912563129246179071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6609293535477052261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d477291b9e775c498c6df0e7411761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatedButton: {fileID: 6842845742429938703}
 --- !u!1 &6744441096789750817
 GameObject:
   m_ObjectHideFlags: 0

@@ -30,6 +30,10 @@ namespace CauldronCodebase
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
         }
-        
+
+        private void OnDestroy()
+        {
+            closePanelButton.OnClick -= Close;            
+        }
     }
 }

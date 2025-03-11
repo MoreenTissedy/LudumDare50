@@ -116,5 +116,10 @@ namespace CauldronCodebase
                 data.Get(attempt[2]).type
             };
         }
+
+        private void OnDestroy()
+        {
+            button.OnClick -= () => recipeBook.SwitchHighlight(ingredients);
+        }
     }
 }

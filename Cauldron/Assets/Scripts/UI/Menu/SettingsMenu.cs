@@ -292,5 +292,13 @@ namespace CauldronCodebase
         {
             autoCookingObject.gameObject.SetActive(false);
         }
+
+        private void OnDestroy()
+        {
+            openResetButton.OnClick -= OpenResetDialogue;
+            closeSettingsButton.OnClick -= Close;
+            acceptResetButton.OnClick -= ResetGameData;
+            declineResetButton.OnClick -= CloseResetDialogue;         
+        }
     }
 }

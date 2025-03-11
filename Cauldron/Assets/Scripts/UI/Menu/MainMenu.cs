@@ -133,5 +133,15 @@ namespace CauldronCodebase
             
             PlayerPrefs.SetInt(PrefKeys.VideoWatched, 1);
         }
+
+        
+        private void OnDestroy()
+        {
+            continueGame.OnClick -= ContinueClick;
+            quit.OnClick -= GameLoader.Exit;
+            newGame.OnClick -= NewGameClick;
+            settings.OnClick -= settingsMenu.Open;
+            authorsButton.OnClick -= authorsMenu.Open;          
+        }
     }
 }

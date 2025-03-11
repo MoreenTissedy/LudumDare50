@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine;
 using Universal;
 using Zenject;
-using Button = UnityEngine.UI.Button;
 
 namespace CauldronCodebase
 {
@@ -28,7 +27,7 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text priceField;
         [SerializeField] private GameObject priceBlock;
         [SerializeField] private TMP_Text headerTMP;
-        [SerializeField] private Button buyButton;
+        [SerializeField] private FlexibleButton buyButton;
         [SerializeField] private FlexibleButton closeButton;
 
         [SerializeField] private List<WardrobeCell> cells;
@@ -46,7 +45,7 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            buyButton.onClick.AddListener(OnBuyButtonClicked);
+            buyButton.OnClick += OnBuyButtonClicked;
             closeButton.OnClick += CloseBook;
             
             defaultColorHex = ColorUtility.ToHtmlStringRGB(defaultTextColor);
@@ -179,12 +178,12 @@ namespace CauldronCodebase
             if (price > playersMoney)
             {
                 priceField.text = $"<color=#{unavailableColorHex}>{price}</color>";
-                buyButton.interactable = false;
+                buyButton.IsInteractive = false;
             }
             else
             {
                 priceField.text = $"<color=#{defaultColorHex}>{price}</color>";
-                buyButton.interactable = true;
+                buyButton.IsInteractive = true;
             }
             priceField.text = price.ToString();
             noPriceText.gameObject.SetActive(false);
@@ -228,5 +227,11 @@ namespace CauldronCodebase
             
             base.CloseBook();
         }
+
+        private void OnDestroy()
+        {
+            buyButton.OnClick -= OnBuyButtonClicked;
+            closeButton.OnClick -= CloseBook;
+        } 
     }
 }

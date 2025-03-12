@@ -19,7 +19,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
-        [SerializeField] private Button closeButton;
+        [SerializeField] private FlexibleButton closeButton;
         [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
         [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
         
@@ -32,7 +32,7 @@ namespace CauldronCodebase
         [SerializeField] private Transform root;
         
         [Header("Skin shop")]
-        [SerializeField] private Button shopButton;
+        [SerializeField] private FlexibleButton shopButton;
         [SerializeField] private SkinShop skinShop;
 
         public event Action OnClose;
@@ -62,7 +62,7 @@ namespace CauldronCodebase
             {
                 buttons[i].OnClick += OnEndingClick;
             }
-            closeButton.onClick.AddListener(Close);
+            closeButton.OnClick += Close;
         }
 
         private void InitSkinShop(bool inBook, string endingTag)
@@ -106,11 +106,13 @@ namespace CauldronCodebase
             if (skinShopEnabled)
             {
                 shopButton.gameObject.SetActive(true);
-                shopButton.onClick.AddListener(skinShop.OpenBook);
+                shopButton.OnClick += skinShop.OpenBook;
+                /*
                 if (skinShop.ShouldHighlightButton(gameDataHandler.Money))
                 {
                     shopButton.GetComponent<SpriteSwap>().Swap();
                 }
+                */
             }
         }
 
@@ -220,6 +222,12 @@ namespace CauldronCodebase
                 var button = buttons[index];
                 button.Hide();
             }
+        }
+
+        private void OnDestroy()
+        {
+            closeButton.OnClick -= Close;
+            shopButton.OnClick -= skinShop.OpenBook;
         }
     }
 }

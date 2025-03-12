@@ -7,7 +7,7 @@ using Universal;
 public class FilterButton : MonoBehaviour
 {
     [SerializeField] private Ingredients ingredientsName;
-    [SerializeField] private AnimatedButton button;
+    [SerializeField] private FlexibleButton button;
     [SerializeField] private Image yellowBackground;
     [SerializeField] private IngredientsData ingredientsData;
 

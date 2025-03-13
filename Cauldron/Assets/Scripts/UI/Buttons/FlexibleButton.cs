@@ -1,9 +1,10 @@
 using System;
+using Buttons;
 using UnityEngine;
 
 namespace Universal
 {
-    public class FlexibleButton : MonoBehaviour
+    public class FlexibleButton : Selectable
     {
         [SerializeField] private IAnimatedButtonComponent[] _animationComponents;
         [SerializeField] private bool _interactive = true;
@@ -32,7 +33,7 @@ namespace Universal
             IsInteractive = _interactive;
         }
 
-        public void Select()
+        public override void Select()
         {
             foreach (var component in _animationComponents)
             {
@@ -40,7 +41,7 @@ namespace Universal
             }
         }
 
-        public void Unselect()
+        public override void Unselect()
         {
             foreach (var component in _animationComponents)
             {

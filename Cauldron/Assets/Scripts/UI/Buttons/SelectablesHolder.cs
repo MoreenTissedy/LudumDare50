@@ -28,29 +28,18 @@ namespace Buttons
             selectables = GetComponentsInChildren<Selectable>(false);
         }
 
-        private void OnEnable()
-        {
-            inputManager.Controls.General.NormalNavigate.performed += Navigate;
-            inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
-        }
-
-        private void OnDisable()
-        {
-            inputManager.Controls.General.NormalNavigate.performed -= Navigate;
-            inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
-        }
-
         private void ActivateCurrent(InputAction.CallbackContext obj)
         {
             Current.Activate();
         }
 
+        //TODO: fix bug with duplicate Navigate event when going up from Links holder
         private void Navigate(InputAction.CallbackContext context)
         {
             float diff = 0;
             if (direction == SelectableDirection.Vertical)
             {
-                diff = context.ReadValue<Vector2>().y;
+                diff = - context.ReadValue<Vector2>().y;
             }
 
             if (direction == SelectableDirection.Horizontal)
@@ -82,6 +71,8 @@ namespace Buttons
         {
             GetButtons();
             SelectDefaultElement();
+            inputManager.Controls.General.NormalNavigate.performed += Navigate;
+            inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
         }
 
         private void GetButtons()
@@ -108,11 +99,8 @@ namespace Buttons
         public override void Unselect()
         {
             Current.Unselect();
-        }
-
-        public override void Activate()
-        {
-            Current.Activate();
+            inputManager.Controls.General.NormalNavigate.performed -= Navigate;
+            inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
         }
     }
 }

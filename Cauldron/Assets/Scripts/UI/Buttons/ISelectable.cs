@@ -15,6 +15,8 @@ namespace Buttons
 
         public abstract void Unselect();
 
-        public abstract void Activate();
+        public virtual void Activate()
+        {
+        }
     }
 }

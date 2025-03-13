@@ -240,17 +240,6 @@ namespace CauldronCodebase
                 },
                 {
                     ""name"": """",
-                    ""id"": ""96eb6c1e-0827-48b0-ba8e-afb8f91c8463"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""AnyKey"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""bd59423e-df84-407c-9d5f-b2f8bd383509"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",

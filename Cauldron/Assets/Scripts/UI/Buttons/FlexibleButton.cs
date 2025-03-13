@@ -48,12 +48,12 @@ namespace Universal
             }
         }
 
-        public void Activate()
+        public virtual void Activate()
         {
            foreach (var component in _animationComponents)
-                {
-                    component?.Activate();
-                }
+            {
+                component?.Activate();
+            }
 
             OnClick?.Invoke();
         }

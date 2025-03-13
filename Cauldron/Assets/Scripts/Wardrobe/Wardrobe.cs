@@ -16,8 +16,8 @@ namespace CauldronCodebase
         [SerializeField] private TMP_Text description;
         [SerializeField] private TMP_Text description2;
         
-        [SerializeField] private Button confirmSkinButton;
-        [SerializeField] private Button closeButton;
+        [SerializeField] private FlexibleButton confirmSkinButton;
+        [SerializeField] private FlexibleButton closeButton;
 
         [SerializeField] private WardrobeCell[] wardrobeCells;
 
@@ -27,8 +27,8 @@ namespace CauldronCodebase
         
         [Header("Confirmation")]
         [SerializeField] private ScrollTooltip tooltipPrefab;
-        [SerializeField] private Button rejectButton;
-        [SerializeField] private Button acceptButton;
+        [SerializeField] private FlexibleButton rejectButton;
+        [SerializeField] private FlexibleButton acceptButton;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
@@ -46,8 +46,8 @@ namespace CauldronCodebase
 
         private void Start()
         {
-            closeButton.onClick.AddListener(CloseWithoutApply);
-            confirmSkinButton.onClick.AddListener(ApplySkin);
+            closeButton.OnClick += CloseWithoutApply;
+            confirmSkinButton.OnClick += ApplySkin;
             InitDescriptionPanelAnimation();
         }
 
@@ -185,6 +185,12 @@ namespace CauldronCodebase
         {
             OnClosed = onClosed;
             OpenBook();
+        }
+
+        private void OnDestroy()
+        {
+            confirmSkinButton.OnClick -= ApplySkin;
+            closeButton.OnClick -= CloseWithoutApply;
         }
     }
 }

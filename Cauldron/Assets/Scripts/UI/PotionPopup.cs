@@ -5,6 +5,7 @@ using EasyLoc;
 using DG.Tweening;
 using Zenject;
 using TMPro;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -22,8 +23,8 @@ namespace CauldronCodebase
         public GameObject newPotionEffect;
         public float tweenDuration = 0.3f;
         public float startTweenSize = 0f;
-        public Button accept;
-        public Button decline;
+        public FlexibleButton accept;
+        public FlexibleButton decline;
         
         [Inject] private SoundManager soundManager;
 
@@ -35,8 +36,8 @@ namespace CauldronCodebase
         private void Start()
         {
             gameObject.SetActive(false);
-            accept.onClick.AddListener(Accept);
-            decline.onClick.AddListener(Decline);
+            accept.OnClick += Accept;
+            decline.OnClick += Decline;
         }
 
         public void Show(Recipe recipe, bool newPotion = false)
@@ -94,6 +95,12 @@ namespace CauldronCodebase
                 .OnComplete(() => gameObject.SetActive(false));
 
             IsEnable = false;
+        }
+
+        private void OnDestroy()
+        {
+            accept.OnClick -= Accept;
+            decline.OnClick -= Decline;
         }
     }
 }

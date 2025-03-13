@@ -5,11 +5,10 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
-using System.Threading;
 
 namespace Universal
 {
-    public class LinkButton: GrowOnMouseEnter
+    public class LinkButton: IAnimatedButtonComponent
     {
         public string link = "https://vk.com/theironhearthg";
         [SerializeField] private ScrollTooltip tooltip;
@@ -24,30 +23,6 @@ namespace Universal
         {
             tooltip.Close();
             tooltip.SetText(link).Forget();
-        }
-        
-        public override void OnPointerClick(PointerEventData eventData)
-        {
-            if (isClicked) return;
-
-            base.OnPointerClick(eventData);
-            StartCoroutine(AnimationAndOpenLink());
-            
-        }
-
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            base.OnPointerEnter(eventData);
-            sound.Play(Sounds.MenuFocus);
-
-            if (isClicked) return;
-            tooltip.Open();
-        }
-
-        public override void OnPointerExit(PointerEventData eventData)
-        {
-            base.OnPointerExit(eventData);
-            tooltip.Close();
         }
 
         private IEnumerator AnimationAndOpenLink()
@@ -67,5 +42,27 @@ namespace Universal
             icon.localRotation = Quaternion.Euler(0, 0, 0);
             isClicked = false;
         }
+
+        public override void Select()
+        {
+            sound.Play(Sounds.MenuFocus);
+
+            if (isClicked) return;
+            tooltip.Open();
+        }
+
+        public override void Unselect()
+        {
+            tooltip.Close();
+        }
+
+        public override void Activate()
+        {
+            if (isClicked) return;
+
+            StartCoroutine(AnimationAndOpenLink());
+        }
+
+        public override void ChangeInteractive(bool isInteractive){}
     }
 }

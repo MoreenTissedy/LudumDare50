@@ -1,11 +1,23 @@
-using UnityEngine.EventSystems;
+using UnityEngine;
 using Universal;
 
 namespace CauldronCodebase
 {
-    public class MenuButton : GrowOnMouseEnter
+    public class MenuButton : MonoBehaviour
     {
-        public override void OnPointerClick(PointerEventData eventData)
+        [SerializeField] private FlexibleButton button;
+
+        private void Reset()
+        {
+            button = GetComponent<FlexibleButton>();
+        }
+        
+        public void Start()
+        {
+            button.OnClick += OnClick;
+        }
+
+        public void OnClick()
         {
             if (GameLoader.IsMenuOpen())
             {
@@ -15,6 +27,11 @@ namespace CauldronCodebase
             {
                 GameLoader.LoadMenu();
             }
+        }
+
+        private void OnDestroy()
+        {
+            button.OnClick -= OnClick;
         }
     }
 }

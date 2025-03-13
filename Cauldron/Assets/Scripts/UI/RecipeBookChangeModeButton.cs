@@ -1,31 +1,31 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBookChangeModeButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class RecipeBookChangeModeButton : MonoBehaviour
     {
+        [SerializeField] private FlexibleButton button;
+
         public RecipeBook.Mode mode;
-        public ScrollTooltip hint;
         
         [Inject]
         private RecipeBook recipeBook;
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void Awake()
+        {
+            button.OnClick += OnClick;
+        }
+
+        public void OnClick()
         {
             recipeBook.ChangeMode(mode);
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public void OnDestroy()
         {
-            hint.Open();
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            hint.Close();
+            button.OnClick -= OnClick;
         }
     }
 }

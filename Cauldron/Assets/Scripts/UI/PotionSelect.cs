@@ -1,44 +1,33 @@
-using UnityEngine.EventSystems;
+using UnityEngine;
 using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class PotionSelect : GrowOnMouseEnter, IPointerClickHandler
+    public class PotionSelect : IAnimatedButtonComponent
     {
+        [SerializeField] private FlexibleButton button;
+        [SerializeField] private bool clicable;
+
         [Inject] private RecipeBook book;
         [Inject] private SoundManager soundManager;
 
-        public bool clickable = true;
-        public bool interactable => clickable && !book.isNightBook;
-
-        public override void OnPointerClick(PointerEventData eventData)
+        private void OnEnable()
         {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerClick(eventData);
-            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
+            button.IsInteractive = !book.isNightBook && clicable;
         }
 
-        public override void OnPointerEnter(PointerEventData eventData)
+        public override void Select()
         {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerEnter(eventData);
             soundManager.Play(Sounds.BookFocus);
         }
 
-        public override void OnPointerExit(PointerEventData eventData)
+        public override void Activate()
         {
-            if (!interactable)
-            {
-                return;
-            }
-            base.OnPointerExit(eventData);
+            book.SwitchHighlight(GetComponentInParent<RecipeBookEntry>());
         }
+
+        public override void Unselect(){}        
+        public override void ChangeInteractive(bool isInteractive){}
     }
 }

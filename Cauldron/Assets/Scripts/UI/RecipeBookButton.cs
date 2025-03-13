@@ -1,14 +1,13 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBookButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
-
+    public class RecipeBookButton : IAnimatedButtonComponent
     {
         public float sizeCoef = 1.2f;
         public float sizeSpeed = 0.2f;
@@ -44,7 +43,7 @@ namespace CauldronCodebase
         private void OnEnable()
         {
             //start flashing to attract attention
-            transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed).
+            transf.DOSizeDelta(initialScale * sizeCoef, sizeSpeed).
                 SetLoops(-1, LoopType.Yoyo);
         }
 
@@ -73,30 +72,32 @@ namespace CauldronCodebase
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public override void Select()
+        {
+            //grow in size
+            if (!clicked)
+                transf.DOPause();
+            transf.DOSizeDelta(initialScale * sizeCoef, sizeSpeed);
+        }
+
+        public override void Unselect()
+        {
+            //shrink in size
+            if (clicked)
+                transf.DOSizeDelta(initialScale, sizeSpeed);
+            else
+            {
+                transf.DOPlay();
+            }
+        }
+
+        public override void Activate()
         {
             clicked = true;
             transf.DOKill(true);
             book.OpenBook();
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            //grow in size
-            if (!clicked)
-                transf.DOPause();
-            transf.DOSizeDelta((initialScale * sizeCoef), sizeSpeed);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            //shrink in size
-            if (clicked)
-                transf.DOSizeDelta((initialScale), sizeSpeed);
-            else
-            {
-                transf.DOPlay();
-            }
-        }
+        public override void ChangeInteractive(bool isInteractive){}
     }
 }

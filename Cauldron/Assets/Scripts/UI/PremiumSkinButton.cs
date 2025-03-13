@@ -1,13 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class PremiumSkinButton : AnimatedButton
+    public class PremiumSkinButton : MonoBehaviour
     {
         [SerializeField] private float animationDelay = 0.15f;
         [SerializeField] private Sprite activeButton;
@@ -15,6 +14,7 @@ namespace CauldronCodebase
         [SerializeField] private GameObject cauldronStandart;
         [SerializeField] private GameObject cauldronPremium;
         [SerializeField] private Image image;
+        [SerializeField] private FlexibleButton button;
 
         [Inject] private GameDataHandler gameData;
         [Inject] private Cauldron cauldron;
@@ -23,6 +23,8 @@ namespace CauldronCodebase
 
         public void Start()
         {
+            button.OnClick += ChangeSkins;
+            
             gameObject.SetActive(SteamConnector.HasPremium);
             if (gameData.premiumSkin)
             {
@@ -59,12 +61,16 @@ namespace CauldronCodebase
             cat.SetSkin(gameData.premiumSkin ? "ArchCat" : "Cat_default");
         }
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public void ChangeSkins()
         {
-            base.OnPointerClick(eventData);
             gameData.premiumSkin = !gameData.premiumSkin;
             StopAllCoroutines();
             StartCoroutine(UpdateSkins());
+        }
+
+        private void OnDestroy()
+        {
+            button.OnClick -= ChangeSkins;
         }
     }
 }

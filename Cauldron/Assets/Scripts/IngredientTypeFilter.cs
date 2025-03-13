@@ -9,7 +9,7 @@ using Universal;
 
 public class IngredientTypeFilter : MonoBehaviour
 {
-    [SerializeField] private AnimatedButton plantsTypeButton;
+    [SerializeField] private FlexibleButton plantsTypeButton;
     [SerializeField] private FilterButton[] buttons;
     [SerializeField] private Image gauge;
     [SerializeField] private Image selection;

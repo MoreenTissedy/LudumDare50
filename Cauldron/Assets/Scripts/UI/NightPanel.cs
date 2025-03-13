@@ -9,6 +9,7 @@ using UnityEngine;
 using Zenject;
 using TMPro;
 using Random = UnityEngine.Random;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -32,7 +33,7 @@ namespace CauldronCodebase
 
         [Header("Coven features")] 
         public GameObject covenBlock;
-        public CovenPopupButton covenButton;
+        public FlexibleButton covenButton;
         public GameObject covenPopup;
         
         [Header("Interval between incoming cards in sec")] 
@@ -118,9 +119,10 @@ namespace CauldronCodebase
             currentPage = 0;
             firstCardDealt = false;
             UnlockCircleFeature();
+            nextPageButton.GetComponent<FlexibleButton>().OnClick += OnNextCard;
             base.OpenBook();
             StartCoroutine(DealCards());
-            covenButton.Show();
+            covenButton.GetComponent<CovenPopupButton>().Show();
         }
 
         private void UnlockCircleFeature()
@@ -290,6 +292,7 @@ namespace CauldronCodebase
         public override void CloseBook()
         {
             covenButton.OnClick -= CovenButtonOnOnClick;
+            nextPageButton.GetComponent<FlexibleButton>().OnClick -= OnNextCard;
             foreach (var nightPanelCard in activeCards)
             {
                 nightPanelCard.Hide();

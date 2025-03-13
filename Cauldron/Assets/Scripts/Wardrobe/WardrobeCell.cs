@@ -17,7 +17,7 @@ namespace CauldronCodebase
         Locked
     }
     
-    public class WardrobeCell : GrowOnMouseEnter
+    public class WardrobeCell : MonoBehaviour
     {
         [SerializeField] private Image skinPreview;
         [SerializeField] private Image background;
@@ -29,6 +29,8 @@ namespace CauldronCodebase
         [SerializeField] private Sprite availableSkinBackground;
         [SerializeField] private Sprite lockedSkinBackground;
 
+        [Space] [SerializeField] private FlexibleButton button;
+
         private WardrobeCellState currentState;
         
         private SkinSO skin;
@@ -36,7 +38,12 @@ namespace CauldronCodebase
         
         [Inject] private SoundManager sound;
 
-        public event Action<WardrobeCell> OnClick; 
+        public event Action<WardrobeCell> OnClick;
+
+        private void Awake()
+        {
+            button.OnClick += Click;
+        }
 
         public void Setup(SkinSO newSkin, WardrobeCellState wardrobeCellState)
         {
@@ -52,6 +59,7 @@ namespace CauldronCodebase
             SmallHighlight.enabled = false;
             Highlight.enabled = false;
             background.sprite = lockedSkinBackground;
+            button.IsInteractive = true;
 
             switch (currentState)
             {
@@ -70,6 +78,7 @@ namespace CauldronCodebase
                     break;
                 case WardrobeCellState.Locked:
                     skinPreview.material = lockedMaterial;
+                    button.IsInteractive = false;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -81,25 +90,10 @@ namespace CauldronCodebase
             Highlight.enabled = state;
         }
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public void Click()
         {
-            if (currentState == WardrobeCellState.Locked)
-            {
-                return;
-            }
-            
-            base.OnPointerClick(eventData);
             sound.Play(Sounds.MenuClick);
             OnClick?.Invoke(this);
-        }
-
-        public override void OnPointerEnter(PointerEventData eventData)
-        {
-            if (currentState == WardrobeCellState.Locked)
-            {
-                return;
-            }
-            base.OnPointerEnter(eventData);
         }
     }
 }

@@ -27,8 +27,8 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea(5, 10)] public string PremiumTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
-    [SerializeField] private Button rejectButton;
-    [SerializeField] private Button acceptButton;
+    [SerializeField] private FlexibleButton rejectButton;
+    [SerializeField] private FlexibleButton acceptButton;
     
     private RecipeBook recipeBook;
     private GameDataHandler gameDataHandler;
@@ -133,8 +133,8 @@ public class TutorialManager : MonoBehaviour
         recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
         
         SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
-        acceptButton.onClick.AddListener(AcceptAutoCookingClickButton);
-        rejectButton.onClick.AddListener(RejectAutoCookingClickButton);
+        acceptButton.OnClick += AcceptAutoCookingClickButton;
+        rejectButton.OnClick += RejectAutoCookingClickButton;
         tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
         acceptButton.gameObject.SetActive(true);
         rejectButton.gameObject.SetActive(true);
@@ -192,8 +192,8 @@ public class TutorialManager : MonoBehaviour
 
     private void DisableButtonAutoCooking()
     {
-        acceptButton.onClick.RemoveListener(AcceptAutoCookingClickButton);
-        rejectButton.onClick.RemoveListener(RejectAutoCookingClickButton);
+        acceptButton.OnClick -= AcceptAutoCookingClickButton;
+        rejectButton.OnClick -= RejectAutoCookingClickButton;
         acceptButton.gameObject.SetActive(false);
         rejectButton.gameObject.SetActive(false);
     }

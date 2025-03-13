@@ -2,10 +2,11 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
+using Universal;
 
 namespace CauldronCodebase
 {
-    public class CovenOption : MonoBehaviour, IPointerClickHandler
+    public class CovenOption : FlexibleButton
     {
         public CovenNightEventProvider covenNightEventProvider;
         public Statustype status = Statustype.Fear;
@@ -14,13 +15,12 @@ namespace CauldronCodebase
         public GameObject callToAction;
         private GameDataHandler gameDataHandler;
         private NightPanel nightPanel;
-        private bool interactable;
         
         [Inject]
         private void Construct(GameDataHandler dataHandler, NightPanel panel)
         {
             gameDataHandler = dataHandler;
-            nightPanel =panel;
+            nightPanel = panel;
         }
 
         private void OnEnable()
@@ -31,15 +31,13 @@ namespace CauldronCodebase
             }
             blackout.SetActive(!gameDataHandler.IsEnoughMoneyForRumours());
             callToAction.SetActive(gameDataHandler.IsEnoughMoneyForRumours());
-            interactable = gameDataHandler.IsEnoughMoneyForRumours();
+            IsInteractive = gameDataHandler.IsEnoughMoneyForRumours();
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public override void Activate()
         {
-            if (!interactable)
-            {
-                return;
-            }
+            base.Activate();
+            
             gameDataHandler.BuyRumour();
             nightPanel.AddEventAsLast(covenNightEventProvider.GetRandom(status, high)).Forget();
         }

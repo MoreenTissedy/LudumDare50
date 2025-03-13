@@ -85,7 +85,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2145615631913173970}
   - component: {fileID: 1524895466177029967}
-  - component: {fileID: 3810844099008170729}
+  - component: {fileID: 3330032921458784591}
+  - component: {fileID: 6825497051721302427}
+  - component: {fileID: 419233169953452729}
+  - component: {fileID: 1787953593738639759}
   m_Layer: 0
   m_Name: PrevPage
   m_TagString: Untagged
@@ -121,7 +124,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4203263152531711764}
   m_CullTransparentMesh: 0
---- !u!114 &3810844099008170729
+--- !u!114 &3330032921458784591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,49 +133,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 4203263152531711764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 2
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 21300000, guid: 08328d6d2e79f1f49a8bc7567363e268, type: 3}
-    m_PressedSprite: {fileID: 21300000, guid: 08328d6d2e79f1f49a8bc7567363e268, type: 3}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 6599837674939748812}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: CauldronCodebase.Book, Assembly-CSharp
-        m_MethodName: PrevPage
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  _animationComponents:
+  - {fileID: 6825497051721302427}
+  _interactive: 1
+--- !u!114 &6825497051721302427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4203263152531711764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0efcc47e56a6aea4b8076e82d2f1b899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enabled: {fileID: 21300000, guid: 97a4f4f48effbb049967ddecf3245b87, type: 3}
+  _disabled: {fileID: 21300000, guid: 97a4f4f48effbb049967ddecf3245b87, type: 3}
+  _selected: {fileID: 21300000, guid: 08328d6d2e79f1f49a8bc7567363e268, type: 3}
+  _activate: {fileID: 21300000, guid: 08328d6d2e79f1f49a8bc7567363e268, type: 3}
+  _image: {fileID: 6599837674939748812}
+  _duration: 0.2
+--- !u!114 &419233169953452729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4203263152531711764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d477291b9e775c498c6df0e7411761f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatedButton: {fileID: 3330032921458784591}
+--- !u!114 &1787953593738639759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4203263152531711764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0fe7e5e7d18c5479cb573233169a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3330032921458784591}
+  isNext: 1

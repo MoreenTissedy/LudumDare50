@@ -31,11 +31,18 @@ namespace Buttons
         private void OnEnable()
         {
             inputManager.Controls.General.NormalNavigate.performed += Navigate;
+            inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
         }
 
         private void OnDisable()
         {
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
+            inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
+        }
+
+        private void ActivateCurrent(InputAction.CallbackContext obj)
+        {
+            Current.Activate();
         }
 
         private void Navigate(InputAction.CallbackContext context)
@@ -101,6 +108,11 @@ namespace Buttons
         public override void Unselect()
         {
             Current.Unselect();
+        }
+
+        public override void Activate()
+        {
+            Current.Activate();
         }
     }
 }

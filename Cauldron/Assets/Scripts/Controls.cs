@@ -230,7 +230,7 @@ namespace CauldronCodebase
                 {
                     ""name"": """",
                     ""id"": ""7036a45b-a330-4227-a651-ee0a494ed515"",
-                    ""path"": ""<Keyboard>/anyKey"",
+                    ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -264,6 +264,17 @@ namespace CauldronCodebase
                     ""name"": """",
                     ""id"": ""976e5e4a-1b23-4a2e-bf1d-ba1fdad1f0b2"",
                     ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AnyKey"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""137a82c4-04e5-4947-8383-33bb4db24070"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

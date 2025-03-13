@@ -10,17 +10,18 @@ namespace Universal
         [SerializeField] private bool _interactive = true;
 
         public event Action OnClick;
-        
+
         public bool IsInteractive
         {
             get { return _interactive; }
-            set {
-                    _interactive = value;
-                    foreach (var component in _animationComponents)
-                    {
-                        component?.ChangeInteractive(value);
-                    }
+            set
+            {
+                _interactive = value;
+                foreach (var component in _animationComponents)
+                {
+                    component?.ChangeInteractive(value);
                 }
+            }
         }
 
         private void Reset()
@@ -49,9 +50,9 @@ namespace Universal
             }
         }
 
-        public virtual void Activate()
+        public override void Activate()
         {
-           foreach (var component in _animationComponents)
+            foreach (var component in _animationComponents)
             {
                 component?.Activate();
             }

@@ -51,6 +51,14 @@ namespace CauldronCodebase
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""NormalNavigate"",
+                    ""type"": ""Value"",
+                    ""id"": ""2cba4058-09b1-43d9-bc7f-8d2ab0fdd4c6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -262,6 +270,72 @@ namespace CauldronCodebase
                     ""action"": ""AnyKey"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa84480c-5a9a-40fd-adcc-7f456e0af6ca"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""759570a8-d4ed-499b-9d40-e43478e6a0e1"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""9ad25c50-b887-498b-8c04-a9b27126ba9a"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""b86a43c3-f78a-4cb7-b131-3d2a2c9da4b9"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""620069ac-3729-40cf-b87f-9e918ce9d12e"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""efe7c073-069b-46ce-8d30-ddea9116ad0a"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NormalNavigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -708,6 +782,7 @@ namespace CauldronCodebase
             m_General_BookToggle = m_General.FindAction("BookToggle", throwIfNotFound: true);
             m_General_BookNavigate = m_General.FindAction("BookNavigate", throwIfNotFound: true);
             m_General_AnyKey = m_General.FindAction("AnyKey", throwIfNotFound: true);
+            m_General_NormalNavigate = m_General.FindAction("NormalNavigate", throwIfNotFound: true);
             // Debug
             m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
             m_Debug_ClearSave = m_Debug.FindAction("ClearSave", throwIfNotFound: true);
@@ -776,6 +851,7 @@ namespace CauldronCodebase
         private readonly InputAction m_General_BookToggle;
         private readonly InputAction m_General_BookNavigate;
         private readonly InputAction m_General_AnyKey;
+        private readonly InputAction m_General_NormalNavigate;
         public struct GeneralActions
         {
             private @Controls m_Wrapper;
@@ -784,6 +860,7 @@ namespace CauldronCodebase
             public InputAction @BookToggle => m_Wrapper.m_General_BookToggle;
             public InputAction @BookNavigate => m_Wrapper.m_General_BookNavigate;
             public InputAction @AnyKey => m_Wrapper.m_General_AnyKey;
+            public InputAction @NormalNavigate => m_Wrapper.m_General_NormalNavigate;
             public InputActionMap Get() { return m_Wrapper.m_General; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -805,6 +882,9 @@ namespace CauldronCodebase
                     @AnyKey.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAnyKey;
                     @AnyKey.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAnyKey;
                     @AnyKey.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnAnyKey;
+                    @NormalNavigate.started -= m_Wrapper.m_GeneralActionsCallbackInterface.OnNormalNavigate;
+                    @NormalNavigate.performed -= m_Wrapper.m_GeneralActionsCallbackInterface.OnNormalNavigate;
+                    @NormalNavigate.canceled -= m_Wrapper.m_GeneralActionsCallbackInterface.OnNormalNavigate;
                 }
                 m_Wrapper.m_GeneralActionsCallbackInterface = instance;
                 if (instance != null)
@@ -821,6 +901,9 @@ namespace CauldronCodebase
                     @AnyKey.started += instance.OnAnyKey;
                     @AnyKey.performed += instance.OnAnyKey;
                     @AnyKey.canceled += instance.OnAnyKey;
+                    @NormalNavigate.started += instance.OnNormalNavigate;
+                    @NormalNavigate.performed += instance.OnNormalNavigate;
+                    @NormalNavigate.canceled += instance.OnNormalNavigate;
                 }
             }
         }
@@ -969,6 +1052,7 @@ namespace CauldronCodebase
             void OnBookToggle(InputAction.CallbackContext context);
             void OnBookNavigate(InputAction.CallbackContext context);
             void OnAnyKey(InputAction.CallbackContext context);
+            void OnNormalNavigate(InputAction.CallbackContext context);
         }
         public interface IDebugActions
         {

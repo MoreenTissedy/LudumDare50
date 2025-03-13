@@ -1,8 +1,19 @@
 namespace CauldronCodebase
 {
+    public enum GamepadType
+    {
+        None,
+        XBox,
+        Playstation,
+        Switch,
+        Unknown
+    }
     public class InputManager
     {
         public readonly Controls Controls;
+
+        public bool GamepadConnected;
+        public GamepadType GamepadType;
         
         public InputManager()
         {
@@ -10,7 +21,9 @@ namespace CauldronCodebase
             Controls.General.Enable();
             Controls.UI.Enable();
             
-            //debug
+            //For tests, will get real data later
+            GamepadConnected = true;
+            GamepadType = GamepadType.Playstation;
         }
     }
 }

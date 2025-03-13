@@ -1,13 +1,19 @@
+using CauldronCodebase;
 using UnityEngine;
+using Zenject;
 
 namespace Buttons
 {
     public class SelectOnEnable: MonoBehaviour
     {
-        //add controller check
+        [Inject]
+        private InputManager inputManager;
         private void OnEnable()
         {
-            GetComponent<ISelectable>()?.Select();
+            if (inputManager.GamepadConnected)
+            {
+                GetComponent<ISelectable>()?.Select();
+            }
         }
 
         private void OnDisable()

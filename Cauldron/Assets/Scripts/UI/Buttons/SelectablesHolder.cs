@@ -1,7 +1,9 @@
 using System.Linq;
+using CauldronCodebase;
 using NaughtyAttributes;
 using UnityEngine;
-using Universal;
+using UnityEngine.InputSystem;
+using Zenject;
 
 namespace Buttons
 {
@@ -13,56 +15,40 @@ namespace Buttons
 
     public class SelectablesHolder : Selectable
     {
-        [ReorderableList]
-        public Selectable[] selectables;
+        [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
 
         private int currentIndex = -1;
         private Selectable Current => selectables[currentIndex];
 
+        [Inject] private InputManager inputManager;
+
         private void Reset()
         {
-            selectables = GetComponentsInChildren<FlexibleButton>(false);
+            selectables = GetComponentsInChildren<Selectable>(false);
         }
 
-        private void GetButtons()
+        private void OnEnable()
         {
-            if (direction == SelectableDirection.Horizontal)
-            {
-                selectables = selectables.OrderBy(x => x.transform.position.x).Where(x => x.gameObject.activeInHierarchy).ToArray();
-            }
-            else if (direction == SelectableDirection.Vertical)
-            {
-                selectables = selectables.OrderByDescending(x => x.transform.position.y).Where(x => x.gameObject.activeInHierarchy).ToArray();
-            }
+            inputManager.Controls.General.NormalNavigate.performed += Navigate;
         }
-        
 
-        private void Update()
+        private void OnDisable()
         {
-            int diff = 0; //use proper Input
+            inputManager.Controls.General.NormalNavigate.performed -= Navigate;
+        }
+
+        private void Navigate(InputAction.CallbackContext context)
+        {
+            float diff = 0;
             if (direction == SelectableDirection.Vertical)
             {
-                if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    diff = 1;
-                }
-                else if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    diff = -1;
-                }
+                diff = context.ReadValue<Vector2>().y;
             }
 
             if (direction == SelectableDirection.Horizontal)
             {
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    diff = 1;
-                }
-                else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    diff = -1;
-                }
+                diff = context.ReadValue<Vector2>().x;
             }
 
             if (diff == 0)
@@ -81,7 +67,7 @@ namespace Buttons
             }
 
             Current.Unselect();
-            currentIndex += diff;
+            currentIndex += diff > 0 ? 1 : -1;
             Current.Select();
         }
 
@@ -89,6 +75,20 @@ namespace Buttons
         {
             GetButtons();
             SelectDefaultElement();
+        }
+
+        private void GetButtons()
+        {
+            if (direction == SelectableDirection.Horizontal)
+            {
+                selectables = selectables.OrderBy(x => x.transform.position.x)
+                    .Where(x => x.gameObject.activeInHierarchy).ToArray();
+            }
+            else if (direction == SelectableDirection.Vertical)
+            {
+                selectables = selectables.OrderByDescending(x => x.transform.position.y)
+                    .Where(x => x.gameObject.activeInHierarchy).ToArray();
+            }
         }
 
         protected virtual void SelectDefaultElement()

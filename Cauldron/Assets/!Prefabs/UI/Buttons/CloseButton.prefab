@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1377378541245293032}
   - component: {fileID: 5463851263106574444}
   - component: {fileID: 3460570469509493894}
+  - component: {fileID: 8443184328576851838}
   m_Layer: 0
   m_Name: button
   m_TagString: Untagged
@@ -139,6 +140,20 @@ MonoBehaviour:
   _disabled: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
   _selected: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   _pressed: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+--- !u!114 &8443184328576851838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559045040525453640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc2c88b9206488badfb9eabb11feab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GamepadButton: 1
+  ScriptButton: {fileID: 1377378541245293032}
 --- !u!1 &2424488657029102380
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +165,7 @@ GameObject:
   - component: {fileID: 2404867246422559252}
   - component: {fileID: 8055141957040995744}
   - component: {fileID: 5455318006346428442}
+  - component: {fileID: 1476351408850386052}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -215,3 +231,16 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1476351408850386052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2424488657029102380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7b37427b1b46709663f640c23e038b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VisibleWithGamepad: 0

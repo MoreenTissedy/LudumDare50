@@ -118,6 +118,8 @@ namespace EasyLoc
                         bool hasData = false;
                         //for UI.Text components we have special TextTool script
                         //that allows us to specify the text ID (but doesn't ensure its uniqueness for now)
+                        
+                        //TODO: don't really need a Localize field, change logic 
                         if (mono is ILocTextTool textTool)
                         {
                             if (locData.TryGetValue(textTool.GetId(), out string textValue))

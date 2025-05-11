@@ -1,3 +1,7 @@
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
 namespace CauldronCodebase
 {
     public enum GamepadType
@@ -8,12 +12,23 @@ namespace CauldronCodebase
         Switch,
         Unknown
     }
+
+    public enum GamepadButton
+    {
+        None,
+        East = 1,
+        West = 2,
+        South = 3,
+        North = 4
+    }
     public class InputManager
     {
         public readonly Controls Controls;
 
         public bool GamepadConnected;
         public GamepadType GamepadType;
+
+        public Action<GamepadType> InputChanged;
         
         public InputManager()
         {
@@ -21,9 +36,25 @@ namespace CauldronCodebase
             Controls.General.Enable();
             Controls.UI.Enable();
             
-            //For tests, will get real data later
+            //GamepadConnected = Gamepad.current != null;
             GamepadConnected = true;
             GamepadType = GamepadType.Playstation;
+            Debug.LogError("Current gamepad "+ Gamepad.current?.device);
+            
+            InputSystem.onDeviceChange += OnDeviceChange;
+        }
+
+        private void OnDeviceChange(InputDevice arg1, InputDeviceChange arg2)
+        {
+            if (Gamepad.current != null)
+            {
+                Debug.LogError("Current gamepad "+ Gamepad.current.device);
+            }
+            else
+            {
+                Debug.LogError("Gamepad disconnected");
+            }
+            //InputChanged?.Invoke();
         }
     }
 }

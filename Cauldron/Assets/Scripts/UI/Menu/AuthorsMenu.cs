@@ -7,6 +7,7 @@ namespace CauldronCodebase
 {
     public class AuthorsMenu : MonoBehaviour
     {
+        public MenuOverlayManager overlayManager;
         [SerializeField] private FlexibleButton closePanelButton;
 
         [Header("Fade")]
@@ -29,6 +30,7 @@ namespace CauldronCodebase
         {
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
+            overlayManager.RemoveLayer(GetComponent<OverlayLayer>());
         }
 
         private void OnDestroy()

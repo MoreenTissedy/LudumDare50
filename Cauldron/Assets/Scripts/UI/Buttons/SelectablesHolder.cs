@@ -13,11 +13,14 @@ namespace Buttons
         Vertical
     }
 
-    public class SelectablesHolder : Selectable
+    public class SelectablesHolder : Selectable, IOverlayElement
     {
         [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
+        public int startIndex = 0;
 
+        private bool locked;
+        private float lastInputTime;
         private int currentIndex = -1;
         private Selectable Current => selectables[currentIndex];
 
@@ -30,12 +33,20 @@ namespace Buttons
 
         private void ActivateCurrent(InputAction.CallbackContext obj)
         {
+            if (locked)
+            {
+                return;
+            }
             Current.Activate();
         }
 
-        //TODO: fix bug with duplicate Navigate event when going up from Links holder
         private void Navigate(InputAction.CallbackContext context)
         {
+            if (locked || Time.realtimeSinceStartup - lastInputTime < 0.3f)
+            {
+                return;
+            }
+            
             float diff = 0;
             if (direction == SelectableDirection.Vertical)
             {
@@ -47,7 +58,7 @@ namespace Buttons
                 diff = context.ReadValue<Vector2>().x;
             }
 
-            if (diff == 0)
+            if (diff < 0.8f && diff > -0.8f)
             {
                 return;
             }
@@ -63,6 +74,7 @@ namespace Buttons
             }
 
             Current.Unselect();
+            lastInputTime = Time.realtimeSinceStartup;
             currentIndex += diff > 0 ? 1 : -1;
             Current.Select();
         }
@@ -92,7 +104,7 @@ namespace Buttons
         protected virtual void SelectDefaultElement()
         {
             if (selectables is null || selectables.Length == 0) return;
-            currentIndex = 0;
+            currentIndex = Mathf.Min(startIndex, selectables.Length - 1);
             Current.Select();
         }
 
@@ -102,5 +114,12 @@ namespace Buttons
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
             inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
         }
+
+        public void Lock(bool on)
+        {
+            locked = on;
+        }
+
+        public bool IsLocked() => locked;
     }
 }

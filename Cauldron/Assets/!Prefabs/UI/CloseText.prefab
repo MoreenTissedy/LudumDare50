@@ -162,8 +162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FormatText: '{0} - close'
-  Button: 1
-  Mediator: {fileID: 0}
+  Button: 0
+  Mediator: {fileID: 3198918161838062309}
   CharColor: {r: 1, g: 0.6509804, b: 0.16078432, a: 1}
   TextField: {fileID: 2412058875037247387}
 --- !u!1 &4898632108929513450
@@ -175,6 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1081216616672835417}
+  - component: {fileID: 3198918161838062309}
   m_Layer: 0
   m_Name: CloseText
   m_TagString: Untagged
@@ -202,3 +203,17 @@ RectTransform:
   m_AnchoredPosition: {x: -388.22, y: 156}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 0}
+--- !u!114 &3198918161838062309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4898632108929513450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc2c88b9206488badfb9eabb11feab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GamepadButton: 1
+  ScriptButton: {fileID: 0}

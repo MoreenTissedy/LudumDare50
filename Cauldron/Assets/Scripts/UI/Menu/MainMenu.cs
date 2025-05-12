@@ -10,16 +10,15 @@ namespace CauldronCodebase
 {
     public class MainMenu : MonoBehaviour
     {
+        public MenuOverlayManager overlayManager;
         public FlexibleButton continueGame;
         public FlexibleButton quit;
         public FlexibleButton newGame;
 
         [Header("Settings")] public FlexibleButton settings;
-        public SettingsMenu settingsMenu;
 
         [Header("Authors")] 
         [SerializeField] private FlexibleButton authorsButton;
-        [SerializeField] private AuthorsMenu authorsMenu;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
@@ -49,8 +48,8 @@ namespace CauldronCodebase
             continueGame.OnClick += ContinueClick;
             quit.OnClick += GameLoader.Exit;
             newGame.OnClick += NewGameClick;
-            settings.OnClick += settingsMenu.Open;
-            authorsButton.OnClick += authorsMenu.Open;
+            settings.OnClick += overlayManager.OpenSettings;
+            authorsButton.OnClick += overlayManager.OpenAuthors;
         }
 
         public void ResetGameData(bool saveLanguage = true)
@@ -140,8 +139,8 @@ namespace CauldronCodebase
             continueGame.OnClick -= ContinueClick;
             quit.OnClick -= GameLoader.Exit;
             newGame.OnClick -= NewGameClick;
-            settings.OnClick -= settingsMenu.Open;
-            authorsButton.OnClick -= authorsMenu.Open;          
+            settings.OnClick -= overlayManager.OpenSettings;
+            authorsButton.OnClick -= overlayManager.OpenAuthors;          
         }
     }
 }

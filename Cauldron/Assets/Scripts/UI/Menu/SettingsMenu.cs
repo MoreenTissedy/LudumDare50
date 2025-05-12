@@ -14,6 +14,7 @@ namespace CauldronCodebase
 {
     public class SettingsMenu : MonoBehaviour
     {
+        public MenuOverlayManager overlayManager;
         [Header("Music and sounds")] 
         [SerializeField] private Slider music;
         [SerializeField] private Slider sounds;
@@ -141,6 +142,7 @@ namespace CauldronCodebase
         {
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
+            overlayManager.RemoveLayer(GetComponent<OverlayLayer>());
         }
 
         private void OpenResetDialogue()

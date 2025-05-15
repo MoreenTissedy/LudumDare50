@@ -1,3 +1,4 @@
+using System;
 using Buttons;
 using CauldronCodebase;
 using NaughtyAttributes;
@@ -46,10 +47,29 @@ namespace EasyLoc
         {
             if (Mediator)
             {
-                return (int)Mediator.GamepadButton;
+                return GetButtonIndex(Mediator.GamepadButton);
             }
 
-            return (int) Button;
+            return GetButtonIndex(Button);
+        }
+
+        private int GetButtonIndex(GamepadButton button)
+        {
+            switch (button)
+            {
+                case GamepadButton.None:
+                    return -1;
+                case GamepadButton.East:
+                    return 0;
+                case GamepadButton.West:
+                    return 6;
+                case GamepadButton.South:
+                    return 1;
+                case GamepadButton.North:
+                    return 5;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(button), button, null);
+            }
         }
     }
 }

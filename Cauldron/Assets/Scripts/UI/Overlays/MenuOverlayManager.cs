@@ -19,7 +19,7 @@ namespace CauldronCodebase
         public void OpenSettings()
         {
             settingsMenu.Open();
-            AddLayer(settingsMenu.GetComponent<OverlayLayer>());
+            AddLayer(settingsMenu.mainLayer);
         }
 
         public void OpenAuthors()
@@ -28,7 +28,7 @@ namespace CauldronCodebase
             AddLayer(authorsMenu.GetComponent<OverlayLayer>());
         }
 
-        private void AddLayer(OverlayLayer layer)
+        public void AddLayer(OverlayLayer layer)
         {
             if (layers.Peek() == layer)
             {

@@ -1,3 +1,4 @@
+using System;
 using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,6 +20,12 @@ namespace Buttons
         private void Reset()
         {
             ScriptButton = GetComponent<FlexibleButton>();
+        }
+
+        private void OnEnable()
+        {
+            //initial delay
+            lastInputTime = Time.realtimeSinceStartup + 0.2f;
         }
 
         private void Update()

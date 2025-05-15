@@ -1,5 +1,6 @@
 using EasyLoc;
 using System.Collections.Generic;
+using Buttons;
 using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
@@ -23,7 +24,7 @@ namespace CauldronCodebase
         [SerializeField] private TextMeshProUGUI soundsLabel;
         
         [Header("Language")]
-        [SerializeField] private TMP_Dropdown language;
+        [SerializeField] private SelectableList language;
 
         [Header("Resolution")] 
         [SerializeField] private TMP_Dropdown resolutionDropdown;
@@ -78,7 +79,7 @@ namespace CauldronCodebase
             LoadLanguage();
             LoadAutoCookingMode();
             LoadPointerSpeed();
-            language.onValueChanged.AddListener(ChangeLanguage);
+            language.OnValueChanged += ChangeLanguage;
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             pointerSpeed.onValueChanged.AddListener(ChangePointerSpeed);
@@ -116,6 +117,10 @@ namespace CauldronCodebase
             if (PlayerPrefs.HasKey(PrefKeys.LanguageKey))
             {
                 language.SetValueWithoutNotify(PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.EN.ToString() ? 0 : 1);
+            }
+            else
+            {
+                language.SetValueWithoutNotify(0);
             }
         }
 

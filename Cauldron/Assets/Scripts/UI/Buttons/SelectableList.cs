@@ -30,10 +30,16 @@ namespace Buttons
                 {
                     return;
                 }
-                currentIndex = Mathf.Clamp(0, Values.Length, value);
+                currentIndex = Mathf.Clamp(0, Values.Length - 1, value);
                 valueText.text = Values[currentIndex];
                 OnValueChanged?.Invoke(currentIndex);
             }
+        }
+
+        public void SetValueWithoutNotify(int index)
+        {
+            currentIndex = index;
+            valueText.text = Values[currentIndex];
         }
 
         private Color initialColor;

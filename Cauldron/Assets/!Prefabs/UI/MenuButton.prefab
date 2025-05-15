@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 7006740304953167519}
   - component: {fileID: 8618192893772854292}
   - component: {fileID: 3245688994352908628}
+  - component: {fileID: 6048197292221986347}
   m_Layer: 5
   m_Name: MenuButton
   m_TagString: Untagged
@@ -236,6 +237,7 @@ MonoBehaviour:
   _animationComponents:
   - {fileID: 5612640677740918524}
   - {fileID: 7006740304953167519}
+  - {fileID: 6048197292221986347}
   _interactive: 1
 --- !u!114 &3245688994352908628
 MonoBehaviour:
@@ -250,3 +252,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animatedButton: {fileID: 8618192893772854292}
+--- !u!114 &6048197292221986347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4653457691051689162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9baac5e6b19828469a182b4070ffd10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _image: {fileID: 4653457691051689159}
+  _enabled: {r: 1, g: 1, b: 1, a: 1}
+  _disabled: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+  _selected: {r: 1, g: 0.6509804, b: 0.16078432, a: 1}
+  _pressed: {r: 0.3679245, g: 0.22948049, b: 0.13016197, a: 1}

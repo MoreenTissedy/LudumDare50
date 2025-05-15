@@ -25,9 +25,11 @@ namespace CauldronCodebase
         public float startTweenSize = 0f;
         public FlexibleButton accept;
         public FlexibleButton decline;
+        public OverlayLayer uiLayer;
         
         [Inject] private SoundManager soundManager;
         [Inject] private InputManager inputManager;
+        [Inject] private OverlayManager overlayManager;
 
         public bool IsEnable { get; private set; }
         
@@ -45,6 +47,7 @@ namespace CauldronCodebase
         {
             IsEnable = true;
             gameObject.SetActive(true);
+            overlayManager.AddLayer(uiLayer);
             newPotionEffect.SetActive(false);
             inputManager.SetCursor(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
@@ -98,6 +101,7 @@ namespace CauldronCodebase
                 .OnComplete(() => gameObject.SetActive(false));
 
             IsEnable = false;
+            overlayManager.RemoveLayer(uiLayer);
         }
 
         private void OnDestroy()

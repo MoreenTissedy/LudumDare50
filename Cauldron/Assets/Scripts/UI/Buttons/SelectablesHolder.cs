@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CauldronCodebase;
 using NaughtyAttributes;
@@ -17,18 +18,27 @@ namespace Buttons
     {
         [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
+        
         public int startIndex = 0;
 
         private bool locked;
         private float lastInputTime;
         private int currentIndex = -1;
-        private Selectable Current => selectables[currentIndex];
+
+        public int CurrentIndex => currentIndex;
+        private Selectable Current => currentIndex >= 0 ? selectables[currentIndex] : null;
 
         [Inject] private InputManager inputManager;
 
         private void Reset()
         {
-            selectables = GetComponentsInChildren<Selectable>(false);
+            selectables = GetComponentsInChildren<Selectable>(false).Where(x => x != this).ToArray();
+        }
+
+        [Button("Clear")]
+        public void Clear()
+        {
+            selectables = Array.Empty<Selectable>();
         }
 
         private void ActivateCurrent(InputAction.CallbackContext obj)
@@ -73,10 +83,17 @@ namespace Buttons
                 return;
             }
 
-            Current.Unselect();
+            Current?.Unselect();
             lastInputTime = Time.realtimeSinceStartup;
+            var oldIndex = currentIndex;
             currentIndex += diff > 0 ? 1 : -1;
+            OnIndexChange(oldIndex, currentIndex);
             Current.Select();
+        }
+
+        public virtual void OnIndexChange(int oldIndex, int newIndex)
+        {
+            
         }
 
         public override void Select()
@@ -110,7 +127,7 @@ namespace Buttons
 
         public override void Unselect()
         {
-            Current.Unselect();
+            Current?.Unselect();
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
             inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
         }

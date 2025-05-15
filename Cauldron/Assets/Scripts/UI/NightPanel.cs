@@ -34,7 +34,7 @@ namespace CauldronCodebase
         [Header("Coven features")] 
         public GameObject covenBlock;
         public FlexibleButton covenButton;
-        public GameObject covenPopup;
+        public OverlayLayer covenPopup;
         
         [Header("Interval between incoming cards in sec")] 
         public float enterTimeInterval = 1f;
@@ -85,7 +85,16 @@ namespace CauldronCodebase
 
         private void CovenButtonOnOnClick()
         {
-            covenPopup.SetActive(!covenPopup.activeSelf);
+            var wasVisible = covenPopup.gameObject.activeSelf;
+            covenPopup.gameObject.SetActive(!wasVisible);
+            if (!wasVisible)
+            {
+                OverlayManager.AddLayer(covenPopup);
+            }
+            else
+            {
+                OverlayManager.RemoveLayer(covenPopup);
+            }
         }
 
         private void ShowDefault()
@@ -129,7 +138,7 @@ namespace CauldronCodebase
         {
             bool covenFeatureUnlocked = StoryTagHelper.CovenFeatureUnlocked(gameDataHandler);
             covenBlock.SetActive(covenFeatureUnlocked);
-            covenPopup.SetActive(false);
+            covenPopup.gameObject.SetActive(false);
             if (covenFeatureUnlocked)
             {
                 covenButton.OnClick += CovenButtonOnOnClick;
@@ -297,6 +306,7 @@ namespace CauldronCodebase
             {
                 nightPanelCard.Hide();
             }
+            Debug.LogError("night panel close");
             base.CloseBook();
         }
     }

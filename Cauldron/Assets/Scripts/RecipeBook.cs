@@ -147,6 +147,7 @@ namespace CauldronCodebase
             base.OpenBook();
             ChangeMode(Mode.Magical);
             OnOpenBook?.Invoke();
+            Debug.LogError("open");
         }
 
         private void LoadRecipes()
@@ -588,7 +589,9 @@ namespace CauldronCodebase
         public override void CloseBook()
         {
             DisposeEndingScreen();
+            CloseAllPages();
             base.CloseBook();
+            Debug.LogError("close book");
         }
 
         private void DisposeEndingScreen()

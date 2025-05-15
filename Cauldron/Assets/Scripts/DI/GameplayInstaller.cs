@@ -31,6 +31,7 @@ namespace CauldronCodebase
         [SerializeField] private NightPanel nightPanel;
         [SerializeField] private CatTipsView catTipsView;
         [SerializeField] private CatAnimations catAnimations;
+        [SerializeField] private OverlayManager overlayManager;
 
         [Inject] private MainSettings mainSettings;
         [Inject] private DataPersistenceManager dataPersistenceManager;
@@ -66,6 +67,7 @@ namespace CauldronCodebase
             Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
             Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
             Container.Bind<CatAnimations>().FromInstance(catAnimations).AsSingle();
+            Container.Bind<OverlayManager>().FromInstance(overlayManager).AsSingle();
         }
 
         private void BindGameplay()

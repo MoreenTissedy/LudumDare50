@@ -36,7 +36,7 @@ namespace Universal
 
         public override void Activate()
         {
-            _image.color = _pressed;
+            //_image.color = _pressed;
         }
 
         public override void ChangeInteractive(bool isInteractive)

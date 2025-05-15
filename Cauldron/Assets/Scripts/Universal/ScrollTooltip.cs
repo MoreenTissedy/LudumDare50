@@ -12,6 +12,7 @@ namespace Universal
 {
     public class ScrollTooltip : MonoBehaviour
     {
+        public OverlayLayer overlayLayer;
         public Canvas canvas;
         public RectTransform scroll;
         public CanvasGroup scrollFader;
@@ -132,26 +133,6 @@ namespace Universal
         private void OnDestroy()
         {
             tweenSequence?.Kill();
-        }
-        
-        public async UniTask<bool> ShowAsDialog(string text, FlexibleButton acceptButton, FlexibleButton rejectButton)
-        {
-            bool accepted = false;
-            bool rejected = false;
-            acceptButton.OnClick += () => accepted = true;
-            rejectButton.OnClick += () => rejected = true;
-            acceptButton.gameObject.SetActive(true);
-            rejectButton.gameObject.SetActive(true);
-            
-            await Open(text);
-            await UniTask.WaitUntil(() => accepted || rejected);
-            
-            acceptButton.RemoveAllSubscriptions();
-            rejectButton.RemoveAllSubscriptions();
-            Close();
-            acceptButton.gameObject.SetActive(false);
-            rejectButton.gameObject.SetActive(false);
-            return accepted;
         }
     }
 }

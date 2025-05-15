@@ -1,4 +1,6 @@
+using System;
 using CauldronCodebase;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -8,10 +10,13 @@ namespace Buttons
     {
         [Inject]
         private InputManager inputManager;
-        private void OnEnable()
+
+        private float initialDelay = 0.2f;
+        private async void OnEnable()
         {
             if (inputManager.GamepadConnected)
             {
+                await UniTask.Delay(TimeSpan.FromSeconds(initialDelay), DelayType.Realtime);
                 GetComponent<ISelectable>()?.Select();
             }
         }

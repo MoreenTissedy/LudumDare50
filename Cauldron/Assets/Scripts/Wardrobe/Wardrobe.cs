@@ -24,11 +24,9 @@ namespace CauldronCodebase
         [Header("Animation")]
         [SerializeField] private float descriptionPanelShowSpeed;
         [SerializeField] private float descriptionPanelHiddenYPos;
-        
-        [Header("Confirmation")]
-        [SerializeField] private ScrollTooltip tooltipPrefab;
-        [SerializeField] private FlexibleButton rejectButton;
-        [SerializeField] private FlexibleButton acceptButton;
+
+        [Header("Confirmation")] 
+        [SerializeField] private TutorialScreen tutorialScreen;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
@@ -145,7 +143,7 @@ namespace CauldronCodebase
         public async void ApplySkin()
         {
             if (selectedCell.Skin.NeedsApprove && 
-                !await tooltipPrefab.ShowAsDialog(selectedCell.Skin.ApproveMessage, acceptButton, rejectButton))
+                !await tutorialScreen.ShowAsDialog(selectedCell.Skin.ApproveMessage))
             {
                 return;
             }

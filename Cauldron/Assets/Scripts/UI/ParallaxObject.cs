@@ -17,6 +17,10 @@ public class ParallaxObject : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (Mouse.current is null)
+        {
+            return;
+        }
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         float x = (mousePosition.x - Screen.width / 2f) * parallaxPower / Screen.width;
         float y = (mousePosition.y - Screen.height / 2f) * parallaxPower * PARALLAX_VERTICAL_POWER_MODIFIER / Screen.height;

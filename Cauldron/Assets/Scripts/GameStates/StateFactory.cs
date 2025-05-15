@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using UnityEngine.InputSystem.UI;
+using Zenject;
 
 namespace CauldronCodebase.GameStates
 {
@@ -15,7 +16,9 @@ namespace CauldronCodebase.GameStates
         GameStateMachine gameStateMachine;
         RecipeBook recipeBook;
         MilestoneProvider milestoneProvider;
-        
+        private readonly InputManager inputManager;
+        private readonly VirtualMouseInput virtualMouseInput;
+
         DataPersistenceManager dataPersistenceManager;
         private GameFXManager gameFXManager;
         private readonly StatusChecker statusChecker;
@@ -39,7 +42,7 @@ namespace CauldronCodebase.GameStates
                             GameFXManager fxManager, 
                             StatusChecker statusChecker, 
                             IAchievementManager achievementManager,
-                            MilestoneProvider milestoneProvider)
+                            MilestoneProvider milestoneProvider, InputManager inputManager)
 
         {
             this.deck = deck;
@@ -59,12 +62,13 @@ namespace CauldronCodebase.GameStates
             this.statusChecker = statusChecker;
             this.achievementManager = achievementManager;
             this.milestoneProvider = milestoneProvider;
+            this.inputManager = inputManager;
         }
 
         public VisitorState CreateVisitorState()
         {
             return new VisitorState(deck, settings, gameDataHandler, visitorManager, cauldron,
-                gameStateMachine, nightEvents, soundManager, statusChecker, achievementManager);
+                gameStateMachine, nightEvents, soundManager, statusChecker, achievementManager, inputManager);
         }
 
 

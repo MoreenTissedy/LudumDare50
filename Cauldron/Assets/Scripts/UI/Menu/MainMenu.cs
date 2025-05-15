@@ -32,6 +32,7 @@ namespace CauldronCodebase
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private PlayerProgressProvider playerProgressProvider;
         [Inject] private VillagerFamiliarityChecker villagerChecker;
+        [Inject] private InputManager inputManager;
 
         private void Start()
         {
@@ -50,6 +51,8 @@ namespace CauldronCodebase
             newGame.OnClick += NewGameClick;
             settings.OnClick += overlayManager.OpenSettings;
             authorsButton.OnClick += overlayManager.OpenAuthors;
+
+            inputManager.SetCursor(false);
         }
 
         public void ResetGameData(bool saveLanguage = true)
@@ -103,6 +106,7 @@ namespace CauldronCodebase
         private void ContinueClick()
         {
             GameLoader.UnloadMenu();
+            inputManager.SetCursor(true);
         }
 
         private async void StartNewGame()

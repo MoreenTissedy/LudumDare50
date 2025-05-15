@@ -27,6 +27,7 @@ namespace CauldronCodebase
         public FlexibleButton decline;
         
         [Inject] private SoundManager soundManager;
+        [Inject] private InputManager inputManager;
 
         public bool IsEnable { get; private set; }
         
@@ -45,6 +46,7 @@ namespace CauldronCodebase
             IsEnable = true;
             gameObject.SetActive(true);
             newPotionEffect.SetActive(false);
+            inputManager.SetCursor(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
                 OnComplete(() =>
                 {
@@ -72,14 +74,14 @@ namespace CauldronCodebase
 
         private void Accept()
         {
-            OnAccept?.Invoke();
             Hide();
+            OnAccept?.Invoke();
         }
 
         private void Decline()
         {
-            OnDecline?.Invoke();
             Hide();
+            OnDecline?.Invoke();
         }
 
         public void ClearAcceptSubscriptions()
@@ -89,6 +91,7 @@ namespace CauldronCodebase
 
         void Hide()
         {
+            inputManager.SetCursor(true);
             soundManager.Play(Sounds.PotionPopupClick);
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)

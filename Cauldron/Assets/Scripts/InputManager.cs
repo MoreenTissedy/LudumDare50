@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.UI;
+using Zenject;
 
 namespace CauldronCodebase
 {
@@ -29,6 +32,9 @@ namespace CauldronCodebase
         public GamepadType GamepadType;
 
         public Action<GamepadType> InputChanged;
+
+        [Inject]
+        private VirtualMouseInput virtualMouseInput; 
         
         public InputManager()
         {
@@ -38,9 +44,10 @@ namespace CauldronCodebase
             
             //GamepadConnected = Gamepad.current != null;
             GamepadConnected = true;
-            GamepadType = GamepadType.Playstation;
-            Debug.LogError("Current gamepad "+ Gamepad.current?.device);
+            GamepadType = GamepadType.Switch;
+            Debug.LogError("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
             
+            //todo: do not forget nonlazy
             InputSystem.onDeviceChange += OnDeviceChange;
         }
 
@@ -48,13 +55,27 @@ namespace CauldronCodebase
         {
             if (Gamepad.current != null)
             {
-                Debug.LogError("Current gamepad "+ Gamepad.current.device);
+                Debug.LogError("Current gamepad: "+ (Gamepad.current.device ));
             }
             else
             {
                 Debug.LogError("Gamepad disconnected");
             }
             //InputChanged?.Invoke();
+        }
+
+        public void SetCursor(bool enable)
+        {
+            if (enable)
+            {
+                Cursor.visible = true;
+            }
+            else if (GamepadConnected)
+            {
+                Cursor.visible = false;
+            }
+
+            virtualMouseInput.enabled = enable;
         }
     }
 }

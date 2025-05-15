@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using UnityEngine;
+using UnityEngine.InputSystem.UI;
 
 namespace CauldronCodebase.GameStates
 {
@@ -15,6 +15,7 @@ namespace CauldronCodebase.GameStates
         private readonly EncounterResolver resolver;
         private readonly StatusChecker statusChecker;
         private readonly IAchievementManager achievementManager;
+        private readonly InputManager inputManager;
 
         public VisitorState(EncounterDeck deck,
                             MainSettings settings,
@@ -25,7 +26,8 @@ namespace CauldronCodebase.GameStates
                             NightEventProvider nightEventProvider, 
                             SoundManager soundManager,
                             StatusChecker statusChecker, 
-                            IAchievementManager achievementManager)
+                            IAchievementManager achievementManager, 
+                            InputManager input)
         {
             cardDeck = deck;
             this.gameDataHandler = gameDataHandler;
@@ -35,6 +37,7 @@ namespace CauldronCodebase.GameStates
             this.soundManager = soundManager;
             this.statusChecker = statusChecker;
             this.achievementManager = achievementManager;
+            this.inputManager = input;
 
             resolver = new EncounterResolver(settings, gameDataHandler, deck, nightEventProvider);
         }
@@ -54,6 +57,8 @@ namespace CauldronCodebase.GameStates
             visitorManager.Enter(currentCard);
             cauldron.PotionAccepted += EndEncounter;
             visitorManager.VisitorLeft += OnVisitorLeft;
+
+            inputManager.SetCursor(true);
         }
 
         public override void Exit()
@@ -61,7 +66,8 @@ namespace CauldronCodebase.GameStates
             gameDataHandler.cardsDrawnToday++;
             cauldron.PotionAccepted -= EndEncounter;
             visitorManager.VisitorLeft -= OnVisitorLeft;
-            visitorManager.Exit();           
+            visitorManager.Exit();    
+            inputManager.SetCursor(false);
         }
 
         private void OnVisitorLeft()

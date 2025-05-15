@@ -75,7 +75,7 @@ namespace CauldronCodebase
         private void Start()
         {
             LoadVolumeValues();
-            LoadResolution();
+            //LoadResolution();
             LoadLanguage();
             LoadAutoCookingMode();
             LoadPointerSpeed();

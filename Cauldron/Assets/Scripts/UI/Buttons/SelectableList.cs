@@ -7,30 +7,33 @@ using Zenject;
 
 namespace Buttons
 {
-    public class SelectableList: Selectable
+    public class SelectableList : Selectable, IOverlayElement
     {
         public string[] Values;
-        
+
         [SerializeField] private TextMeshProUGUI label;
         [SerializeField] private TextMeshProUGUI valueText;
         [SerializeField] private Color highlightColor;
-        
+
         [Inject] private InputManager inputManager;
 
         private int currentIndex = -1;
+        private float lastInputTime;
+        private bool locked;
 
         public event Action<int> OnValueChanged;
 
         public int CurrentIndex
         {
-            get { return currentIndex; }
+            get => currentIndex;
             set
             {
                 if (Values is null || Values.Length == 0 || currentIndex == value)
                 {
                     return;
                 }
-                currentIndex = Mathf.Clamp(0, Values.Length - 1, value);
+
+                currentIndex = Mathf.Clamp(value, 0, Values.Length - 1);
                 valueText.text = Values[currentIndex];
                 OnValueChanged?.Invoke(currentIndex);
             }
@@ -43,7 +46,7 @@ namespace Buttons
         }
 
         private Color initialColor;
-        
+
         public override void Select()
         {
             initialColor = label.color;
@@ -53,12 +56,19 @@ namespace Buttons
 
         private void Navigate(InputAction.CallbackContext context)
         {
+            if (locked || Time.realtimeSinceStartup - lastInputTime < 0.3f)
+            {
+                return;
+            }
+
             var diff = context.ReadValue<Vector2>().x;
             if (Mathf.Abs(diff) < 0.8f)
             {
                 return;
             }
-            CurrentIndex = diff < 0 ? CurrentIndex-- : CurrentIndex++;
+
+            CurrentIndex = diff < 0 ? currentIndex - 1 : currentIndex + 1;
+            lastInputTime = Time.realtimeSinceStartup;
         }
 
         public override void Unselect()
@@ -66,5 +76,12 @@ namespace Buttons
             label.color = initialColor;
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
         }
+
+        public void Lock(bool on)
+        {
+            locked = on;
+        }
+
+        public bool IsLocked() => locked;
     }
 }

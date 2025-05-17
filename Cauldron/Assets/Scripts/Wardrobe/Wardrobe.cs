@@ -61,8 +61,13 @@ namespace CauldronCodebase
         {
             totalPages = 1;
         }
-        
+
         protected override void UpdatePage()
+        {
+            //shouldn't be the book in the first place, probably
+        }
+
+        public override void OpenBook()
         {
             var skinsProviderSkins = skinsProvider.skins;
             LinkedList<SkinSO> sortedSkins = new LinkedList<SkinSO>();
@@ -95,6 +100,7 @@ namespace CauldronCodebase
 
                 i++;
             }
+            base.OpenBook();
         }
 
         private WardrobeCellState DetermineCellState(SkinSO skin)
@@ -110,11 +116,12 @@ namespace CauldronCodebase
         
         private void SelectCell(WardrobeCell cell)
         {
-            if (cell == selectedCell) return;
-            
-            selectedCell.ToggleSelect(false);
-            selectedCell = cell;
-            cell.ToggleSelect(true);
+            if (cell != selectedCell)
+            {
+                selectedCell.ToggleSelect(false);
+                selectedCell = cell;
+                cell.ToggleSelect(true);
+            }
 
             description.text = cell.Skin.DescriptionText;
             description2.text = cell.Skin.FlavorText;
@@ -142,6 +149,10 @@ namespace CauldronCodebase
 
         public async void ApplySkin()
         {
+            if (selectedCell is null)
+            {
+                return;
+            }
             if (selectedCell.Skin.NeedsApprove && 
                 !await tutorialScreen.ShowAsDialog(selectedCell.Skin.ApproveMessage))
             {

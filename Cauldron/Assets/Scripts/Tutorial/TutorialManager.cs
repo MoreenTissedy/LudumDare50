@@ -58,7 +58,7 @@ public class TutorialManager : MonoBehaviour
     {
         tutorials = tutorialStorage.GetTutorials();
         
-        recipeBook.OnOpenBook += ViewBookTutorial;
+        recipeBook.OnOpen += ViewBookTutorial;
         recipeBook.OnUnlockAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
@@ -117,7 +117,7 @@ public class TutorialManager : MonoBehaviour
 
     private void ViewBookTutorial()
     {
-        recipeBook.OnOpenBook -= ViewBookTutorial;
+        recipeBook.OnOpen -= ViewBookTutorial;
         
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_BOOK_OPENED))
         {
@@ -130,7 +130,7 @@ public class TutorialManager : MonoBehaviour
 
     private async void ViewAutoCookingTutorial()
     {
-        recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
+        recipeBook.OnOpen -= ViewAutoCookingTutorial;
         
         SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
         bool accepted = await tutorialScreen.ShowAsDialog(DescriptionTutorialAutoCooking);

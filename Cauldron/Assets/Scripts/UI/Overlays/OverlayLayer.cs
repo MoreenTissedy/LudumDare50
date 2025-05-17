@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -5,7 +7,7 @@ namespace CauldronCodebase
     public class OverlayLayer: MonoBehaviour
     {
         private bool locked;
-        private IOverlayElement[] items;
+        private List<IOverlayElement> items;
 
         private void OnValidate()
         {
@@ -18,7 +20,7 @@ namespace CauldronCodebase
 
         private void Awake()
         {
-            items = GetComponentsInChildren<IOverlayElement>();
+            items = GetComponentsInChildren<IOverlayElement>().ToList();
         }
 
         public void Lock(bool on)
@@ -28,6 +30,11 @@ namespace CauldronCodebase
             {
                 element.Lock(on);
             }
+        }
+
+        public void Register(IOverlayElement element)
+        {
+            items.Add(element);
         }
     }
 }

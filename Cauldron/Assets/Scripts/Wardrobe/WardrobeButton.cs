@@ -4,16 +4,17 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using Universal;
 using Zenject;
 
 namespace CauldronCodebase
 {
-    public class WardrobeButton : MonoBehaviour, IPointerClickHandler
+    public class WardrobeButton : FlexibleButton, IOverlayElement
     {
         [SerializeField] private float offsetX = 5;
         [SerializeField] private float clickedOffset = -2;
         [SerializeField] private float moveDuration;
+        [SerializeField] private OverlayLayer overlayLayer;
         private float initialXPos, offScreenXPos;
         
         [Inject] private Wardrobe wardrobe;
@@ -22,8 +23,9 @@ namespace CauldronCodebase
         [Inject] private SoundManager soundManager;
 
         private bool hidden;
+        private bool locked;
 
-        private void Awake()
+        private void Start()
         {
             initialXPos = transform.position.x;
             offScreenXPos = initialXPos + offsetX;
@@ -31,6 +33,8 @@ namespace CauldronCodebase
             
             stateMachine.OnGameStarted += TryShow;
             stateMachine.OnChangeState += Hide;
+            
+            overlayLayer.Register(this);
         }
 
         private void OnDestroy()
@@ -92,14 +96,22 @@ namespace CauldronCodebase
             transform.DOLocalMoveX(initialXPos, moveDuration);
         }
         
-        public void OnPointerClick(PointerEventData eventData)
+        public override void Activate()
         {
-            if (hidden)
+            if (hidden || locked)
             {
                 return;
             }
+            base.Activate();
             transform.DOLocalMoveX(initialXPos + clickedOffset, moveDuration);
             wardrobe.OpenWithCallback(Close);
         }
+
+        public void Lock(bool on)
+        {
+            locked = on;
+        }
+
+        public bool IsLocked() => locked;
     }
 }

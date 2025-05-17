@@ -18,5 +18,11 @@ namespace Buttons
         public virtual void Activate()
         {
         }
+
+        //for initial selection in holders - should be abstract but what the hell
+        public virtual bool IsSelected()
+        {
+            return false;
+        }
     }
 }

@@ -55,7 +55,6 @@ namespace CauldronCodebase
 
         public event Action<Recipe> OnSelectRecipe;
         public event Action OnSelectIncorrectRecipe;
-        public event Action OnOpenBook;
         public event Action OnUnlockAutoCooking;
         public event Action<Mode> OnModeChanged;
 
@@ -148,8 +147,6 @@ namespace CauldronCodebase
         {
             base.OpenBook();
             ChangeMode(Mode.Magical);
-            OnOpenBook?.Invoke();
-            Debug.LogError("open");
         }
 
         private void LoadRecipes()

@@ -66,7 +66,7 @@ namespace CauldronCodebase
             {
                 recipeBook.CloseBook();
             }
-            else if (overlayManager.GetCurrentLayer == Layers.RecipeBook)
+            else if (overlayManager.GetCurrentLayer == Layers.Wardrobe)
             {
                 wardrobe.CloseWithoutApply();
             }

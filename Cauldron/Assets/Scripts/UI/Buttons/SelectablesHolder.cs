@@ -18,6 +18,7 @@ namespace Buttons
     {
         [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
+        public bool activateOnSelect = false;
         
         public int startIndex = 0;
 
@@ -89,6 +90,10 @@ namespace Buttons
             currentIndex += diff > 0 ? 1 : -1;
             OnIndexChange(oldIndex, currentIndex);
             Current.Select();
+            if (activateOnSelect)
+            {
+                Current.Activate();
+            }
         }
 
         public virtual void OnIndexChange(int oldIndex, int newIndex)
@@ -101,7 +106,14 @@ namespace Buttons
             GetButtons();
             SelectDefaultElement();
             inputManager.Controls.General.NormalNavigate.performed += Navigate;
-            inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
+            if (!activateOnSelect)
+            {
+                inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
+            }
+            else
+            {
+                Current.Activate();
+            }
         }
 
         private void GetButtons()
@@ -121,8 +133,26 @@ namespace Buttons
         protected virtual void SelectDefaultElement()
         {
             if (selectables is null || selectables.Length == 0) return;
-            currentIndex = Mathf.Min(startIndex, selectables.Length - 1);
-            Current.Select();
+            for (var index = 0; index < selectables.Length; index++)
+            {
+                var selectable = selectables[index];
+                if (selectable.IsSelected())
+                {
+                    Debug.Log($"[Selectable {gameObject.name}] found selected on start: "+index);
+                    SelectElement(index);
+                    return;
+                }
+            }
+
+            int startIndexVerified = Mathf.Min(startIndex, selectables.Length - 1);
+            Debug.Log($"[Selectable {gameObject.name}] selected on start "+startIndexVerified);
+            SelectElement(startIndexVerified);
+
+            void SelectElement(int index)
+            {
+                currentIndex = index;
+                Current.Select();
+            }
         }
 
         public override void Unselect()
@@ -130,6 +160,20 @@ namespace Buttons
             Current?.Unselect();
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
             inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
+        }
+
+        public override bool IsSelected()
+        {
+            if (selectables is null || selectables.Length == 0) return false;
+            foreach (var selectable in selectables)
+            {
+                if (selectable.IsSelected())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Lock(bool on)

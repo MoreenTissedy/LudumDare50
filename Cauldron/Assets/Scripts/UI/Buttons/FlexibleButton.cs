@@ -9,6 +9,8 @@ namespace Universal
         [SerializeField] private AnimatedButtonComponent[] _animationComponents;
         [SerializeField] private bool _interactive = true;
 
+        private bool selected;
+
         public event Action OnClick;
 
         public bool IsInteractive
@@ -36,6 +38,7 @@ namespace Universal
 
         public override void Select()
         {
+            selected = true;
             foreach (var component in _animationComponents)
             {
                 component?.Select();
@@ -44,6 +47,7 @@ namespace Universal
 
         public override void Unselect()
         {
+            selected = false;
             foreach (var component in _animationComponents)
             {
                 component?.Unselect();
@@ -59,6 +63,8 @@ namespace Universal
 
             OnClick?.Invoke();
         }
+
+        public override bool IsSelected() => selected;
 
         public void RemoveAllSubscriptions()
         {

@@ -33,6 +33,7 @@ namespace CauldronCodebase
         protected OverlayManager OverlayManager;
         
         public event Action OnClose;
+        public event Action OnOpen;
 
         [Inject]
         protected virtual void ConstructBase(SoundManager soundManager, InputManager inputManager, OverlayManager overlayManager)
@@ -103,6 +104,7 @@ namespace CauldronCodebase
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
             UpdateBookButtons();
+            OnOpen?.Invoke();
         }
 
         IEnumerator UpdateWithDelay()

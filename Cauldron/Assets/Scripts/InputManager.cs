@@ -66,7 +66,6 @@ namespace CauldronCodebase
 
         public void SetCursor(bool enable)
         {
-            Debug.LogError("set cursor "+enable);
             if (enable)
             {
                 Cursor.visible = true;

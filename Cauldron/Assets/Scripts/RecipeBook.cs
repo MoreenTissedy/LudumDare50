@@ -57,6 +57,7 @@ namespace CauldronCodebase
         public event Action OnSelectIncorrectRecipe;
         public event Action OnOpenBook;
         public event Action OnUnlockAutoCooking;
+        public event Action<Mode> OnModeChanged;
 
         public RecipeBookButton hudButton;
         public bool isNightBook = false;
@@ -71,14 +72,15 @@ namespace CauldronCodebase
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
-        private Mode currentMode;
+        private Mode currentMode = Mode.None;
         public Mode CurrentMode => currentMode;
         public enum Mode
         {
             Magical,
             Herbal,
             Attempts,
-            Ingredients
+            Ingredients,
+            None
         }
 
         [ContextMenu("Find Entries")]
@@ -240,6 +242,10 @@ namespace CauldronCodebase
 
         public void ChangeMode(Mode newMode)
         {
+            if (newMode == currentMode)
+            {
+                return;
+            }
             switch (newMode)
             {
                 case Mode.Magical:
@@ -266,6 +272,7 @@ namespace CauldronCodebase
             InitTotalPages();
             UpdatePage();
             UpdateBookButtons();
+            OnModeChanged?.Invoke(newMode);
         }
 
         private void ChangeBookmarksOrder(Mode newMode)
@@ -470,6 +477,7 @@ namespace CauldronCodebase
 
         private void CloseAllPages()
         {
+            currentMode = Mode.None;
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);
             attemptsDisplay.SetActive(false);

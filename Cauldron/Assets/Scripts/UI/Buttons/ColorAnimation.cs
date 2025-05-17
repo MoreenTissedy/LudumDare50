@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Universal
 {
-    public class ColorAnimation : IAnimatedButtonComponent
+    public class ColorAnimation : AnimatedButtonComponent
     {
         [SerializeField] private Image _image;
         [Space]

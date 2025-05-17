@@ -1,18 +1,23 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Zenject;
+using Universal;
+using Selectable = Buttons.Selectable;
 
 namespace CauldronCodebase
 {
-    public abstract class RecipeBookEntryHolder : MonoBehaviour
+    public abstract class RecipeBookEntryHolder : Selectable, IOverlayElement
     {
         [SerializeField] private RecipeBookEntry unlocked;
         [SerializeField] private RecipeBookEntry locked;
+        [SerializeField] private Image selectionImage;
+        [SerializeField] private FlexibleButton potionButton;
+        [SerializeField] private Color selectionColor;
 
-        [Inject]
-        public void Construct(IngredientsData data)
+        private bool potionUnlocked;
+        private bool selectionLock;
+
+        private void Awake()
         {
             Clear();
         }
@@ -22,6 +27,7 @@ namespace CauldronCodebase
             locked.gameObject.SetActive(false);
             unlocked.gameObject.SetActive(true);
             unlocked.Display(recipe);
+            potionUnlocked = true;
         }
 
         public void SetLocked(Recipe recipe)
@@ -29,6 +35,7 @@ namespace CauldronCodebase
             locked.gameObject.SetActive(true);
             unlocked.gameObject.SetActive(false);
             locked.Display(recipe);
+            potionUnlocked = false;
         }
         
         public void Clear()
@@ -37,6 +44,50 @@ namespace CauldronCodebase
             unlocked.gameObject.SetActive(true);
             unlocked.Clear();
         }
+
+        public override void Select()
+        {
+            if (selectionLock)
+            {
+                return;
+            }
+
+            selectionImage.color = selectionColor;
+            if (potionUnlocked)
+            {
+                potionButton.Select();
+            }
+        }
+
+        public override void Unselect()
+        {
+            if (selectionLock)
+            {
+                return;
+            }
+
+            selectionImage.color = Color.white;
+            if (potionUnlocked)
+            {
+                potionButton.Unselect();
+            }
+        }
+
+        public override void Activate()
+        {
+            if (potionUnlocked && !selectionLock)
+            {
+                Unselect();
+                potionButton.Activate();
+            }
+        }
+
+        public void Lock(bool on)
+        {
+            selectionLock = on;
+        }
+
+        public bool IsLocked() => selectionLock;
     }
     
     public class RecipeBookEntry : MonoBehaviour

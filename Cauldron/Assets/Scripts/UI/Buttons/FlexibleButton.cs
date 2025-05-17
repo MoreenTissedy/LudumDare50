@@ -6,7 +6,7 @@ namespace Universal
 {
     public class FlexibleButton : Selectable
     {
-        [SerializeField] private IAnimatedButtonComponent[] _animationComponents;
+        [SerializeField] private AnimatedButtonComponent[] _animationComponents;
         [SerializeField] private bool _interactive = true;
 
         public event Action OnClick;
@@ -24,9 +24,9 @@ namespace Universal
             }
         }
 
-        private void Reset()
+        private void OnValidate()
         {
-            _animationComponents = GetComponents<IAnimatedButtonComponent>();
+            _animationComponents = GetComponents<AnimatedButtonComponent>();
         }
 
         private void Awake()

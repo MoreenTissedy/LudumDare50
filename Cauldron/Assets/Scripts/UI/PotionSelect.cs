@@ -4,7 +4,7 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class PotionSelect : IAnimatedButtonComponent
+    public class PotionSelect : AnimatedButtonComponent
     {
         [SerializeField] private FlexibleButton button;
         [SerializeField] private bool clicable;

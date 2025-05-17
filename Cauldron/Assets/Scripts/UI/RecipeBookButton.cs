@@ -7,7 +7,7 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBookButton : IAnimatedButtonComponent
+    public class RecipeBookButton : AnimatedButtonComponent
     {
         public float sizeCoef = 1.2f;
         public float sizeSpeed = 0.2f;

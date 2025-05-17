@@ -4,7 +4,7 @@ using DG.Tweening;
 namespace Universal
 {
     [RequireComponent(typeof(RectTransform))]
-    public class GrowAnimation : IAnimatedButtonComponent
+    public class GrowAnimation : AnimatedButtonComponent
     {
         public float sizeCoef = 1.2f;
         public float sizeSpeed = 0.2f;

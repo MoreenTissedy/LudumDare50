@@ -3,7 +3,7 @@ using Universal;
 
 namespace Buttons
 {
-    public class SetActiveAnimation: IAnimatedButtonComponent
+    public class SetActiveAnimation: AnimatedButtonComponent
     {
         public GameObject activeOnSelected;
 

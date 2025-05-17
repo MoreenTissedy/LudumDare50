@@ -50,7 +50,7 @@ namespace CauldronCodebase
                     ""id"": ""21b303da-bd7e-4f60-a4bb-56c18ddc907d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press(pressPoint=0.5,behavior=2)""
                 },
                 {
                     ""name"": ""NormalNavigate"",

@@ -1,17 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
     public class OverlayLayer: MonoBehaviour
     {
-        private bool locked;
-        private List<IOverlayElement> items;
+        [ReadOnly] public bool locked;
+        [ReadOnly] public int childCount;
+        
+        public List<IOverlayElement> items;
 
         private void OnValidate()
         {
-            var componentsInChildren = GetComponentsInChildren<OverlayLayer>();
+            var componentsInChildren = GetComponentsInChildren<OverlayLayer>(true);
             if (componentsInChildren.Length > 1)
             {
                 Debug.LogError($"[NESTED OVERLAY LAYERS] {gameObject.name} has {componentsInChildren.Length - 1} nested layer(s), first one is {componentsInChildren[1].gameObject.name}");
@@ -20,7 +23,8 @@ namespace CauldronCodebase
 
         private void Awake()
         {
-            items = GetComponentsInChildren<IOverlayElement>().ToList();
+            items = GetComponentsInChildren<IOverlayElement>(true).ToList();
+            childCount = items.Count;
         }
 
         public void Lock(bool on)

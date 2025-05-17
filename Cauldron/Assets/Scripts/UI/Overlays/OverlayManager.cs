@@ -12,7 +12,8 @@ namespace CauldronCodebase
         RecipeBook,
         NightScreen,
         EndingScreen,
-        Wardrobe
+        Wardrobe,
+        SkinShop
     }
     
     public class OverlayManager: MonoBehaviour

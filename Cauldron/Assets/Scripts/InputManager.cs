@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -64,10 +65,11 @@ namespace CauldronCodebase
             //InputChanged?.Invoke();
         }
 
-        public void SetCursor(bool enable)
+        public async void SetCursor(bool enable)
         {
             if (enable)
             {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
                 Cursor.visible = true;
             }
             else if (GamepadConnected)

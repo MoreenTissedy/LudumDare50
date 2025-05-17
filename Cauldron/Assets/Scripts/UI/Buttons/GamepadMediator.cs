@@ -57,6 +57,8 @@ namespace Buttons
         public void Lock(bool on)
         {
             locked = on;
+            //delay to prevent input hanging from another layer
+            lastInputTime = Time.realtimeSinceStartup + 0.2f;
         }
 
         public bool IsLocked() => locked;

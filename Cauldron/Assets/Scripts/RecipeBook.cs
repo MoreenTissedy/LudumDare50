@@ -596,7 +596,6 @@ namespace CauldronCodebase
             DisposeEndingScreen();
             CloseAllPages();
             base.CloseBook();
-            Debug.LogError("close book");
         }
 
         private void DisposeEndingScreen()

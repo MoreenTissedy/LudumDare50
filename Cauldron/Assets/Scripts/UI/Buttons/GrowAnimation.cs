@@ -30,6 +30,10 @@ namespace Universal
 
         public override void Activate()
         {
+            if (transf == null)
+            {
+                transf = GetComponent<RectTransform>();
+            }
             transf.DOKill();
             transf.localScale = initialScale;
         }

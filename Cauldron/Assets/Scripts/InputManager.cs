@@ -69,7 +69,7 @@ namespace CauldronCodebase
         {
             if (enable)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f), DelayType.Realtime);
                 Cursor.visible = true;
             }
             else if (GamepadConnected)
@@ -77,6 +77,7 @@ namespace CauldronCodebase
                 Cursor.visible = false;
             }
 
+            Debug.Log("[Set Cursor] "+enable);
             virtualMouseInput.enabled = enable;
         }
     }

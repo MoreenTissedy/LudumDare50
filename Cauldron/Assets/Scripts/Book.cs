@@ -120,7 +120,7 @@ namespace CauldronCodebase
             OnClose?.Invoke();
             IsOpen = false;
             OverlayManager.RemoveLayer(overlayLayer);
-            inputManager.SetCursor(false);
+            inputManager.SetCursor(true);
             
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>

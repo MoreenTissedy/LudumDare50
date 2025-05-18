@@ -456,17 +456,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 759f29e3a3aa4ff2bf0d4e77d8f66120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &370485314 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 257718562470209096, guid: 073ac39e79d22304dbe1bdee046f2b37, type: 3}
-  m_PrefabInstance: {fileID: 370485301}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 759f29e3a3aa4ff2bf0d4e77d8f66120, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &370485315 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7227816389611740603, guid: 073ac39e79d22304dbe1bdee046f2b37, type: 3}
@@ -509,8 +498,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 4900000, guid: 4ad30e84e3795dcc99c6d42281dcecc2, type: 3}
   localizationUnits:
-  - {fileID: 370485314}
-  - {fileID: 370485315}
   - {fileID: 196351316}
   - {fileID: 370485302}
   - {fileID: 370485303}
@@ -524,6 +511,8 @@ MonoBehaviour:
   - {fileID: 370485311}
   - {fileID: 370485312}
   - {fileID: 370485313}
+  - {fileID: 0}
+  - {fileID: 370485315}
   - {fileID: 739152339}
   - {fileID: 782368384}
   - {fileID: 896574072}
@@ -641,6 +630,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseLayer: {fileID: 1133516031}
+  debugStack: 
   authorsMenu: {fileID: 8227132636177026476}
   settingsMenu: {fileID: 1818727157}
 --- !u!114 &998409475 stripped
@@ -693,6 +683,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0823c8f5f8154d95903a1d29807c246f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  childCount: 0
 --- !u!1001 &1141032453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1487,6 +1479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0823c8f5f8154d95903a1d29807c246f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locked: 0
+  childCount: 0
 --- !u!1001 &290447393865514463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1502,10 +1496,6 @@ PrefabInstance:
       propertyPath: overlayManager
       value: 
       objectReference: {fileID: 923448663}
-    - target: {fileID: 1696759320978243373, guid: 8d7509faba1564b418d931ad39618cb2, type: 3}
-      propertyPath: Mediator
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8514976308886794356, guid: 8d7509faba1564b418d931ad39618cb2, type: 3}
       propertyPath: m_Name
       value: About_panel

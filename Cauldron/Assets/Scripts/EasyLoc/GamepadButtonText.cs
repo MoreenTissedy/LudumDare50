@@ -24,13 +24,10 @@ namespace EasyLoc
         public Color CharColor = Color.white;
 
         public TMP_Text TextField;
+        public TMP_Text LeftIconField;
+        public TMP_Text RightIconField;
         
         [Inject] InputManager inputManager;
-
-        private void Reset()
-        {
-            TextField = GetComponent<TMP_Text>();
-        }
 
         public string GetId() => id;
 
@@ -41,12 +38,25 @@ namespace EasyLoc
                 string gamepadIcon = $"<sprite={GetButton()} color={ColorToHex(CharColor)}>";
                 if (placeIconLeft)
                 {
-                    text = text.Insert(0, gamepadIcon + "       ");
+                    LeftIconField.text = gamepadIcon;
+                    RightIconField.text = String.Empty;
                 }
                 else
                 {
-                    text += " "+gamepadIcon;
+                    RightIconField.text = gamepadIcon;
+                    if (LeftIconField)
+                    {
+                        LeftIconField.text = String.Empty;
+                    }
                 }
+            }
+            else
+            {
+                if (LeftIconField)
+                {
+                    LeftIconField.text = String.Empty;
+                }
+                RightIconField.text = String.Empty;
             }
 
             TextField.text = text;

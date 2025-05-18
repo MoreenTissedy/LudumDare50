@@ -9,7 +9,7 @@ namespace CauldronCodebase
 {
     public class OverlayLayer: MonoBehaviour
     {
-        [ReadOnly] public bool locked;
+        public bool locked;
         [ReadOnly] public int childCount;
         
         public List<IOverlayElement> items;
@@ -27,6 +27,10 @@ namespace CauldronCodebase
         {
             items = GetComponentsInChildren<IOverlayElement>(true).ToList();
             childCount = items.Count;
+            if (locked)
+            {
+                Lock(true);
+            }
         }
 
         public void Lock(bool on)

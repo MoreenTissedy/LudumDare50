@@ -57,6 +57,7 @@ namespace CauldronCodebase
                 Debug.LogError("[Overlay Layers] Trying to remove layer that is NOT on top of the stack "+layer.gameObject.name);
                 return;
             }
+            layer.Lock(true);
             layers.Pop();
             layers.Peek().Item1.Lock(false);
         }

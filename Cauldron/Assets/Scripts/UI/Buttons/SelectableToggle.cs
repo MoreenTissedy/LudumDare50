@@ -16,6 +16,7 @@ namespace Buttons
         [Inject] private InputManager inputManager;
 
         private Color initialColor;
+        private float lastInputTime;
         
         public override void Select()
         {
@@ -26,7 +27,13 @@ namespace Buttons
 
         private void Toggle(InputAction.CallbackContext context)
         {
+            if (Time.realtimeSinceStartup - lastInputTime < 0.3f)
+            {
+                return;
+            }
+
             toggle.isOn = !toggle.isOn;
+            lastInputTime = Time.realtimeSinceStartup;
         }
 
         public override void Unselect()

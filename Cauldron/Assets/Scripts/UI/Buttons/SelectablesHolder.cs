@@ -44,7 +44,7 @@ namespace Buttons
 
         private void ActivateCurrent(InputAction.CallbackContext obj)
         {
-            if (locked)
+            if (locked || Time.realtimeSinceStartup - lastInputTime < 0.3f)
             {
                 return;
             }
@@ -179,6 +179,8 @@ namespace Buttons
         public void Lock(bool on)
         {
             locked = on;
+            //delay to prevent input hanging from another layer
+            lastInputTime = Time.realtimeSinceStartup + 0.2f;
         }
 
         public bool IsLocked() => locked;

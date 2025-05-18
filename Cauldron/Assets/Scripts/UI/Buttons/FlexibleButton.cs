@@ -6,8 +6,10 @@ namespace Universal
 {
     public class FlexibleButton : Selectable
     {
-        [SerializeField] private IAnimatedButtonComponent[] _animationComponents;
+        [SerializeField] private AnimatedButtonComponent[] _animationComponents;
         [SerializeField] private bool _interactive = true;
+
+        private bool selected;
 
         public event Action OnClick;
 
@@ -24,9 +26,9 @@ namespace Universal
             }
         }
 
-        private void Reset()
+        private void OnValidate()
         {
-            _animationComponents = GetComponents<IAnimatedButtonComponent>();
+            _animationComponents = GetComponents<AnimatedButtonComponent>();
         }
 
         private void Awake()
@@ -36,6 +38,7 @@ namespace Universal
 
         public override void Select()
         {
+            selected = true;
             foreach (var component in _animationComponents)
             {
                 component?.Select();
@@ -44,6 +47,7 @@ namespace Universal
 
         public override void Unselect()
         {
+            selected = false;
             foreach (var component in _animationComponents)
             {
                 component?.Unselect();
@@ -59,6 +63,8 @@ namespace Universal
 
             OnClick?.Invoke();
         }
+
+        public override bool IsSelected() => selected;
 
         public void RemoveAllSubscriptions()
         {

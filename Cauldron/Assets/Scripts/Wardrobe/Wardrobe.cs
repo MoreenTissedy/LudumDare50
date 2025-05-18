@@ -24,11 +24,9 @@ namespace CauldronCodebase
         [Header("Animation")]
         [SerializeField] private float descriptionPanelShowSpeed;
         [SerializeField] private float descriptionPanelHiddenYPos;
-        
-        [Header("Confirmation")]
-        [SerializeField] private ScrollTooltip tooltipPrefab;
-        [SerializeField] private FlexibleButton rejectButton;
-        [SerializeField] private FlexibleButton acceptButton;
+
+        [Header("Confirmation")] 
+        [SerializeField] private TutorialScreen tutorialScreen;
 
         [Inject] private WitchSkinChanger witchSkinChanger;
         [Inject] private SkinsProvider skinsProvider;
@@ -63,8 +61,13 @@ namespace CauldronCodebase
         {
             totalPages = 1;
         }
-        
+
         protected override void UpdatePage()
+        {
+            //shouldn't be the book in the first place, probably
+        }
+
+        public override void OpenBook()
         {
             var skinsProviderSkins = skinsProvider.skins;
             LinkedList<SkinSO> sortedSkins = new LinkedList<SkinSO>();
@@ -97,6 +100,7 @@ namespace CauldronCodebase
 
                 i++;
             }
+            base.OpenBook();
         }
 
         private WardrobeCellState DetermineCellState(SkinSO skin)
@@ -112,11 +116,12 @@ namespace CauldronCodebase
         
         private void SelectCell(WardrobeCell cell)
         {
-            if (cell == selectedCell) return;
-            
-            selectedCell.ToggleSelect(false);
-            selectedCell = cell;
-            cell.ToggleSelect(true);
+            if (cell != selectedCell)
+            {
+                selectedCell.ToggleSelect(false);
+                selectedCell = cell;
+                cell.ToggleSelect(true);
+            }
 
             description.text = cell.Skin.DescriptionText;
             description2.text = cell.Skin.FlavorText;
@@ -144,8 +149,12 @@ namespace CauldronCodebase
 
         public async void ApplySkin()
         {
+            if (selectedCell is null)
+            {
+                return;
+            }
             if (selectedCell.Skin.NeedsApprove && 
-                !await tooltipPrefab.ShowAsDialog(selectedCell.Skin.ApproveMessage, acceptButton, rejectButton))
+                !await tutorialScreen.ShowAsDialog(selectedCell.Skin.ApproveMessage))
             {
                 return;
             }

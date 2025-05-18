@@ -9,30 +9,33 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class EndingScreen: MonoBehaviour
+    public class EndingScreen : MonoBehaviour
     {
         private const float _ENDING_SCREEN_FADE_DURATION_ = 0.2f;
-        
-        [SerializeField]
-        private EndingsProvider endings;
+
+        [SerializeField] private EndingsProvider endings;
 
         [SerializeField] private GameObject background;
         [SerializeField] private SkeletonGraphic map;
         [SerializeField] private EndingScreenButton[] buttons;
         [SerializeField] private FlexibleButton closeButton;
-        [SpineAnimation(dataField: "map")] [SerializeField] private string startAnimation;
-        [SpineAnimation(dataField: "map")] [SerializeField] private string foldAnimation;
-        
-        [Header("Ending display")] 
-        [SerializeField] private GameObject screen;
+
+        [SpineAnimation(dataField: "map")] [SerializeField]
+        private string startAnimation;
+
+        [SpineAnimation(dataField: "map")] [SerializeField]
+        private string foldAnimation;
+
+        [Header("Ending display")] [SerializeField]
+        private GameObject screen;
+
         [SerializeField] private CanvasGroup screenFader;
         [SerializeField] private TMP_Text title;
         [SerializeField] private TMP_Text description;
         [SerializeField] private Image picture;
         [SerializeField] private Transform root;
-        
-        [Header("Skin shop")]
-        [SerializeField] private FlexibleButton shopButton;
+
+        [Header("Skin shop")] [SerializeField] private FlexibleButton shopButton;
         [SerializeField] private SkinShop skinShop;
 
         public event Action OnClose;
@@ -48,6 +51,10 @@ namespace CauldronCodebase
         [Inject] private InputManager inputManager;
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private RecipeBook recipeBook;
+        [Inject] private OverlayManager overlayManager;
+
+        public OverlayLayer overlayLayer;
+        public OverlayLayer cartoonOverlayLayer;
 
         [ContextMenu("Find buttons")]
         void FindButtons()
@@ -62,6 +69,7 @@ namespace CauldronCodebase
             {
                 buttons[i].OnClick += OnEndingClick;
             }
+
             closeButton.OnClick += Close;
         }
 
@@ -71,7 +79,7 @@ namespace CauldronCodebase
             {
                 skinShopEnabled = true;
                 int money = gameDataHandler.Money;
-                
+
                 SkinSO initialSkin = gameDataHandler.currentSkin;
 
                 bool tryUnlock = false;
@@ -85,9 +93,11 @@ namespace CauldronCodebase
                         {
                             money -= 150; //crutch
                         }
+
                         tryUnlock = true;
                     }
                 }
+
                 if (!tryUnlock)
                 {
                     if (recipeBook.AllHerbalRecipesUnlocked(out var skin))
@@ -96,34 +106,35 @@ namespace CauldronCodebase
                         tryUnlock = true;
                     }
                 }
+
                 skinShop.SetPlayerMoney(money);
                 skinShop.SetInitialSkin(initialSkin, tryUnlock);
             }
         }
-        
+
         private void TryEnableSkinShop()
         {
             if (skinShopEnabled)
             {
                 shopButton.gameObject.SetActive(true);
                 shopButton.OnClick += skinShop.OpenBook;
-                /*
                 if (skinShop.ShouldHighlightButton(gameDataHandler.Money))
                 {
-                    shopButton.GetComponent<SpriteSwap>().Swap();
+                    shopButton.Select();
                 }
-                */
             }
         }
 
         private async void OnEndingClick(string tag)
         {
             //cartoons don't fade
-            
+
             Ending ending = endings.Get(tag);
             await LoadEndingCartoon(tag);
             //picture.sprite = ending.image;
             screen.SetActive(true);
+            overlayManager.AddLayer(cartoonOverlayLayer);
+            inputManager.SetCursor(false);
             //screenFader.alpha = 0;
             //screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
@@ -132,8 +143,10 @@ namespace CauldronCodebase
             await UniTask.WaitUntil(() => inputManager.Controls.General.AnyKey.triggered);
             //screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
             //{
-                screen.SetActive(false);
-                
+            screen.SetActive(false);
+            inputManager.SetCursor(true);
+            overlayManager.RemoveLayer(cartoonOverlayLayer);
+
             //});
         }
 
@@ -143,6 +156,7 @@ namespace CauldronCodebase
             {
                 Destroy(currentCartoon);
             }
+
             GameObject asset = await Resources.LoadAsync<GameObject>(ResourceIdents.EndingCartoons[tag]) as GameObject;
             currentCartoon = Instantiate(asset, root);
         }
@@ -153,15 +167,19 @@ namespace CauldronCodebase
             {
                 return;
             }
+
+            overlayManager.AddLayer(overlayLayer, Layers.EndingScreen);
+            inputManager.SetCursor(true);
+            
             final = endingTag == EndingsProvider.FINAL;
             background.SetActive(!inBook);
             if (!inBook)
             {
                 soundManager.SetMusic(Music.Ending, false);
             }
-            
+
             InitSkinShop(inBook, endingTag);
-            
+
             gameObject.SetActive(true);
             shopButton.gameObject.SetActive(false);
             closeButton.gameObject.SetActive(false);
@@ -180,8 +198,10 @@ namespace CauldronCodebase
                 {
                     buttonToUnlock = button;
                 }
+
                 button.Show(endings.Unlocked(button.Tag) && button.Tag != tag);
             }
+
             endings.TryUnlock(tag);
             if (buttonToUnlock != null)
             {
@@ -190,6 +210,7 @@ namespace CauldronCodebase
                 await UniTask.Delay(TimeSpan.FromSeconds(2));
                 OnEndingClick(tag);
             }
+
             await UniTask.Delay(1000);
             closeButton.gameObject.SetActive(true);
             TryEnableSkinShop();
@@ -201,14 +222,19 @@ namespace CauldronCodebase
             {
                 return;
             }
+
             if (final)
             {
                 Debug.LogError("Exit!");
                 GameLoader.Exit();
                 return;
             }
+
             active = false;
             screen.SetActive(false);
+            overlayManager.RemoveLayer(overlayLayer);
+            inputManager.SetCursor(false);
+            
             closeButton.gameObject.SetActive(false);
             shopButton.gameObject.SetActive(false);
             soundManager.Play(Sounds.EndingPanelFold);
@@ -217,7 +243,7 @@ namespace CauldronCodebase
                 gameObject.SetActive(false);
                 OnClose?.Invoke();
             };
-            for (var index = buttons.Length-1; index >=0; index--)
+            for (var index = buttons.Length - 1; index >= 0; index--)
             {
                 var button = buttons[index];
                 button.Hide();

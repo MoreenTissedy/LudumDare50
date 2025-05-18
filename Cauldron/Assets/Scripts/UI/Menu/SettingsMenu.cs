@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using Universal;
@@ -16,6 +15,8 @@ namespace CauldronCodebase
     public class SettingsMenu : MonoBehaviour
     {
         public MenuOverlayManager overlayManager;
+        public OverlayLayer mainLayer;
+        public OverlayLayer popupLayer;
         [Header("Music and sounds")] 
         [SerializeField] private Slider music;
         [SerializeField] private Slider sounds;
@@ -147,17 +148,19 @@ namespace CauldronCodebase
         {
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
-            overlayManager.RemoveLayer(GetComponent<OverlayLayer>());
+            overlayManager.RemoveLayer(mainLayer);
         }
 
         private void OpenResetDialogue()
         {
             dialogueReset.SetActive(true);
+            overlayManager.AddLayer(popupLayer);
         }
         
         private void CloseResetDialogue()
         {
             dialogueReset.SetActive(false);
+            overlayManager.RemoveLayer(popupLayer);
         }
 
         private void ChangeVolume(string vca, float value, float max = 1)

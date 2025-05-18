@@ -6,13 +6,21 @@ using Zenject;
 
 namespace Buttons
 {
-    public class SelectOnEnable: MonoBehaviour
+    public class SelectOnOpenBook: MonoBehaviour
     {
+        public Book book;
         [Inject]
         private InputManager inputManager;
 
         private float initialDelay = 0.2f;
-        private async void OnEnable()
+
+        private void Start()
+        {
+            book.OnOpen += Enable;
+            book.OnClose += Disable;
+        }
+
+        private async void Enable()
         {
             if (inputManager.GamepadConnected)
             {
@@ -21,9 +29,15 @@ namespace Buttons
             }
         }
 
-        private void OnDisable()
+        private void Disable()
         {
             GetComponent<ISelectable>().Unselect();
+        }
+
+        private void OnDestroy()
+        {
+            book.OnOpen -= Enable;
+            book.OnClose -= Disable;
         }
     }
 }

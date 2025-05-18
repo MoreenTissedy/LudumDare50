@@ -8,7 +8,7 @@ using Zenject;
 
 namespace Universal
 {
-    public class LinkButton: IAnimatedButtonComponent
+    public class LinkButton: AnimatedButtonComponent
     {
         public string link = "https://vk.com/theironhearthg";
         [SerializeField] private ScrollTooltip tooltip;

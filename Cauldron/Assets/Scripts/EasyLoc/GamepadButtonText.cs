@@ -4,13 +4,16 @@ using CauldronCodebase;
 using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace EasyLoc
 {
     public class GamepadButtonText: MonoBehaviour, ILocTextTool
     {
-        [Localize]
-        public string FormatText;
+        [Localize] [ReadOnly]
+        public string textString;
+        [SerializeField] protected string id;
+        [SerializeField] private bool placeIconLeft;
         
         [BoxGroup("Choose one")]
         public GamepadButton Button;
@@ -21,21 +24,32 @@ namespace EasyLoc
         public Color CharColor = Color.white;
 
         public TMP_Text TextField;
+        
+        [Inject] InputManager inputManager;
 
         private void Reset()
         {
             TextField = GetComponent<TMP_Text>();
         }
 
-        public string GetId()
-        {
-            string id = gameObject.name;
-            return id;
-        }
+        public string GetId() => id;
 
         public void SetText(string text)
         {
-            TextField.text = string.Format(text, $"<sprite={GetButton()} color={ColorToHex(CharColor)}>");
+            if (inputManager.GamepadConnected)
+            {
+                string gamepadIcon = $"<sprite={GetButton()} color={ColorToHex(CharColor)}>";
+                if (placeIconLeft)
+                {
+                    text = text.Insert(0, gamepadIcon + "       ");
+                }
+                else
+                {
+                    text += " "+gamepadIcon;
+                }
+            }
+
+            TextField.text = text;
         }
 
         private static string ColorToHex(Color color)

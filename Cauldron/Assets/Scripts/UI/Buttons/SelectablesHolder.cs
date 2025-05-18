@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CauldronCodebase;
 using NaughtyAttributes;
@@ -17,18 +18,28 @@ namespace Buttons
     {
         [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
+        public bool activateOnSelect = false;
+        
         public int startIndex = 0;
 
         private bool locked;
         private float lastInputTime;
         private int currentIndex = -1;
-        private Selectable Current => selectables[currentIndex];
+
+        public int CurrentIndex => currentIndex;
+        private Selectable Current => currentIndex >= 0 ? selectables[currentIndex] : null;
 
         [Inject] private InputManager inputManager;
 
         private void Reset()
         {
-            selectables = GetComponentsInChildren<Selectable>(false);
+            selectables = GetComponentsInChildren<Selectable>(false).Where(x => x != this).ToArray();
+        }
+
+        [Button("Clear")]
+        public void Clear()
+        {
+            selectables = Array.Empty<Selectable>();
         }
 
         private void ActivateCurrent(InputAction.CallbackContext obj)
@@ -73,10 +84,21 @@ namespace Buttons
                 return;
             }
 
-            Current.Unselect();
+            Current?.Unselect();
             lastInputTime = Time.realtimeSinceStartup;
+            var oldIndex = currentIndex;
             currentIndex += diff > 0 ? 1 : -1;
+            OnIndexChange(oldIndex, currentIndex);
             Current.Select();
+            if (activateOnSelect)
+            {
+                Current.Activate();
+            }
+        }
+
+        public virtual void OnIndexChange(int oldIndex, int newIndex)
+        {
+            
         }
 
         public override void Select()
@@ -84,7 +106,14 @@ namespace Buttons
             GetButtons();
             SelectDefaultElement();
             inputManager.Controls.General.NormalNavigate.performed += Navigate;
-            inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
+            if (!activateOnSelect)
+            {
+                inputManager.Controls.General.AnyKey.performed += ActivateCurrent;
+            }
+            else
+            {
+                Current.Activate();
+            }
         }
 
         private void GetButtons()
@@ -104,15 +133,47 @@ namespace Buttons
         protected virtual void SelectDefaultElement()
         {
             if (selectables is null || selectables.Length == 0) return;
-            currentIndex = Mathf.Min(startIndex, selectables.Length - 1);
-            Current.Select();
+            for (var index = 0; index < selectables.Length; index++)
+            {
+                var selectable = selectables[index];
+                if (selectable.IsSelected())
+                {
+                    Debug.Log($"[Selectable {gameObject.name}] found selected on start: "+index);
+                    SelectElement(index);
+                    return;
+                }
+            }
+
+            int startIndexVerified = Mathf.Min(startIndex, selectables.Length - 1);
+            Debug.Log($"[Selectable {gameObject.name}] selected on start "+startIndexVerified);
+            SelectElement(startIndexVerified);
+
+            void SelectElement(int index)
+            {
+                currentIndex = index;
+                Current.Select();
+            }
         }
 
         public override void Unselect()
         {
-            Current.Unselect();
+            Current?.Unselect();
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
             inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;
+        }
+
+        public override bool IsSelected()
+        {
+            if (selectables is null || selectables.Length == 0) return false;
+            foreach (var selectable in selectables)
+            {
+                if (selectable.IsSelected())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Lock(bool on)

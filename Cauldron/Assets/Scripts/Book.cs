@@ -9,6 +9,8 @@ namespace CauldronCodebase
 {
     public abstract class Book : MonoBehaviour
     {
+        [SerializeField] public OverlayLayer overlayLayer;
+        [SerializeField] public Layers layerId;
         [SerializeField] public Canvas bookObject;
         [SerializeField] protected RectTransform mainPanel;
         [SerializeField] protected bool keyboardControl;
@@ -27,15 +29,18 @@ namespace CauldronCodebase
         public bool IsOpen { get; private set; }
 
         protected SoundManager SoundManager;
-        private Controls controls;
+        private InputManager inputManager;
+        protected OverlayManager OverlayManager;
         
         public event Action OnClose;
+        public event Action OnOpen;
 
         [Inject]
-        protected virtual void ConstructBase(SoundManager soundManager, InputManager inputManager)
+        protected virtual void ConstructBase(SoundManager soundManager, InputManager inputManager, OverlayManager overlayManager)
         {
             SoundManager = soundManager;
-            controls = inputManager.Controls;
+            this.inputManager = inputManager;
+            this.OverlayManager = overlayManager;
         }
         
         protected virtual void Awake()
@@ -50,12 +55,16 @@ namespace CauldronCodebase
 
             if (keyboardControl)
             {
-                controls.General.BookNavigate.performed += ProcessNavigate;
+                inputManager.Controls.General.BookNavigate.performed += ProcessNavigate;
             }
         }
 
         private void ProcessNavigate(InputAction.CallbackContext input)
         {
+            if (!IsOpen)
+            {
+                return;
+            }
             var leftRight = input.ReadValue<Vector2>().x;
             if (leftRight > 0)
             {
@@ -85,12 +94,17 @@ namespace CauldronCodebase
         public virtual void OpenBook()
         {
             SoundManager.PlayBook(sounds, BookSound.Open);
+            
             bookObject.enabled = true;
+            OverlayManager.AddLayer(overlayLayer, layerId);
+            inputManager.SetCursor(false);
+            
             IsOpen = true;
             mainPanel.DOLocalMoveY(initialYPos, openCloseAnimationTime).
                 From(offScreenYPos);
             StartCoroutine(UpdateWithDelay());
             UpdateBookButtons();
+            OnOpen?.Invoke();
         }
 
         IEnumerator UpdateWithDelay()
@@ -102,8 +116,12 @@ namespace CauldronCodebase
         public virtual void CloseBook()
         {
             SoundManager.PlayBook(sounds, BookSound.Close);
+            
             OnClose?.Invoke();
             IsOpen = false;
+            OverlayManager.RemoveLayer(overlayLayer);
+            inputManager.SetCursor(false);
+            
             mainPanel.DOLocalMoveY(offScreenYPos, openCloseAnimationTime).
                 OnComplete(() =>
                 {

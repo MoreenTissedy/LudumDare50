@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Universal
 {
-    public class SpriteAnimation : IAnimatedButtonComponent
+    public class SpriteAnimation : AnimatedButtonComponent
     {
         [SerializeField] private Sprite _enabled;
         [SerializeField] private Sprite _disabled;

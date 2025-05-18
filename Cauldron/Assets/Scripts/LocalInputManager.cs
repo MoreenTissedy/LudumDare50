@@ -11,15 +11,17 @@ namespace CauldronCodebase
         private Wardrobe wardrobe;
         private int recipeBookModeTotal;
         private Controls controls;
+        private OverlayManager overlayManager;
 
         [Inject]
-        private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe)
+        private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe, OverlayManager overlayManager)
         {
             this.recipeBook = recipeBook;
             this.wardrobe = wardrobe;
             recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length;
             
             controls = inputManager.Controls;
+            this.overlayManager = overlayManager;
             
             controls.General.Exit.performed += ProcessExit;
             controls.General.BookToggle.performed += ToggleBook;
@@ -29,12 +31,18 @@ namespace CauldronCodebase
         private void ToggleBook(InputAction.CallbackContext input)
         {
             if (recipeBook.isNightBook) return;
-            
-            recipeBook.ToggleBook();
+            if (overlayManager.GetCurrentLayer == Layers.Base || overlayManager.GetCurrentLayer == Layers.RecipeBook)
+            {
+                recipeBook.ToggleBook();
+            }
         }
         
         private void BookNavigateUpDown(InputAction.CallbackContext input)
         {
+            if (overlayManager.GetCurrentLayer != Layers.RecipeBook)
+            {
+                return;
+            }
             float upDown = input.ReadValue<Vector2>().y;
             int currentMode = (int)recipeBook.CurrentMode;
             if (upDown > 0 && currentMode > 0)
@@ -54,15 +62,15 @@ namespace CauldronCodebase
                 return;
             }
             
-            if (recipeBook.IsOpen)
+            if (overlayManager.GetCurrentLayer == Layers.RecipeBook)
             {
                 recipeBook.CloseBook();
             }
-            else if (wardrobe.IsOpen)
+            else if (overlayManager.GetCurrentLayer == Layers.Wardrobe)
             {
                 wardrobe.CloseWithoutApply();
             }
-            else
+            else if (overlayManager.GetCurrentLayer == Layers.Base)
             {
                 GameLoader.LoadMenu();
             }

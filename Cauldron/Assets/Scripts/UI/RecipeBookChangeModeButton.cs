@@ -10,15 +10,32 @@ namespace CauldronCodebase
 
         public RecipeBook.Mode mode;
         
-        [Inject]
-        private RecipeBook recipeBook;
+        [Inject] private RecipeBook recipeBook;
+        [Inject] private InputManager inputManager;
 
         public void Awake()
         {
             button.OnClick += OnClick;
+            recipeBook.OnModeChanged += OnBookModeChanged;
         }
 
-        public void OnClick()
+        private void OnBookModeChanged(RecipeBook.Mode newMode)
+        {
+            if (!inputManager.GamepadConnected)
+            {
+                return;
+            }
+            if (mode == newMode)
+            {
+                button.Select();
+            }
+            else
+            {
+                button.Unselect();
+            }
+        }
+
+        private void OnClick()
         {
             recipeBook.ChangeMode(mode);
         }
@@ -26,6 +43,7 @@ namespace CauldronCodebase
         public void OnDestroy()
         {
             button.OnClick -= OnClick;
+            recipeBook.OnModeChanged -= OnBookModeChanged;
         }
     }
 }

@@ -87,6 +87,14 @@ namespace CauldronCodebase
 
         public void ToggleSelect(bool state)
         {
+            if (state)
+            {
+                button.Select();
+            }
+            else
+            {
+                button.Unselect();
+            }
             Highlight.enabled = state;
         }
 

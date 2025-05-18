@@ -13,7 +13,7 @@ using Zenject;
 
 public class TutorialManager : MonoBehaviour
 {
-    [SerializeField] private ScrollTooltip tooltipPrefab;
+    [SerializeField] private TutorialScreen tutorialScreen;
 
     [Localize] [TextArea (5, 10)] public string BookTutorialText;
     [Localize] [TextArea (5, 10)] public string BookTutorialGamepadControls;
@@ -27,8 +27,6 @@ public class TutorialManager : MonoBehaviour
     [Localize] [TextArea(5, 10)] public string PremiumTutorialText;
 
     [SerializeField] private Encounter targetTutorialVisitor;
-    [SerializeField] private FlexibleButton rejectButton;
-    [SerializeField] private FlexibleButton acceptButton;
     
     private RecipeBook recipeBook;
     private GameDataHandler gameDataHandler;
@@ -37,13 +35,14 @@ public class TutorialManager : MonoBehaviour
     private RecipeHintsStorage recipeHintsStorage;
     private TutorialStorage tutorialStorage;
     private Wardrobe wardrobe;
+    private OverlayManager overlayManager;
     
     private HashSet<TutorialKeys> tutorials;
     private CancellationTokenSource cts = new CancellationTokenSource();
 
     [Inject]
     private void Construct(RecipeBook book, GameDataHandler dataHandler,
-                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings, Wardrobe wardrobe)
+                            Cauldron witchCauldron, GameStateMachine gameStateMachine, MainSettings settings, Wardrobe wardrobe, OverlayManager overlayManager)
     {
         recipeBook = book;
         gameDataHandler = dataHandler;
@@ -51,6 +50,7 @@ public class TutorialManager : MonoBehaviour
         stateMachine = gameStateMachine;
         recipeHintsStorage = settings.recipeHintsStorage;
         this.wardrobe = wardrobe;
+        this.overlayManager = overlayManager;
         tutorialStorage = new TutorialStorage();
     }
 
@@ -58,7 +58,7 @@ public class TutorialManager : MonoBehaviour
     {
         tutorials = tutorialStorage.GetTutorials();
         
-        recipeBook.OnOpenBook += ViewBookTutorial;
+        recipeBook.OnOpen += ViewBookTutorial;
         recipeBook.OnUnlockAutoCooking += ViewAutoCookingTutorial;
         cauldron.PotionAccepted += ViewVisitorTutorial;
         gameDataHandler.StatusChanged += ViewScaleChangeTutorial;
@@ -86,13 +86,13 @@ public class TutorialManager : MonoBehaviour
         if (SteamConnector.HasPremium)
         {
             SaveKey(TutorialKeys.TUTORIAL_PREMIUM);
-            tooltipPrefab.Open(PremiumTutorialText).Forget();
+            tutorialScreen.Show(PremiumTutorialText).Forget();
         }
     }
 
     private async UniTask<bool> OnWardrobeApply()
     {
-        var result = await tooltipPrefab.ShowAsDialog(WardrobeTutorialText, acceptButton, rejectButton);
+        var result = await tutorialScreen.ShowAsDialog(WardrobeTutorialText);
         SaveKey(TutorialKeys.TUTORIAL_WARDROBE);
         wardrobe.OnApplyCondition -= OnWardrobeApply;
         return result;
@@ -111,33 +111,30 @@ public class TutorialManager : MonoBehaviour
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_RECIPE_HINTS))
         {
             SaveKey(TutorialKeys.TUTORIAL_RECIPE_HINTS);
-            tooltipPrefab.Open(RecipeHintTutorialText).Forget();
+            tutorialScreen.Show(RecipeHintTutorialText).Forget();
         }
     }
 
     private void ViewBookTutorial()
     {
-        recipeBook.OnOpenBook -= ViewBookTutorial;
+        recipeBook.OnOpen -= ViewBookTutorial;
         
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_BOOK_OPENED))
         {
             SaveKey(TutorialKeys.TUTORIAL_BOOK_OPENED);
             string tutorialText = string.Format(BookTutorialText,
                 Gamepad.current != null ? BookTutorialGamepadControls : BookTutorialKeyboardControls);
-            tooltipPrefab.Open(tutorialText).Forget();
+            tutorialScreen.Show(tutorialText).Forget();
         }
     }
 
-    private void ViewAutoCookingTutorial()
+    private async void ViewAutoCookingTutorial()
     {
-        recipeBook.OnOpenBook -= ViewAutoCookingTutorial;
+        recipeBook.OnOpen -= ViewAutoCookingTutorial;
         
         SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
-        acceptButton.OnClick += AcceptAutoCookingClickButton;
-        rejectButton.OnClick += RejectAutoCookingClickButton;
-        tooltipPrefab.Open(DescriptionTutorialAutoCooking).Forget();
-        acceptButton.gameObject.SetActive(true);
-        rejectButton.gameObject.SetActive(true);
+        bool accepted = await tutorialScreen.ShowAsDialog(DescriptionTutorialAutoCooking);
+        PlayerPrefs.SetInt(PrefKeys.AutoCooking, accepted ? 1 : 0);
     }
 
     private void ViewVisitorTutorial(Potions potion)
@@ -149,7 +146,7 @@ public class TutorialManager : MonoBehaviour
             if(!tutorials.Contains(TutorialKeys.TUTORIAL_VISITOR))
             {
                 SaveKey(TutorialKeys.TUTORIAL_VISITOR);
-                tooltipPrefab.Open(VisitorTutorialText).Forget();
+                tutorialScreen.Show(VisitorTutorialText).Forget();
             }
         }
     }
@@ -161,7 +158,7 @@ public class TutorialManager : MonoBehaviour
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_CHANGE_SCALE))
         {            
             SaveKey(TutorialKeys.TUTORIAL_CHANGE_SCALE);
-            tooltipPrefab.Open(ScaleTutorialText).Forget();
+            tutorialScreen.Show(ScaleTutorialText).Forget();
         }
     }
 
@@ -174,28 +171,8 @@ public class TutorialManager : MonoBehaviour
         if(!tutorials.Contains(TutorialKeys.TUTORIAL_POTION_DENIED))
         {
             SaveKey(TutorialKeys.TUTORIAL_POTION_DENIED);
-            tooltipPrefab.Open(PotionDeniedTutorialText).Forget();
+            tutorialScreen.Show(PotionDeniedTutorialText).Forget();
         }
-    }
-    
-    private void AcceptAutoCookingClickButton()
-    {
-        PlayerPrefs.SetInt(PrefKeys.AutoCooking, 1);
-        DisableButtonAutoCooking();
-    }
-
-    private void RejectAutoCookingClickButton()
-    {
-        PlayerPrefs.SetInt(PrefKeys.AutoCooking, 0);
-        DisableButtonAutoCooking();
-    }
-
-    private void DisableButtonAutoCooking()
-    {
-        acceptButton.OnClick -= AcceptAutoCookingClickButton;
-        rejectButton.OnClick -= RejectAutoCookingClickButton;
-        acceptButton.gameObject.SetActive(false);
-        rejectButton.gameObject.SetActive(false);
     }
 
     private void OnDestroy()

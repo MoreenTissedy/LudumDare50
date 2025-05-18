@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Universal
 {
-    public class ColorAnimation : IAnimatedButtonComponent
+    public class ColorAnimation : AnimatedButtonComponent
     {
         [SerializeField] private Image _image;
         [Space]
@@ -36,7 +36,7 @@ namespace Universal
 
         public override void Activate()
         {
-            _image.color = _pressed;
+            //_image.color = _pressed;
         }
 
         public override void ChangeInteractive(bool isInteractive)

@@ -3,7 +3,7 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class ButtonSound : IAnimatedButtonComponent
+    public class ButtonSound : AnimatedButtonComponent
     {
         [Inject] private SoundManager sound;
 

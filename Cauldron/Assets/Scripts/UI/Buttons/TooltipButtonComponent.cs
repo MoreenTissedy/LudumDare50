@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Universal
 {
-    public class TooltipButtonComponent: IAnimatedButtonComponent
+    public class TooltipButtonComponent: AnimatedButtonComponent
     {
         [SerializeField] private ScrollTooltip tooltip;
 

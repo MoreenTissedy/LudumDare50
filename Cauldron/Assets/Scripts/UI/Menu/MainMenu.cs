@@ -11,6 +11,7 @@ namespace CauldronCodebase
     public class MainMenu : MonoBehaviour
     {
         public MenuOverlayManager overlayManager;
+        public OverlayLayer dummyOverlayLayer;
         public FlexibleButton continueGame;
         public FlexibleButton quit;
         public FlexibleButton newGame;
@@ -111,6 +112,7 @@ namespace CauldronCodebase
 
         private async void StartNewGame()
         {
+            overlayManager.AddLayer(dummyOverlayLayer);
             await fadeController.FadeIn(duration: fadeNewGameDuration);
             await TryPlayIntroVideo();
             GameLoader.ReloadGame();
@@ -126,6 +128,7 @@ namespace CauldronCodebase
 
             soundManager.StopMusic();
             menuHud.enabled = false;
+            
             
             var video = Instantiate(Resources.Load("Video")) as GameObject;
             var player = video.GetComponentInChildren<VideoPlayer>();

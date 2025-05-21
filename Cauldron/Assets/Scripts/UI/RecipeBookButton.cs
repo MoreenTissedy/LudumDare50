@@ -21,9 +21,12 @@ namespace CauldronCodebase
         private float initialPosXButton;
         private float offPosXButton;
         public float openCloseAnimationTime = 0.4f;
+        public GameObject gamePadIcon;
 
         [Inject]
         private RecipeBook book;
+
+        public bool flashing;
 
         private void Start()
         {
@@ -45,6 +48,18 @@ namespace CauldronCodebase
             //start flashing to attract attention
             transf.DOSizeDelta(initialScale * sizeCoef, sizeSpeed).
                 SetLoops(-1, LoopType.Yoyo);
+            gamePadIcon.SetActive(true);
+            flashing = true;
+        }
+
+        private void Update()
+        {
+            if (flashing && book.IsOpen)
+            {
+                flashing = false;
+                gamePadIcon.SetActive(false);
+                transf.DOKill();
+            }
         }
 
         public void ChangeLayer(string name, int order)
@@ -96,6 +111,7 @@ namespace CauldronCodebase
             clicked = true;
             transf.DOKill(true);
             book.OpenBook();
+            gamePadIcon.SetActive(false);
         }
 
         public override void ChangeInteractive(bool isInteractive){}

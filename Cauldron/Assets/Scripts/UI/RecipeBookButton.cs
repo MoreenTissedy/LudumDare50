@@ -41,11 +41,13 @@ namespace CauldronCodebase
 
             initialPosXButton = bgButtonTransf.anchoredPosition.x;
             offPosXButton = initialPosXButton + 210;
+            
+            StartFlashing();
         }
 
-        private void OnEnable()
+        private void StartFlashing()
         {
-            //start flashing to attract attention
+            transf.DOKill();
             transf.DOSizeDelta(initialScale * sizeCoef, sizeSpeed).
                 SetLoops(-1, LoopType.Yoyo);
             gamePadIcon.SetActive(true);
@@ -58,7 +60,7 @@ namespace CauldronCodebase
             {
                 flashing = false;
                 gamePadIcon.SetActive(false);
-                transf.DOKill();
+                transf.DOKill(true);
             }
         }
 
@@ -90,15 +92,17 @@ namespace CauldronCodebase
         public override void Select()
         {
             //grow in size
-            if (!clicked)
+            if (flashing)
+            {
                 transf.DOPause();
+            }
             transf.DOSizeDelta(initialScale * sizeCoef, sizeSpeed);
         }
 
         public override void Unselect()
         {
             //shrink in size
-            if (clicked)
+            if (!flashing)
                 transf.DOSizeDelta(initialScale, sizeSpeed);
             else
             {
@@ -108,7 +112,6 @@ namespace CauldronCodebase
 
         public override void Activate()
         {
-            clicked = true;
             transf.DOKill(true);
             book.OpenBook();
             gamePadIcon.SetActive(false);

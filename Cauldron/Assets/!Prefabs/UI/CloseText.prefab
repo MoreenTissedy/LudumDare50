@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8743642256655202970}
   - component: {fileID: 8911666844334070775}
   - component: {fileID: 2412058875037247387}
-  - component: {fileID: 8687909875625718726}
   - component: {fileID: 3603914689003115572}
   m_Layer: 0
   m_Name: CloseText
@@ -136,19 +135,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8687909875625718726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383436033976436690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7b37427b1b46709663f640c23e038b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VisibleWithGamepad: 1
 --- !u!114 &3603914689003115572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1081216616672835417}
   - component: {fileID: 3198918161838062309}
+  - component: {fileID: 7030749497942543808}
   m_Layer: 0
   m_Name: CloseText
   m_TagString: Untagged
@@ -222,6 +209,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GamepadButton: 1
   ScriptButton: {fileID: 0}
+--- !u!114 &7030749497942543808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4898632108929513450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7b37427b1b46709663f640c23e038b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VisibleWithGamepad: 1
 --- !u!1 &5471622710341762691
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,8 +233,6 @@ GameObject:
   - component: {fileID: 3309307425509964072}
   - component: {fileID: 6744042328508587667}
   - component: {fileID: 7599708996235067182}
-  - component: {fileID: 5525738559591024049}
-  - component: {fileID: 3098716773840115517}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -358,37 +356,3 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5525738559591024049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5471622710341762691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7b37427b1b46709663f640c23e038b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  VisibleWithGamepad: 1
---- !u!114 &3098716773840115517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5471622710341762691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3232bccf1745b19ba40d6ef2d3386d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textString: 
-  id: CloseText
-  placeIconLeft: 0
-  Button: 0
-  Mediator: {fileID: 3198918161838062309}
-  CharColor: {r: 1, g: 0.6509804, b: 0.16078432, a: 1}
-  TextField: {fileID: 7599708996235067182}
-  LeftIconField: {fileID: 0}
-  RightIconField: {fileID: 0}

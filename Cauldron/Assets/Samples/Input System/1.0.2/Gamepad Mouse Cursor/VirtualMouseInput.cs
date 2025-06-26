@@ -58,6 +58,8 @@ namespace UnityEngine.InputSystem.UI
             set => m_CursorTransform = value;
         }
 
+        public GameObject enableCursorFx;
+
         /// <summary>
         /// How many pixels per second the cursor travels in one axis when the respective axis from
         /// <see cref="stickAction"/> is 1.
@@ -282,6 +284,7 @@ namespace UnityEngine.InputSystem.UI
             // Hijack system mouse, if enabled.
             if (m_CursorMode == CursorMode.HardwareCursorIfAvailable)
             {
+                Debug.Log("[Input] Hijack system mouse");
                 TryEnableHardwareCursor();
             }
 
@@ -324,6 +327,9 @@ namespace UnityEngine.InputSystem.UI
             m_ForwardButtonAction.action?.Enable();
             m_BackButtonAction.action?.Enable();
             m_ScrollWheelAction.action?.Enable();
+            
+            enableCursorFx.SetActive(false);
+            enableCursorFx.SetActive(true);
         }
 
         protected void OnDisable()

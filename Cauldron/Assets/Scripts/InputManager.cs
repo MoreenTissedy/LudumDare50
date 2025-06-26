@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,7 +36,9 @@ namespace CauldronCodebase
         public Action<GamepadType> InputChanged;
 
         [Inject]
-        private VirtualMouseInput virtualMouseInput; 
+        private VirtualMouseInput virtualMouseInput;
+
+        private CancellationTokenSource cts;
         
         public InputManager()
         {
@@ -69,7 +72,10 @@ namespace CauldronCodebase
         {
             if (enable)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(0.2f), DelayType.Realtime);
+                cts?.Cancel();
+                cts = new CancellationTokenSource();
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f), DelayType.Realtime, cancellationToken: cts.Token);
+                virtualMouseInput.enabled = true;
                 Cursor.visible = true;
             }
             else if (GamepadConnected)

@@ -18,7 +18,7 @@ namespace CauldronCodebase
         {
             this.recipeBook = recipeBook;
             this.wardrobe = wardrobe;
-            recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length;
+            recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length - 1;
             
             controls = inputManager.Controls;
             this.overlayManager = overlayManager;

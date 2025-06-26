@@ -24,7 +24,7 @@ namespace Buttons
 
         public override void Activate()
         {
-            Unselect();
+            //Unselect();
         }
 
         public override void ChangeInteractive(bool isInteractive)

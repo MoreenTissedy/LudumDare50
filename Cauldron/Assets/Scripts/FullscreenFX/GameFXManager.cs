@@ -9,12 +9,13 @@ namespace CauldronCodebase
 {
     public class GameFXManager : MonoBehaviour
     {
-        [SerializeField] private BaseFX startGameFX; 
+        [SerializeField] private StartGameFX startGameFX; 
         [SerializeField] private DayStageFX sunFX;
         [SerializeField] private DayStageFX moonFX;
         [SerializeField] private EndGameFX endGameFX;
         [Localize] [SerializeField] private string startDayText = "Восходит солнце";
         [Localize] [SerializeField] private string endGameText = "Наступает ночь";
+        [Localize] [SerializeField] private string startGameSaveHint = "This means the cat is saving your progress. Do not switch off.";
 
         private SoundManager soundManager;
         private EndingsProvider endingsProvider;
@@ -32,7 +33,7 @@ namespace CauldronCodebase
         public async UniTask ShowStartGame()
         {
             SceneManager.SetActiveScene(SceneManager.GetSceneByName("Main_desktop"));
-            await PlayFX(CreateFx(startGameFX));
+            await PlayFX(CreateFx(startGameFX).SetSavingProcessHint(startGameSaveHint));
         }
 
         public async UniTask ShowSunrise()

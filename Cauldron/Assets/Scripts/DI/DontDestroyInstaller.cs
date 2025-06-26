@@ -43,10 +43,10 @@ namespace CauldronCodebase
             
             visitorsProvider = new VillagerFamiliarityChecker();
             Container.Bind<VillagerFamiliarityChecker>().FromInstance(visitorsProvider).AsSingle();
-            
+
+            Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
-            Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<InputManager>().FromNew().AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();
             Container.Bind<VirtualMouseInput>().FromInstance(virtualMouseInput).AsSingle();

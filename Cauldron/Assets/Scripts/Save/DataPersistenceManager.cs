@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using CauldronCodebase.GameStates;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -9,6 +12,10 @@ namespace CauldronCodebase
     {
         [Header("File Storage Config")] 
         [SerializeField] private string fileName;
+
+        [Header("Animation")] 
+        [SerializeField] private GameObject animation;
+        [SerializeField] private float animationMinTime = 1f;
         
         private GameData gameData;
         
@@ -21,6 +28,8 @@ namespace CauldronCodebase
 
         public bool IsNewGame { get; private set; }
 
+        private CancellationTokenSource cts;
+
         [Inject]
         private void Construct(MainSettings mainSettings, SODictionary dictionary, MilestoneProvider milestones)
         {
@@ -32,6 +41,7 @@ namespace CauldronCodebase
 
         private void Awake()
         {
+            animation.SetActive(false);
             if (IsSaveFound())
             {
                 gameData = fileDataHandler.Load();
@@ -65,6 +75,17 @@ namespace CauldronCodebase
             }
             
             fileDataHandler.Save(gameData);
+            SetSaveAnimation().Forget();
+        }
+
+        private async UniTaskVoid SetSaveAnimation()
+        {
+            cts?.Cancel();
+            cts = new CancellationTokenSource();
+            animation.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromSeconds(animationMinTime), DelayType.UnscaledDeltaTime,
+                cancellationToken: cts.Token);
+            animation.SetActive(false);
         }
 
         public void AddToDataPersistenceObjList(IDataPersistence obj)

@@ -110,7 +110,10 @@ namespace CauldronCodebase.GameStates
             currentGameState.Enter();
             OnChangeState?.Invoke(phase);
             if (isNewDay) OnNewDay?.Invoke();
-            dataPersistenceManager.SaveGame();
+            if (currentGamePhase == GamePhase.Visitor || currentGamePhase == GamePhase.Night)
+            {
+                dataPersistenceManager.SaveGame();
+            }
         }
 
         public void SwitchToEnding(string tag)

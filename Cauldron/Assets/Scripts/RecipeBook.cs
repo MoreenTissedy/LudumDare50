@@ -82,6 +82,10 @@ namespace CauldronCodebase
             None
         }
 
+        private int lastMagicPage;
+        private int lastHerbalPage;
+        private int lastIngredientsPage;
+
         [ContextMenu("Find Entries")]
         void FindEntries()
         {
@@ -243,29 +247,45 @@ namespace CauldronCodebase
             {
                 return;
             }
+
+            switch (currentMode)
+            {
+                case Mode.Magical:
+                    lastMagicPage = currentPage;
+                    break;
+                case Mode.Herbal:
+                    lastHerbalPage = currentPage;
+                    break;
+                case Mode.Ingredients:
+                    lastIngredientsPage = currentPage;
+                    break;
+            }
             switch (newMode)
             {
                 case Mode.Magical:
                     CloseAllPages();
                     recipesDisplay.SetActive(true);
+                    currentPage = lastMagicPage;
                     break;
                 case Mode.Herbal:
                     CloseAllPages();
                     foodDisplay.SetActive(true);
+                    currentPage = lastHerbalPage;
                     break;
                 case Mode.Attempts:
                     CloseAllPages();
                     attemptsDisplay.SetActive(true);
+                    currentPage = 0;
                     break;
                 case Mode.Ingredients:
                     CloseAllPages();
                     ingredientsDisplay.SetActive(true);
+                    currentPage = lastIngredientsPage;
                     break;
             }
             ChangeBookmarksOrder(newMode);
             
             currentMode = newMode;
-            currentPage = 0;
             InitTotalPages();
             UpdatePage();
             UpdateBookButtons();

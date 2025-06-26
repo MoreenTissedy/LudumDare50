@@ -157,6 +157,7 @@ namespace Buttons
 
         public override void Unselect()
         {
+            startIndex = currentIndex;
             Current?.Unselect();
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
             inputManager.Controls.General.AnyKey.performed -= ActivateCurrent;

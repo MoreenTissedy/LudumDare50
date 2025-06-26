@@ -20,7 +20,7 @@ namespace EasyLoc
         
         [Inject] protected LocalizationTool localizationTool;
         
-        private void Start()
+        private void Awake()
         {
             ImportUI(localizationTool.GetSavedLanguage());
             localizationTool.OnLanguageChanged += ImportUI;

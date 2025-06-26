@@ -15,7 +15,7 @@ namespace CauldronCodebase
         [SerializeField] private EndGameFX endGameFX;
         [Localize] [SerializeField] private string startDayText = "Восходит солнце";
         [Localize] [SerializeField] private string endGameText = "Наступает ночь";
-        [Localize] [SerializeField] private string startGameSaveHint = "This means the cat is saving your progress. Do not switch off.";
+        [Localize] [SerializeField] private string startGameSaveHint = "This means the cat is saving your progress";
 
         private SoundManager soundManager;
         private EndingsProvider endingsProvider;

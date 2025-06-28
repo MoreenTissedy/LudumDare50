@@ -19,15 +19,16 @@ namespace Buttons
         [ReorderableList] public Selectable[] selectables;
         public SelectableDirection direction;
         public bool activateOnSelect = false;
-        
+
         public int startIndex = 0;
 
         private bool locked;
         private float lastInputTime;
         private int currentIndex = -1;
+        public Selectable[] Selectables;
 
         public int CurrentIndex => currentIndex;
-        private Selectable Current => currentIndex >= 0 ? selectables[currentIndex] : null;
+        private Selectable Current => currentIndex >= 0 ? Selectables[currentIndex] : null;
 
         [Inject] private InputManager inputManager;
 
@@ -48,7 +49,21 @@ namespace Buttons
             {
                 return;
             }
-            Current.Activate();
+
+            if (TryActivate())
+            {
+                Debug.LogError($"[Selectable {gameObject.name}] activate current");
+                Current.Activate();
+            }
+        }
+
+        protected virtual bool TryActivate()
+        {
+            if (Current is SelectablesHolder)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void Navigate(InputAction.CallbackContext context)
@@ -57,11 +72,11 @@ namespace Buttons
             {
                 return;
             }
-            
+
             float diff = 0;
             if (direction == SelectableDirection.Vertical)
             {
-                diff = - context.ReadValue<Vector2>().y;
+                diff = -context.ReadValue<Vector2>().y;
             }
 
             if (direction == SelectableDirection.Horizontal)
@@ -74,7 +89,7 @@ namespace Buttons
                 return;
             }
 
-            if (diff > 0 && currentIndex == selectables.Length - 1)
+            if (diff > 0 && currentIndex == Selectables.Length - 1)
             {
                 return;
             }
@@ -84,26 +99,32 @@ namespace Buttons
                 return;
             }
 
-            Current?.Unselect();
-            lastInputTime = Time.realtimeSinceStartup;
-            var oldIndex = currentIndex;
-            currentIndex += diff > 0 ? 1 : -1;
-            OnIndexChange(oldIndex, currentIndex);
-            Current.Select();
-            if (activateOnSelect)
+            int oldIndex = currentIndex;
+            int newIndex = currentIndex + (diff > 0 ? 1 : -1);
+
+            if (TryChangeIndex(oldIndex, newIndex))
             {
-                Current.Activate();
+                Current?.Unselect();
+                currentIndex = newIndex;
+                Current.Select();
+
+                lastInputTime = Time.realtimeSinceStartup;
+
+                if (activateOnSelect)
+                {
+                    Current.Activate();
+                }
             }
         }
 
-        public virtual void OnIndexChange(int oldIndex, int newIndex)
+        protected virtual bool TryChangeIndex(int oldIndex, int newIndex)
         {
-            
+            return true;
         }
 
         public override void Select()
         {
-            GetButtons();
+            GetActiveButtons();
             SelectDefaultElement();
             inputManager.Controls.General.NormalNavigate.performed += Navigate;
             if (!activateOnSelect)
@@ -116,36 +137,26 @@ namespace Buttons
             }
         }
 
-        private void GetButtons()
+        private void GetActiveButtons()
         {
-            if (direction == SelectableDirection.Horizontal)
-            {
-                selectables = selectables.OrderBy(x => x.transform.position.x)
-                    .Where(x => x.gameObject.activeInHierarchy).ToArray();
-            }
-            else if (direction == SelectableDirection.Vertical)
-            {
-                selectables = selectables.OrderByDescending(x => x.transform.position.y)
-                    .Where(x => x.gameObject.activeInHierarchy).ToArray();
-            }
+            Selectables = selectables.Where(x => x.gameObject.activeInHierarchy).ToArray();
+            Selectables = selectables.Where(x => x.gameObject.activeInHierarchy).ToArray();
         }
 
         protected virtual void SelectDefaultElement()
         {
-            if (selectables is null || selectables.Length == 0) return;
-            for (var index = 0; index < selectables.Length; index++)
+            if (Selectables is null || Selectables.Length == 0) return;
+            for (var index = 0; index < Selectables.Length; index++)
             {
-                var selectable = selectables[index];
+                var selectable = Selectables[index];
                 if (selectable.IsSelected())
                 {
-                    Debug.Log($"[Selectable {gameObject.name}] found selected on start: "+index);
                     SelectElement(index);
                     return;
                 }
             }
 
-            int startIndexVerified = Mathf.Min(startIndex, selectables.Length - 1);
-            Debug.Log($"[Selectable {gameObject.name}] selected on start "+startIndexVerified);
+            int startIndexVerified = Mathf.Min(startIndex, Selectables.Length - 1);
             SelectElement(startIndexVerified);
 
             void SelectElement(int index)
@@ -165,8 +176,8 @@ namespace Buttons
 
         public override bool IsSelected()
         {
-            if (selectables is null || selectables.Length == 0) return false;
-            foreach (var selectable in selectables)
+            if (Selectables is null || Selectables.Length == 0) return false;
+            foreach (var selectable in Selectables)
             {
                 if (selectable.IsSelected())
                 {

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using CauldronCodebase;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,17 +13,21 @@ namespace Buttons
         private InputManager inputManager;
 
         private float initialDelay = 0.2f;
+        private CancellationTokenSource cts;
         private async void OnEnable()
         {
             if (inputManager.GamepadConnected)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(initialDelay), DelayType.Realtime);
+                cts?.Cancel();
+                cts = new CancellationTokenSource();
+                await UniTask.Delay(TimeSpan.FromSeconds(initialDelay), DelayType.Realtime, cancellationToken: cts.Token);
                 GetComponent<Selectable>()?.Select();
             }
         }
 
         private void OnDisable()
         {
+            cts?.Cancel();
             GetComponent<ISelectable>().Unselect();
         }
     }

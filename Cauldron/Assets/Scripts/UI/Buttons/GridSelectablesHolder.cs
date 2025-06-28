@@ -4,25 +4,26 @@ namespace Buttons
 {
     public class GridSelectablesHolder: SelectablesHolder
     {
-        public override void OnIndexChange(int oldIndex, int newIndex)
+        protected override bool TryChangeIndex(int oldIndex, int newIndex)
         {
-            base.OnIndexChange(oldIndex, newIndex);
-            if (oldIndex < 0 || oldIndex > selectables.Length)
+            if (oldIndex < 0 || oldIndex > Selectables.Length)
             {
-                return;
+                return false;
             }
 
             int moveIndex = -1;
-            SelectablesHolder holder = selectables[oldIndex] as SelectablesHolder;
+            SelectablesHolder holder = Selectables[oldIndex] as SelectablesHolder;
             if (holder != null)
             {
                 moveIndex = holder.CurrentIndex;
             }
-            SelectablesHolder holder2 = selectables[newIndex] as SelectablesHolder;
+            SelectablesHolder holder2 = Selectables[newIndex] as SelectablesHolder;
             if (holder2 != null && moveIndex >= 0)
             {
-                holder2.startIndex = Mathf.Min(moveIndex, holder2.selectables.Length);
+                holder2.startIndex = Mathf.Min(moveIndex, holder2.Selectables.Length);
             }
+
+            return true;
         }
     }
 }

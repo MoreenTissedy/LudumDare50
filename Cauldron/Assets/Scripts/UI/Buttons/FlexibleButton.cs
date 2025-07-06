@@ -38,6 +38,10 @@ namespace Universal
 
         public override void Select()
         {
+            if (!IsInteractive)
+            {
+                return;
+            }
             selected = true;
             foreach (var component in _animationComponents)
             {
@@ -47,6 +51,10 @@ namespace Universal
 
         public override void Unselect()
         {
+            if (!IsInteractive)
+            {
+                return;
+            }
             selected = false;
             foreach (var component in _animationComponents)
             {
@@ -56,6 +64,10 @@ namespace Universal
 
         public override void Activate()
         {
+            if (!IsInteractive)
+            {
+                return;
+            }
             foreach (var component in _animationComponents)
             {
                 component?.Activate();

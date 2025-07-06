@@ -36,9 +36,12 @@ namespace CauldronCodebase
         public override void Activate()
         {
             base.Activate();
-            
-            gameDataHandler.BuyRumour();
-            nightPanel.AddEventAsLast(covenNightEventProvider.GetRandom(status, high)).Forget();
+
+            if (gameDataHandler.IsEnoughMoneyForRumours())
+            {
+                gameDataHandler.BuyRumour();
+                nightPanel.AddEventAsLast(covenNightEventProvider.GetRandom(status, high)).Forget();
+            }
         }
     }
 }

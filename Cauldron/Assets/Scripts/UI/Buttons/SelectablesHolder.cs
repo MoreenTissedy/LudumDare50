@@ -52,7 +52,7 @@ namespace Buttons
 
             if (TryActivate())
             {
-                Debug.LogError($"[Selectable {gameObject.name}] activate current");
+                lastInputTime = Time.realtimeSinceStartup;
                 Current.Activate();
             }
         }

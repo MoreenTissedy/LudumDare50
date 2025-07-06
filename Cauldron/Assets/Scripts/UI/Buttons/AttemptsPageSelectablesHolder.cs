@@ -27,15 +27,15 @@ namespace Buttons
             {
                 if (oldIndex == 0)
                 {
-                    holder2.startIndex = Mathf.Min(moveIndex - 1, holder2.Selectables.Length);
+                    holder2.startIndex = moveIndex - 1;
                 }
                 else if (newIndex == 0)
                 {
-                    holder2.startIndex = Mathf.Min(moveIndex + 1, holder2.Selectables.Length);
+                    holder2.startIndex = moveIndex + 1;
                 }
                 else
                 {
-                    holder2.startIndex = Mathf.Min(moveIndex, holder2.Selectables.Length);
+                    holder2.startIndex = moveIndex;
                 }
             }
 

@@ -27,7 +27,6 @@ namespace CauldronCodebase
         [SerializeField] private WitchSkinChanger witchSkinChanger;
 
         [Header("UI")]
-        [SerializeField] private GameFXManager fxManager;
         [SerializeField] private NightPanel nightPanel;
         [SerializeField] private CatTipsView catTipsView;
         [SerializeField] private CatAnimations catAnimations;
@@ -64,7 +63,6 @@ namespace CauldronCodebase
         private void BindUI()
         {
             Container.Bind<NightPanel>().FromInstance(nightPanel).AsSingle();
-            Container.Bind<GameFXManager>().FromInstance(fxManager).AsSingle();
             Container.Bind<CatTipsView>().FromInstance(catTipsView).AsSingle();
             Container.Bind<CatAnimations>().FromInstance(catAnimations).AsSingle();
             Container.Bind<OverlayManager>().FromInstance(overlayManager).AsSingle();

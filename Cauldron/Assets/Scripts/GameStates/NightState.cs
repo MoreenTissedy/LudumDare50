@@ -22,6 +22,7 @@ namespace CauldronCodebase.GameStates
         
         private readonly GameFXManager gameFXManager;
         private string storyEnding;
+        private readonly InputManager inputManager;
 
         public NightState(GameDataHandler gameDataHandler,
                           MainSettings settings,
@@ -33,7 +34,7 @@ namespace CauldronCodebase.GameStates
                           GameFXManager gameFXManager,
                           StatusChecker statusChecker, 
                           IAchievementManager achievements,
-                          MilestoneProvider milestoneProvider)
+                          MilestoneProvider milestoneProvider, InputManager input)
         {
             this.gameDataHandler = gameDataHandler;
             this.settings = settings;
@@ -45,6 +46,7 @@ namespace CauldronCodebase.GameStates
             this.recipeBook = recipeBook;
             this.statusChecker = statusChecker;
             this.achievements = achievements;
+            this.inputManager = input;
 
             eventResolver = new EventResolver(settings, gameDataHandler, cardDeck, milestoneProvider);
             storyCards = new List<Encounter>(2);
@@ -58,6 +60,7 @@ namespace CauldronCodebase.GameStates
             }
             gameDataHandler.SetCurrentCard(null);
             EnterWithFX();
+            inputManager.SetCursor(false);
         }
 
         private async void EnterWithFX()

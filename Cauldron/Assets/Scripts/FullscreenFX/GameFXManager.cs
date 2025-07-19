@@ -18,16 +18,15 @@ namespace CauldronCodebase
         [Localize] [SerializeField] private string startGameSaveHint = "This means the cat is saving your progress";
 
         private SoundManager soundManager;
-        private EndingsProvider endingsProvider;
+        [SerializeField] private EndingsProvider endingsProvider;
 
         private BaseFX currentEffect;
         private CancellationTokenSource cancellationTokenSource;
 
         [Inject]
-        private void Construct(SoundManager soundManager, EndingsProvider endingsProvider)
+        private void Construct(SoundManager soundManager)
         {
             this.soundManager = soundManager;
-            this.endingsProvider = endingsProvider;
         }
 
         public async UniTask ShowStartGame()

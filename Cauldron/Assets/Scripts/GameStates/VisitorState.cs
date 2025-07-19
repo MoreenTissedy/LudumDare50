@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine.InputSystem.UI;
 
 namespace CauldronCodebase.GameStates
@@ -54,11 +55,9 @@ namespace CauldronCodebase.GameStates
             
             gameDataHandler.SetCurrentCard(currentCard);
                      
-            visitorManager.Enter(currentCard);
+            visitorManager.Enter(currentCard).ContinueWith(() => inputManager.SetCursor(true));
             cauldron.PotionAccepted += EndEncounter;
             visitorManager.VisitorLeft += OnVisitorLeft;
-
-            inputManager.SetCursor(true);
         }
 
         public override void Exit()
@@ -67,7 +66,7 @@ namespace CauldronCodebase.GameStates
             cauldron.PotionAccepted -= EndEncounter;
             visitorManager.VisitorLeft -= OnVisitorLeft;
             visitorManager.Exit();    
-            inputManager.SetCursor(false);
+            //inputManager.SetCursor(false);
         }
 
         private void OnVisitorLeft()

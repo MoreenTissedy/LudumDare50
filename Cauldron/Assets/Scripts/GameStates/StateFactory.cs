@@ -80,7 +80,7 @@ namespace CauldronCodebase.GameStates
         public NightState CreateNightState()
         {
             return new NightState(gameDataHandler, settings, nightEvents, deck, nightPanel, 
-                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager, milestoneProvider);
+                gameStateMachine, recipeBook, gameFXManager, statusChecker, achievementManager, milestoneProvider, inputManager);
         }
 
         public EndGameState CreateEndGameState()

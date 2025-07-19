@@ -49,7 +49,7 @@ namespace CauldronCodebase
             gameObject.SetActive(true);
             overlayManager.AddLayer(uiLayer);
             newPotionEffect.SetActive(false);
-            inputManager.SetCursor(false);
+            //inputManager.SetCursor(false);
             transform.DOScale(1, tweenDuration).From(startTweenSize).
                 OnComplete(() =>
                 {
@@ -94,7 +94,7 @@ namespace CauldronCodebase
 
         void Hide()
         {
-            inputManager.SetCursor(true);
+            //inputManager.SetCursor(true);
             soundManager.Play(Sounds.PotionPopupClick);
             newPotionEffect.SetActive(false);
             transform.DOScale(startTweenSize, tweenDuration)

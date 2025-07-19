@@ -79,7 +79,7 @@ namespace CauldronCodebase
             }
         }
         
-        public async void Enter(Encounter card)
+        public async UniTask Enter(Encounter card)
         {
             Villager villager = card.villager;
 

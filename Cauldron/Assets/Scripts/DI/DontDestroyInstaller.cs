@@ -18,6 +18,7 @@ namespace CauldronCodebase
 
         [SerializeField] private SoundManager soundManager;
         [SerializeField] private FadeController fadeController;
+        [SerializeField] private GameFXManager fxManager;
 
         private MilestoneProvider milestoneProvider;        
         private VillagerFamiliarityChecker visitorsProvider;
@@ -46,6 +47,8 @@ namespace CauldronCodebase
 
             Container.Bind<FadeController>().FromComponentInNewPrefab(fadeController).AsSingle();
             Container.Bind<DataPersistenceManager>().FromComponentInNewPrefab(dataPersistenceManager).AsSingle().NonLazy();
+            Container.Bind<GameFXManager>().FromComponentInNewPrefab(fxManager).AsSingle();
+            
             Container.Bind<SoundManager>().FromInstance(soundManager).NonLazy();
             Container.Bind<InputManager>().FromNew().AsSingle();
             Container.Bind<LocalizationTool>().FromNew().AsSingle();

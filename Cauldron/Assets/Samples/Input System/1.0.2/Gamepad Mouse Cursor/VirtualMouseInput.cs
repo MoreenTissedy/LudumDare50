@@ -328,12 +328,12 @@ namespace UnityEngine.InputSystem.UI
             m_BackButtonAction.action?.Enable();
             m_ScrollWheelAction.action?.Enable();
             
-            enableCursorFx.SetActive(false);
             enableCursorFx.SetActive(true);
         }
 
         protected void OnDisable()
         {
+            enableCursorFx.SetActive(false);
             // Remove mouse device.
             if (m_VirtualMouse != null && m_VirtualMouse.added)
                 InputSystem.RemoveDevice(m_VirtualMouse);

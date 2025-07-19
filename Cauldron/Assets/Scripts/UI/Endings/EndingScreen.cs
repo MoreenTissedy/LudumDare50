@@ -134,7 +134,7 @@ namespace CauldronCodebase
             //picture.sprite = ending.image;
             screen.SetActive(true);
             overlayManager.AddLayer(cartoonOverlayLayer);
-            inputManager.SetCursor(false);
+            //inputManager.SetCursor(false);
             //screenFader.alpha = 0;
             //screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
@@ -144,7 +144,7 @@ namespace CauldronCodebase
             //screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
             //{
             screen.SetActive(false);
-            inputManager.SetCursor(true);
+            //inputManager.SetCursor(true);
             overlayManager.RemoveLayer(cartoonOverlayLayer);
 
             //});
@@ -169,7 +169,6 @@ namespace CauldronCodebase
             }
 
             overlayManager.AddLayer(overlayLayer, Layers.EndingScreen);
-            inputManager.SetCursor(true);
             
             final = endingTag == EndingsProvider.FINAL;
             background.SetActive(!inBook);
@@ -190,6 +189,8 @@ namespace CauldronCodebase
 
         private async void OnComplete(string tag)
         {
+            inputManager.SetCursor(true);
+            
             EndingScreenButton buttonToUnlock = null;
             foreach (EndingScreenButton button in buttons)
             {

@@ -54,10 +54,21 @@ namespace CauldronCodebase.GameStates
             if(currentCard is null) return;
             
             gameDataHandler.SetCurrentCard(currentCard);
-                     
-            visitorManager.Enter(currentCard).ContinueWith(() => inputManager.SetCursor(true));
+            PlayCursorFx();
+
+            inputManager.SetCursor(true);
+            visitorManager.Enter(currentCard).ContinueWith(PlayCursorFx);
             cauldron.PotionAccepted += EndEncounter;
             visitorManager.VisitorLeft += OnVisitorLeft;
+        }
+
+        private void PlayCursorFx()
+        {
+            if (gameDataHandler.cardsDrawnToday == 0)
+            {
+                inputManager.cursorFx.SetActive(false);
+                inputManager.cursorFx.SetActive(true);
+            }
         }
 
         public override void Exit()

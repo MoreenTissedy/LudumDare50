@@ -494,6 +494,18 @@ namespace CauldronCodebase
 
         private void CloseAllPages()
         {
+            switch (currentMode)
+            {
+                case Mode.Magical:
+                    lastMagicPage = currentPage;
+                    break;
+                case Mode.Herbal:
+                    lastHerbalPage = currentPage;
+                    break;
+                case Mode.Ingredients:
+                    lastIngredientsPage = currentPage;
+                    break;
+            }
             currentMode = Mode.None;
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);

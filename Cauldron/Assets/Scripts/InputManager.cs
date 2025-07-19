@@ -35,12 +35,12 @@ namespace CauldronCodebase
 
         public Action<GamepadType> InputChanged;
 
-        [Inject]
         private VirtualMouseInput virtualMouseInput;
+        public GameObject cursorFx;
 
         private CancellationTokenSource cts;
-        
-        public InputManager()
+
+        public InputManager(GameObject cursorFx, VirtualMouseInput virtualMouseInput)
         {
             Controls = new Controls();
             Controls.General.Enable();
@@ -51,8 +51,9 @@ namespace CauldronCodebase
             GamepadType = GamepadType.Switch;
             Debug.LogError("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
             
-            //todo: do not forget nonlazy
             InputSystem.onDeviceChange += OnDeviceChange;
+            this.cursorFx = cursorFx;
+            this.virtualMouseInput = virtualMouseInput;
         }
 
         private void OnDeviceChange(InputDevice arg1, InputDeviceChange arg2)

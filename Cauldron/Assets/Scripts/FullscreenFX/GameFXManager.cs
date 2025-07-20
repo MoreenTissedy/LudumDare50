@@ -73,7 +73,10 @@ namespace CauldronCodebase
                 return;
             }
             cancellationTokenSource?.Cancel();
-            Destroy(currentEffect.gameObject);
+            if (currentEffect.gameObject)
+            {
+                Destroy(currentEffect.gameObject);
+            }
             currentEffect = null;
         }
     }

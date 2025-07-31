@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Universal;
+using Zenject;
 using Selectable = Buttons.Selectable;
 
 namespace CauldronCodebase
@@ -103,7 +104,12 @@ namespace CauldronCodebase
         public Image image;
         public IngredientButton ingredient1, ingredient2, ingredient3;
         private Recipe currentRecipe;
+        
+        [Header("Ingredient tooltip")]
+        [SerializeField] private TMP_Text[] ingredientText;
         public Recipe CurrentRecipe => currentRecipe;
+
+        [Inject] private IngredientsData ingredientsData;
         
         public void Display(Recipe recipe)
         {
@@ -127,6 +133,16 @@ namespace CauldronCodebase
                 ingredient1.Set(recipe.RecipeIngredients[0]);
                 ingredient2.Set(recipe.RecipeIngredients[1]);
                 ingredient3.Set(recipe.RecipeIngredients[2]);
+            }
+
+            if (ingredientText.Length == 3)
+            {
+                for (var index = 0; index < recipe.RecipeIngredients.Count; index++)
+                {
+                    Ingredients ingredient = recipe.RecipeIngredients[index];
+                    var data = ingredientsData.Get(ingredient);
+                    ingredientText[index].text = data.friendlyName;
+                }
             }
         }
 

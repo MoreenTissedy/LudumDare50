@@ -5,21 +5,22 @@ namespace Buttons
 {
     public class SetActiveAnimation: AnimatedButtonComponent
     {
+        public bool invert = false;
         public GameObject activeOnSelected;
 
         private void Start()
         {
-            activeOnSelected.SetActive(false);
+            activeOnSelected.SetActive(invert);
         }
 
         public override void Select()
         {
-            activeOnSelected.SetActive(true);
+            activeOnSelected.SetActive(!invert);
         }
 
         public override void Unselect()
         {
-            activeOnSelected.SetActive(false);
+            activeOnSelected.SetActive(invert);
         }
 
         public override void Activate()
@@ -29,7 +30,7 @@ namespace Buttons
 
         public override void ChangeInteractive(bool isInteractive)
         {
-            activeOnSelected.SetActive(false);
+            activeOnSelected.SetActive(invert);
         }
     }
 }

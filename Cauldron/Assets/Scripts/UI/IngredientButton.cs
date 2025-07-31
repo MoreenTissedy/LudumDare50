@@ -26,8 +26,8 @@ namespace CauldronCodebase
             image.sprite = data.image;
             image.material = gameData.ingredientsFreezed.Contains(ingredient) ? material : null;
             button.IsInteractive = false;
-            scrollTooltip.Close();
-            await scrollTooltip.SetText(data.friendlyName);
+            //scrollTooltip.Close();
+            //await scrollTooltip.SetText(data.friendlyName);
             button.IsInteractive = true;
         }
 
@@ -40,7 +40,7 @@ namespace CauldronCodebase
         {
             button.IsInteractive = false;
             image.enabled = false;
-            scrollTooltip.Close();
+            //scrollTooltip.Close();
         }
 
         public void OnClick()

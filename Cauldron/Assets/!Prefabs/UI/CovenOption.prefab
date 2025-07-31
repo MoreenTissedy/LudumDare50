@@ -687,6 +687,7 @@ GameObject:
   - component: {fileID: 5957751974873184487}
   - component: {fileID: 2534662794355654330}
   - component: {fileID: 61685120535433544}
+  - component: {fileID: 2243451880976859105}
   m_Layer: 0
   m_Name: CovenOption
   m_TagString: Untagged
@@ -736,6 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animationComponents:
   - {fileID: 61685120535433544}
+  - {fileID: 2243451880976859105}
   _interactive: 1
   covenNightEventProvider: {fileID: 11400000, guid: 4bf72245dbd32cf47a989326e22e9064, type: 2}
   status: 2
@@ -769,6 +771,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sizeCoef: 1.2
   sizeSpeed: 0.2
+--- !u!114 &2243451880976859105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684493450507316419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab9698ab4db4c7596882596216c1bea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  invert: 1
+  activeOnSelected: {fileID: 5311620499977326989}
 --- !u!1 &5311620499977326989
 GameObject:
   m_ObjectHideFlags: 0

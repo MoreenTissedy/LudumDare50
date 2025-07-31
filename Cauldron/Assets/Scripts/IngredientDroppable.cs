@@ -134,6 +134,7 @@ namespace CauldronCodebase
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            cancellationTokenSource?.Cancel();
             bool doubleClick = Time.timeSinceLevelLoad - lastClickTime < doubleClickTime;
             lastClickTime = Time.timeSinceLevelLoad;
             if (doubleClick || Gamepad.current != null)

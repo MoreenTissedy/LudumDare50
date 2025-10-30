@@ -70,7 +70,7 @@ namespace CauldronCodebase
 
         private void BindGameplay()
         {
-            achievementManager = new AchievementManager();
+            achievementManager = new EmptyAchievementManager();
             
             Container.Bind<StatusChecker>().FromNew().AsSingle();
             Container.Bind<GameStateMachine>().FromInstance(stateMachine).AsSingle().NonLazy();
@@ -81,7 +81,7 @@ namespace CauldronCodebase
             Container.Bind<VisitorManager>().FromInstance(visitorManager).AsSingle();
             Container.Bind<CatTipsValidator>().FromInstance(catTipsValidator).AsSingle();
             Container.Bind<TooltipManager>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<AchievementManager>().FromInstance(achievementManager).AsSingle();
+            Container.BindInterfacesAndSelfTo<EmptyAchievementManager>().FromInstance(achievementManager).AsSingle();
             Container.Bind<GameDataHandler>().FromInstance(gameDataHandler).AsSingle().NonLazy();
             Container.Bind<Wardrobe>().FromInstance(wardrobe).AsSingle();
             Container.Bind<WitchSkinChanger>().FromInstance(witchSkinChanger).AsSingle();

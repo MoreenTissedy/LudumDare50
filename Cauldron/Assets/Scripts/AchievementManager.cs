@@ -1,12 +1,29 @@
 using System.Collections.Generic;
-using System.Linq;
-using Steamworks;
-using Steamworks.Data;
-using UnityEngine;
-using Universal;
 
 namespace CauldronCodebase
 {
+    public class EmptyAchievementManager: IAchievementManager
+    {
+        public bool TryUnlock(string id)
+        {
+            return false;
+        }
+
+        public bool TryUnlock(NightEvent nightEvent)
+        {
+            return false;
+        }
+
+        public void ClearAll()
+        {
+        }
+
+        public bool SetStat(string id, int stat)
+        {
+            return false;
+        }
+    }
+    
     public interface IAchievementManager
     {
         bool TryUnlock(string id);
@@ -85,65 +102,5 @@ namespace CauldronCodebase
             new PotionsUsedAchiv(Potions.VoiceChange, 10, "potion voice 1"),
             new PotionsUsedAchiv(Potions.Laughter, 10, "potion laughter 1"),
         };
-    }
-
-    public class AchievementManager : IAchievementManager
-    {
-        public bool TryUnlock(string id)
-        {
-            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
-            {
-                return false;
-            }
-            
-            var achievement = SteamUserStats.Achievements.FirstOrDefault(x => x.Identifier == id);
-            if (string.IsNullOrWhiteSpace(achievement.Name))
-            {
-                Debug.LogError($"Achievement {id} not found!");
-                return false;
-            } 
-            if (achievement.State == true)
-            {
-                return false;
-            }
-            bool unlocked = achievement.Trigger();
-            if (unlocked)
-            {
-                Debug.Log($"Achievement {id} unlocked!");
-                SteamUserStats.StoreStats();
-            }
-            else Debug.LogError($"Achievement {id} failed to unlock!");
-            return unlocked;
-        }
-
-        public bool TryUnlock(NightEvent nightEvent)
-        {
-            if (!AchievIdents.EVENT_NAMES_TO_ACHIEVEMENTS.TryGetValue(nightEvent.name, out string tag))
-            {
-                return false;
-            }
-            return TryUnlock(tag);
-        }
-
-        public void ClearAll()
-        {
-            foreach (Achievement achievement in SteamUserStats.Achievements)
-            {
-                achievement.Clear();
-            }
-            SteamUserStats.StoreStats();
-            Debug.LogError("Achievements cleared!");
-        }
-
-        public bool SetStat(string id, int stat)
-        {
-            if (!SteamConnector.LoggedIn || !SteamClient.IsLoggedOn)
-            {
-                return false;
-            }
-            SteamUserStats.SetStat(id, stat);
-            SteamUserStats.StoreStats();
-            return true;
-        }
     }
 }

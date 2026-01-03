@@ -10,6 +10,7 @@ namespace CauldronCodebase
 
         public FileDataHandler(string dataFileName, bool extension = true)
         {
+            return;
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
             string subDirPath = Path.Combine(dataDirPath, SubFolder);
@@ -26,6 +27,7 @@ namespace CauldronCodebase
 
         public bool IsFileValid()
         {
+            return false;
             return File.Exists(fullPath);
         }
         
@@ -70,6 +72,7 @@ namespace CauldronCodebase
 
         private string GetFileData()
         {
+            return String.Empty;
             string dataToLoad;
 
             using (FileStream stream = new FileStream(fullPath, FileMode.Open))
@@ -85,6 +88,7 @@ namespace CauldronCodebase
 
         public void Save(T data)
         {
+            return;
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -106,6 +110,7 @@ namespace CauldronCodebase
 
         public void Delete()
         {
+            return;
             File.Delete(fullPath);
         }
     }

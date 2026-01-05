@@ -1,15 +1,43 @@
 fileFormatVersion: 2
 guid: c913b0a16fdf68640b7cbac543c4e4cf
-timeCreated: 1484003926
-licenseType: Pro
 PluginImporter:
-  serializedVersion: 1
+  externalObjects: {}
+  serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
-    Any:
+  - first:
+      : Linux
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      : LinuxUniversal
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      : OSXIntel
+    second:
+      enabled: 0
+      settings:
+        CPU: None
+  - first:
+      : OSXIntel64
+    second:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
+  - first:
+      Any: 
+    second:
       enabled: 0
       settings:
         Exclude Editor: 1
@@ -22,44 +50,40 @@ PluginImporter:
         Exclude Switch: 1
         Exclude Win: 1
         Exclude Win64: 1
-    Editor:
+  - first:
+      Editor: Editor
+    second:
       enabled: 0
       settings:
         CPU: x86_64
         DefaultValueInitialized: true
         OS: AnyOS
-    Linux:
+  - first:
+      Nintendo Switch: Switch
+    second:
       enabled: 0
-      settings:
-        CPU: None
-    Linux64:
-      enabled: 0
-      settings:
-        CPU: x86_64
-    LinuxUniversal:
-      enabled: 0
-      settings:
-        CPU: None
-    OSXIntel:
-      enabled: 0
-      settings:
-        CPU: None
-    OSXIntel64:
+      settings: {}
+  - first:
+      Standalone: Linux64
+    second:
       enabled: 0
       settings:
         CPU: AnyCPU
-    OSXUniversal:
+  - first:
+      Standalone: OSXUniversal
+    second:
       enabled: 0
       settings:
         CPU: None
-    Switch:
-      enabled: 1
-      settings: {}
-    Win:
+  - first:
+      Standalone: Win
+    second:
       enabled: 0
       settings:
         CPU: None
-    Win64:
+  - first:
+      Standalone: Win64
+    second:
       enabled: 0
       settings:
         CPU: AnyCPU

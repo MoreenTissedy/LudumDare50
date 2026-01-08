@@ -13,8 +13,7 @@ public class IngredientTypeFilter : MonoBehaviour
     [SerializeField] private FilterButton[] buttons;
     [SerializeField] private Image gauge;
     [SerializeField] private Image selection;
-
-    private ScrollTooltip scrollTooltip;
+    [SerializeField] private ScrollTooltip scrollTooltip;
     
     public bool IsEnable { get; private set; }
     
@@ -23,7 +22,6 @@ public class IngredientTypeFilter : MonoBehaviour
     
     private void Awake()
     {
-        scrollTooltip = GetComponentInChildren<ScrollTooltip>();
         DisableButton();
     }
 

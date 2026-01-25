@@ -4,13 +4,19 @@ using UnityEngine;
 
 namespace CauldronCodebase
 {
-    public class FileDataHandler<T> where T: class
+    public class FileDataHandler<T> where T : class
     {
         private readonly string fullPath;
 
         public FileDataHandler(string dataFileName, bool extension = true)
         {
-            return;
+            if (extension)
+            {
+                dataFileName += ".sav";
+            }
+#if UNITY_SWITCH
+            fullPath = dataFileName;
+#else
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
             string subDirPath = Path.Combine(dataDirPath, SubFolder);
@@ -18,19 +24,15 @@ namespace CauldronCodebase
             {
                 Directory.CreateDirectory(subDirPath);
             }
-            if (extension)
-            {
-                dataFileName += ".sav";
-            }
             fullPath = Path.Combine(subDirPath, dataFileName);
+#endif
         }
 
         public bool IsFileValid()
         {
-            return false;
             return File.Exists(fullPath);
         }
-        
+
         public T LoadWithOverwrite(T unityObject)
         {
             if (IsFileValid())
@@ -43,7 +45,8 @@ namespace CauldronCodebase
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error occured  when trying to load data from file to a Unity object: " + fullPath + "\n" + e);
+                    Debug.LogError("Error occured  when trying to load data from file to a Unity object: " + fullPath +
+                                   "\n" + e);
                 }
             }
 
@@ -72,7 +75,6 @@ namespace CauldronCodebase
 
         private string GetFileData()
         {
-            return String.Empty;
             string dataToLoad;
 
             using (FileStream stream = new FileStream(fullPath, FileMode.Open))
@@ -88,10 +90,13 @@ namespace CauldronCodebase
 
         public void Save(T data)
         {
-            return;
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                string directoryName = Path.GetDirectoryName(fullPath);
+                if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
 
                 string dataToStore = JsonUtility.ToJson(data, true);
                 using (FileStream stream = new FileStream(fullPath, FileMode.Create))
@@ -110,7 +115,6 @@ namespace CauldronCodebase
 
         public void Delete()
         {
-            return;
             File.Delete(fullPath);
         }
     }

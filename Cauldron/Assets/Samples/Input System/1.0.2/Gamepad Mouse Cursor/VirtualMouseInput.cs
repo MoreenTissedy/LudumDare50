@@ -431,26 +431,29 @@ namespace UnityEngine.InputSystem.UI
                 // Update position.
                 var currentPosition = m_VirtualMouse.position.ReadValue();
                 var newPosition = currentPosition + delta;
-
+                
                 ////REVIEW: for the hardware cursor, clamp to something else?
                 // Clamp to canvas.
                 var pixelRect = m_Canvas.pixelRect;
                 newPosition.x = Mathf.Clamp(newPosition.x, pixelRect.xMin, pixelRect.xMax);
                 newPosition.y = Mathf.Clamp(newPosition.y, pixelRect.yMin, pixelRect.yMax);
-
+                
                 InputState.Change(virtualMouse.position, newPosition);
                 InputState.Change(virtualMouse.delta, delta);
-                
-                InputState.Change(m_SystemMouse.position, newPosition);
-                InputState.Change(m_SystemMouse.delta, delta);
 
-                Vector3 invertedPosition = new Vector2(newPosition.x, (Screen.height - newPosition.y)); 
+                if (m_SystemMouse != null)
+                {
+                    InputState.Change(m_SystemMouse.position, newPosition);
+                    InputState.Change(m_SystemMouse.delta, delta);
+                }
+
+                Vector3 invertedPosition = new Vector2(newPosition.x, (Screen.height - newPosition.y));
                 
                 // Update software cursor transform, if any.
                 if (m_CursorTransform != null &&
                     (m_CursorMode == CursorMode.SoftwareCursor ||
                      (m_CursorMode == CursorMode.HardwareCursorIfAvailable && m_SystemMouse == null)))
-                    m_CursorTransform.anchoredPosition = invertedPosition;
+                    m_CursorTransform.anchoredPosition = newPosition;
 
                 m_LastStickValue = stickValue;
                 m_LastTime = currentTime;
@@ -460,25 +463,26 @@ namespace UnityEngine.InputSystem.UI
             }
 
             // Update scroll wheel.
-            var scrollAction = m_ScrollWheelAction.action;
-            if (scrollAction != null)
-            {
-                var scrollValue = scrollAction.ReadValue<Vector2>();
-                scrollValue.x *= m_ScrollSpeed;
-                scrollValue.y *= m_ScrollSpeed;
+            //var scrollAction = m_ScrollWheelAction.action;
+            //if (scrollAction != null)
+            //{
+            //    var scrollValue = scrollAction.ReadValue<Vector2>();
+            //    scrollValue.x *= m_ScrollSpeed;
+            //    scrollValue.y *= m_ScrollSpeed;
 
-                InputState.Change(m_VirtualMouse.scroll, scrollValue);
+             //   InputState.Change(m_VirtualMouse.scroll, scrollValue);
                 
-                if (scrollValue.y != 0)
+              //  if (scrollValue.y != 0)
                 {
-                    InputState.Change(Mouse.current.scroll, scrollValue);
+                //    InputState.Change(Mouse.current.scroll, scrollValue);
                 }
-            }
+            //}
         }
 
         [Header("Cursor")]
         [SerializeField] private CursorMode m_CursorMode;
         [SerializeField] private Graphic m_CursorGraphic;
+        [SerializeField] private GameObject m_CursorVfx;
         [SerializeField] private RectTransform m_CursorTransform;
 
         [Header("Motion")]
@@ -572,6 +576,16 @@ namespace UnityEngine.InputSystem.UI
                     if (value.reference == null)
                         value.action?.Enable();
                 }
+            }
+        }
+
+        public void SetCursorVisible(bool on)
+        {
+            m_CursorGraphic.enabled = on;
+            if (on)
+            {
+                m_CursorVfx.SetActive(false);
+                m_CursorVfx.SetActive(true);
             }
         }
 

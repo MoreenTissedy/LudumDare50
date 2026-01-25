@@ -54,6 +54,8 @@ namespace CauldronCodebase
             InputSystem.onDeviceChange += OnDeviceChange;
             this.cursorFx = cursorFx;
             this.virtualMouseInput = virtualMouseInput;
+            
+            virtualMouseInput.SetCursorVisible(false);
         }
 
         private void OnDeviceChange(InputDevice arg1, InputDeviceChange arg2)
@@ -76,7 +78,6 @@ namespace CauldronCodebase
                 cts?.Cancel();
                 cts = new CancellationTokenSource();
                 await UniTask.Delay(TimeSpan.FromSeconds(0.2f), DelayType.Realtime, cancellationToken: cts.Token);
-                virtualMouseInput.enabled = true;
                 Cursor.visible = true;
             }
             else if (GamepadConnected)
@@ -85,7 +86,7 @@ namespace CauldronCodebase
             }
 
             Debug.Log("[Set Cursor] "+enable);
-            virtualMouseInput.enabled = enable;
+            virtualMouseInput.SetCursorVisible(enable);
         }
     }
 }

@@ -26,7 +26,9 @@ namespace CauldronCodebase
 
         public List<WrongPotion> LoadWrongRecipe()
         {
+#if UNITY_STANDALONE_WIN
             if (TryLoadLegacy(out var list)) return list;
+#endif
 
             TryInitDataHandler();
             if (fileDataHandler.IsFileValid())

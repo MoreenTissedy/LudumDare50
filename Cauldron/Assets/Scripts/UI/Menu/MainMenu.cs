@@ -114,7 +114,7 @@ namespace CauldronCodebase
         {
             overlayManager.AddLayer(dummyOverlayLayer);
             await fadeController.FadeIn(duration: fadeNewGameDuration);
-            await TryPlayIntroVideo();
+            //await TryPlayIntroVideo();
             GameLoader.ReloadGame();
             dataPersistenceManager.NewGame();
         }

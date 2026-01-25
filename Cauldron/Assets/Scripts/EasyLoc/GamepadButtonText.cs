@@ -71,14 +71,16 @@ namespace EasyLoc
         {
             if (Mediator)
             {
-                return GetButtonIndex(Mediator.GamepadButton);
+                return GetButtonIndex(Mediator.Button);
             }
 
+            Debug.LogWarning($"Button text for {Button} has no mediator and will not be inverted for Switch");
             return GetButtonIndex(Button);
         }
 
         private int GetButtonIndex(GamepadButton button)
         {
+            //for switch
             switch (button)
             {
                 case GamepadButton.None:

@@ -15,7 +15,7 @@ namespace CauldronCodebase
                 dataFileName += ".sav";
             }
 #if UNITY_SWITCH
-            fullPath = dataFileName;
+            fullPath = Path.Combine(Application.persistentDataPath, dataFileName);
 #else
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";

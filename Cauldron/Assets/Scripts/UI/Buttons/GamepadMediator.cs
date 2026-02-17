@@ -60,23 +60,10 @@ namespace Buttons
                 return;
             }
             
-            GamepadButton button = GamepadButton;
-            if (inputManager.GamepadType == GamepadType.Switch)
-            {
-                if (GamepadButton == GamepadButton.South)
-                {
-                    button = GamepadButton.East;
-                }
-                else if (GamepadButton == GamepadButton.East)
-                {
-                    button = GamepadButton.South;
-                }
-            }
-            
-            if (gamepad.buttonEast.wasPressedThisFrame & button == GamepadButton.East || 
-                gamepad.buttonWest.wasPressedThisFrame & button == GamepadButton.West ||
-                gamepad.buttonNorth.wasPressedThisFrame & button == GamepadButton.North ||
-                gamepad.buttonSouth.wasPressedThisFrame & button == GamepadButton.South)
+            if (gamepad.buttonEast.wasPressedThisFrame & Button == GamepadButton.East || 
+                gamepad.buttonWest.wasPressedThisFrame & Button == GamepadButton.West ||
+                gamepad.buttonNorth.wasPressedThisFrame & Button == GamepadButton.North ||
+                gamepad.buttonSouth.wasPressedThisFrame & Button == GamepadButton.South)
             {
                 if (Time.realtimeSinceStartup - lastInputTime < 0.3f)
                 {

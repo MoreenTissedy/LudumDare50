@@ -1,6 +1,8 @@
+using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using NaughtyAttributes;
+using Zenject;
 
 namespace Universal
 {
@@ -8,6 +10,8 @@ namespace Universal
     {
         [ReadOnly]
         [SerializeField] private FlexibleButton _animatedButton;
+        
+        [Inject] InputManager inputManager;
 
         private void Reset()
         {
@@ -16,6 +20,7 @@ namespace Universal
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
+            if (inputManager.GamepadConnected) return;
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Select();
@@ -23,13 +28,15 @@ namespace Universal
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
+            if (inputManager.GamepadConnected) return;
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Unselect();
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)
-        {            
+        {
+            if (inputManager.GamepadConnected) return;
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Activate();

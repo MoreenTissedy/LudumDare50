@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using nn;
 using UnityEngine;
 
 namespace CauldronCodebase
@@ -8,6 +9,12 @@ namespace CauldronCodebase
     {
         private readonly string fullPath;
 
+#if UNITY_SWITCH
+        public const string mountName = "Saves";
+        private const int saveDataSize = 32;
+        private nn.fs.FileHandle fileHandle;
+#endif
+
         public FileDataHandler(string dataFileName, bool extension = true)
         {
             if (extension)
@@ -15,7 +22,7 @@ namespace CauldronCodebase
                 dataFileName += ".sav";
             }
 #if UNITY_SWITCH
-            fullPath = Path.Combine(Application.persistentDataPath, dataFileName);
+            fullPath = string.Format("{0}:/{1}", mountName, dataFileName);
 #else
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
@@ -30,7 +37,11 @@ namespace CauldronCodebase
 
         public bool IsFileValid()
         {
+#if UNITY_SWITCH
+            return FileValidForSwitch();
+#else
             return File.Exists(fullPath);
+#endif
         }
 
         public T LoadWithOverwrite(T unityObject)
@@ -75,6 +86,9 @@ namespace CauldronCodebase
 
         private string GetFileData()
         {
+#if UNITY_SWITCH
+            return LoadForSwitch();
+#else
             string dataToLoad;
 
             using (FileStream stream = new FileStream(fullPath, FileMode.Open))
@@ -86,19 +100,31 @@ namespace CauldronCodebase
             }
 
             return dataToLoad;
+#endif
         }
 
         public void Save(T data)
         {
             try
             {
+#if UNITY_SWITCH
+                if (!IsFileValid())
+                {
+                    var result = nn.fs.File.Create(fullPath, saveDataSize);
+                    result.abortUnlessSuccess();
+                }
+#else
                 string directoryName = Path.GetDirectoryName(fullPath);
                 if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
                 {
                     Directory.CreateDirectory(directoryName);
                 }
+#endif
 
                 string dataToStore = JsonUtility.ToJson(data, true);
+#if UNITY_SWITCH
+                SaveForSwitch(dataToStore);
+#else
                 using (FileStream stream = new FileStream(fullPath, FileMode.Create))
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
@@ -106,6 +132,7 @@ namespace CauldronCodebase
                         writer.Write(dataToStore);
                     }
                 }
+#endif
             }
             catch (Exception e)
             {
@@ -115,7 +142,80 @@ namespace CauldronCodebase
 
         public void Delete()
         {
+#if UNITY_SWITCH
+            nn.fs.File.Delete(fullPath);
+#else
             File.Delete(fullPath);
+#endif
+        }
+
+        private void SaveForSwitch(string stringData)
+        {
+            byte[] data;
+            using (BinaryWriter writer = new BinaryWriter(new MemoryStream(sizeof(int))))
+            {
+                writer.Write(stringData);
+
+                writer.BaseStream.Close();
+                data = (writer.BaseStream as MemoryStream).GetBuffer();
+                Debug.Assert(data.Length == sizeof(int)); //TODO fails - research
+            }
+
+#if UNITY_SWITCH
+            UnityEngine.Switch.Notification.EnterExitRequestHandlingSection();
+#endif
+
+            nn.Result result = nn.fs.File.Open(ref fileHandle, fullPath, nn.fs.OpenFileMode.Write| nn.fs.OpenFileMode.AllowAppend);
+            result.abortUnlessSuccess();
+
+            result = nn.fs.File.Write(fileHandle, 0, data, data.LongLength, nn.fs.WriteOption.Flush);
+            result.abortUnlessSuccess();
+
+            nn.fs.File.Close(fileHandle);
+            result = nn.fs.FileSystem.Commit(mountName);
+            result.abortUnlessSuccess();
+
+#if UNITY_SWITCH
+            UnityEngine.Switch.Notification.LeaveExitRequestHandlingSection();
+#endif
+        }
+
+        private string LoadForSwitch()
+        {
+            Result result;
+            if (!FileValidForSwitch())
+            {
+                return string.Empty;
+            }
+
+            result = nn.fs.File.Open(ref fileHandle, fullPath, nn.fs.OpenFileMode.Read);
+            result.abortUnlessSuccess();
+
+            long fileSize = 0;
+            result = nn.fs.File.GetSize(ref fileSize, fileHandle);
+            result.abortUnlessSuccess();
+
+            byte[] data = new byte[fileSize];
+            result = nn.fs.File.Read(fileHandle, 0, data, fileSize);
+            result.abortUnlessSuccess();
+
+            nn.fs.File.Close(fileHandle);
+
+            string stringData;
+
+            using (BinaryReader reader = new BinaryReader(new MemoryStream(data)))
+            {
+                stringData = reader.ReadString();
+            }
+
+            return stringData;
+        }
+
+        private bool FileValidForSwitch()
+        {
+            nn.fs.EntryType entryType = 0;
+            nn.Result result = nn.fs.FileSystem.GetEntryType(ref entryType, fullPath);
+            return !nn.fs.FileSystem.ResultPathNotFound.Includes(result);
         }
     }
 }

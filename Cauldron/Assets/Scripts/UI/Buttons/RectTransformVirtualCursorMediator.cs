@@ -1,18 +1,21 @@
+using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Universal;
+using Zenject;
 
 namespace UI.Buttons
 {
     public class RectTransformVirtualCursorMediator: MonoBehaviour
     {
-        public Camera uiCamera;
-        
+        private Camera uiCamera;
         private RectTransform rectTransform;
         private Mouse virtualMouse;
         private PointerMediator pointerMediator;
 
         private bool underCursor;
+        
+        [Inject] private InputManager inputManager;
         
         private void Start()
         {
@@ -21,10 +24,15 @@ namespace UI.Buttons
             
             virtualMouse = (Mouse)InputSystem.GetDevice("Virtual cursor");
             rectTransform = GetComponent<RectTransform>();
+            uiCamera = GameObject.FindWithTag("UiCamera").GetComponent<Camera>();
         }
 
         private void LateUpdate()
         {
+            if (!inputManager.CursorEnabled)
+            {
+                return;
+            }
             Vector2 mousePosition = virtualMouse.position.value;
             bool isOverlap = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition, uiCamera);
             

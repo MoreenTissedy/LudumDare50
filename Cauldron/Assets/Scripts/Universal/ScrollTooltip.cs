@@ -134,5 +134,17 @@ namespace Universal
         {
             tweenSequence?.Kill();
         }
+
+        public void Toggle()
+        {
+            if (canvas.enabled)
+            {
+                Close();
+            }
+            else
+            {
+                Open();
+            }
+        }
     }
 }

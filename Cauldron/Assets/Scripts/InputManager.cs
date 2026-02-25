@@ -40,6 +40,8 @@ namespace CauldronCodebase
 
         private CancellationTokenSource cts;
 
+        public bool CursorEnabled => virtualMouseInput.CursorVisible;
+
         public InputManager(GameObject cursorFx, VirtualMouseInput virtualMouseInput)
         {
             Controls = new Controls();
@@ -73,6 +75,10 @@ namespace CauldronCodebase
 
         public async void SetCursor(bool enable)
         {
+            if (CursorEnabled == enable)
+            {
+                return;
+            }
             if (enable)
             {
                 cts?.Cancel();

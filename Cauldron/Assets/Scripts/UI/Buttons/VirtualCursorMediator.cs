@@ -1,8 +1,10 @@
 using System;
+using CauldronCodebase;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using Zenject;
 
 namespace UI.Buttons
 {
@@ -16,6 +18,8 @@ namespace UI.Buttons
         private IPointerClickHandler pointerClickHandler;
 
         private bool underCursor;
+
+        [Inject] private InputManager inputManager;
         
         private void Start()
         {
@@ -28,6 +32,10 @@ namespace UI.Buttons
 
         private void LateUpdate()
         {
+            if (!inputManager.CursorEnabled)
+            {
+                return;
+            }
             if (!mainCamera)
             {
                 mainCamera = Camera.main;

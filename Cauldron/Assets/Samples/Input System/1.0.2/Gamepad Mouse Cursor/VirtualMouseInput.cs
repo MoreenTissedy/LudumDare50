@@ -463,11 +463,7 @@ namespace UnityEngine.InputSystem.UI
                     (m_CursorMode == CursorMode.SoftwareCursor ||
                      (m_CursorMode == CursorMode.HardwareCursorIfAvailable && m_SystemMouse == null)))
                 {
-                    float refheight = 1080;
-                    float refwidth = 1920;
-                    m_CursorTransform.anchoredPosition = new Vector2(
-                        newPosition.x / Screen.width * refwidth,
-                        newPosition.y / Screen.height * refheight);
+                    m_CursorTransform.anchoredPosition = Resize(newPosition);
                 }
 
                 m_LastStickValue = stickValue;
@@ -477,13 +473,20 @@ namespace UnityEngine.InputSystem.UI
                 m_SystemMouse?.WarpCursorPosition(invertedPosition);
             }
         }
+        
+        private Vector2 Resize(Vector2 position)
+        {
+            float refheight = 1080;
+            float refwidth = 1920;
+            return new Vector2(position.x / Screen.width * refwidth, position.y / Screen.height * refheight);
+        }
 
         [Header("Cursor")] [SerializeField] private CursorMode m_CursorMode;
         [SerializeField] private Graphic m_CursorGraphic;
         [SerializeField] private GameObject m_CursorVfx;
         [SerializeField] private RectTransform m_CursorTransform;
 
-        [Header("Motion")] [SerializeField] private float m_defaultSpeed = 1000;
+        [Header("Motion")] [SerializeField] private float m_defaultSpeed = 500;
         private float m_CursorSpeed = 400;
         [SerializeField] private float m_ScrollSpeed = 45;
 
@@ -582,8 +585,14 @@ namespace UnityEngine.InputSystem.UI
             {
                 m_CursorVfx.SetActive(false);
                 m_CursorVfx.SetActive(true);
+                
+                Vector2 initialPosition = new Vector2(Screen.width*3/4, Screen.height/2);
+                InputState.Change(m_VirtualMouse.position, initialPosition);
+                m_CursorTransform.anchoredPosition = Resize(initialPosition);
             }
         }
+
+        public bool CursorVisible => m_CursorGraphic.enabled;
 
         private void OnAfterInputUpdate()
         {

@@ -22,7 +22,8 @@ namespace CauldronCodebase
         public float rotateSpeed = 0.3f;
         public float returntime = 0.5f;
         public IngredientsData dataList;
-        [FormerlySerializedAs("collider")] public Collider2D theCollider;
+        
+        private Collider2D theCollider;
         
         [SerializeField, HideInInspector]
         private ScrollTooltip tooltip;
@@ -66,6 +67,8 @@ namespace CauldronCodebase
         {
             this.catAnimations = catAnimations;
             this.cauldron = cauldron;
+            
+            theCollider = GetComponent<Collider2D>();
             ingredientManager = cauldron.tooltipManager;
             ingredientManager.AddIngredient(this);
             dataList.Changed += ChangeText;

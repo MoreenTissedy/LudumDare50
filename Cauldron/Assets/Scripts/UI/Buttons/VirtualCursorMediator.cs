@@ -8,8 +8,7 @@ namespace UI.Buttons
 {
     public class VirtualCursorMediator: MonoBehaviour
     {
-        public Collider2D collider;
-
+        private Collider2D theCollider;
         private Camera mainCamera;
         private Mouse virtualMouse;
         private IPointerEnterHandler pointerEnterHandler;
@@ -24,13 +23,14 @@ namespace UI.Buttons
             pointerExitHandler = GetComponent<IPointerExitHandler>();
             pointerClickHandler = GetComponent<IPointerClickHandler>();
             virtualMouse = (Mouse)InputSystem.GetDevice("Virtual cursor");
+            theCollider = GetComponent<Collider2D>();
         }
 
         private void LateUpdate()
         {
             var worldPoint = Camera.main.ScreenToWorldPoint(virtualMouse.position.value);
             Debug.Log(worldPoint);
-            bool isOverlap = collider.OverlapPoint(worldPoint);
+            bool isOverlap = theCollider.OverlapPoint(worldPoint);
             
             if (isOverlap && !underCursor)
             {

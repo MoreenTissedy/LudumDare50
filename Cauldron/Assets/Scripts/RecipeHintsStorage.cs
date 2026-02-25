@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyLoc;
 using UnityEngine;
+using Universal;
 
 #if UNITY_EDITOR
 using System.IO;
@@ -130,10 +131,10 @@ namespace CauldronCodebase
 
         private bool TryLoadLegacy(out List<string> list)
         {
-            if (PlayerPrefs.HasKey(PrefKeys.RecipeHints))
+            if (PlayerPrefsService.HasKey(PrefKeys.RecipeHints))
             {
-                var encodedTags = PlayerPrefs.GetString(PrefKeys.RecipeHints);
-                PlayerPrefs.DeleteKey(PrefKeys.RecipeHints);
+                var encodedTags = PlayerPrefsService.GetString(PrefKeys.RecipeHints);
+                PlayerPrefsService.DeleteKey(PrefKeys.RecipeHints);
                 StringListWrapper wrapper = JsonUtility.FromJson<StringListWrapper>(encodedTags);
                 TryInitFileDataHandler();
                 fileDataHandler.Save(wrapper);

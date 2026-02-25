@@ -95,8 +95,8 @@ namespace CauldronCodebase
 
         private void LoadPointerSpeed()
         {
-            pointerSpeed.value = PlayerPrefs.HasKey(PrefKeys.PointerSpeed) 
-                ? GetValueFromRealSpeed(PlayerPrefs.GetInt(PrefKeys.PointerSpeed)) 
+            pointerSpeed.value = PlayerPrefsService.HasKey(PrefKeys.PointerSpeed) 
+                ? GetValueFromRealSpeed(PlayerPrefsService.GetInt(PrefKeys.PointerSpeed)) 
                 : GetValueFromRealSpeed(virtualMouse.DefaultSpeed);
 
             float GetValueFromRealSpeed(float realSpeed)
@@ -109,15 +109,15 @@ namespace CauldronCodebase
         {
             int realValue = (int)Mathf.Lerp(pointerSpeedMinValue, pointerSpeedMaxValue, value);
             
-            PlayerPrefs.SetInt(PrefKeys.PointerSpeed, realValue);
+            PlayerPrefsService.SetInt(PrefKeys.PointerSpeed, realValue);
             virtualMouse.cursorSpeed = realValue;
         }
 
         private void LoadLanguage()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.LanguageKey))
+            if (PlayerPrefsService.HasKey(PrefKeys.LanguageKey))
             {
-                language.SetValueWithoutNotify(PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.EN.ToString() ? 0 : 1);
+                language.SetValueWithoutNotify(PlayerPrefsService.GetString(PrefKeys.LanguageKey) == Language.EN.ToString() ? 0 : 1);
             }
             else
             {
@@ -128,7 +128,7 @@ namespace CauldronCodebase
         private void ChangeLanguage(int index)
         {
             var newLanguage = index > 0 ? Language.RU : Language.EN;
-            PlayerPrefs.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
+            PlayerPrefsService.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
             locTool.LoadLanguage(newLanguage);
         }
 
@@ -167,8 +167,8 @@ namespace CauldronCodebase
         {
             RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
             UpdateSliderLabel(vca, value);
-            PlayerPrefs.SetFloat(PrefKeys.MusicValueSettings, music.value);
-            PlayerPrefs.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
+            PlayerPrefsService.SetFloat(PrefKeys.MusicValueSettings, music.value);
+            PlayerPrefsService.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
         }
 
         private void LoadResolutionDropdown()
@@ -210,7 +210,7 @@ namespace CauldronCodebase
         private async void ChangeFullscreenMode(bool set)
         {
             fullscreenMode = set;
-            PlayerPrefs.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
+            PlayerPrefsService.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
             Screen.fullScreen = fullscreenMode;
             
             if (set)
@@ -226,14 +226,14 @@ namespace CauldronCodebase
         private void ChangeAutoCooking(bool set)
         {
             autoCookingMode = set;
-            PlayerPrefs.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
+            PlayerPrefsService.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
         }
 
         private void LoadFullscreenMode()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.FullscreenModeSettings))
+            if (PlayerPrefsService.HasKey(PrefKeys.FullscreenModeSettings))
             {
-                fullscreenMode = PlayerPrefs.GetInt(PrefKeys.FullscreenModeSettings) == 1;
+                fullscreenMode = PlayerPrefsService.GetInt(PrefKeys.FullscreenModeSettings) == 1;
                 toggleFullscreen.isOn = fullscreenMode;
             }
             else
@@ -258,9 +258,9 @@ namespace CauldronCodebase
 
         private void LoadSlidersValues()
         {
-            sounds.value = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
+            sounds.value = PlayerPrefsService.HasKey(PrefKeys.SoundsValueSettings) ? PlayerPrefsService.GetFloat(PrefKeys.SoundsValueSettings) : 0.8f;
             UpdateSliderLabel("SFX", sounds.value);
-            music.value = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
+            music.value = PlayerPrefsService.HasKey(PrefKeys.MusicValueSettings) ? PlayerPrefsService.GetFloat(PrefKeys.MusicValueSettings) : 0.8f;
             UpdateSliderLabel("Music", music.value);
         }
 
@@ -286,9 +286,9 @@ namespace CauldronCodebase
                 CloseAutoCooking();
             }
 
-            if (PlayerPrefs.HasKey(PrefKeys.AutoCooking))
+            if (PlayerPrefsService.HasKey(PrefKeys.AutoCooking))
             {
-                autoCookingMode = PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 1;
+                autoCookingMode = PlayerPrefsService.GetInt(PrefKeys.AutoCooking) == 1;
                 autoCooking.isOn = autoCookingMode;
             }
         }

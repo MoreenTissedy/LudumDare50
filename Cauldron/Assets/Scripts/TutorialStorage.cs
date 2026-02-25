@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -78,10 +79,10 @@ namespace CauldronCodebase
             foreach (TutorialKeys tutorialKey in TutorialKeys.GetValues(typeof(TutorialKeys)))
             {
                 var key = tutorialKey.ToString();
-                if (PlayerPrefs.HasKey(key))
+                if (PlayerPrefsService.HasKey(key))
                 {
                     tutorials.Add(tutorialKey);
-                    PlayerPrefs.DeleteKey(key);
+                    PlayerPrefsService.DeleteKey(key);
                     hasLegacy = true;
                 }
             }

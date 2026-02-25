@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -59,8 +60,8 @@ namespace CauldronCodebase
 
         public SkinSO GetInitialSkin()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.LastPlayerSkin))
-                return Get(PlayerPrefs.GetString(PrefKeys.LastPlayerSkin)); 
+            if (PlayerPrefsService.HasKey(PrefKeys.LastPlayerSkin))
+                return Get(PlayerPrefsService.GetString(PrefKeys.LastPlayerSkin)); 
             for (var i = unlocked.Count - 1; i >= 0; i--)
             {
                 SkinSO skin = Get(unlocked[i]);

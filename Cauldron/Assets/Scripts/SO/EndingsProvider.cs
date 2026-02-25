@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -105,16 +106,16 @@ namespace CauldronCodebase
 
         private bool TryLoadLegacy()
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedEndings))
+            if (!PlayerPrefsService.HasKey(PrefKeys.UnlockedEndings))
             {
                 return false;
             }
 
-            var endingString = PlayerPrefs.GetString(PrefKeys.UnlockedEndings);
+            var endingString = PlayerPrefsService.GetString(PrefKeys.UnlockedEndings);
             Debug.LogError("load legacy endings: "+endingString);
             Legacy = true;
             unlocked = endingString.Split(',').ToList();
-            PlayerPrefs.DeleteKey(PrefKeys.UnlockedEndings);
+            PlayerPrefsService.DeleteKey(PrefKeys.UnlockedEndings);
             return true;  
         }
 

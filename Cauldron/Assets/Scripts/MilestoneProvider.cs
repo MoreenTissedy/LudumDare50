@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -80,14 +81,14 @@ namespace CauldronCodebase
 
         private bool TryLoadLegacy(out List<string> list)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.Milestones))
+            if (!PlayerPrefsService.HasKey(PrefKeys.Milestones))
             {
                 list = null;
                 return false;
             }
 
-            list = JsonUtility.FromJson<StringListWrapper>(PlayerPrefs.GetString(PrefKeys.Milestones)).list;
-            PlayerPrefs.DeleteKey(PrefKeys.Milestones);
+            list = JsonUtility.FromJson<StringListWrapper>(PlayerPrefsService.GetString(PrefKeys.Milestones)).list;
+            PlayerPrefsService.DeleteKey(PrefKeys.Milestones);
             return true;
         }
     }

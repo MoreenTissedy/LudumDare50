@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
+using Universal;
 using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
@@ -123,7 +124,7 @@ namespace CauldronCodebase
 
         private void InitRememberedCards()
         {
-            string rememberedCardsJson = PlayerPrefs.GetString(PrefKeys.UniqueCards);
+            string rememberedCardsJson = PlayerPrefsService.GetString(PrefKeys.UniqueCards);
             if (!string.IsNullOrEmpty(rememberedCardsJson))
             {
                 var wrapper = JsonUtility.FromJson<StringListWrapper>(rememberedCardsJson);
@@ -328,7 +329,7 @@ namespace CauldronCodebase
             rememberedCards.Add(currentCard.name);
             StringListWrapper wrapper = new StringListWrapper { list = rememberedCards };
             string json = JsonUtility.ToJson(wrapper);
-            PlayerPrefs.SetString(PrefKeys.UniqueCards, json);
+            PlayerPrefsService.SetString(PrefKeys.UniqueCards, json);
             Debug.Log("unique cards: "+json);
         }
         

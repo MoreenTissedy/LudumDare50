@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -101,41 +102,41 @@ namespace CauldronCodebase
 
         private bool GetLegacyRound(ref int round)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.CurrentRound))
+            if (!PlayerPrefsService.HasKey(PrefKeys.CurrentRound))
             {
                 round = 0;
                 return false;
             }
             
-            round = PlayerPrefs.GetInt(PrefKeys.CurrentRound);
-            PlayerPrefs.DeleteKey(PrefKeys.CurrentRound);
+            round = PlayerPrefsService.GetInt(PrefKeys.CurrentRound);
+            PlayerPrefsService.DeleteKey(PrefKeys.CurrentRound);
 
             return true;
         }
 
         private bool GetLegacyCovenIntroShown(ref bool isShown)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.CovenIntroShown))
+            if (!PlayerPrefsService.HasKey(PrefKeys.CovenIntroShown))
             {
                 isShown = false;
                 return false;
             }
             
-            isShown = PlayerPrefs.GetInt(PrefKeys.CovenIntroShown) == 1;
-            PlayerPrefs.DeleteKey(PrefKeys.CovenIntroShown);
+            isShown = PlayerPrefsService.GetInt(PrefKeys.CovenIntroShown) == 1;
+            PlayerPrefsService.DeleteKey(PrefKeys.CovenIntroShown);
 
             return true;
         }
         private bool GetLegacyAutoCooking(ref bool isUnlocked)
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.IsAutoCookingUnlocked))
+            if (!PlayerPrefsService.HasKey(PrefKeys.IsAutoCookingUnlocked))
             {
                 isUnlocked = false;
                 return false;
             }
             
-            isUnlocked = PlayerPrefs.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1;
-            PlayerPrefs.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
+            isUnlocked = PlayerPrefsService.GetInt(PrefKeys.IsAutoCookingUnlocked) == 1;
+            PlayerPrefsService.DeleteKey(PrefKeys.IsAutoCookingUnlocked);
 
             return true;
         }

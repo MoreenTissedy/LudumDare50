@@ -547,7 +547,7 @@ namespace CauldronCodebase
             tooltipManager.HighlightRecipe(recipeBookEntry.CurrentRecipe);
             OnSelectRecipe?.Invoke(recipeBookEntry.CurrentRecipe);
 
-            if (PlayerPrefs.GetInt(PrefKeys.AutoCooking) == 0)
+            if (PlayerPrefsService.GetInt(PrefKeys.AutoCooking) == 0)
             {
                 return;
             }

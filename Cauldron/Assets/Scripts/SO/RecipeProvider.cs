@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
+using Universal;
 
 namespace CauldronCodebase
 {
@@ -94,13 +95,13 @@ namespace CauldronCodebase
 
         private bool TryLoadLegacy()
         {
-            if (!PlayerPrefs.HasKey(PrefKeys.UnlockedRecipes))
+            if (!PlayerPrefsService.HasKey(PrefKeys.UnlockedRecipes))
             {
                 return false;
             }
 
             unlockedRecipes = new List<int>();
-            string data = PlayerPrefs.GetString(PrefKeys.UnlockedRecipes);
+            string data = PlayerPrefsService.GetString(PrefKeys.UnlockedRecipes);
             foreach (var potion in data.Split(','))
             {
                 if (string.IsNullOrWhiteSpace(potion))
@@ -109,7 +110,7 @@ namespace CauldronCodebase
                 }
                 unlockedRecipes.Add(int.Parse(potion));
             }
-            PlayerPrefs.DeleteKey(PrefKeys.UnlockedRecipes);
+            PlayerPrefsService.DeleteKey(PrefKeys.UnlockedRecipes);
             Debug.LogError("load legacy potions: "+string.Join(",",unlockedRecipes));
 
             return true;

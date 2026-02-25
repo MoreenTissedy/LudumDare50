@@ -73,9 +73,9 @@ namespace CauldronCodebase
 
         private void SetPointerSpeed()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.PointerSpeed))
+            if (PlayerPrefsService.HasKey(PrefKeys.PointerSpeed))
             {
-                virtualMouseInput.cursorSpeed = PlayerPrefs.GetInt(PrefKeys.PointerSpeed);
+                virtualMouseInput.cursorSpeed = PlayerPrefsService.GetInt(PrefKeys.PointerSpeed);
             }
             else
             {
@@ -85,11 +85,11 @@ namespace CauldronCodebase
 
         private void SetSoundVolume()
         {
-            var soundVolume = PlayerPrefs.HasKey(PrefKeys.SoundsValueSettings)
-                ? PlayerPrefs.GetFloat(PrefKeys.SoundsValueSettings)
+            var soundVolume = PlayerPrefsService.HasKey(PrefKeys.SoundsValueSettings)
+                ? PlayerPrefsService.GetFloat(PrefKeys.SoundsValueSettings)
                 : 0.8f;
-            var musicVolume = PlayerPrefs.HasKey(PrefKeys.MusicValueSettings)
-                ? PlayerPrefs.GetFloat(PrefKeys.MusicValueSettings)
+            var musicVolume = PlayerPrefsService.HasKey(PrefKeys.MusicValueSettings)
+                ? PlayerPrefsService.GetFloat(PrefKeys.MusicValueSettings)
                 : 0.8f;
             RuntimeManager.GetVCA("vca:/Music").setVolume(musicVolume);
             RuntimeManager.GetVCA("vca:/SFX").setVolume(soundVolume);

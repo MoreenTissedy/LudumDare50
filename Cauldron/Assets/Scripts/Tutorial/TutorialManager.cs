@@ -134,7 +134,7 @@ public class TutorialManager : MonoBehaviour
         
         SaveKey(TutorialKeys.BOOK_AUTOCOOKING_OPENED);
         bool accepted = await tutorialScreen.ShowAsDialog(DescriptionTutorialAutoCooking);
-        PlayerPrefs.SetInt(PrefKeys.AutoCooking, accepted ? 1 : 0);
+        PlayerPrefsService.SetInt(PrefKeys.AutoCooking, accepted ? 1 : 0);
     }
 
     private void ViewVisitorTutorial(Potions potion)

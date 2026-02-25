@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using System.Reflection;
 using CauldronCodebase;
+using Universal;
 using Zenject;
 
 #if UNITY_EDITOR
@@ -28,8 +29,8 @@ namespace EasyLoc
         public Language GetSavedLanguage()
         {
             var language = Language.EN;
-            if (PlayerPrefs.HasKey(PrefKeys.LanguageKey) &&
-                PlayerPrefs.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
+            if (PlayerPrefsService.HasKey(PrefKeys.LanguageKey) &&
+                PlayerPrefsService.GetString(PrefKeys.LanguageKey) == Language.RU.ToString())
             {
                 language = Language.RU;
             }

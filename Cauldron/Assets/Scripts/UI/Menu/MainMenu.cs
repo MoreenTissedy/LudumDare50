@@ -59,10 +59,10 @@ namespace CauldronCodebase
         public void ResetGameData(bool saveLanguage = true)
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
-            PlayerPrefs.DeleteAll();
+            PlayerPrefsService.DeleteAll();
             ClearAllSaveFiles();
             dataPersistenceManager.NewGame();
-            if (saveLanguage) PlayerPrefs.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
+            if (saveLanguage) PlayerPrefsService.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
             HideContinueButton();
             newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
             Debug.LogWarning("All data cleared!");
@@ -94,7 +94,7 @@ namespace CauldronCodebase
             {
                 case true:
                     Debug.LogWarning("The saved data has been deleted and a new game has been started");
-                    PlayerPrefs.DeleteKey(PrefKeys.UniqueCards);
+                    PlayerPrefsService.DeleteKey(PrefKeys.UniqueCards);
                     StartNewGame();
                     break;
 
@@ -121,7 +121,7 @@ namespace CauldronCodebase
 
         private async UniTask TryPlayIntroVideo()
         {
-            if (PlayerPrefs.HasKey(PrefKeys.VideoWatched))
+            if (PlayerPrefsService.HasKey(PrefKeys.VideoWatched))
             {
                 return;
             }
@@ -137,7 +137,7 @@ namespace CauldronCodebase
             await UniTask.WaitWhile(() => player.isPlaying);
             await fadeController.FadeIn(0.3f);
             
-            PlayerPrefs.SetInt(PrefKeys.VideoWatched, 1);
+            PlayerPrefsService.SetInt(PrefKeys.VideoWatched, 1);
         }
 
         

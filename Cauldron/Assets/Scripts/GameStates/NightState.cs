@@ -54,7 +54,7 @@ namespace CauldronCodebase.GameStates
         
         public override void Enter()
         {
-            if (recipeBook.enabled)
+            if (recipeBook.IsOpen)
             {
                 recipeBook.CloseBook();
             }

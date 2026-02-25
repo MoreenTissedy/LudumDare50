@@ -197,6 +197,8 @@ namespace CauldronCodebase
         public async UniTask AddEventAsLast(NightEvent nightEvent)
         {
             covenBlock.SetActive(false);
+            OverlayManager.RemoveLayer(covenPopup);
+            
             clickable = false;
             content.Add(nightEvent);
             totalPages++;
@@ -306,7 +308,6 @@ namespace CauldronCodebase
             {
                 nightPanelCard.Hide();
             }
-            Debug.LogError("night panel close");
             base.CloseBook();
         }
     }

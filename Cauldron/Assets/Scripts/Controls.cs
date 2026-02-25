@@ -44,7 +44,7 @@ namespace CauldronCodebase
                     ""id"": ""b109a3d6-0148-4923-a8d5-6c90df1b42ba"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Tap"",
+                    ""interactions"": ""Tap(duration=0.5,pressPoint=0.2)"",
                     ""initialStateCheck"": false
                 },
                 {

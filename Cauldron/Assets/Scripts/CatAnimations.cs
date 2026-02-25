@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 
 namespace CauldronCodebase
 {
-    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler
+    public class CatAnimations : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerClickHandler
     {
         [SerializeField] private SkeletonAnimation catSkeleton;
         public SkeletonAnimation CatSkeleton => catSkeleton;
@@ -287,6 +287,12 @@ namespace CauldronCodebase
         public void OnPointerEnter(PointerEventData eventData)
         {
             MouseOverCat?.Invoke();
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            soundManager.PlayCat(CatSound.Purr);
+            PlayAnimationOneShot(strokeAnimation);
         }
     }
 }

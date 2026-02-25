@@ -61,5 +61,10 @@ namespace CauldronCodebase
             layers.Pop();
             layers.Peek().Item1.Lock(false);
         }
+        
+        public void LockCurrentLayer(bool value)
+        {
+            layers.Peek().Item1.Lock(value);
+        }
     }
 }

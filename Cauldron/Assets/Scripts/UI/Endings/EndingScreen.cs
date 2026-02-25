@@ -134,7 +134,7 @@ namespace CauldronCodebase
             //picture.sprite = ending.image;
             screen.SetActive(true);
             overlayManager.AddLayer(cartoonOverlayLayer);
-            //inputManager.SetCursor(false);
+            inputManager.SetCursor(false);
             //screenFader.alpha = 0;
             //screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;
@@ -144,8 +144,8 @@ namespace CauldronCodebase
             //screenFader.DOFade(0, _ENDING_SCREEN_FADE_DURATION_).OnComplete(() =>
             //{
             screen.SetActive(false);
-            //inputManager.SetCursor(true);
             overlayManager.RemoveLayer(cartoonOverlayLayer);
+            inputManager.SetCursor(true);
 
             //});
         }

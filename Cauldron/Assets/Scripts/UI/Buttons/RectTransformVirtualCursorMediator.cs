@@ -14,6 +14,7 @@ namespace UI.Buttons
         private PointerMediator pointerMediator;
 
         private bool underCursor;
+        private float lastClickTime;
         
         [Inject] private InputManager inputManager;
         
@@ -31,6 +32,11 @@ namespace UI.Buttons
         {
             if (!inputManager.CursorEnabled)
             {
+                if (underCursor)
+                {
+                    pointerMediator.OnPointerExit(null);
+                    underCursor = false;
+                }
                 return;
             }
             Vector2 mousePosition = virtualMouse.position.value;
@@ -49,6 +55,11 @@ namespace UI.Buttons
             
             if (underCursor && virtualMouse.leftButton.isPressed)
             {
+                if (Time.realtimeSinceStartup - lastClickTime < 0.3f)
+                {
+                    return;
+                }
+                lastClickTime = Time.realtimeSinceStartup;
                 pointerMediator.OnPointerClick(null);
             }
         }

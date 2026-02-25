@@ -63,6 +63,7 @@ namespace CauldronCodebase
         [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private CameraAdapt cameraAdaptation;
         [Inject] private VirtualMouseInput virtualMouse;
+        
         private bool fullscreenMode;
         private bool autoCookingMode;
         
@@ -109,7 +110,7 @@ namespace CauldronCodebase
         {
             int realValue = (int)Mathf.Lerp(pointerSpeedMinValue, pointerSpeedMaxValue, value);
             
-            PlayerPrefsService.SetInt(PrefKeys.PointerSpeed, realValue);
+            PlayerPrefsService.SetInt(PrefKeys.PointerSpeed, realValue, false);
             virtualMouse.cursorSpeed = realValue;
         }
 
@@ -125,11 +126,15 @@ namespace CauldronCodebase
             }
         }
 
+        //TODO
         private void ChangeLanguage(int index)
         {
             var newLanguage = index > 0 ? Language.RU : Language.EN;
-            PlayerPrefsService.SetString(PrefKeys.LanguageKey, newLanguage.ToString());
+            PlayerPrefsService.SetString(PrefKeys.LanguageKey, newLanguage.ToString(), true);
+            
+            overlayManager.LockCurrentLayer(true);
             locTool.LoadLanguage(newLanguage);
+            overlayManager.LockCurrentLayer(false);
         }
 
         private void LoadResolution()
@@ -146,6 +151,7 @@ namespace CauldronCodebase
 
         public void Close()
         {
+            PlayerPrefsService.Save();
             gameObject.SetActive(false);
             fadeController.FadeOut().Forget();
             overlayManager.RemoveLayer(mainLayer);
@@ -167,8 +173,8 @@ namespace CauldronCodebase
         {
             RuntimeManager.GetVCA($"vca:/{vca}").setVolume(Mathf.Lerp(0, max, value));
             UpdateSliderLabel(vca, value);
-            PlayerPrefsService.SetFloat(PrefKeys.MusicValueSettings, music.value);
-            PlayerPrefsService.SetFloat(PrefKeys.SoundsValueSettings, sounds.value);
+            PlayerPrefsService.SetFloat(PrefKeys.MusicValueSettings, music.value, false);
+            PlayerPrefsService.SetFloat(PrefKeys.SoundsValueSettings, sounds.value, false);
         }
 
         private void LoadResolutionDropdown()
@@ -210,7 +216,7 @@ namespace CauldronCodebase
         private async void ChangeFullscreenMode(bool set)
         {
             fullscreenMode = set;
-            PlayerPrefsService.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0);
+            PlayerPrefsService.SetInt(PrefKeys.FullscreenModeSettings, fullscreenMode ? 1 : 0, false);
             Screen.fullScreen = fullscreenMode;
             
             if (set)
@@ -226,7 +232,7 @@ namespace CauldronCodebase
         private void ChangeAutoCooking(bool set)
         {
             autoCookingMode = set;
-            PlayerPrefsService.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0);
+            PlayerPrefsService.SetInt(PrefKeys.AutoCooking, autoCookingMode ? 1 : 0, false);
         }
 
         private void LoadFullscreenMode()

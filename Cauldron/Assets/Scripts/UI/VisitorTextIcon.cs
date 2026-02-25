@@ -15,6 +15,7 @@ namespace CauldronCodebase
         [Localize] public string moneyHint = "Этот персонаж даст вам денег, если вы поможете ему.";
         [Localize] public string fameHint = "Если вы поможете или навредите, изменится шкала славы.";
         [Localize] public string fractionHint = "Ваше решение будет замечено и оценено по достоинству.";
+        [Localize] public string unknownHint = "Последствия неизвестны.";
         
         public Image icon;
         public Sprite fame, fear, money, question, bishop, king, bandit;
@@ -48,10 +49,12 @@ namespace CauldronCodebase
         public void Display(Statustype type, bool hidden = false)
         {
             hintEnabled = false;
+            hint.Close();
             if (hidden)
             {
                 icon.sprite = question;
                 gameObject.SetActive(true);
+                hint.SetText(unknownHint).Forget();
                 return;
             }
             switch (type)
@@ -80,6 +83,7 @@ namespace CauldronCodebase
         public void Hide()
         {
             gameObject.SetActive(false);
+            hint.Close();
         }
 
         public void OnPointerEnter(PointerEventData eventData)

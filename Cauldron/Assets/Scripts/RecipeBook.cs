@@ -85,6 +85,7 @@ namespace CauldronCodebase
         private int lastMagicPage;
         private int lastHerbalPage;
         private int lastIngredientsPage;
+        private Mode lastModeToOpen = Mode.Magical;
 
         [ContextMenu("Find Entries")]
         void FindEntries()
@@ -150,7 +151,11 @@ namespace CauldronCodebase
         public override void OpenBook()
         {
             base.OpenBook();
-            ChangeMode(Mode.Magical);
+            if (lastModeToOpen == Mode.None)
+            {
+                lastModeToOpen = Mode.Magical;
+            }
+            ChangeMode(lastModeToOpen);
         }
 
         private void LoadRecipes()
@@ -506,6 +511,8 @@ namespace CauldronCodebase
                     lastIngredientsPage = currentPage;
                     break;
             }
+
+            lastModeToOpen = currentMode;
             currentMode = Mode.None;
             recipesDisplay.SetActive(false);
             foodDisplay.SetActive(false);

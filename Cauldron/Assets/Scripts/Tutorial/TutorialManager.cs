@@ -70,7 +70,7 @@ public class TutorialManager : MonoBehaviour
             wardrobe.OnApplyCondition += OnWardrobeApply;
         }
 
-        TryShowTutorialForPremium();
+        //TryShowTutorialForPremium();
     }
 
     private async void TryShowTutorialForPremium()

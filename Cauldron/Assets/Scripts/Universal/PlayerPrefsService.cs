@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Universal
 {
     public static class PlayerPrefsService
@@ -53,6 +55,7 @@ namespace Universal
 
         public static void Save()
         {
+            Debug.LogWarning("save prefs");
 #if UNITY_SWITCH && !UNITY_EDITOR
         // Nintendo Switch specific saving implementation
         byte[] data = UnityEngine.Switch.PlayerPrefsHelper.rawData;
@@ -60,7 +63,7 @@ namespace Universal
         UnityEngine.Switch.Notification.EnterExitRequestHandlingSection();
 
         nn.fs.FileHandle fileHandle = new nn.fs.FileHandle();
-        nn.Result result = nn.fs.File.Open(ref fileHandle, filePath, nn.fs.OpenFileMode.Write);
+        nn.Result result = nn.fs.File.Open(ref fileHandle, filePath, nn.fs.OpenFileMode.Write| nn.fs.OpenFileMode.AllowAppend);
         
         // If file doesn't exist, create it
         if (!result.IsSuccess())
@@ -68,7 +71,7 @@ namespace Universal
             result = nn.fs.File.Create(filePath, data.LongLength);
             if (result.IsSuccess())
             {
-                result = nn.fs.File.Open(ref fileHandle, filePath, nn.fs.OpenFileMode.Write);
+                result = nn.fs.File.Open(ref fileHandle, filePath, nn.fs.OpenFileMode.Write| nn.fs.OpenFileMode.AllowAppend);
             }
         }
         

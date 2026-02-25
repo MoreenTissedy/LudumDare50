@@ -21,6 +21,8 @@ namespace UI.Buttons
 
         [Inject] private InputManager inputManager;
         
+        private float lastClickTime;
+        
         private void Start()
         {
             pointerEnterHandler = GetComponent<IPointerEnterHandler>();
@@ -34,6 +36,11 @@ namespace UI.Buttons
         {
             if (!inputManager.CursorEnabled)
             {
+                if (underCursor)
+                {
+                    pointerExitHandler?.OnPointerExit(null);
+                    underCursor = false;
+                }
                 return;
             }
             if (!mainCamera)
@@ -58,6 +65,11 @@ namespace UI.Buttons
             
             if (underCursor && virtualMouse.leftButton.isPressed)
             {
+                if (Time.realtimeSinceStartup - lastClickTime < 0.3f)
+                {
+                    return;
+                }
+                lastClickTime = Time.realtimeSinceStartup;
                 pointerClickHandler?.OnPointerClick(null);
             }
         }

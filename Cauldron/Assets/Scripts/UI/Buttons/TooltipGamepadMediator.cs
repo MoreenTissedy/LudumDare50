@@ -27,17 +27,17 @@ namespace UI.Buttons
         {
             //initial delay
             lastInputTime = Time.realtimeSinceStartup + 0.2f;
-            gameStateMachine.OnNewDay += CloseTooltipsOnNewDay;
+            gameStateMachine.OnChangeState += CloseTooltipsOnNewDay;
         }
 
-        private void CloseTooltipsOnNewDay()
+        private void CloseTooltipsOnNewDay(GameStateMachine.GamePhase _)
         {
             tooltip.Close();
         }
 
         private void OnDisable()
         {
-            gameStateMachine.OnNewDay -= CloseTooltipsOnNewDay;
+            gameStateMachine.OnChangeState -= CloseTooltipsOnNewDay;
         }
 
         private void Update()

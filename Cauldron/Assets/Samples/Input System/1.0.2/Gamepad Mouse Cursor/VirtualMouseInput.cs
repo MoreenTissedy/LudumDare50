@@ -1,5 +1,6 @@
 using System;
 using CauldronCodebase;
+using DG.Tweening;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
@@ -583,9 +584,13 @@ namespace UnityEngine.InputSystem.UI
             m_CursorGraphic.enabled = on;
             if (on)
             {
+                m_CursorGraphic.transform.DOKill();
+                m_CursorGraphic.transform.DOScale(1, 0.3f).From(0f).SetDelay(0.5f);
                 m_CursorVfx.SetActive(false);
                 m_CursorVfx.SetActive(true);
-                
+            }
+            else if (m_VirtualMouse != null)
+            {
                 Vector2 initialPosition = new Vector2(Screen.width*3/4, Screen.height/2);
                 InputState.Change(m_VirtualMouse.position, initialPosition);
                 m_CursorTransform.anchoredPosition = Resize(initialPosition);

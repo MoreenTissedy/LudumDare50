@@ -36,7 +36,6 @@ namespace CauldronCodebase
         public Action<GamepadType> InputChanged;
 
         private VirtualMouseInput virtualMouseInput;
-        public GameObject cursorFx;
 
         private CancellationTokenSource cts;
 
@@ -54,7 +53,6 @@ namespace CauldronCodebase
             Debug.Log("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
             
             InputSystem.onDeviceChange += OnDeviceChange;
-            this.cursorFx = cursorFx;
             this.virtualMouseInput = virtualMouseInput;
             
             virtualMouseInput.SetCursorVisible(false);
@@ -91,7 +89,6 @@ namespace CauldronCodebase
                 Cursor.visible = false;
             }
 
-            Debug.Log("[Set Cursor] "+enable);
             virtualMouseInput.SetCursorVisible(enable);
         }
     }

@@ -16,6 +16,8 @@ public class CatTipsView : MonoBehaviour
     
     [Inject] private SoundManager soundManager;
 
+    public bool HasTip;
+
     private bool tipEnabled;
     private CancellationTokenSource cancel;
     
@@ -33,14 +35,14 @@ public class CatTipsView : MonoBehaviour
 
     }
 
-    private void ChangeToIcon()
+    public void ChangeToIcon()
     {
         catDialogBubble.DisableBubble();
         dialogIcon.EnableIcon();
         tipEnabled = false;
     }
 
-    private void ChangeToBubble()
+    public void ChangeToBubble()
     {
         catDialogBubble.EnableBubble();
         dialogIcon.DisableIcon();
@@ -52,6 +54,7 @@ public class CatTipsView : MonoBehaviour
         cancel?.Cancel();
         cancel = new CancellationTokenSource();
         text.text = tips.TipsText;
+        HasTip = true;
         soundManager.PlayCat(CatSound.Attention);
         ChangeToBubble();
         await UniTask.Delay(TimeSpan.FromSeconds(_SHOW_TIME_)).
@@ -70,5 +73,7 @@ public class CatTipsView : MonoBehaviour
         {
             catDialogBubble.DisableBubble();
         }
+
+        HasTip = false;
     }
 }

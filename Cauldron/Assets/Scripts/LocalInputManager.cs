@@ -12,25 +12,37 @@ namespace CauldronCodebase
         private int recipeBookModeTotal;
         private Controls controls;
         private OverlayManager overlayManager;
+        private CatTipsView catTipsView;
+        private InputManager inputManager;
+        
+        private float lastBookInputTime;
+        private float lastHintInputTime;
+        private bool hintsShown;
 
         [Inject]
-        private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe, OverlayManager overlayManager)
+        private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe, OverlayManager overlayManager, CatTipsView catTipsView)
         {
             this.recipeBook = recipeBook;
             this.wardrobe = wardrobe;
+            this.catTipsView = catTipsView;
             recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length - 1;
             
             controls = inputManager.Controls;
             this.overlayManager = overlayManager;
             
             controls.General.Exit.performed += ProcessExit;
-            controls.General.BookToggle.performed += ToggleBook;
+            controls.General.BookToggle.started += ToggleBook;
             controls.General.BookNavigate.performed += BookNavigateUpDown;
         }
 
         private void ToggleBook(InputAction.CallbackContext input)
         {
             if (recipeBook.isNightBook) return;
+            if (Time.realtimeSinceStartup - lastBookInputTime < 0.5f)
+            {
+                return;
+            }
+            lastBookInputTime = Time.realtimeSinceStartup;
             if (overlayManager.GetCurrentLayer == Layers.Base || overlayManager.GetCurrentLayer == Layers.RecipeBook)
             {
                 recipeBook.ToggleBook();
@@ -81,6 +93,40 @@ namespace CauldronCodebase
             controls.General.Exit.performed -= ProcessExit;
             controls.General.BookToggle.performed -= ToggleBook;
             controls.General.BookNavigate.performed -= BookNavigateUpDown;
+        }
+
+        private void Update()
+        {
+            if (overlayManager.GetCurrentLayer != Layers.Base)
+            {
+                return;
+            }
+            Gamepad gamepad = Gamepad.current;
+            if (gamepad is null || !inputManager.GamepadConnected)
+            {
+                return;
+            }
+            
+            if (gamepad.buttonNorth.wasPressedThisFrame)
+            {
+                if (Time.realtimeSinceStartup - lastHintInputTime < 0.3f)
+                {
+                    return;
+                }
+                lastHintInputTime = Time.realtimeSinceStartup;
+                hintsShown = !hintsShown;
+                if (catTipsView.HasTip)
+                {
+                    if (hintsShown)
+                    {
+                        catTipsView.ChangeToBubble();
+                    }
+                    else
+                    {
+                        catTipsView.ChangeToIcon();
+                    }
+                }
+            }
         }
     }
 }

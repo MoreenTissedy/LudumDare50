@@ -22,6 +22,7 @@ namespace CauldronCodebase
             locationIndex = gameData.currentRound % ResourceIdents.Backgrounds.Length;
             Instantiate(Resources.Load<GameObject>(ResourceIdents.Backgrounds[locationIndex]), transform);
             gameLoop.OnGameStarted += StartLocationMusic;
+            Resources.UnloadUnusedAssets();
         }
 
         private void StartLocationMusic()

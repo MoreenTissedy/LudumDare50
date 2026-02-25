@@ -10,6 +10,8 @@ namespace Universal
     {
         [ReadOnly]
         [SerializeField] private FlexibleButton _animatedButton;
+
+        public bool VirtualCursorControlable;
         
         [Inject] InputManager inputManager;
 
@@ -20,7 +22,10 @@ namespace Universal
 
         public virtual void OnPointerEnter(PointerEventData eventData)
         {
-            if (inputManager.GamepadConnected) return;
+            if (!VirtualCursorControlable && inputManager.GamepadConnected)
+            {
+                return;
+            }
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Select();
@@ -28,7 +33,10 @@ namespace Universal
 
         public virtual void OnPointerExit(PointerEventData eventData)
         {
-            if (inputManager.GamepadConnected) return;
+            if (!VirtualCursorControlable && inputManager.GamepadConnected)
+            {
+                return;
+            }
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Unselect();
@@ -36,7 +44,10 @@ namespace Universal
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
-            if (inputManager.GamepadConnected) return;
+            if (!VirtualCursorControlable && inputManager.GamepadConnected)
+            {
+                return;
+            }
             if (!_animatedButton.IsInteractive) return;
 
             _animatedButton.Activate();

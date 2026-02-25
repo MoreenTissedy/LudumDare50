@@ -49,7 +49,7 @@ namespace CauldronCodebase
             //GamepadConnected = Gamepad.current != null;
             GamepadConnected = true;
             GamepadType = GamepadType.Switch;
-            Debug.LogError("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
+            Debug.Log("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
             
             InputSystem.onDeviceChange += OnDeviceChange;
             this.cursorFx = cursorFx;
@@ -62,11 +62,11 @@ namespace CauldronCodebase
         {
             if (Gamepad.current != null)
             {
-                Debug.LogError("Current gamepad: "+ (Gamepad.current.device ));
+                Debug.Log("Current gamepad: "+ (Gamepad.current.device ));
             }
             else
             {
-                Debug.LogError("Gamepad disconnected");
+                Debug.Log("Gamepad disconnected");
             }
             //InputChanged?.Invoke();
         }

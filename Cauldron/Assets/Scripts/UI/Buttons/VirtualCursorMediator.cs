@@ -28,18 +28,21 @@ namespace UI.Buttons
 
         private void LateUpdate()
         {
-            var worldPoint = Camera.main.ScreenToWorldPoint(virtualMouse.position.value);
-            Debug.Log(worldPoint);
+            if (!mainCamera)
+            {
+                mainCamera = Camera.main;
+                return;
+            }
+            
+            var worldPoint = mainCamera.ScreenToWorldPoint(virtualMouse.position.value);
             bool isOverlap = theCollider.OverlapPoint(worldPoint);
             
             if (isOverlap && !underCursor)
             {
-                Debug.LogError("Pointer enter "+gameObject.name);
                 pointerEnterHandler?.OnPointerEnter(null);
             }
             else if (!isOverlap && underCursor)
             {
-                Debug.LogError("Pointer exit "+gameObject.name);
                 pointerExitHandler?.OnPointerExit(null);
             }
 
@@ -47,7 +50,6 @@ namespace UI.Buttons
             
             if (underCursor && virtualMouse.leftButton.isPressed)
             {
-                Debug.LogError("Pointer click "+gameObject.name);
                 pointerClickHandler?.OnPointerClick(null);
             }
         }

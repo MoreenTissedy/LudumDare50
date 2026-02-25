@@ -166,8 +166,7 @@ MonoBehaviour:
   rotateSpeed: 0.2
   returntime: 0.4
   dataList: {fileID: 11400000, guid: 48fa507dd59c6364aa052f41b0df74ad, type: 2}
-  theCollider: {fileID: 2301198565061899766}
-  tooltip: {fileID: 0}
+  tooltip: {fileID: 8146441713240086191}
   image: {fileID: 3238362719770474279}
   ingredientParticle: {fileID: 5600298136131939862}
   dragTrail: {fileID: 3360730278269549510}
@@ -197,7 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0662efded6498eb2aa1a74463b0eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 2301198565061899766}
 --- !u!1001 &5157860297859999352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -235,11 +233,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4918615615475639741, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 366.94
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4918615615475639741, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100.990005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5357222628029266267, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
       propertyPath: m_Layer
@@ -259,7 +257,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6470295160649219002, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6470295160649219005, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
       propertyPath: m_Pivot.x
@@ -396,6 +394,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6470295160649219005, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
   m_PrefabInstance: {fileID: 5157860297859999352}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8146441713240086191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3934350634413764823, guid: 99cd7b5b938e6744bb7c0b22226f950a, type: 3}
+  m_PrefabInstance: {fileID: 5157860297859999352}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ef423ac38674c80b7ee0b0972821313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7410512907341884974
 PrefabInstance:
   m_ObjectHideFlags: 0

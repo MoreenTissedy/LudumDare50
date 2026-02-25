@@ -287,7 +287,9 @@ namespace UnityEngine.InputSystem.UI
 
             // Add mouse device.
             if (m_VirtualMouse == null)
-                m_VirtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
+            {
+                m_VirtualMouse = (Mouse) InputSystem.AddDevice("VirtualMouse", "Virtual cursor");
+            }
             else if (!m_VirtualMouse.added)
                 InputSystem.AddDevice(m_VirtualMouse);
 
@@ -411,6 +413,11 @@ namespace UnityEngine.InputSystem.UI
             var stickValue = stickAction.ReadValue<Vector2>();
             if (Mathf.Approximately(0, stickValue.x) && Mathf.Approximately(0, stickValue.y))
             {
+                if (m_SystemMouse == null)
+                {
+                    InputState.Change(virtualMouse.position, m_VirtualMouse.position.ReadValue());
+                }
+
                 isUseGamePad = false;
                 m_LastTime = default;
                 m_LastStickValue = default;
@@ -425,19 +432,21 @@ namespace UnityEngine.InputSystem.UI
                 }
 
                 // Compute delta.
-                var deltaTime = (float)(currentTime - m_LastTime);
-                var delta = new Vector2(m_CursorSpeed * stickValue.x * deltaTime, m_CursorSpeed * stickValue.y * deltaTime);
+                var deltaTime = (float) (currentTime - m_LastTime);
+                var delta = new Vector2(m_CursorSpeed * stickValue.x * deltaTime,
+                    m_CursorSpeed * stickValue.y * deltaTime);
 
                 // Update position.
                 var currentPosition = m_VirtualMouse.position.ReadValue();
                 var newPosition = currentPosition + delta;
-                
+
                 ////REVIEW: for the hardware cursor, clamp to something else?
-                // Clamp to canvas.
-                var pixelRect = m_Canvas.pixelRect;
-                newPosition.x = Mathf.Clamp(newPosition.x, pixelRect.xMin, pixelRect.xMax);
-                newPosition.y = Mathf.Clamp(newPosition.y, pixelRect.yMin, pixelRect.yMax);
-                
+                // Clamp to canvas. TODO: hardware?
+                var pixelRect = Screen.safeArea;
+                newPosition = new Vector2(
+                    Mathf.Clamp(newPosition.x, 0, Screen.width - 100),
+                    Mathf.Clamp(newPosition.y, 30, Screen.height));
+
                 InputState.Change(virtualMouse.position, newPosition);
                 InputState.Change(virtualMouse.delta, delta);
 
@@ -447,13 +456,19 @@ namespace UnityEngine.InputSystem.UI
                     InputState.Change(m_SystemMouse.delta, delta);
                 }
 
-                Vector3 invertedPosition = new Vector2(newPosition.x, (Screen.height - newPosition.y));
-                
+                Vector3 invertedPosition = new Vector2(newPosition.x, (pixelRect.yMax - newPosition.y));
+
                 // Update software cursor transform, if any.
                 if (m_CursorTransform != null &&
                     (m_CursorMode == CursorMode.SoftwareCursor ||
                      (m_CursorMode == CursorMode.HardwareCursorIfAvailable && m_SystemMouse == null)))
-                    m_CursorTransform.anchoredPosition = newPosition;
+                {
+                    float refheight = 1080;
+                    float refwidth = 1920;
+                    m_CursorTransform.anchoredPosition = new Vector2(
+                        newPosition.x / Screen.width * refwidth,
+                        newPosition.y / Screen.height * refheight);
+                }
 
                 m_LastStickValue = stickValue;
                 m_LastTime = currentTime;
@@ -461,44 +476,25 @@ namespace UnityEngine.InputSystem.UI
                 // Update hardware cursor.
                 m_SystemMouse?.WarpCursorPosition(invertedPosition);
             }
-
-            // Update scroll wheel.
-            //var scrollAction = m_ScrollWheelAction.action;
-            //if (scrollAction != null)
-            //{
-            //    var scrollValue = scrollAction.ReadValue<Vector2>();
-            //    scrollValue.x *= m_ScrollSpeed;
-            //    scrollValue.y *= m_ScrollSpeed;
-
-             //   InputState.Change(m_VirtualMouse.scroll, scrollValue);
-                
-              //  if (scrollValue.y != 0)
-                {
-                //    InputState.Change(Mouse.current.scroll, scrollValue);
-                }
-            //}
         }
 
-        [Header("Cursor")]
-        [SerializeField] private CursorMode m_CursorMode;
+        [Header("Cursor")] [SerializeField] private CursorMode m_CursorMode;
         [SerializeField] private Graphic m_CursorGraphic;
         [SerializeField] private GameObject m_CursorVfx;
         [SerializeField] private RectTransform m_CursorTransform;
 
-        [Header("Motion")]
-        [SerializeField] private float m_defaultSpeed = 1000;
+        [Header("Motion")] [SerializeField] private float m_defaultSpeed = 1000;
         private float m_CursorSpeed = 400;
         [SerializeField] private float m_ScrollSpeed = 45;
 
-        [Space(10)]
-        [SerializeField] private InputActionProperty m_StickAction;
+        [Space(10)] [SerializeField] private InputActionProperty m_StickAction;
         [SerializeField] private InputActionProperty m_LeftButtonAction;
         [SerializeField] private InputActionProperty m_MiddleButtonAction;
         [SerializeField] private InputActionProperty m_RightButtonAction;
         [SerializeField] private InputActionProperty m_ForwardButtonAction;
         [SerializeField] private InputActionProperty m_BackButtonAction;
         [SerializeField] private InputActionProperty m_ScrollWheelAction;
-        
+
         [SerializeField] private Canvas m_Canvas; // Canvas that gives the motion range for the software cursor.
         private bool isUseGamePad = false;
         private Mouse m_VirtualMouse;
@@ -592,7 +588,7 @@ namespace UnityEngine.InputSystem.UI
         private void OnAfterInputUpdate()
         {
             UpdateMotion();
-            if (isUseGamePad == false)
+            if (isUseGamePad == false && m_SystemMouse != null && m_CursorMode == CursorMode.HardwareCursorIfAvailable)
             {
                 InputState.Change(m_VirtualMouse.position, Mouse.current.position.ReadValue());
             }

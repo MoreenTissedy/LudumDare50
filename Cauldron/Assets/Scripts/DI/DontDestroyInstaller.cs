@@ -27,11 +27,10 @@ namespace CauldronCodebase
 
         public override void InstallBindings()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             MountSaveRomForSwitch();
+            PlayerPrefsService.Load();
 #endif
-            Debug.Log(Screen.width + " X " + Screen.height);
-            
             GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
             Camera mainCameraScript = cameraInstance.GetComponent<Camera>();
             CameraAdapt cameraAdaptation = cameraInstance.GetComponent<CameraAdapt>();

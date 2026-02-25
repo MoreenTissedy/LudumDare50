@@ -1,6 +1,6 @@
 ﻿namespace CauldronCodebase
 {
-    public static class PrefKeys //TODO for Switch UnityEngine.Switch.PlayerPrefsHelper
+    public static class PrefKeys
     {
         //Player flow modifiers - not needed in the cloud
         public const string UniqueCards = "RememberedCards";

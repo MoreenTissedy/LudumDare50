@@ -1,10 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using nn;
 using UnityEngine;
 
 namespace CauldronCodebase
 {
+    public static class SwitchFileHelper 
+    {
+        public static readonly List<string> Paths = new List<string>();
+        
+        public static bool FileValid(string fullPath)
+        {
+            nn.fs.EntryType entryType = 0;
+            nn.Result result = nn.fs.FileSystem.GetEntryType(ref entryType, fullPath);
+            return !nn.fs.FileSystem.ResultPathNotFound.Includes(result);
+        }
+
+        public static void DeleteFile(string path)
+        {
+            nn.fs.File.Delete(path);
+        }
+    }
+    
     public class FileDataHandler<T> where T : class
     {
         private readonly string fullPath;
@@ -23,6 +42,7 @@ namespace CauldronCodebase
             }
 #if UNITY_SWITCH
             fullPath = string.Format("{0}:/{1}", mountName, dataFileName);
+            SwitchFileHelper.Paths.Add(fullPath);
 #else
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
@@ -38,7 +58,7 @@ namespace CauldronCodebase
         public bool IsFileValid()
         {
 #if UNITY_SWITCH
-            return FileValidForSwitch();
+            return SwitchFileHelper.FileValid(fullPath);
 #else
             return File.Exists(fullPath);
 #endif
@@ -143,7 +163,7 @@ namespace CauldronCodebase
         public void Delete()
         {
 #if UNITY_SWITCH
-            nn.fs.File.Delete(fullPath);
+            SwitchFileHelper.DeleteFile(fullPath);
 #else
             File.Delete(fullPath);
 #endif
@@ -183,7 +203,7 @@ namespace CauldronCodebase
         private string LoadForSwitch()
         {
             Result result;
-            if (!FileValidForSwitch())
+            if (!SwitchFileHelper.FileValid(fullPath))
             {
                 return string.Empty;
             }
@@ -209,13 +229,6 @@ namespace CauldronCodebase
             }
 
             return stringData;
-        }
-
-        private bool FileValidForSwitch()
-        {
-            nn.fs.EntryType entryType = 0;
-            nn.Result result = nn.fs.FileSystem.GetEntryType(ref entryType, fullPath);
-            return !nn.fs.FileSystem.ResultPathNotFound.Includes(result);
         }
     }
 }

@@ -18,8 +18,7 @@ namespace CauldronCodebase
 
         [Header("Settings")] public FlexibleButton settings;
 
-        [Header("Authors")] 
-        [SerializeField] private FlexibleButton authorsButton;
+        [Header("Authors")] [SerializeField] private FlexibleButton authorsButton;
 
         [Header("Fade In Out")] [SerializeField] [Tooltip("Fade in seconds")]
         private float fadeNewGameDuration;
@@ -29,7 +28,7 @@ namespace CauldronCodebase
         [Inject] private DataPersistenceManager dataPersistenceManager;
         [Inject] private FadeController fadeController;
         [Inject] private SoundManager soundManager;
-        [Inject] private LocalizationTool localizationTool;        
+        [Inject] private LocalizationTool localizationTool;
         [Inject] private MilestoneProvider milestoneProvider;
         [Inject] private PlayerProgressProvider playerProgressProvider;
         [Inject] private VillagerFamiliarityChecker villagerChecker;
@@ -41,10 +40,12 @@ namespace CauldronCodebase
             {
                 soundManager.SetMusic(Music.Menu, false);
             }
+
             if (!dataPersistenceManager.IsSaveFound())
             {
                 HideContinueButton();
             }
+
             newGame.gameObject.GetComponent<NewGameButton>().UpdateButton();
 
             continueGame.OnClick += ContinueClick;
@@ -70,6 +71,7 @@ namespace CauldronCodebase
 
         private void ClearAllSaveFiles()
         {
+#if (!UNITY_SWITCH)
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
             string subDirPath = Path.Combine(dataDirPath, SubFolder);
@@ -78,6 +80,15 @@ namespace CauldronCodebase
             {
                 file.Delete();
             }
+#else
+            foreach (string path in SwitchFileHelper.Paths)
+            {
+                if (SwitchFileHelper.FileValid(path))
+                {
+                    SwitchFileHelper.DeleteFile(path);
+                }
+            }
+#endif
             milestoneProvider.LoadMilestones();
             playerProgressProvider.Update();
             villagerChecker.Update();
@@ -128,26 +139,26 @@ namespace CauldronCodebase
 
             soundManager.StopMusic();
             menuHud.enabled = false;
-            
-            
+
+
             var video = Instantiate(Resources.Load("Video")) as GameObject;
             var player = video.GetComponentInChildren<VideoPlayer>();
-            
+
             await fadeController.FadeOut(0.3f);
             await UniTask.WaitWhile(() => player.isPlaying);
             await fadeController.FadeIn(0.3f);
-            
+
             PlayerPrefsService.SetInt(PrefKeys.VideoWatched, 1);
         }
 
-        
+
         private void OnDestroy()
         {
             continueGame.OnClick -= ContinueClick;
             quit.OnClick -= GameLoader.Exit;
             newGame.OnClick -= NewGameClick;
             settings.OnClick -= overlayManager.OpenSettings;
-            authorsButton.OnClick -= overlayManager.OpenAuthors;          
+            authorsButton.OnClick -= overlayManager.OpenAuthors;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,6 +69,7 @@ namespace CauldronCodebase
         private EndingsProvider endingsProvider;
         private PlayerProgressProvider progressProvider;
         private GameDataHandler gameData;
+        private FadeController fadeController;
 
         public static int MAX_COMBINATIONS_COUNT = 120;
 
@@ -101,7 +103,8 @@ namespace CauldronCodebase
                                 IAchievementManager achievements, 
                                 EndingsProvider endingsProvider,
                                 PlayerProgressProvider progressProvider,
-                                GameDataHandler gameData)
+                                GameDataHandler gameData, 
+                                FadeController fadeController)
         {
             dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
@@ -111,6 +114,7 @@ namespace CauldronCodebase
             this.endingsProvider = endingsProvider;
             this.progressProvider = progressProvider;
             this.gameData = gameData;
+            this.fadeController = fadeController;
         }
 
         private void Start()
@@ -138,8 +142,12 @@ namespace CauldronCodebase
         {
             if (!endingScreen)
             {
+                OverlayManager.LockCurrentLayer(true);
+                fadeController.FadeIn(0, 0.5f, 0.2f).Forget();
                 var asset = Resources.Load<EndingScreen>(ResourceIdents.EndingScreen);
                 endingScreen = Instantiate(asset, endingRoot);
+                OverlayManager.LockCurrentLayer(false);
+                fadeController.FadeOut(0f, 0.2f).Forget();
             }
             if (endingScreen == null)
             {

@@ -157,7 +157,9 @@ namespace CauldronCodebase
                 Destroy(currentCartoon);
             }
 
+            overlayManager.LockCurrentLayer(true);
             GameObject asset = await Resources.LoadAsync<GameObject>(ResourceIdents.EndingCartoons[tag]) as GameObject;
+            overlayManager.LockCurrentLayer(false);
             currentCartoon = Instantiate(asset, root);
         }
 

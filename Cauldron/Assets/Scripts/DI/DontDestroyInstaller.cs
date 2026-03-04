@@ -29,7 +29,7 @@ namespace CauldronCodebase
         {
 #if UNITY_SWITCH
             MountSaveRomForSwitch();
-            PlayerPrefsService.Load();
+            PlayerPrefsService.Initialize(); //maybe wait before this to allow time for rom mounting
 #endif
             GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
             Camera mainCameraScript = cameraInstance.GetComponent<Camera>();

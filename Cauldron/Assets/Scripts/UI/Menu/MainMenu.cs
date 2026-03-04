@@ -60,7 +60,6 @@ namespace CauldronCodebase
         public void ResetGameData(bool saveLanguage = true)
         {
             var loadedLanguage = localizationTool.GetSavedLanguage();
-            PlayerPrefsService.DeleteAll();
             ClearAllSaveFiles();
             dataPersistenceManager.NewGame();
             if (saveLanguage) PlayerPrefsService.SetString(PrefKeys.LanguageKey, loadedLanguage.ToString());
@@ -72,6 +71,8 @@ namespace CauldronCodebase
         private void ClearAllSaveFiles()
         {
 #if (!UNITY_SWITCH)
+            PlayerPrefsService.DeleteAll();
+
             string dataDirPath = Application.persistentDataPath;
             string SubFolder = "Saves";
             string subDirPath = Path.Combine(dataDirPath, SubFolder);
@@ -92,6 +93,7 @@ namespace CauldronCodebase
             milestoneProvider.LoadMilestones();
             playerProgressProvider.Update();
             villagerChecker.Update();
+            PlayerPrefsService.Initialize();
         }
 
         private void HideContinueButton()

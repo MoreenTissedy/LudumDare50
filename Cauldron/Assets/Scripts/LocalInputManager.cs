@@ -97,12 +97,13 @@ namespace CauldronCodebase
 
         private void Update()
         {
+            return;
             if (overlayManager.GetCurrentLayer != Layers.Base)
             {
                 return;
             }
             Gamepad gamepad = Gamepad.current;
-            if (gamepad is null || !inputManager.GamepadConnected)
+            if (!inputManager.GamepadConnected)
             {
                 return;
             }

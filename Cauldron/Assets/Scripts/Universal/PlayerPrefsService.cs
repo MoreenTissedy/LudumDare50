@@ -58,7 +58,7 @@ namespace Universal
         {
             UnityEngine.PlayerPrefs.Save();
 
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             byte[] data = UnityEngine.Switch.PlayerPrefsHelper.rawData;
 
             UnityEngine.Switch.Notification.EnterExitRequestHandlingSection();
@@ -89,7 +89,7 @@ namespace Universal
 
         public static void Initialize()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             if (!SwitchFileHelper.Paths.Contains(filePath))
             {
                 SwitchFileHelper.Paths.Add(filePath);
@@ -137,7 +137,7 @@ namespace Universal
 
         public static void Load()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             nn.fs.EntryType entryType = 0;
             nn.Result result = nn.fs.FileSystem.GetEntryType(ref entryType, filePath);
 
@@ -178,7 +178,7 @@ namespace Universal
         }
 
         // Switch-specific constants (only compiled for Switch)
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
         private const string mountName = "Saves";
         private const string fileName = "PlayerPrefsData";
         private static readonly string filePath = string.Format("{0}:/{1}", mountName, fileName);

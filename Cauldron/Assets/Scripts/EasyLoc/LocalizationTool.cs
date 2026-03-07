@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using System.Reflection;
 using CauldronCodebase;
+using Cysharp.Threading.Tasks;
 using Universal;
 using Zenject;
 
@@ -23,7 +24,7 @@ namespace EasyLoc
         [Inject]
         private void Startup()
         {
-            LoadLanguage(GetSavedLanguage());
+            LoadLanguage(GetSavedLanguage()).Forget();
         }
 
         public Language GetSavedLanguage()
@@ -38,40 +39,46 @@ namespace EasyLoc
             return language;
         }
 
-        public void LoadLanguage(Language language)
+        public async UniTask LoadLanguage(Language language)
         {
-            if (loadedLanguage == language)
+            Debug.Log("[Loc] load language "+language);
+            if (loadedLanguage == language || language == Language.None)
             {
                 return;
             }
-            ImportScriptableObjects(language);
+            await ImportScriptableObjects(language);
             loadedLanguage = language;
             OnLanguageChanged?.Invoke(language);
         }
 
-        private void ImportScriptableObjects(Language language)
+        private async UniTask ImportScriptableObjects(Language language)
         {
             Debug.Log("[Loc] translating SOs to "+language+"...");
             var units = Resources.FindObjectsOfTypeAll<LocalizableSO>();
-            foreach (LocalizableSO unit in units)
+            for (var index = 0; index < units.Length; index++)
             {
+                LocalizableSO unit = units[index];
                 try
                 {
                     if (!unit.Localize(language))
                     {
                         Debug.LogWarning(unit.name + " not found in " + unit.localizationCSV.name);
                     }
-                    #if UNITY_EDITOR
+#if UNITY_EDITOR
                     else
                     {
                         if (!Application.isPlaying) EditorUtility.SetDirty(unit);
                     }
-                    #endif
+#endif
                 }
                 catch (Exception e)
                 {
                     Debug.LogError("failed to localize " + unit.name + ": " + e.Message);
                     continue;
+                }
+                if (index % 30 == 0)
+                {
+                    await UniTask.Yield();
                 }
             }
 

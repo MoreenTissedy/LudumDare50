@@ -290,6 +290,7 @@ namespace UnityEngine.InputSystem.UI
             if (m_VirtualMouse == null)
             {
                 m_VirtualMouse = (Mouse) InputSystem.AddDevice("VirtualMouse", "Virtual cursor");
+                ResetCursorPosition();
             }
             else if (!m_VirtualMouse.added)
                 InputSystem.AddDevice(m_VirtualMouse);
@@ -591,10 +592,15 @@ namespace UnityEngine.InputSystem.UI
             }
             else if (m_VirtualMouse != null)
             {
-                Vector2 initialPosition = new Vector2(Screen.width*3/4, Screen.height/2);
-                InputState.Change(m_VirtualMouse.position, initialPosition);
-                m_CursorTransform.anchoredPosition = Resize(initialPosition);
+                ResetCursorPosition();
             }
+        }
+
+        private void ResetCursorPosition()
+        {
+            Vector2 initialPosition = new Vector2(Screen.width * 3 / 4, Screen.height / 2);
+            InputState.Change(m_VirtualMouse.position, initialPosition);
+            m_CursorTransform.anchoredPosition = Resize(initialPosition);
         }
 
         public bool CursorVisible => m_CursorGraphic.enabled;

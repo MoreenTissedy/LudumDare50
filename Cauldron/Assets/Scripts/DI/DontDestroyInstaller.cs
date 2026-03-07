@@ -27,7 +27,7 @@ namespace CauldronCodebase
 
         public override void InstallBindings()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             MountSaveRomForSwitch();
             PlayerPrefsService.Initialize(); //maybe wait before this to allow time for rom mounting
 #endif

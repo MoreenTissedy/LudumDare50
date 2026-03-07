@@ -228,9 +228,10 @@ namespace CauldronCodebase
 
             if (final)
             {
+                //TODO
                 Debug.LogError("Exit!");
-                GameLoader.Exit();
-                return;
+                //GameLoader.Exit();
+                //return;
             }
 
             active = false;

@@ -40,7 +40,7 @@ namespace CauldronCodebase
             {
                 dataFileName += ".sav";
             }
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             fullPath = string.Format("{0}:/{1}", mountName, dataFileName);
             SwitchFileHelper.Paths.Add(fullPath);
 #else
@@ -57,7 +57,7 @@ namespace CauldronCodebase
 
         public bool IsFileValid()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             return SwitchFileHelper.FileValid(fullPath);
 #else
             return File.Exists(fullPath);
@@ -106,7 +106,7 @@ namespace CauldronCodebase
 
         private string GetFileData()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             return LoadForSwitch();
 #else
             string dataToLoad;
@@ -127,7 +127,7 @@ namespace CauldronCodebase
         {
             try
             {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
                 if (!IsFileValid())
                 {
                     var result = nn.fs.File.Create(fullPath, saveDataSize);
@@ -142,7 +142,7 @@ namespace CauldronCodebase
 #endif
 
                 string dataToStore = JsonUtility.ToJson(data, true);
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
                 SaveForSwitch(dataToStore);
 #else
                 using (FileStream stream = new FileStream(fullPath, FileMode.Create))
@@ -162,7 +162,7 @@ namespace CauldronCodebase
 
         public void Delete()
         {
-#if UNITY_SWITCH
+#if UNITY_SWITCH && !UNITY_EDITOR
             SwitchFileHelper.DeleteFile(fullPath);
 #else
             File.Delete(fullPath);
@@ -181,9 +181,7 @@ namespace CauldronCodebase
                 Debug.Assert(data.Length == sizeof(int)); //TODO fails - research
             }
 
-#if UNITY_SWITCH
             UnityEngine.Switch.Notification.EnterExitRequestHandlingSection();
-#endif
 
             nn.Result result = nn.fs.File.Open(ref fileHandle, fullPath, nn.fs.OpenFileMode.Write| nn.fs.OpenFileMode.AllowAppend);
             result.abortUnlessSuccess();
@@ -195,9 +193,7 @@ namespace CauldronCodebase
             result = nn.fs.FileSystem.Commit(mountName);
             result.abortUnlessSuccess();
 
-#if UNITY_SWITCH
             UnityEngine.Switch.Notification.LeaveExitRequestHandlingSection();
-#endif
         }
 
         private string LoadForSwitch()

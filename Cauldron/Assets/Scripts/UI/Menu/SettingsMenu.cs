@@ -26,6 +26,7 @@ namespace CauldronCodebase
         
         [Header("Language")]
         [SerializeField] private SelectableList language;
+        [SerializeField] private FlexibleButton changeLanguage;
 
         [Header("Resolution")] 
         [SerializeField] private TMP_Dropdown resolutionDropdown;
@@ -66,6 +67,7 @@ namespace CauldronCodebase
         
         private bool fullscreenMode;
         private bool autoCookingMode;
+        private Language selectedLanguage;
         
         #if UNITY_EDITOR
         private void OnValidate()
@@ -81,7 +83,8 @@ namespace CauldronCodebase
             LoadLanguage();
             LoadAutoCookingMode();
             LoadPointerSpeed();
-            language.OnValueChanged += ChangeLanguage;
+            language.OnValueChanged += UpdateSelectedLanguage;
+            changeLanguage.OnClick += ChangeLanguageToSelected;
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             pointerSpeed.onValueChanged.AddListener(ChangePointerSpeed);
@@ -126,15 +129,32 @@ namespace CauldronCodebase
             }
         }
 
-        //TODO
-        private void ChangeLanguage(int index)
+        private void UpdateSelectedLanguage(int index)
         {
-            var newLanguage = index > 0 ? Language.RU : Language.EN;
+            selectedLanguage = index > 0 ? Language.RU : Language.EN;
+        }
+        
+        private async void ChangeLanguageToSelected()
+        {
+            if (selectedLanguage == Language.None)
+            {
+                return;
+            }
+
+            Language newLanguage = selectedLanguage;
+            selectedLanguage = Language.None;
             PlayerPrefsService.SetString(PrefKeys.LanguageKey, newLanguage.ToString(), true);
-            
-            overlayManager.LockCurrentLayer(true);
-            locTool.LoadLanguage(newLanguage);
-            overlayManager.LockCurrentLayer(false);
+
+            await fadeController.FadeIn(
+                endAlpha: 0.5f, 
+                duration: 0.3f, 
+                mode: FadeMode.OverPopup, 
+                blockInput: overlayManager,
+                showWait: true);
+            await locTool.LoadLanguage(newLanguage);
+            await fadeController.FadeOut(
+                duration: 0.3f, 
+                unblockInput: overlayManager);
         }
 
         private void LoadResolution()

@@ -138,16 +138,14 @@ namespace CauldronCodebase
             }
         }
 
-        private void OpenEndingMap()
+        private async void OpenEndingMap()
         {
             if (!endingScreen)
             {
-                OverlayManager.LockCurrentLayer(true);
-                fadeController.FadeIn(0, 0.5f, 0.2f).Forget();
-                var asset = Resources.Load<EndingScreen>(ResourceIdents.EndingScreen);
+                await fadeController.FadeIn(0, 0.5f, 0.2f, FadeMode.OverPopup, OverlayManager, true);
+                EndingScreen asset = await Resources.LoadAsync<EndingScreen>(ResourceIdents.EndingScreen).ToUniTask() as EndingScreen;
                 endingScreen = Instantiate(asset, endingRoot);
-                OverlayManager.LockCurrentLayer(false);
-                fadeController.FadeOut(0f, 0.2f).Forget();
+                fadeController.FadeOut(0f, 0.2f, unblockInput: OverlayManager).Forget();
             }
             if (endingScreen == null)
             {

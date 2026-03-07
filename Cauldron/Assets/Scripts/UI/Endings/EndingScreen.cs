@@ -52,6 +52,7 @@ namespace CauldronCodebase
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private RecipeBook recipeBook;
         [Inject] private OverlayManager overlayManager;
+        [Inject] private FadeController fadeController;
 
         public OverlayLayer overlayLayer;
         public OverlayLayer cartoonOverlayLayer;
@@ -157,9 +158,9 @@ namespace CauldronCodebase
                 Destroy(currentCartoon);
             }
 
-            overlayManager.LockCurrentLayer(true);
+            await fadeController.FadeIn(0, 0.5f, 0.2f, FadeMode.OverPopup, overlayManager);
             GameObject asset = await Resources.LoadAsync<GameObject>(ResourceIdents.EndingCartoons[tag]) as GameObject;
-            overlayManager.LockCurrentLayer(false);
+            fadeController.FadeOut(0f, 0.2f, unblockInput: overlayManager).Forget();
             currentCartoon = Instantiate(asset, root);
         }
 

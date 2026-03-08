@@ -295,17 +295,6 @@ namespace UnityEngine.InputSystem.UI
             else if (!m_VirtualMouse.added)
                 InputSystem.AddDevice(m_VirtualMouse);
 
-            // Set initial cursor position.
-            if (m_CursorTransform != null && m_CursorMode == CursorMode.SoftwareCursor)
-            {
-                var objectPosition = m_CursorTransform.anchoredPosition;
-                InputState.Change(m_VirtualMouse.position, objectPosition);
-            }
-            else if (m_CursorMode == CursorMode.HardwareCursorIfAvailable)
-            {
-                InputState.Change(m_VirtualMouse.position, new Vector2(Screen.width/2, Screen.height/2));
-            }
-
             // Hook into input update.
             if (m_AfterInputUpdateDelegate == null)
                 m_AfterInputUpdateDelegate = OnAfterInputUpdate;

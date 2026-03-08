@@ -602,6 +602,7 @@ GameObject:
   - component: {fileID: 1175652703977368541}
   - component: {fileID: 1175652703977368540}
   - component: {fileID: 1175652703977368542}
+  - component: {fileID: 5184431621465768203}
   m_Layer: 5
   m_Name: Wardrobe
   m_TagString: Untagged
@@ -693,6 +694,20 @@ MonoBehaviour:
   m_Spacing: {x: 15, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 4
+--- !u!114 &5184431621465768203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175652703977368530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc2c88b9206488badfb9eabb11feab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GamepadButton: 4
+  ScriptButton: {fileID: 2690093866019410728}
 --- !u!1 &1175652704013121462
 GameObject:
   m_ObjectHideFlags: 0
@@ -2730,31 +2745,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1377378541245293032, guid: 934f0d5fa5f59be4cb4b5aa49f724705, type: 3}
   m_PrefabInstance: {fileID: 3911460260172313280}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3569785375202614152}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f54f303638c98a4692f77d8553e3c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &3569785375202614152 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 559045040525453640, guid: 934f0d5fa5f59be4cb4b5aa49f724705, type: 3}
-  m_PrefabInstance: {fileID: 3911460260172313280}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4337922532121180697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3569785375202614152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abc2c88b9206488badfb9eabb11feab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GamepadButton: 4
-  ScriptButton: {fileID: 2690093866019410728}
 --- !u!1001 &5469670763314838467
 PrefabInstance:
   m_ObjectHideFlags: 0

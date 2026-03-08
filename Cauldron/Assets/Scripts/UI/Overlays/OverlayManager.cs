@@ -13,7 +13,8 @@ namespace CauldronCodebase
         NightScreen,
         EndingScreen,
         Wardrobe,
-        SkinShop
+        SkinShop,
+        Tutorial
     }
     
     public class OverlayManager: MonoBehaviour
@@ -40,12 +41,24 @@ namespace CauldronCodebase
 
         public void AddLayer(OverlayLayer layer, Layers layerId = 0)
         {
-            if (layers.Peek().Item1 == layer)
+            var topLayer = layers.Peek();
+            if (topLayer.Item1 == layer)
             {
                 Debug.LogError("[Overlay Layers] Trying to add the layer that is already on top of the stack");
                 return;
             }
-            layers.Peek().Item1.Lock(true);
+
+            if (topLayer.Item2 == Layers.Tutorial)
+            {
+                layers.Pop();
+                layers.Push((layer, layerId));
+                layers.Push(topLayer);
+                layer.Lock(true);
+                Debug.Log("[Overlay Layers] Added new layer under the tutorial layer");
+                return;
+            }
+            
+            topLayer.Item1.Lock(true);
             layers.Push((layer, layerId));
             layers.Peek().Item1.Lock(false);
         }

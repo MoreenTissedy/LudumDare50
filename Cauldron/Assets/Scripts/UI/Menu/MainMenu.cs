@@ -70,7 +70,15 @@ namespace CauldronCodebase
 
         private void ClearAllSaveFiles()
         {
-#if (!UNITY_SWITCH)
+#if UNITY_SWITCH && !UNITY_EDITOR
+            foreach (string path in SwitchFileHelper.Paths)
+            {
+                if (SwitchFileHelper.FileValid(path))
+                {
+                    SwitchFileHelper.DeleteFile(path);
+                }
+            }
+#else
             PlayerPrefsService.DeleteAll();
 
             string dataDirPath = Application.persistentDataPath;
@@ -80,14 +88,6 @@ namespace CauldronCodebase
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
-            }
-#else
-            foreach (string path in SwitchFileHelper.Paths)
-            {
-                if (SwitchFileHelper.FileValid(path))
-                {
-                    SwitchFileHelper.DeleteFile(path);
-                }
             }
 #endif
             milestoneProvider.LoadMilestones();

@@ -21,7 +21,7 @@ namespace CauldronCodebase
         public async UniTask Show(string text)
         {
             bool clicked = false;
-            overlayManager.AddLayer(overlayLayer);
+            overlayManager.AddLayer(overlayLayer, Layers.Tutorial);
             await scrollTooltip.Open(text);
 
             dialogButtonsRoot.SetActive(false);
@@ -43,7 +43,7 @@ namespace CauldronCodebase
             dialogButtonsRoot.SetActive(true);
             nextButton.gameObject.SetActive(false);
 
-            overlayManager.AddLayer(overlayLayer);
+            overlayManager.AddLayer(overlayLayer, Layers.Tutorial);
             await scrollTooltip.Open(text);
             await UniTask.WaitUntil(() => accepted || rejected);
 

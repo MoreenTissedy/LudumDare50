@@ -131,11 +131,11 @@ namespace CauldronCodebase
             //cartoons don't fade
 
             Ending ending = endings.Get(tag);
+            inputManager.SetCursor(false);
             await LoadEndingCartoon(tag);
             //picture.sprite = ending.image;
             screen.SetActive(true);
             overlayManager.AddLayer(cartoonOverlayLayer);
-            inputManager.SetCursor(false);
             //screenFader.alpha = 0;
             //screenFader.DOFade(1, _ENDING_SCREEN_FADE_DURATION_);
             title.text = ending.title;

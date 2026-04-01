@@ -26,7 +26,8 @@ namespace CauldronCodebase
             this.wardrobe = wardrobe;
             this.catTipsView = catTipsView;
             recipeBookModeTotal = Enum.GetValues(typeof(RecipeBook.Mode)).Length - 1;
-            
+
+            this.inputManager = inputManager;
             controls = inputManager.Controls;
             this.overlayManager = overlayManager;
             
@@ -97,13 +98,12 @@ namespace CauldronCodebase
 
         private void Update()
         {
-            return;
             if (overlayManager.GetCurrentLayer != Layers.Base)
             {
                 return;
             }
             Gamepad gamepad = Gamepad.current;
-            if (!inputManager.GamepadConnected)
+            if (!inputManager.GamepadConnected || gamepad is null)
             {
                 return;
             }

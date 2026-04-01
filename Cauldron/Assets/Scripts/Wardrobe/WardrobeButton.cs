@@ -15,6 +15,8 @@ namespace CauldronCodebase
         [SerializeField] private float clickedOffset = -2;
         [SerializeField] private float moveDuration;
         [SerializeField] private OverlayLayer overlayLayer;
+        [SerializeField] private GameObject gamepadHint;
+        
         private float initialXPos, offScreenXPos;
         
         [Inject] private Wardrobe wardrobe;
@@ -94,6 +96,7 @@ namespace CauldronCodebase
                 return;
             }
             transform.DOLocalMoveX(initialXPos, moveDuration);
+            gamepadHint.SetActive(true);
         }
         
         public override void Activate()
@@ -105,6 +108,7 @@ namespace CauldronCodebase
             base.Activate();
             transform.DOLocalMoveX(initialXPos + clickedOffset, moveDuration);
             wardrobe.OpenWithCallback(Close);
+            gamepadHint.SetActive(false);
         }
 
         public void Lock(bool on)

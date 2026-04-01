@@ -142,10 +142,15 @@ namespace CauldronCodebase
         {
             if (!endingScreen)
             {
+                Debug.Log("create ending screen");
                 await fadeController.FadeIn(0, 0.5f, 0.2f, FadeMode.OverPopup, OverlayManager, true);
                 EndingScreen asset = await Resources.LoadAsync<EndingScreen>(ResourceIdents.EndingScreen).ToUniTask() as EndingScreen;
                 endingScreen = Instantiate(asset, endingRoot);
                 fadeController.FadeOut(0f, 0.2f, unblockInput: OverlayManager).Forget();
+            }
+            else
+            {
+                Debug.Log("reuse ending screen");
             }
             if (endingScreen == null)
             {
@@ -645,6 +650,7 @@ namespace CauldronCodebase
 
         private void DisposeEndingScreen()
         {
+            Debug.Log("dispose ending screen");
             if (!endingScreen)
             {
                 return;

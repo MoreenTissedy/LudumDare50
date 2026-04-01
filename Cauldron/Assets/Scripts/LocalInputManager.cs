@@ -17,7 +17,6 @@ namespace CauldronCodebase
         
         private float lastBookInputTime;
         private float lastHintInputTime;
-        private bool hintsShown;
 
         [Inject]
         private void Construct(RecipeBook recipeBook, InputManager inputManager, Wardrobe wardrobe, OverlayManager overlayManager, CatTipsView catTipsView)
@@ -108,24 +107,16 @@ namespace CauldronCodebase
                 return;
             }
             
-            if (gamepad.buttonNorth.wasPressedThisFrame)
+            if (gamepad.buttonWest.wasPressedThisFrame)
             {
                 if (Time.realtimeSinceStartup - lastHintInputTime < 0.3f)
                 {
                     return;
                 }
                 lastHintInputTime = Time.realtimeSinceStartup;
-                hintsShown = !hintsShown;
                 if (catTipsView.HasTip)
                 {
-                    if (hintsShown)
-                    {
-                        catTipsView.ChangeToBubble();
-                    }
-                    else
-                    {
-                        catTipsView.ChangeToIcon();
-                    }
+                    catTipsView.ChangeTipView();
                 }
             }
         }

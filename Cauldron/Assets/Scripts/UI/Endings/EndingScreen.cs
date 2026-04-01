@@ -237,7 +237,6 @@ namespace CauldronCodebase
 
             active = false;
             screen.SetActive(false);
-            overlayManager.RemoveLayer(overlayLayer);
             inputManager.SetCursor(false);
             
             closeButton.gameObject.SetActive(false);
@@ -245,6 +244,7 @@ namespace CauldronCodebase
             soundManager.Play(Sounds.EndingPanelFold);
             map.AnimationState.SetAnimation(0, foldAnimation, false).Complete += (_) =>
             {
+                overlayManager.RemoveLayer(overlayLayer);
                 gameObject.SetActive(false);
                 OnClose?.Invoke();
             };

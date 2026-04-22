@@ -37,7 +37,8 @@ namespace CauldronCodebase
 
         [Inject]
         public void Construct(GameStateMachine gameStateMachine, RecipeProvider recipeProvider, RecipeBook recipeBook,
-            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game, ExperimentController experimentController)
+            SoundManager soundManager, TooltipManager tooltipManager, GameDataHandler game,
+            ExperimentController experimentController)
         {
             this.recipeProvider = recipeProvider;
             this.recipeBook = recipeBook;
@@ -87,7 +88,7 @@ namespace CauldronCodebase
                 soundManager.Play(Sounds.Splash);
             }
         }
-        
+
         public void ClearAndActivate(GameStateMachine.GamePhase phase)
         {
             if (phase != GameStateMachine.GamePhase.Visitor) return;
@@ -102,41 +103,42 @@ namespace CauldronCodebase
             dropZone.SetActive(false);
             tooltipManager.DisableAllHighlights();
             potionPopup.ClearAcceptSubscriptions();
+            foreach (var recipe in recipeProvider.allRecipes)
             {
-                foreach (var recipe in recipeProvider.allRecipes)
+                if (recipe.RecipeIngredients.All(ingredient => mix.Contains(ingredient)))
                 {
-                    if (recipe.RecipeIngredients.All(ingredient => mix.Contains(ingredient)))
+                    if (!StoryTagHelper.Check(recipe.requiredStoryTag, game))
                     {
-                        if (!StoryTagHelper.Check(recipe.requiredStoryTag, game))
-                        {
-                            continue;
-                        }
-                        if (!recipeBook.IsRecipeInBook(recipe))
-                        {
-                            potionPopup.Show(recipe, true);
-                            recipeBook.RecordRecipe(recipe);
-                        }
-                        else
-                        {
-                            potionPopup.Show(recipe);
-                        }
-
-                        PotionBrewed?.Invoke(recipe.potion);
-                        potionPopup.OnAccept += () => OnPotionAccepted(recipe.potion);
-                        mix.Clear();
-                        recipeBook.CheckExperimentsCompletion();
-                        return recipe.potion;
+                        continue;
                     }
+
+                    if (!recipeBook.IsRecipeInBook(recipe))
+                    {
+                        potionPopup.Show(recipe, true);
+                        recipeBook.RecordRecipe(recipe);
+                    }
+                    else
+                    {
+                        potionPopup.Show(recipe);
+                    }
+
+                    PotionBrewed?.Invoke(recipe.potion);
+                    potionPopup.OnAccept += () => OnPotionAccepted(recipe.potion);
+                    mix.Clear();
+                    recipeBook.CheckExperimentsCompletion();
+                    return recipe.potion;
                 }
             }
 
-            experimentController.RecordAttempt(new WrongPotion(mix));
+            if (experimentController.RecordAttempt(new WrongPotion(mix)))
+            {
+                recipeBook.SaveWrongRecipes();
+            }
             game.wrongExperiments++;
             potionPopup.Show(null);
             PotionBrewed?.Invoke(Potions.Placebo);
             potionPopup.OnAccept += () => OnPotionAccepted(Potions.Placebo);
             mix.Clear();
-            recipeBook.CheckExperimentsCompletion();
             return Potions.Placebo;
         }
 

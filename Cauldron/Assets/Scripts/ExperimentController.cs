@@ -66,7 +66,7 @@ public class ExperimentController : MonoBehaviour
         }
     }
 
-    public void RecordAttempt(WrongPotion mix)
+    public bool RecordAttempt(WrongPotion mix)
     {
         if (wrongPotions is null)
         {
@@ -76,7 +76,10 @@ public class ExperimentController : MonoBehaviour
         if (!wrongPotions.Any(wrongRecipe => wrongRecipe.IngredientsList.All(mix.IngredientsList.Contains)))
         {
             wrongPotions.Add(mix);
+            return true;
         }
+
+        return false;
     }
 
     public void UpdateTab(int page)

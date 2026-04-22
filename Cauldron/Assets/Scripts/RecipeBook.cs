@@ -10,7 +10,7 @@ using Zenject;
 
 namespace CauldronCodebase
 {
-    public class RecipeBook : Book, IDataPersistence
+    public class RecipeBook : Book
     {
         [Header("Bookmark")] 
         [SerializeField] private Image bookmark;
@@ -106,7 +106,6 @@ namespace CauldronCodebase
                                 GameDataHandler gameData, 
                                 FadeController fadeController)
         {
-            dataPersistenceManager.AddToDataPersistenceObjList(this);
             this.achievements = achievements;
             this.tooltipManager = tooltipManager;
             this.recipeProvider = recipeProvider;
@@ -121,6 +120,7 @@ namespace CauldronCodebase
         {
             InitEndingsMap();
             LoadRecipes();
+            LoadWrongRecipes();
             experimentController.OnContentChanged += () =>
             {
                 InitTotalPages();
@@ -625,7 +625,7 @@ namespace CauldronCodebase
             return false;
         }
 
-        public void LoadData(GameData data, bool newGame)
+        public void LoadWrongRecipes()
         {
             experimentController.wrongPotions = wrongRecipeProvider.LoadWrongRecipe();
             foreach (var potion in experimentController.wrongPotions)
@@ -635,10 +635,11 @@ namespace CauldronCodebase
             experimentController.GenerateData();
         }
 
-        public void SaveData(ref GameData data)
+        public void SaveWrongRecipes()
         {
             wrongRecipeProvider.WrongPotions = experimentController.wrongPotions;
             wrongRecipeProvider.SaveWrongRecipes();
+            CheckExperimentsCompletion();
         }
 
         public override void CloseBook()

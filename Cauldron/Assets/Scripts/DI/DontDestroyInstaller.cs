@@ -1,6 +1,5 @@
 using EasyLoc;
 using FMODUnity;
-using nn.account;
 using UnityEngine;
 using Universal;
 using UnityEngine.InputSystem.UI;
@@ -27,10 +26,6 @@ namespace CauldronCodebase
 
         public override void InstallBindings()
         {
-#if UNITY_SWITCH && !UNITY_EDITOR
-            MountSaveRomForSwitch();
-            PlayerPrefsService.Initialize(); //maybe wait before this to allow time for rom mounting
-#endif
             GameObject cameraInstance = Container.InstantiatePrefab(mainCamera);
             Camera mainCameraScript = cameraInstance.GetComponent<Camera>();
             CameraAdapt cameraAdaptation = cameraInstance.GetComponent<CameraAdapt>();
@@ -92,22 +87,6 @@ namespace CauldronCodebase
                 : 0.8f;
             RuntimeManager.GetVCA("vca:/Music").setVolume(musicVolume);
             RuntimeManager.GetVCA("vca:/SFX").setVolume(soundVolume);
-        }
-
-        public static void MountSaveRomForSwitch()
-        {
-            nn.account.Account.Initialize();
-            nn.account.UserHandle userHandle = new nn.account.UserHandle();
-
-            if (!nn.account.Account.TryOpenPreselectedUser(ref userHandle))
-            {
-                nn.Nn.Abort("Failed to open preselected user.");
-            }
-
-            nn.account.Uid userId = Uid.Invalid;
-            nn.Result result = nn.account.Account.GetUserId(ref userId, userHandle);
-            result.abortUnlessSuccess();
-            result = nn.fs.SaveData.Mount("Saves", userId);
         }
     }
 }

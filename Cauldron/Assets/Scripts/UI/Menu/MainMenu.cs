@@ -70,15 +70,6 @@ namespace CauldronCodebase
 
         private void ClearAllSaveFiles()
         {
-#if UNITY_SWITCH && !UNITY_EDITOR
-            foreach (string path in SwitchFileHelper.Paths)
-            {
-                if (SwitchFileHelper.FileValid(path))
-                {
-                    SwitchFileHelper.DeleteFile(path);
-                }
-            }
-#else
             PlayerPrefsService.DeleteAll();
 
             string dataDirPath = Application.persistentDataPath;
@@ -89,11 +80,9 @@ namespace CauldronCodebase
             {
                 file.Delete();
             }
-#endif
             milestoneProvider.LoadMilestones();
             playerProgressProvider.Update();
             villagerChecker.Update();
-            PlayerPrefsService.Initialize();
         }
 
         private void HideContinueButton()

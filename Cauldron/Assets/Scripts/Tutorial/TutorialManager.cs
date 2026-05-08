@@ -83,10 +83,10 @@ public class TutorialManager : MonoBehaviour
         {
             return;
         }
-       // if (SteamConnector.HasPremium)
+        if (SteamConnector.HasPremium)
         {
-          //  SaveKey(TutorialKeys.TUTORIAL_PREMIUM);
-          //  tutorialScreen.Show(PremiumTutorialText).Forget();
+            SaveKey(TutorialKeys.TUTORIAL_PREMIUM);
+            tutorialScreen.Show(PremiumTutorialText).Forget();
         }
     }
 

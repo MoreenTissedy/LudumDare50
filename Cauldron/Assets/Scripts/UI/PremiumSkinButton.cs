@@ -23,12 +23,12 @@ namespace CauldronCodebase
 
         public void Start()
         {
-            //button.OnClick += ChangeSkins;
+            button.OnClick += ChangeSkins;
             
-            //gameObject.SetActive(SteamConnector.HasPremium);
-            //if (gameData.premiumSkin)
+            gameObject.SetActive(SteamConnector.HasPremium);
+            if (gameData.premiumSkin)
             {
-            //    StartCoroutine(UpdateSkins());
+                StartCoroutine(UpdateSkins());
             }
         }
         

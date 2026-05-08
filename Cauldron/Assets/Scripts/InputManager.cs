@@ -47,8 +47,8 @@ namespace CauldronCodebase
             Controls.General.Enable();
             Controls.UI.Enable();
             
-            //GamepadConnected = Gamepad.current != null;
-            GamepadConnected = true;
+            GamepadConnected = Gamepad.current != null;
+            //GamepadConnected = true;
             GamepadType = GamepadType.Switch;
             Debug.Log("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
             

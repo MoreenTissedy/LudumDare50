@@ -2,6 +2,7 @@ using CauldronCodebase;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using DG.Tweening;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -32,6 +33,7 @@ namespace Universal
         private Sequence tweenSequence;
         private ContentSizeFitter fitter;
         private float targetWidth;
+        private string lastUpdatedText;
 
         private void Start()
         {
@@ -60,42 +62,13 @@ namespace Universal
 
         public async UniTask SetText(string text)
         {
-            if (!fitter)
-            {
-                fitter = scroll.GetComponent<ContentSizeFitter>();
-            }
-            fitter.enabled = true;
             textField.text = text;
-            if (Application.isPlaying)
-            {
-                await UniTask.DelayFrame(2); //to rearrange the layout
-                targetWidth = scroll.sizeDelta.x;
-            }
+            await UpdateWidth();
         }
 
         public void Open()
         {
-            if (!fitter)
-            {
-                fitter = scroll.GetComponent<ContentSizeFitter>();
-            }
-            fitter.enabled = false;
-            canvas.enabled = true;
-            tweenSequence?.Kill();
-            tweenSequence = DOTween.Sequence();
-            tweenSequence
-                .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
-                    .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
-                    .SetEase(scrollOutEase)).SetUpdate(true)
-                .SetSpeedBased()
-                .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
-                .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
-                .Play();
-            
-            if (raycaster != null)
-            {
-                raycaster.enabled = true;
-            }
+            OpenAsync();
         }
 
         [ContextMenu("TestClose")]
@@ -152,6 +125,51 @@ namespace Universal
             acceptButton.gameObject.SetActive(false);
             rejectButton.gameObject.SetActive(false);
             return accepted;
+        }
+
+        private async void OpenAsync()
+        {
+            await UpdateWidth();
+            if (!fitter)
+            {
+                fitter = scroll.GetComponent<ContentSizeFitter>();
+            }
+            fitter.enabled = false;
+            canvas.enabled = true;
+            tweenSequence?.Kill();
+            tweenSequence = DOTween.Sequence();
+            _ = tweenSequence
+                .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
+                    .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
+                    .SetEase(scrollOutEase)).SetUpdate(true)
+                .SetSpeedBased()
+                .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
+                .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
+                .Play();
+
+            if (raycaster != null)
+            {
+                raycaster.enabled = true;
+            }
+        }
+
+        private async UniTask UpdateWidth()
+        {
+            if (textField.text == lastUpdatedText)
+                return;
+
+            if (!fitter)
+            {
+                fitter = scroll.GetComponent<ContentSizeFitter>();
+            }
+            fitter.enabled = true;
+            if (Application.isPlaying)
+            {
+                await UniTask.DelayFrame(2); //to rearrange the layout
+                targetWidth = scroll.sizeDelta.x;
+            }
+
+            lastUpdatedText = textField.text;
         }
     }
 }

@@ -64,6 +64,7 @@ namespace CauldronCodebase
         [Inject] private PlayerProgressProvider progressProvider;
         [Inject] private CameraAdapt cameraAdaptation;
         [Inject] private VirtualMouseInput virtualMouse;
+        [Inject] private InputManager inputManager;
         
         private bool fullscreenMode;
         private bool autoCookingMode;
@@ -91,8 +92,11 @@ namespace CauldronCodebase
             resolutionDropdown.onValueChanged.AddListener(ChangeResolution);
             toggleFullscreen.onValueChanged.AddListener(ChangeFullscreenMode);
             autoCooking.onValueChanged.AddListener(ChangeAutoCooking);
-            openResetButton.OnClick += OpenResetDialogue;
+            
             closeSettingsButton.OnClick += Close;
+            inputManager.Controls.General.Exit.performed += (_) => Close();
+            
+            openResetButton.OnClick += OpenResetDialogue;
             acceptResetButton.OnClick += ResetGameData;
             declineResetButton.OnClick += CloseResetDialogue;
         }

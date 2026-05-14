@@ -2,6 +2,7 @@ using CauldronCodebase;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using DG.Tweening;
+using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace Universal
         private ContentSizeFitter fitter;
         private float targetWidth;
         private string lastUpdatedText;
+        private CancellationTokenSource cancellationTokenSource;
 
         private void Start()
         {
@@ -56,24 +58,52 @@ namespace Universal
         public async UniTask Open(string text)
         {            
             canvas.enabled = false;
-            await SetText(text);
-            Open();
+            var token = CreateCancellationToken();
+            await SetText(text, token);
+            await Open(token);
         }
 
-        public async UniTask SetText(string text)
+        public async UniTask SetText(string text, CancellationToken token = default)
         {
+            if(token == default)
+            {
+                token = CreateCancellationToken();
+            }
+
             textField.text = text;
-            await UpdateWidth();
+            await UpdateWidth(token);
         }
 
-        public void Open()
+        public async UniTask Open(CancellationToken token = default)
         {
-            OpenAsync();
+            if(token == default)
+            {
+                token = CreateCancellationToken();
+            }
+
+            await UpdateWidth(token);
+            canvas.enabled = true;
+            tweenSequence?.Kill();
+            tweenSequence = DOTween.Sequence();
+            _ = tweenSequence
+                .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
+                    .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
+                    .SetEase(scrollOutEase)).SetUpdate(true)
+                .SetSpeedBased()
+                .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
+                .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
+                .Play();
+
+            if (raycaster != null)
+            {
+                raycaster.enabled = true;
+            }
         }
 
         [ContextMenu("TestClose")]
         public void Close()
         {
+            cancellationTokenSource?.Cancel();
             tweenSequence?.Kill();
             if (!canvas.enabled)
             {
@@ -104,6 +134,8 @@ namespace Universal
 
         private void OnDestroy()
         {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
             tweenSequence?.Kill();
         }
         
@@ -127,33 +159,7 @@ namespace Universal
             return accepted;
         }
 
-        private async void OpenAsync()
-        {
-            await UpdateWidth();
-            if (!fitter)
-            {
-                fitter = scroll.GetComponent<ContentSizeFitter>();
-            }
-            fitter.enabled = false;
-            canvas.enabled = true;
-            tweenSequence?.Kill();
-            tweenSequence = DOTween.Sequence();
-            _ = tweenSequence
-                .Append(scroll.DOSizeDelta(new Vector2(targetWidth, scroll.sizeDelta.y), scrollDuration)
-                    .From(new Vector2(startScrollWidth, scroll.sizeDelta.y))
-                    .SetEase(scrollOutEase)).SetUpdate(true)
-                .SetSpeedBased()
-                .Insert(0, scrollFader.DOFade(1, scrollFadeDuration).From(0))
-                .Insert(textFadeDelay, textFader.DOFade(1, textFadeDuration).From(0))
-                .Play();
-
-            if (raycaster != null)
-            {
-                raycaster.enabled = true;
-            }
-        }
-
-        private async UniTask UpdateWidth()
+        private async UniTask UpdateWidth(CancellationToken token)
         {
             if (textField.text == lastUpdatedText)
                 return;
@@ -165,11 +171,20 @@ namespace Universal
             fitter.enabled = true;
             if (Application.isPlaying)
             {
-                await UniTask.DelayFrame(2); //to rearrange the layout
+                await UniTask.DelayFrame(2, cancellationToken: token); //to rearrange the layout
                 targetWidth = scroll.sizeDelta.x;
             }
 
             lastUpdatedText = textField.text;
+            fitter.enabled = false;
+        }
+
+        private CancellationToken CreateCancellationToken()
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = new CancellationTokenSource();
+            return cancellationTokenSource.Token;
         }
     }
 }

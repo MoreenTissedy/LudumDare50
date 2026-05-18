@@ -42,11 +42,13 @@ namespace CauldronCodebase
         private string defaultColorHex, unavailableColorHex;
 
         [Inject] private SoundManager soundManager;
+        [Inject] private InputManager inputManager;
 
         private void Start()
         {
             buyButton.OnClick += OnBuyButtonClicked;
             closeButton.OnClick += CloseBook;
+            inputManager.Controls.General.Exit.performed += (_) => CloseBook();
             
             defaultColorHex = ColorUtility.ToHtmlStringRGB(defaultTextColor);
             unavailableColorHex = ColorUtility.ToHtmlStringRGB(unavailableTextColor);

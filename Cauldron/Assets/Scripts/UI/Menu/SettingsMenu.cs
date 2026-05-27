@@ -177,7 +177,7 @@ namespace CauldronCodebase
 
         private void LoadResolution()
         {
-            //LoadFullscreenMode();
+            LoadFullscreenMode();
             LoadResolutionSelector();
         }
 
@@ -258,7 +258,7 @@ namespace CauldronCodebase
             {
                 var newDisplay = Display.displays[cameraAdaptation.Display];
                 Screen.SetResolution(newDisplay.systemWidth, newDisplay.systemHeight, true);
-                //LoadResolutionDropdown();
+                LoadResolutionSelector();
             }
             await UniTask.NextFrame();
             cameraAdaptation.Rebuild();

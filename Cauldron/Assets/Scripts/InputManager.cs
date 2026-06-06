@@ -49,9 +49,9 @@ namespace CauldronCodebase
             
             GamepadConnected = Gamepad.current != null;
             //GamepadConnected = true;
-            GamepadType = GamepadType.Switch;
-            Debug.Log("Current gamepad: "+ (Gamepad.current?.device.ToString() ?? "none"));
-            
+            GamepadType = DetermineGamepadType(Gamepad.current);
+            Debug.Log($"Gamepad Connected: {GamepadConnected} | Type: {GamepadType}");
+
             InputSystem.onDeviceChange += OnDeviceChange;
             this.virtualMouseInput = virtualMouseInput;
             
@@ -90,6 +90,24 @@ namespace CauldronCodebase
             }
 
             virtualMouseInput.SetCursorVisible(enable);
+        }
+
+        private GamepadType DetermineGamepadType(Gamepad gamepad)
+        {
+            if (gamepad == null) 
+                return GamepadType.None;
+
+            if (gamepad is UnityEngine.InputSystem.DualShock.DualShockGamepad 
+                || gamepad is UnityEngine.InputSystem.DualShock.DualSenseGamepadHID)
+                return GamepadType.Playstation;
+
+            if (gamepad is UnityEngine.InputSystem.XInput.XInputController)
+                return GamepadType.XBox;
+
+            if (gamepad is UnityEngine.InputSystem.Switch.SwitchProControllerHID)
+                return GamepadType.Switch;
+
+            return GamepadType.Unknown;
         }
     }
 }

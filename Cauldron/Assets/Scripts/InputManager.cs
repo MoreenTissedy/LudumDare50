@@ -46,11 +46,8 @@ namespace CauldronCodebase
             Controls = new Controls();
             Controls.General.Enable();
             Controls.UI.Enable();
-            
-            GamepadConnected = Gamepad.current != null;
-            //GamepadConnected = true;
-            GamepadType = DetermineGamepadType(Gamepad.current);
-            Debug.Log($"Gamepad Connected: {GamepadConnected} | Type: {GamepadType}");
+
+            UpdateGamepad();
 
             InputSystem.onDeviceChange += OnDeviceChange;
             this.virtualMouseInput = virtualMouseInput;
@@ -58,17 +55,12 @@ namespace CauldronCodebase
             virtualMouseInput.SetCursorVisible(false);
         }
 
-        private void OnDeviceChange(InputDevice arg1, InputDeviceChange arg2)
+        private void OnDeviceChange(InputDevice device, InputDeviceChange change)
         {
-            if (Gamepad.current != null)
-            {
-                Debug.Log("Current gamepad: "+ (Gamepad.current.device ));
-            }
-            else
-            {
-                Debug.Log("Gamepad disconnected");
-            }
-            //InputChanged?.Invoke();
+            if (change != InputDeviceChange.Added && change != InputDeviceChange.Removed)
+                return;
+
+            UpdateGamepad();
         }
 
         public async void SetCursor(bool enable)
@@ -90,6 +82,15 @@ namespace CauldronCodebase
             }
 
             virtualMouseInput.SetCursorVisible(enable);
+        }
+
+        private void UpdateGamepad()
+        {
+            GamepadConnected = Gamepad.current != null;
+            GamepadType = DetermineGamepadType(Gamepad.current);
+            Debug.Log($"Gamepad is connected: {GamepadConnected} | Type: {GamepadType}");
+
+            InputChanged?.Invoke(GamepadType);
         }
 
         private GamepadType DetermineGamepadType(Gamepad gamepad)

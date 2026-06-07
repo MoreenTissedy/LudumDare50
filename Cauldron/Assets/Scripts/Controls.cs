@@ -90,7 +90,7 @@ namespace CauldronCodebase
                 {
                     ""name"": """",
                     ""id"": ""cfef83c2-baea-4651-af99-86a5a328245f"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -200,7 +200,7 @@ namespace CauldronCodebase
                 {
                     ""name"": """",
                     ""id"": ""bd59423e-df84-407c-9d5f-b2f8bd383509"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -678,7 +678,7 @@ namespace CauldronCodebase
                 {
                     ""name"": """",
                     ""id"": ""89de957c-548a-4e99-ba32-f6f84d08b765"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

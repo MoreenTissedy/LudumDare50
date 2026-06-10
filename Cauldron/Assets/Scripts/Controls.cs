@@ -73,6 +73,24 @@ namespace CauldronCodebase
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OpenWardrobe"",
+                    ""type"": ""Button"",
+                    ""id"": ""677ba874-36a0-4820-a978-d7f5b2805008"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleTooltips"",
+                    ""type"": ""Button"",
+                    ""id"": ""e7a213df-fb9c-402a-b1fc-2200a90d8609"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -306,6 +324,28 @@ namespace CauldronCodebase
                     ""action"": ""NormalNavigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a65cb45-c729-4a8c-a502-bf67fa599109"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenWardrobe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d8e126b-d34b-4483-ae7d-456588ba3713"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleTooltips"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -753,6 +793,8 @@ namespace CauldronCodebase
             m_General_BookNavigate = m_General.FindAction("BookNavigate", throwIfNotFound: true);
             m_General_AnyKey = m_General.FindAction("AnyKey", throwIfNotFound: true);
             m_General_NormalNavigate = m_General.FindAction("NormalNavigate", throwIfNotFound: true);
+            m_General_OpenWardrobe = m_General.FindAction("OpenWardrobe", throwIfNotFound: true);
+            m_General_ToggleTooltips = m_General.FindAction("ToggleTooltips", throwIfNotFound: true);
             // Debug
             m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
             m_Debug_ClearSave = m_Debug.FindAction("ClearSave", throwIfNotFound: true);
@@ -834,6 +876,8 @@ namespace CauldronCodebase
         private readonly InputAction m_General_BookNavigate;
         private readonly InputAction m_General_AnyKey;
         private readonly InputAction m_General_NormalNavigate;
+        private readonly InputAction m_General_OpenWardrobe;
+        private readonly InputAction m_General_ToggleTooltips;
         public struct GeneralActions
         {
             private @Controls m_Wrapper;
@@ -843,6 +887,8 @@ namespace CauldronCodebase
             public InputAction @BookNavigate => m_Wrapper.m_General_BookNavigate;
             public InputAction @AnyKey => m_Wrapper.m_General_AnyKey;
             public InputAction @NormalNavigate => m_Wrapper.m_General_NormalNavigate;
+            public InputAction @OpenWardrobe => m_Wrapper.m_General_OpenWardrobe;
+            public InputAction @ToggleTooltips => m_Wrapper.m_General_ToggleTooltips;
             public InputActionMap Get() { return m_Wrapper.m_General; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -867,6 +913,12 @@ namespace CauldronCodebase
                 @NormalNavigate.started += instance.OnNormalNavigate;
                 @NormalNavigate.performed += instance.OnNormalNavigate;
                 @NormalNavigate.canceled += instance.OnNormalNavigate;
+                @OpenWardrobe.started += instance.OnOpenWardrobe;
+                @OpenWardrobe.performed += instance.OnOpenWardrobe;
+                @OpenWardrobe.canceled += instance.OnOpenWardrobe;
+                @ToggleTooltips.started += instance.OnToggleTooltips;
+                @ToggleTooltips.performed += instance.OnToggleTooltips;
+                @ToggleTooltips.canceled += instance.OnToggleTooltips;
             }
 
             private void UnregisterCallbacks(IGeneralActions instance)
@@ -886,6 +938,12 @@ namespace CauldronCodebase
                 @NormalNavigate.started -= instance.OnNormalNavigate;
                 @NormalNavigate.performed -= instance.OnNormalNavigate;
                 @NormalNavigate.canceled -= instance.OnNormalNavigate;
+                @OpenWardrobe.started -= instance.OnOpenWardrobe;
+                @OpenWardrobe.performed -= instance.OnOpenWardrobe;
+                @OpenWardrobe.canceled -= instance.OnOpenWardrobe;
+                @ToggleTooltips.started -= instance.OnToggleTooltips;
+                @ToggleTooltips.performed -= instance.OnToggleTooltips;
+                @ToggleTooltips.canceled -= instance.OnToggleTooltips;
             }
 
             public void RemoveCallbacks(IGeneralActions instance)
@@ -1074,6 +1132,8 @@ namespace CauldronCodebase
             void OnBookNavigate(InputAction.CallbackContext context);
             void OnAnyKey(InputAction.CallbackContext context);
             void OnNormalNavigate(InputAction.CallbackContext context);
+            void OnOpenWardrobe(InputAction.CallbackContext context);
+            void OnToggleTooltips(InputAction.CallbackContext context);
         }
         public interface IDebugActions
         {

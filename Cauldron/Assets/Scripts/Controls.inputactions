@@ -49,6 +49,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "OpenWardrobe",
+                    "type": "Button",
+                    "id": "677ba874-36a0-4820-a978-d7f5b2805008",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleTooltips",
+                    "type": "Button",
+                    "id": "e7a213df-fb9c-402a-b1fc-2200a90d8609",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -66,7 +84,7 @@
                 {
                     "name": "",
                     "id": "cfef83c2-baea-4651-af99-86a5a328245f",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -176,7 +194,7 @@
                 {
                     "name": "",
                     "id": "bd59423e-df84-407c-9d5f-b2f8bd383509",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -282,6 +300,28 @@
                     "action": "NormalNavigate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "9a65cb45-c729-4a8c-a502-bf67fa599109",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenWardrobe",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d8e126b-d34b-4483-ae7d-456588ba3713",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleTooltips",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -654,7 +694,7 @@
                 {
                     "name": "",
                     "id": "89de957c-548a-4e99-ba32-f6f84d08b765",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

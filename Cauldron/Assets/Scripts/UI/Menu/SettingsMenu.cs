@@ -1,8 +1,9 @@
-using EasyLoc;
-using System.Collections.Generic;
 using Buttons;
 using Cysharp.Threading.Tasks;
+using EasyLoc;
 using FMODUnity;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.UI;
@@ -28,8 +29,9 @@ namespace CauldronCodebase
         [SerializeField] private SelectableList language;
         [SerializeField] private FlexibleButton changeLanguage;
 
-        [Header("Resolution")] 
-        [SerializeField] private TMP_Dropdown resolutionDropdown;
+        [Header("Resolution")]
+        [SerializeField] private SelectableList resolution;
+        [SerializeField] private FlexibleButton changeResolution;
 
         private Resolution[] resolutions;
 
@@ -69,6 +71,7 @@ namespace CauldronCodebase
         private bool fullscreenMode;
         private bool autoCookingMode;
         private Language selectedLanguage;
+        private int selectedResolutionIndex;
         
         #if UNITY_EDITOR
         private void OnValidate()
@@ -80,16 +83,17 @@ namespace CauldronCodebase
         private void Start()
         {
             LoadVolumeValues();
-            //LoadResolution();
+            LoadResolution();
             LoadLanguage();
             LoadAutoCookingMode();
             LoadPointerSpeed();
             language.OnValueChanged += UpdateSelectedLanguage;
             changeLanguage.OnClick += ChangeLanguageToSelected;
+            resolution.OnValueChanged += UpdateSelectedResolution;
+            changeResolution.OnClick += ChangeResolutionToSelected;
             music.onValueChanged.AddListener((x) => ChangeVolume("Music", x));
             sounds.onValueChanged.AddListener(x => ChangeVolume("SFX", x));
             pointerSpeed.onValueChanged.AddListener(ChangePointerSpeed);
-            resolutionDropdown.onValueChanged.AddListener(ChangeResolution);
             toggleFullscreen.onValueChanged.AddListener(ChangeFullscreenMode);
             autoCooking.onValueChanged.AddListener(ChangeAutoCooking);
             
@@ -161,10 +165,20 @@ namespace CauldronCodebase
                 unblockInput: overlayManager);
         }
 
+        private void ChangeResolutionToSelected()
+        {
+            ChangeResolution(selectedResolutionIndex);
+        }
+
+        private void UpdateSelectedResolution(int index)
+        {
+            selectedResolutionIndex = index;
+        }
+
         private void LoadResolution()
         {
             LoadFullscreenMode();
-            LoadResolutionDropdown();
+            LoadResolutionSelector();
         }
 
         public void Open()
@@ -201,27 +215,24 @@ namespace CauldronCodebase
             PlayerPrefsService.SetFloat(PrefKeys.SoundsValueSettings, sounds.value, false);
         }
 
-        private void LoadResolutionDropdown()
+        private void LoadResolutionSelector()
         {
             resolutions = Screen.resolutions;
-            resolutionDropdown.ClearOptions();
-            List<string> options = new List<string>();
-            
-            int setResolutionIndex = -1;
+            resolution.Values = new string[resolutions.Length];
+
+            int currentResolutionIndex = -1;
 
             for (var index = 0; index < resolutions.Length; index++)
             {
                 var res = resolutions[index];
-                options.Add(res.ToString());
+                resolution.Values[index] = res.ToString();
                 if (Screen.currentResolution.ToString() == res.ToString())
                 {
-                    setResolutionIndex = index;
+                    currentResolutionIndex = index;
                 }
             }
 
-            resolutionDropdown.AddOptions(options);
-            resolutionDropdown.value = setResolutionIndex;
-            resolutionDropdown.RefreshShownValue();
+            resolution.SetValueWithoutNotify(currentResolutionIndex);
         }
 
         private async void ChangeResolution(int resIndex)
@@ -247,7 +258,7 @@ namespace CauldronCodebase
             {
                 var newDisplay = Display.displays[cameraAdaptation.Display];
                 Screen.SetResolution(newDisplay.systemWidth, newDisplay.systemHeight, true);
-                LoadResolutionDropdown();
+                LoadResolutionSelector();
             }
             await UniTask.NextFrame();
             cameraAdaptation.Rebuild();

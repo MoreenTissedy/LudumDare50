@@ -6,6 +6,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using Universal;
 using Zenject;
+using static UnityEngine.InputSystem.InputAction;
 
 namespace CauldronCodebase
 {
@@ -23,6 +24,7 @@ namespace CauldronCodebase
         [Inject] private GameDataHandler gameDataHandler;
         [Inject] private GameStateMachine stateMachine;
         [Inject] private SoundManager soundManager;
+        [Inject] private InputManager inputManager;
 
         private bool hidden;
         private bool locked;
@@ -37,6 +39,8 @@ namespace CauldronCodebase
             stateMachine.OnChangeState += Hide;
             
             overlayLayer.Register(this);
+
+            inputManager.Controls.General.OpenWardrobe.performed += OnOpenWardrobePerfrormed;
         }
 
         private void OnDestroy()
@@ -44,6 +48,7 @@ namespace CauldronCodebase
             stateMachine.OnGameStarted -= TryShow;
             stateMachine.OnChangeState -= Hide;
             wardrobe.SkinApplied -= Hide;
+            inputManager.Controls.General.OpenWardrobe.performed -= OnOpenWardrobePerfrormed;
         }
         
         private void TryShow()
@@ -117,5 +122,13 @@ namespace CauldronCodebase
         }
 
         public bool IsLocked() => locked;
+
+        private void OnOpenWardrobePerfrormed(CallbackContext context)
+        {
+            if (!gameObject.activeInHierarchy || hidden || locked)
+                return;
+
+            Activate();
+        }
     }
 }

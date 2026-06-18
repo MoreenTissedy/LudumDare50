@@ -3,6 +3,7 @@ using CauldronCodebase;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Zenject;
 
 namespace Buttons
@@ -14,6 +15,9 @@ namespace Buttons
         [SerializeField] private TextMeshProUGUI label;
         [SerializeField] private TextMeshProUGUI valueText;
         [SerializeField] private Color highlightColor;
+
+        [SerializeField] private Button leftButton;
+        [SerializeField] private Button rightButton;
 
         [Inject] private InputManager inputManager;
 
@@ -37,6 +41,22 @@ namespace Buttons
                 valueText.text = Values[currentIndex];
                 OnValueChanged?.Invoke(currentIndex);
             }
+        }
+
+        private void Awake()
+        {
+            if (leftButton != null)
+                leftButton.onClick.AddListener(SelectPrevious);
+            if (rightButton != null)
+                rightButton.onClick.AddListener(SelectNext);
+        }
+
+        private void OnDestroy()
+        {
+            if (leftButton != null) 
+                leftButton.onClick.RemoveListener(SelectPrevious);
+            if (rightButton != null) 
+                rightButton.onClick.RemoveListener(SelectNext);
         }
 
         public void SetValueWithoutNotify(int index)
@@ -75,6 +95,21 @@ namespace Buttons
         {
             label.color = initialColor;
             inputManager.Controls.General.NormalNavigate.performed -= Navigate;
+        }
+
+        public void SelectPrevious()
+        {
+            if (locked) 
+                return;
+            CurrentIndex = currentIndex - 1;
+        }
+
+        public void SelectNext()
+        {
+            Debug.Log("Selecting next, locked: " + locked);
+            if (locked) 
+                return;
+            CurrentIndex = currentIndex + 1;
         }
 
         public void Lock(bool on)
